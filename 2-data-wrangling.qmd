@@ -1,0 +1,5 @@
+# Data wrangling (L2) {.unnumbered}
+
+::: {.callout-note}
+There is no in-person lecture this week, and so there is no content here. Instead, please do the homework listed on OLAT.
+:::

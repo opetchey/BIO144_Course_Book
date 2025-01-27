@@ -1,0 +1,16 @@
+# Preface {.unnumbered}
+
+This book contains content of the first six Monday lectures of the course BIO144 Data Analysis in Biology at the University of Zurich. Information for the remaining lectures are available on the OLAT course website.
+
+## How this book was made
+
+The book was written using a type of RMarkdown. It allows a script with a mix of normal text and R code to produce chapters and a book that has a mixture of text, R code, and R output. Rmarkdown is very useful for making reports, books, presentations, and even websites.
+
+This book is a Quarto book. To learn more about Quarto books visit <https://quarto.org/docs/books>.
+
+
+## Acknowledgements {.unnumbered}
+
+The content was based on lectures originally written by [Dr Stefanie Muff](https://www.ntnu.edu/employees/stefanie.muff).
+
+The content of the book was written with the assistance of [Github Copilot](https://copilot.github.com/), an AI tool that helps write code and text.

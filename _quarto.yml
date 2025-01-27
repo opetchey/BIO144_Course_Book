@@ -1,0 +1,37 @@
+project:
+  type: book
+
+book:
+  title: "BIO144 Course Book"
+  author: "Owen Petchey"
+  date: today
+  chapters:
+    - index.qmd
+    - 1-intro.qmd
+    - 2-data-wrangling.qmd
+    - 3-regression.qmd
+    - 4-multiple-regression.qmd
+    - 5-categorical-explanatory-variables.qmd
+    - 6-interactions.qmd
+    - 7-ANOVA.qmd
+    - 8-ANCOVA.qmd
+    - 9-linear-algebra.qmd
+    - 10-variable-selection.qmd
+    - 11-interpretation.qmd
+    - 12-count-data.qmd
+    - 13-binary-data.qmd
+    - 14-measurement-error.qmd
+    - 15-mixed-models.qmd
+    - 16-what-next.qmd
+
+format:
+  html:
+    theme: cosmo
+    fig-width: 5
+    fig-height: 5
+    fig-align: center
+  
+execute: 
+  echo: false
+  
+

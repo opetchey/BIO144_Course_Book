@@ -198,7 +198,7 @@ Let's ensure we understand this, by thinking about the units of the variables in
 
 
 ::: {.callout-tip}
-**Think, pair, share**:
+## Think, pair, share
 
 * What are the units of blood pressure?
 * What are the units of age?

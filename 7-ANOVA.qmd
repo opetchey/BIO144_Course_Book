@@ -579,7 +579,9 @@ No clear patterns: all is good.
 
 As is implied by the name "Analysis of variance" we analyse variances, here mean squares, to test hypotheses. And as before we use an $F$-test to do this. Remember that the $F$-test is a ratio of two mean squares (where mean squares are a kind of variance).
 
-::: {.callout-info}
+
+
+::: {.callout-tip}
 ## Think, Pair, Share
 
 How many degrees of freedom for error will there be when we fit this model with both main effects and the interaction term? Hint: remember that the degrees of freedom for error is the number of observations minus the number of parameters estimated.
@@ -661,7 +663,7 @@ Here's a graphical representation of how the coefficients in the summary table r
 
 ![Understanding coefficients](assets/twowayanova1.png){width=300}
 
-:::{callout, type="info"}
+::: {.callout-tip}
 ## Think, Pair, Share
 
 From the values in the coefficients table, calculate the estimated mean of the treatment combination "vegetarian, High".

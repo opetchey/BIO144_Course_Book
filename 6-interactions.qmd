@@ -91,7 +91,7 @@ ggplot(bp_diet, aes(x=mins_per_week, y=bp, col=diet)) +
 Can we say anything general about the effect of diet on blood pressure?
 :::
 
-Answer: no, we can't. We cannot, for example, state that a vegetarian diet lowers blood pressure. We can say, however, that a vegatarian diet lowers blood pressure of people that do little exercise.
+No, we can't. We cannot, for example, state that a vegetarian diet lowers blood pressure. We can say, however, that a vegatarian diet lowers blood pressure of people that do little exercise.
 
 ::: {.callout-tip}
 ## Think, Pair, Share
@@ -99,7 +99,7 @@ Answer: no, we can't. We cannot, for example, state that a vegetarian diet lower
 Can we say anything general about the effect of exercise on blood pressure?
 :::
 
-Answer: Well, we can say that exercise lowers blood pressure, but we have to be careful. We have to say that exercise lowers blood pressure of people with a vegetarian diet more than of people with a meat heavy diet.
+Well, we can say that exercise lowers blood pressure, but we have to be careful. We have to say that exercise lowers blood pressure of people with a vegetarian diet more than of people with a meat heavy diet.
 
 
 I think it is clear that the interaction was easier to see when we plotted all the data in one graph... it is much easier to visually compare the slopes of the two regression lines when they are on the same graph.
@@ -272,8 +272,6 @@ What would a linear model without an interaction term be?
 :::
 
 
-Answer:
-
 $$y_i = \beta_0 + \beta_1 x_{i}^{(1)} + \beta_2 x_{i}^{(2)} + \epsilon_i$$
 
 where:
@@ -295,7 +293,7 @@ This model is a multiple regression model in which one of the explanatory variab
 What might the model look like if we wanted to include an interaction between diet and exercise?
 :::
 
-Answer:
+
 
 $$y_i = \beta_0 + \beta_1 x_{i}^{(1)} + \beta_2 x_{i}^{(2)} + \beta_3 (x_{i}^{(1)} x_{i}^{(2)}) + \epsilon_i$$
 
@@ -330,7 +328,7 @@ If we want to test whether the effect of minutes of exercise on blood pressure i
 What is the null hypothesis in this case, verbally, and in terms of the coefficients of the model?
 :::
 
-Answer: The null hypothesis is that the effect of minutes of exercise on blood pressure is the same for people with different diets. This is a null hypothesis of no interaction between diet and exercise. In terms of the coefficients of the model, the null hypothesis is that $\beta_3 = 0$.
+The null hypothesis is that the effect of minutes of exercise on blood pressure is the same for people with different diets. This is a null hypothesis of no interaction between diet and exercise. In terms of the coefficients of the model, the null hypothesis is that $\beta_3 = 0$.
 
 If we reject the null hypothesis, we conclude that the effect of minutes of exercise on blood pressure is different for people with different diets. This is a non-additive effect.
 

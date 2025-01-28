@@ -271,9 +271,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#the-model-for-2-way-anova" id="toc-the-model-for-2-way-anova" class="nav-link" data-scroll-target="#the-model-for-2-way-anova">The model for 2-way ANOVA</a></li>
   <li><a href="#using-r-for-2-way-anova" id="toc-using-r-for-2-way-anova" class="nav-link" data-scroll-target="#using-r-for-2-way-anova">Using R for 2-way ANOVA</a></li>
   <li><a href="#hypothesis-testing" id="toc-hypothesis-testing" class="nav-link" data-scroll-target="#hypothesis-testing">Hypothesis testing</a></li>
-  </ul></li>
-  <li><a href="#think-pair-share-1" id="toc-think-pair-share-1" class="nav-link" data-scroll-target="#think-pair-share-1">Think, Pair, Share</a></li>
   <li><a href="#interpreting-coefficients" id="toc-interpreting-coefficients" class="nav-link" data-scroll-target="#interpreting-coefficients">Interpreting coefficients</a></li>
+  </ul></li>
   <li><a href="#why-not-perform-multiple-t-tests" id="toc-why-not-perform-multiple-t-tests" class="nav-link" data-scroll-target="#why-not-perform-multiple-t-tests">Why not perform multiple <span class="math inline">\(t\)</span>-tests?</a></li>
   <li><a href="#summing-up" id="toc-summing-up" class="nav-link" data-scroll-target="#summing-up">Summing up</a></li>
   <li><a href="#additional-reading" id="toc-additional-reading" class="nav-link" data-scroll-target="#additional-reading">Additional reading</a></li>
@@ -792,12 +791,19 @@ Think, Pair, Share
 <section id="hypothesis-testing" class="level3">
 <h3 class="anchored" data-anchor-id="hypothesis-testing">Hypothesis testing</h3>
 <p>As is implied by the name “Analysis of variance” we analyse variances, here mean squares, to test hypotheses. And as before we use an <span class="math inline">\(F\)</span>-test to do this. Remember that the <span class="math inline">\(F\)</span>-test is a ratio of two mean squares (where mean squares are a kind of variance).</p>
-</section>
-</section>
-<section id="think-pair-share-1" class="level2 callout-info">
-<h2 class="anchored" data-anchor-id="think-pair-share-1">Think, Pair, Share</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Think, Pair, Share
+</div>
+</div>
+<div class="callout-body-container callout-body">
 <p>How many degrees of freedom for error will there be when we fit this model with both main effects and the interaction term? Hint: remember that the degrees of freedom for error is the number of observations minus the number of parameters estimated.</p>
-</section>
+</div>
+</div>
 <p>We can have have a null hypothesis of no effect for each of the two main effects and for the interaction. So we can do an <span class="math inline">\(F\)</span>-test for each of these null hypotheses.</p>
 <p>Here is the ANOVA table:</p>
 <div class="cell">
@@ -815,6 +821,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
 <p><strong>Interpretation</strong>: All three of the null hypotheses are rejected. Importantly, we see that the interaction term is significant, which means that the effect of one treatment is different depending on the level of the other treatment. This means that even though the main effects are significant, we cannot interpret them without considering the interaction term. I.e., we cannot say anything general about the effect of diet or exercise alone on blood pressure. We have to qualify any statement about the effect of diet or exercise with “depending on the level of the other treatment”. Or state something like “the exercise reduces blood pressure greatly for people with a meat heavy diet, but reduces blood pressure only slightly for people with a vegetarian diet or Mediterranean diet”.</p>
+</section>
 <section id="interpreting-coefficients" class="level3">
 <h3 class="anchored" data-anchor-id="interpreting-coefficients">Interpreting coefficients</h3>
 <p>We can look at the estimated coefficients to see the size of the effects, but be aware that it contains only a subset of the possible effects; it would contain different values if a different treatment combination were set to be the intercept of the model. Also be aware that often we are mostly interested in the <span class="math inline">\(F\)</span>-test and their hypotheses test, and are less interest in the coefficients and their <span class="math inline">\(t\)</span>-tests (unlike in a regression model where we are often interested in the coefficients and their <span class="math inline">\(t\)</span>-tests).</p>
@@ -902,8 +909,9 @@ Vegetarian (3)
 <figcaption class="figure-caption">Understanding coefficients</figcaption>
 </figure>
 </div>
-<p>:::{callout, type=“info”} ## Think, Pair, Share</p>
+<p>::: {.callout-tip} ## Think, Pair, Share</p>
 <p>From the values in the coefficients table, calculate the estimated mean of the treatment combination “vegetarian, High”. ::</p>
+</section>
 </section>
 <section id="why-not-perform-multiple-t-tests" class="level2">
 <h2 class="anchored" data-anchor-id="why-not-perform-multiple-t-tests">Why not perform multiple <span class="math inline">\(t\)</span>-tests?</h2>

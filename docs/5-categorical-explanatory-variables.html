@@ -370,11 +370,6 @@ Think, Pair, Share (#draw-coefficients)
 </div>
 <p>Here is a graph showing the mean of the two groups (non-smoker and smoker) and a vertical line for the difference between the two means:</p>
 <div class="cell">
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in geom_segment(aes(x = 0.5, y = group_means$mean_bp[1], xend = 0.5, : All aesthetics have length 1, but the data has 50 rows.
-ℹ Please consider using `annotate()` or provide this layer with data containing
-  a single row.</code></pre>
-</div>
 <div class="cell-output-display">
 <p><img src="5-categorical-explanatory-variables_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="480"></p>
 </div>
@@ -384,7 +379,7 @@ Think, Pair, Share (#draw-coefficients)
 <p>Let’s do a real example. We have data on blood pressure and smoking status. We want to know if smoking has an effect on blood pressure.</p>
 <p>To fit the linear model in R, we use the <code>lm</code> function as before. The only difference is that the explanatory variable is binary. But we do not need to tell this to R. It can handle things just fine. So, the code to fit the model is:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>mod_smoking <span class="ot">&lt;-</span> <span class="fu">lm</span>(bp <span class="sc">~</span> smoke_01, <span class="at">data =</span> bp_data_smoking)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>mod_smoking <span class="ot">&lt;-</span> <span class="fu">lm</span>(bp <span class="sc">~</span> smoke_01, <span class="at">data =</span> bp_data_smoking)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Of course, we next look at the model diagnostic plots to see if the model assumptions are met.</p>
 <div class="cell">
@@ -415,23 +410,23 @@ Think, Pair, Share (#draw-coefficients)
 <div class="cell">
 <div class="cell-output-display">
 
-<div id="zotvpobqyy" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#zotvpobqyy table {
+<div id="vcnymhcuiw" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#vcnymhcuiw table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#zotvpobqyy thead, #zotvpobqyy tbody, #zotvpobqyy tfoot, #zotvpobqyy tr, #zotvpobqyy td, #zotvpobqyy th {
+#vcnymhcuiw thead, #vcnymhcuiw tbody, #vcnymhcuiw tfoot, #vcnymhcuiw tr, #vcnymhcuiw td, #vcnymhcuiw th {
   border-style: none;
 }
 
-#zotvpobqyy p {
+#vcnymhcuiw p {
   margin: 0;
   padding: 0;
 }
 
-#zotvpobqyy .gt_table {
+#vcnymhcuiw .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -457,12 +452,12 @@ Think, Pair, Share (#draw-coefficients)
   border-left-color: #D3D3D3;
 }
 
-#zotvpobqyy .gt_caption {
+#vcnymhcuiw .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#zotvpobqyy .gt_title {
+#vcnymhcuiw .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -474,7 +469,7 @@ Think, Pair, Share (#draw-coefficients)
   border-bottom-width: 0;
 }
 
-#zotvpobqyy .gt_subtitle {
+#vcnymhcuiw .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -486,7 +481,7 @@ Think, Pair, Share (#draw-coefficients)
   border-top-width: 0;
 }
 
-#zotvpobqyy .gt_heading {
+#vcnymhcuiw .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -498,13 +493,13 @@ Think, Pair, Share (#draw-coefficients)
   border-right-color: #D3D3D3;
 }
 
-#zotvpobqyy .gt_bottom_border {
+#vcnymhcuiw .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#zotvpobqyy .gt_col_headings {
+#vcnymhcuiw .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -519,7 +514,7 @@ Think, Pair, Share (#draw-coefficients)
   border-right-color: #D3D3D3;
 }
 
-#zotvpobqyy .gt_col_heading {
+#vcnymhcuiw .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -539,7 +534,7 @@ Think, Pair, Share (#draw-coefficients)
   overflow-x: hidden;
 }
 
-#zotvpobqyy .gt_column_spanner_outer {
+#vcnymhcuiw .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -551,15 +546,15 @@ Think, Pair, Share (#draw-coefficients)
   padding-right: 4px;
 }
 
-#zotvpobqyy .gt_column_spanner_outer:first-child {
+#vcnymhcuiw .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#zotvpobqyy .gt_column_spanner_outer:last-child {
+#vcnymhcuiw .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#zotvpobqyy .gt_column_spanner {
+#vcnymhcuiw .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -571,11 +566,11 @@ Think, Pair, Share (#draw-coefficients)
   width: 100%;
 }
 
-#zotvpobqyy .gt_spanner_row {
+#vcnymhcuiw .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#zotvpobqyy .gt_group_heading {
+#vcnymhcuiw .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -601,7 +596,7 @@ Think, Pair, Share (#draw-coefficients)
   text-align: left;
 }
 
-#zotvpobqyy .gt_empty_group_heading {
+#vcnymhcuiw .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -616,15 +611,15 @@ Think, Pair, Share (#draw-coefficients)
   vertical-align: middle;
 }
 
-#zotvpobqyy .gt_from_md > :first-child {
+#vcnymhcuiw .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#zotvpobqyy .gt_from_md > :last-child {
+#vcnymhcuiw .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#zotvpobqyy .gt_row {
+#vcnymhcuiw .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -643,7 +638,7 @@ Think, Pair, Share (#draw-coefficients)
   overflow-x: hidden;
 }
 
-#zotvpobqyy .gt_stub {
+#vcnymhcuiw .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -656,7 +651,7 @@ Think, Pair, Share (#draw-coefficients)
   padding-right: 5px;
 }
 
-#zotvpobqyy .gt_stub_row_group {
+#vcnymhcuiw .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -670,15 +665,15 @@ Think, Pair, Share (#draw-coefficients)
   vertical-align: top;
 }
 
-#zotvpobqyy .gt_row_group_first td {
+#vcnymhcuiw .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#zotvpobqyy .gt_row_group_first th {
+#vcnymhcuiw .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#zotvpobqyy .gt_summary_row {
+#vcnymhcuiw .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -688,16 +683,16 @@ Think, Pair, Share (#draw-coefficients)
   padding-right: 5px;
 }
 
-#zotvpobqyy .gt_first_summary_row {
+#vcnymhcuiw .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#zotvpobqyy .gt_first_summary_row.thick {
+#vcnymhcuiw .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#zotvpobqyy .gt_last_summary_row {
+#vcnymhcuiw .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -707,7 +702,7 @@ Think, Pair, Share (#draw-coefficients)
   border-bottom-color: #D3D3D3;
 }
 
-#zotvpobqyy .gt_grand_summary_row {
+#vcnymhcuiw .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -717,7 +712,7 @@ Think, Pair, Share (#draw-coefficients)
   padding-right: 5px;
 }
 
-#zotvpobqyy .gt_first_grand_summary_row {
+#vcnymhcuiw .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -727,7 +722,7 @@ Think, Pair, Share (#draw-coefficients)
   border-top-color: #D3D3D3;
 }
 
-#zotvpobqyy .gt_last_grand_summary_row_top {
+#vcnymhcuiw .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -737,11 +732,11 @@ Think, Pair, Share (#draw-coefficients)
   border-bottom-color: #D3D3D3;
 }
 
-#zotvpobqyy .gt_striped {
+#vcnymhcuiw .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#zotvpobqyy .gt_table_body {
+#vcnymhcuiw .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -750,7 +745,7 @@ Think, Pair, Share (#draw-coefficients)
   border-bottom-color: #D3D3D3;
 }
 
-#zotvpobqyy .gt_footnotes {
+#vcnymhcuiw .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -764,7 +759,7 @@ Think, Pair, Share (#draw-coefficients)
   border-right-color: #D3D3D3;
 }
 
-#zotvpobqyy .gt_footnote {
+#vcnymhcuiw .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -773,7 +768,7 @@ Think, Pair, Share (#draw-coefficients)
   padding-right: 5px;
 }
 
-#zotvpobqyy .gt_sourcenotes {
+#vcnymhcuiw .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -787,7 +782,7 @@ Think, Pair, Share (#draw-coefficients)
   border-right-color: #D3D3D3;
 }
 
-#zotvpobqyy .gt_sourcenote {
+#vcnymhcuiw .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -795,72 +790,72 @@ Think, Pair, Share (#draw-coefficients)
   padding-right: 5px;
 }
 
-#zotvpobqyy .gt_left {
+#vcnymhcuiw .gt_left {
   text-align: left;
 }
 
-#zotvpobqyy .gt_center {
+#vcnymhcuiw .gt_center {
   text-align: center;
 }
 
-#zotvpobqyy .gt_right {
+#vcnymhcuiw .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#zotvpobqyy .gt_font_normal {
+#vcnymhcuiw .gt_font_normal {
   font-weight: normal;
 }
 
-#zotvpobqyy .gt_font_bold {
+#vcnymhcuiw .gt_font_bold {
   font-weight: bold;
 }
 
-#zotvpobqyy .gt_font_italic {
+#vcnymhcuiw .gt_font_italic {
   font-style: italic;
 }
 
-#zotvpobqyy .gt_super {
+#vcnymhcuiw .gt_super {
   font-size: 65%;
 }
 
-#zotvpobqyy .gt_footnote_marks {
+#vcnymhcuiw .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#zotvpobqyy .gt_asterisk {
+#vcnymhcuiw .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#zotvpobqyy .gt_indent_1 {
+#vcnymhcuiw .gt_indent_1 {
   text-indent: 5px;
 }
 
-#zotvpobqyy .gt_indent_2 {
+#vcnymhcuiw .gt_indent_2 {
   text-indent: 10px;
 }
 
-#zotvpobqyy .gt_indent_3 {
+#vcnymhcuiw .gt_indent_3 {
   text-indent: 15px;
 }
 
-#zotvpobqyy .gt_indent_4 {
+#vcnymhcuiw .gt_indent_4 {
   text-indent: 20px;
 }
 
-#zotvpobqyy .gt_indent_5 {
+#vcnymhcuiw .gt_indent_5 {
   text-indent: 25px;
 }
 
-#zotvpobqyy .katex-display {
+#vcnymhcuiw .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#zotvpobqyy div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#vcnymhcuiw div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -875,8 +870,8 @@ Think, Pair, Share (#draw-coefficients)
   </thead>
   <tbody class="gt_table_body">
     <tr><td headers="label" class="gt_row gt_left">smoke_01</td>
-<td headers="estimate" class="gt_row gt_center">14</td>
-<td headers="conf.low" class="gt_row gt_center">13, 15</td>
+<td headers="estimate" class="gt_row gt_center">15</td>
+<td headers="conf.low" class="gt_row gt_center">14, 16</td>
 <td headers="p.value" class="gt_row gt_center">&lt;0.001</td></tr>
   </tbody>
   
@@ -893,8 +888,8 @@ Think, Pair, Share (#draw-coefficients)
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>            Estimate Std. Error   t value     Pr(&gt;|t|)
-(Intercept)  80.5580  0.4083897 197.25768 1.716429e-71
-smoke_01     14.1195  0.5663346  24.93138 4.028727e-29</code></pre>
+(Intercept) 80.25309  0.3706096 216.54345 1.959901e-73
+smoke_01    14.73188  0.5464341  26.96002 1.205133e-30</code></pre>
 </div>
 </div>
 <p>There is very clear evidence that smoking increases blood pressure. The <span class="math inline">\(p\)</span>-value is very small.</p>
@@ -917,12 +912,12 @@ smoke_01     14.1195  0.5663346  24.93138 4.028727e-29</code></pre>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>        bp     status
-1 79.53803 non-smoker
-2 91.56312     smoker
-3 78.34911 non-smoker
-4 97.33290     smoker
-5 81.75504 non-smoker
-6 93.00601     smoker</code></pre>
+1 92.81245     smoker
+2 79.22422 non-smoker
+3 79.55095 non-smoker
+4 94.75613     smoker
+5 77.81707 non-smoker
+6 77.60524 non-smoker</code></pre>
 </div>
 </div>
 <p>The data now has the variable that describes smoker status as a word. Here’s a graph of that data:</p>
@@ -935,15 +930,15 @@ smoke_01     14.1195  0.5663346  24.93138 4.028727e-29</code></pre>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>             Estimate Std. Error   t value     Pr(&gt;|t|)
-(Intercept)   80.5580  0.4083897 197.25768 1.716429e-71
-statussmoker  14.1195  0.5663346  24.93138 4.028727e-29</code></pre>
+(Intercept)  80.25309  0.3706096 216.54345 1.959901e-73
+statussmoker 14.73188  0.5464341  26.96002 1.205133e-30</code></pre>
 </div>
 </div>
 <p>The numbers in this table are exactly the same as before, when we used the 0/1 coding. The <code>lm</code> function is pretty smart. It recodes the two levels (non-smoker and smoker) in the status variable to be a binary variable. The <code>summary</code> function then gives the estimates for the two levels.</p>
 <p>We can also get the <span class="math inline">\(R^2\)</span> value, and it has the same meaning and is calculated in the same way.</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.9283126</code></pre>
+<pre><code>[1] 0.938052</code></pre>
 </div>
 </div>
 <p>So, a linear model with a binary explanatory variable very similiar to a linear model with a continuous explanatory variable. A difference is that the estimates are not slopes, but differences in means between the two groups.</p>
@@ -964,13 +959,13 @@ Note
     Two Sample t-test
 
 data:  bp by status
-t = -24.931, df = 48, p-value &lt; 2.2e-16
+t = -26.96, df = 48, p-value &lt; 2.2e-16
 alternative hypothesis: true difference in means between group non-smoker and group smoker is not equal to 0
 95 percent confidence interval:
- -15.25820 -12.98081
+ -15.83055 -13.63320
 sample estimates:
 mean in group non-smoker     mean in group smoker 
-                 80.5580                  94.6775 </code></pre>
+                80.25309                 94.98496 </code></pre>
 </div>
 </div>
 <p>The value of <span class="math inline">\(t\)</span>-statistic is the same as exactly the value of the <span class="math inline">\(t\)</span>-statistic in the linear output. It is exactly the same test.</p>
@@ -1124,7 +1119,7 @@ Think, Pair, Share (#beta1-meaning)
 <h3 class="anchored" data-anchor-id="doing-it-in-r">Doing it in R</h3>
 <p>In R, we can fit a linear model with a categorical variable using the <code>lm()</code> function. And we don’t need to make the dummy binary variables. That is all very conveniently done in the inner workings of the <code>lm()</code> function. Here we go:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>bp_model_diet <span class="ot">&lt;-</span> <span class="fu">lm</span>(bp <span class="sc">~</span> diet, <span class="at">data =</span> bp_data_diet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>bp_model_diet <span class="ot">&lt;-</span> <span class="fu">lm</span>(bp <span class="sc">~</span> diet, <span class="at">data =</span> bp_data_diet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>No news is good news!</p>
 <p>Check the diagnostic plots to assess if the model assumptions are met.</p>
@@ -1161,8 +1156,8 @@ Think, Pair, Share (#beta-conclusions)
 <p>The <span class="math inline">\(t\)</span>-statistics and <span class="math inline">\(p\)</span>-values are also given. The <span class="math inline">\(p\)</span>-values are all less than 0.05, so we can reject the null hypothesis that the coefficients are zero. This means that the blood pressure is significantly lower on the Mediterranean, vegetarian, and vegan diets compared to the meat heavy diet.</p>
 <p>Just for fun, let’s fit the model using the three binary dummy variables:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>bp_model_diet_bin <span class="ot">&lt;-</span> <span class="fu">lm</span>(bp <span class="sc">~</span> Mediterranean <span class="sc">+</span> vegetarian <span class="sc">+</span> vegan, <span class="at">data =</span> bp_data_diet)</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(bp_model_diet_bin)<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>bp_model_diet_bin <span class="ot">&lt;-</span> <span class="fu">lm</span>(bp <span class="sc">~</span> Mediterranean <span class="sc">+</span> vegetarian <span class="sc">+</span> vegan, <span class="at">data =</span> bp_data_diet)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(bp_model_diet_bin)<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>               Estimate Std. Error   t value     Pr(&gt;|t|)
 (Intercept)   122.62500   2.302393 53.259813 5.494274e-43
@@ -1174,11 +1169,11 @@ vegan         -26.76786   4.173441 -6.413858 6.922791e-08</code></pre>
 <p>Exactly the same :)</p>
 <p>And for even more fun, lets see what happens if we fit a model with four binary variables, one for each diet.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>bp_data_diet_bin <span class="ot">&lt;-</span> bp_data_diet <span class="sc">%&gt;%</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(bp, meat_heavy, Mediterranean, vegetarian, vegan)</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>bp_model_diet_bin_all <span class="ot">&lt;-</span> <span class="fu">lm</span>(bp <span class="sc">~</span> <span class="sc">-</span> Mediterranean <span class="sc">+</span> vegetarian <span class="sc">+</span> vegan <span class="sc">+</span> meat_heavy,</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>                            <span class="at">data =</span> bp_data_diet_bin)</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(bp_model_diet_bin_all)<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>bp_data_diet_bin <span class="ot">&lt;-</span> bp_data_diet <span class="sc">%&gt;%</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(bp, meat_heavy, Mediterranean, vegetarian, vegan)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>bp_model_diet_bin_all <span class="ot">&lt;-</span> <span class="fu">lm</span>(bp <span class="sc">~</span> <span class="sc">-</span> Mediterranean <span class="sc">+</span> vegetarian <span class="sc">+</span> vegan <span class="sc">+</span> meat_heavy,</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>                            <span class="at">data =</span> bp_data_diet_bin)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(bp_model_diet_bin_all)<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>             Estimate Std. Error   t value     Pr(&gt;|t|)
 (Intercept) 109.93750   2.302393 47.749241 7.652542e-41

@@ -97,8 +97,8 @@ ggplot(bp_data_smoking, aes(x = smoke_01, y = bp)) +
   geom_point(data = group_means, aes(x = smoke_01, y = mean_bp), color = "red", size = 5) +
   geom_hline(yintercept = group_means$mean_bp[1], color = "red", linetype = "dotted") +
   geom_hline(yintercept = group_means$mean_bp[2], color = "red", linetype = "dotted") +
-  geom_segment(aes(x = 0.5, y = group_means$mean_bp[1],
-                   xend = 0.5, yend = group_means$mean_bp[2]),
+  annotate("segment", x = 0.5, y = group_means$mean_bp[1],
+                   xend = 0.5, yend = group_means$mean_bp[2],
                color = "blue", linewidth = 1,
                arrow = arrow(length = unit(0.5,"cm"), ends = "both")) +
   labs(x = "Smoking (0=no, 1=yes)", y = "Blood pressure") +

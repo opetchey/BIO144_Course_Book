@@ -1185,31 +1185,31 @@ m2 <- lm(y2 ~ x)
 m3 <- lm(y3 ~ x)
 m4 <- lm(y4 ~ x)
 ylims <- range(c(y1, y2, y3, y4))
-ylims <- c(-30, 50)
+#ylims <- c(-30, 50)
 p1 <- ggplot(data.frame(x = x, y1 = y1), aes(x = x, y = y1)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE, formula = y ~ x) +
-  geom_text(aes(x = 0, y = -20, label = paste("R^2 = ", round(summary(m1)$r.squared, 2))), hjust = 0, vjust = 0) +
+  annotate("text", x = 0, y = -20, label = paste("R^2 = ", round(summary(m1)$r.squared, 2)), hjust = 0, vjust = 0) +
   theme_minimal() +
   ylim(ylims)
 p2 <- ggplot(data.frame(x = x, y2 = y2), aes(x = x, y = y2)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE, formula = y ~ x) +
-  geom_text(aes(x = 0, y = -20, label = paste("R^2 = ", round(summary(m2)$r.squared, 2))), hjust = 0, vjust = 0) +
+  annotate("text", x = 0, y = -20, label = paste("R^2 = ", round(summary(m2)$r.squared, 2)), hjust = 0, vjust = 0) +
   theme_minimal() +
   ylim(ylims)
 p3 <- ggplot(data.frame(x = x, y3 = y3), aes(x = x, y = y3)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE, formula = y ~ x) +
-  geom_text(aes(x = 0, y = -20,
-                label = paste("R^2 = ", round(summary(m3)$r.squared, 2))),
+  annotate("text", x = 0, y = -20,
+                label = paste("R^2 = ", round(summary(m3)$r.squared, 2)),
             hjust = 0, vjust = 0) +
   theme_minimal() +
   ylim(ylims)
 p4 <- ggplot(data.frame(x = x, y4 = y4), aes(x = x, y = y4)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE, formula = y ~ x) +
-  geom_text(aes(x = 0, y = -20, label = paste("R^2 = ", round(summary(m4)$r.squared, 2))), hjust = 0, vjust = 0) +
+  annotate("text", x = 0, y = -20, label = paste("R^2 = ", round(summary(m4)$r.squared, 2)), hjust = 0, vjust = 0) +
   theme_minimal() +
   ylim(ylims)
 (p1 + p2) / (p3 + p4)

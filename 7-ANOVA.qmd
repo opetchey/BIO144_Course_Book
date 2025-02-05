@@ -515,7 +515,7 @@ ggplot(bp_data_2cat, aes(x=exercise, y=bp, col=diet)) +
 
 
 ::: {.callout-tip}
-## Think, Pair, Share
+## Think, Pair, Share (#twoway-plot)
 
 What do you conclude from this plot?
 :::
@@ -582,7 +582,7 @@ As is implied by the name "Analysis of variance" we analyse variances, here mean
 
 
 ::: {.callout-tip}
-## Think, Pair, Share
+## Think, Pair, Share (#full-degrees)
 
 How many degrees of freedom for error will there be when we fit this model with both main effects and the interaction term? Hint: remember that the degrees of freedom for error is the number of observations minus the number of parameters estimated.
 :::
@@ -664,7 +664,7 @@ Here's a graphical representation of how the coefficients in the summary table r
 ![Understanding coefficients](assets/twowayanova1.png){width=300}
 
 ::: {.callout-tip}
-## Think, Pair, Share
+## Think, Pair, Share (veghigh-estimate)
 
 From the values in the coefficients table, calculate the estimated mean of the treatment combination "vegetarian, High".
 ::

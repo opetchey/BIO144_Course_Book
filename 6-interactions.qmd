@@ -86,7 +86,7 @@ ggplot(bp_diet, aes(x=mins_per_week, y=bp, col=diet)) +
 
 
 ::: {.callout-tip}
-## Think, Pair, Share
+## Think, Pair, Share (#general-diet)
 
 Can we say anything general about the effect of diet on blood pressure?
 :::
@@ -94,7 +94,7 @@ Can we say anything general about the effect of diet on blood pressure?
 No, we can't. We cannot, for example, state that a vegetarian diet lowers blood pressure. We can say, however, that a vegatarian diet lowers blood pressure of people that do little exercise.
 
 ::: {.callout-tip}
-## Think, Pair, Share
+## Think, Pair, Share (#general-exercise)
 
 Can we say anything general about the effect of exercise on blood pressure?
 :::
@@ -228,7 +228,7 @@ ggplot(bp_data_cont, aes(x=age, y=bp, col = mins_per_week_class)) +
 Another way of thinking about this is that the effects of diet and exercise on blood pressure are not additive. If in one study we estimated the effect of diet on blood pressure we might find an effect size of 10. If in another study we estimated the effect of exercise on blood pressure we might find an effect size of 5.
 
 ::: {.callout-tip}
-## Think, Pair, Share
+## Think, Pair, Share (#adding-effects)
 
 If the effects of diet and exercise were additive, what would we expect the effect size to be if we estimated the effect of diet and exercise on blood pressure in the same study?
 :::
@@ -266,7 +266,7 @@ We have one continuous explanatory variable (minutes of exercise) and one binary
 
 
 ::: {.callout-tip}
-## Think, Pair, Share
+## Think, Pair, Share (#without-interaction)
 
 What would a linear model without an interaction term be?
 :::
@@ -288,7 +288,7 @@ This model is a multiple regression model in which one of the explanatory variab
 
 
 ::: {.callout-tip}
-## Think, Pair, Share
+## Think, Pair, Share (#with-interaction)
 
 What might the model look like if we wanted to include an interaction between diet and exercise?
 :::
@@ -313,7 +313,7 @@ where:
 This is again a multiple regression model, but now with three explanatory variables.
 
 ::: {.callout-tip}
-## Think, Pair, Share
+## Think, Pair, Share (#sketch-interaction)
 
 Make sketches of the possible relationships between diet, exercise and blood pressure. Make a sketch compatible with $\beta_3 = 0$. Make a sketch compatible with $\beta_3 \neq 0$.
 :::
@@ -323,7 +323,7 @@ Make sketches of the possible relationships between diet, exercise and blood pre
 If we want to test whether the effect of minutes of exercise on blood pressure is different for people with different diets, we need a null hypothesis to test.
 
 ::: {.callout-tip}
-## Think, Pair, Share
+## Think, Pair, Share (#interaction-null)
 
 What is the null hypothesis in this case, verbally, and in terms of the coefficients of the model?
 :::
@@ -372,7 +372,7 @@ The fourth is the interaction term `mins_per_week:dietvegetarian`, which is the 
 
 
 ::: {.callout-tip}
-## Think, Pair, Share
+## Think, Pair, Share (#two-equations)
 
 Write two equations, one for each of the two diets. They would look something like this: $y_i = 0.1 - 0.1 x_{i}^{(1)}$, but will have other numbers.
 :::

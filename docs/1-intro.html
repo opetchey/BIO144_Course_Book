@@ -62,6 +62,8 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
 
@@ -207,7 +209,13 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#notation-and-some-definitions" id="toc-notation-and-some-definitions" class="nav-link active" data-scroll-target="#notation-and-some-definitions">Notation and some definitions</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -240,8 +248,43 @@ ul.task-list li input[type="checkbox"] {
 <li>Reviewing what you should already know</li>
 <li>Learning objectives</li>
 </ul>
+<section id="notation-and-some-definitions" class="level2">
+<h2 class="anchored" data-anchor-id="notation-and-some-definitions">Notation and some definitions</h2>
+<p>Throughout the course, we will use the following notation:</p>
+<ul>
+<li><span class="math inline">\(x\)</span> for a variable. Typically this variable contains a set of observations. These observations are said to represent a sample of all the possible observations that could be made of a <em>population</em>.</li>
+<li><span class="math inline">\(x_1, x_2, \ldots\)</span> for the values of a variable</li>
+<li><span class="math inline">\(x_i\)</span> for the <span class="math inline">\(i\)</span>th value of a scalar variable. This is often spoken as “x sub i” or the “i-th value of x”.</li>
+<li><span class="math inline">\(x^{(1)}\)</span> for variable 1, <span class="math inline">\(x^{(2)}\)</span> for variable 2, etc.</li>
+<li>The mean of the sample <span class="math inline">\(x\)</span> is <span class="math inline">\(\bar{x}\)</span>. This is usually spoken as “x-bar”.</li>
+<li>The mean of <span class="math inline">\(x\)</span> is calculated as <span class="math inline">\(\bar{x} = \frac{1}{n} \sum_{i=1}^n x_i\)</span>.</li>
+<li><span class="math inline">\(n\)</span> is the number of observations in a sample.</li>
+<li>The summation symbol <span class="math inline">\(\sum\)</span> is used to indicate that the values of <span class="math inline">\(x\)</span> are summed over all values of <span class="math inline">\(i\)</span> from 1 to <span class="math inline">\(n\)</span>.</li>
+<li>The standard deviation of the sample is <span class="math inline">\(s\)</span>. The standard deviation of the population is <span class="math inline">\(\sigma\)</span>.</li>
+<li>The variance is <span class="math inline">\(s^2\)</span>. The variance of the population is <span class="math inline">\(\sigma^2\)</span>.</li>
+<li>The variance of the sample is calculated as <span class="math inline">\(s^2 = \frac{1}{n-1} \sum_{i=1}^n (x_i - \bar{x})^2\)</span>.</li>
+<li>The standard deviation of the sample is calculated as <span class="math inline">\(s = \sqrt{s^2}\)</span>.</li>
+<li><span class="math inline">\(y\)</span> is usually used to represent a dependent / response variable.</li>
+<li><span class="math inline">\(x\)</span> is usually used to represent an independent / predictor / explanatory variable.</li>
+<li><span class="math inline">\(\beta_0\)</span> is usually used to denote the intercept of a linear model.</li>
+<li><span class="math inline">\(\beta_1\)</span>, <span class="math inline">\(\beta_2\)</span>, etc. are usually used to denote the coefficients of the independent variables in a linear model.</li>
+<li>Estimates are denoted with a hat, so <span class="math inline">\(\hat{\beta}_0\)</span> is the estimate of the intercept of a linear model.</li>
+<li>Hence, the estimated value of <span class="math inline">\(y_i\)</span> in a linear regression model is <span class="math inline">\(\hat{y_i} = \hat{\beta}_0 + \hat{\beta}_1 x_i^{(1)}\)</span>.</li>
+<li><span class="math inline">\(e_i\)</span> is the residual for the <span class="math inline">\(i\)</span>th observation in a linear model. The residual is the difference between the observed value of <span class="math inline">\(y_i\)</span> and the predicted value of <span class="math inline">\(y_i\)</span> (<span class="math inline">\(\hat{y_i}\)</span>).</li>
+<li>Often we assume errors are normally distributed with mean 0 and variance <span class="math inline">\(\sigma^2\)</span>. This is written as <span class="math inline">\(e_i \sim N(0, \sigma^2)\)</span>.</li>
+<li>SST is the total sum of squares. It is the sum of the squared differences between the observed values of <span class="math inline">\(y\)</span> and the mean of <span class="math inline">\(y\)</span>. It is calculated as <span class="math inline">\(\sum_{i=1}^n (y_i - \bar{y})^2\)</span>.</li>
+<li>SSM is the model sum of squares. It is the sum of the squared differences between the predicted values of <span class="math inline">\(y\)</span> and the mean of <span class="math inline">\(y\)</span>. It is calculated as <span class="math inline">\(\sum_{i=1}^n (\hat{y_i} - \bar{y})^2\)</span>.</li>
+<li>SSE is the error sum of squares. It is the sum of the squared differences between the observed values of <span class="math inline">\(y\)</span> and the predicted values of <span class="math inline">\(y\)</span>. It is calculated as <span class="math inline">\(\sum_{i=1}^n (y_i - \hat{y_i})^2\)</span>.</li>
+<li>The variance of <span class="math inline">\(x\)</span> can be written as <span class="math inline">\(Var(x)\)</span>. The covariance between <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> can be written as <span class="math inline">\(Cov(x, y)\)</span>.</li>
+<li>Covariance is calculated as <span class="math inline">\(Cov(x, y) = \frac{1}{n-1} \sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y})\)</span>.</li>
+<li><span class="math inline">\(H_0\)</span> is the null hypothesis.</li>
+<li><span class="math inline">\(\alpha\)</span> is the significance level.</li>
+<li><span class="math inline">\(df\)</span> is the degrees of freedom.</li>
+<li><span class="math inline">\(p\)</span> is the p-value.</li>
+</ul>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

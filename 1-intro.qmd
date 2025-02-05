@@ -13,4 +13,37 @@ The lecture includes:
 * Learning objectives
 
 
+## Notation and some definitions
+
+Throughout the course, we will use the following notation:
+
+* $x$ for a variable. Typically this variable contains a set of observations. These observations are said to represent a sample of all the possible observations that could be made of a *population*.
+* $x_1, x_2, \ldots$ for the values of a variable
+* $x_i$ for the $i$th value of a scalar variable. This is often spoken as "x sub i" or the "i-th value of x".
+* $x^{(1)}$ for variable 1, $x^{(2)}$ for variable 2, etc.
+* The mean of the sample $x$ is $\bar{x}$. This is usually spoken as "x-bar".
+* The mean of $x$ is calculated as $\bar{x} = \frac{1}{n} \sum_{i=1}^n x_i$.
+* $n$ is the number of observations in a sample.
+* The summation symbol $\sum$ is used to indicate that the values of $x$ are summed over all values of $i$ from 1 to $n$.
+* The standard deviation of the sample is $s$. The standard deviation of the population is $\sigma$.
+* The variance is $s^2$. The variance of the population is $\sigma^2$.
+* The variance of the sample is calculated as $s^2 = \frac{1}{n-1} \sum_{i=1}^n (x_i - \bar{x})^2$.
+* The standard deviation of the sample is calculated as $s = \sqrt{s^2}$.
+* $y$ is usually used to represent a dependent / response variable.
+* $x$ is usually used to represent an independent / predictor / explanatory variable.
+* $\beta_0$ is usually used to denote the intercept of a linear model.
+* $\beta_1$, $\beta_2$, etc. are usually used to denote the coefficients of the independent variables in a linear model.
+* Estimates are denoted with a hat, so $\hat{\beta}_0$ is the estimate of the intercept of a linear model.
+* Hence, the estimated value of $y_i$ in a linear regression model is $\hat{y_i} = \hat{\beta}_0 + \hat{\beta}_1 x_i^{(1)}$.
+* $e_i$ is the residual for the $i$th observation in a linear model. The residual is the difference between the observed value of $y_i$ and the predicted value of $y_i$ ($\hat{y_i}$).
+* Often we assume errors are normally distributed with mean 0 and variance $\sigma^2$. This is written as $e_i \sim N(0, \sigma^2)$.
+* SST is the total sum of squares. It is the sum of the squared differences between the observed values of $y$ and the mean of $y$. It is calculated as $\sum_{i=1}^n (y_i - \bar{y})^2$.
+* SSM is the model sum of squares. It is the sum of the squared differences between the predicted values of $y$ and the mean of $y$. It is calculated as $\sum_{i=1}^n (\hat{y_i} - \bar{y})^2$.
+* SSE is the error sum of squares. It is the sum of the squared differences between the observed values of $y$ and the predicted values of $y$. It is calculated as $\sum_{i=1}^n (y_i - \hat{y_i})^2$.
+* The variance of $x$ can be written as $Var(x)$. The covariance between $x$ and $y$ can be written as $Cov(x, y)$.
+* Covariance is calculated as $Cov(x, y) = \frac{1}{n-1} \sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y})$.
+* $H_0$ is the null hypothesis.
+* $\alpha$ is the significance level.
+* $df$ is the degrees of freedom.
+* $p$ is the p-value.
 

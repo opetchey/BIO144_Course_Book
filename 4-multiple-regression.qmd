@@ -118,7 +118,7 @@ where:
 $\hat{\beta}_0, \hat{\beta}_1, \ldots, \hat{\beta}_p$ are the estimated parameters.
 
 ::: {.callout-tip}
-## Think, Pair, Share
+## Think, Pair, Share (#two-shape)
 
 Graphically, a linear regression with one explanatory variable is a line. What is a geometric representation of linear regression with two explanatory variables?
 :::
@@ -181,7 +181,7 @@ d) Linearity.
 e) No outliers.
 
 ::: {.callout-tip}
-## Think, Pair, Share
+## Think, Pair, Share (#assump-match)
 
 Review how we can check these assumptions in the simple linear regression model:
 
@@ -377,7 +377,7 @@ More generally, in the case of a regression model with $p$ continuous explanator
 Each time we estimate a new parameter, we lose a degree of freedom.
 
 ::: {.callout-tip}
-## Think, Pair, Share
+## Think, Pair, Share (#lost-degrees)
 
 How many degrees of freedom are lost when this model is fit?:
 
@@ -507,7 +507,7 @@ nrow(bp_data)
 
 
 ::: {.callout-tip}
-## Think, Pair, Share
+## Think, Pair, Share (#three-degrees)
 
 We have two explanatory variables (age and minutes of exercise per week).
 
@@ -699,7 +699,7 @@ Take home: when we want to compare the explanatory power of models that differ i
 How important are the explanatory variables and how important are they relative to each other?
 
 ::: {.callout-tip}
-## Think, Pair, Share
+## Think, Pair, Share (#variable-importance)
 
 How might we assess how important is each of the explanatory variables, and how important they are relative to each other?
 :::
@@ -720,7 +720,7 @@ However, the coefficients are then not in the original units of the explanatory 
 One way to relate the coefficients in this case is to realise that to compensate for the blood pressure increase associated with one year of age, one would need to exercise for a certain number of minutes more.
 
 ::: {.callout-tip}
-## Think, Pair, Share
+## Think, Pair, Share (#exercise-age)
 
 How many minutes of exercise per week would we need to add to our fitness schedule to compensate for the blood pressure increase associated with one year of age?
 :::

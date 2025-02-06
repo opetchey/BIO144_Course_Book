@@ -2,6 +2,10 @@
 suppressMessages(library(tidyverse))
 ```
 
+**How Owen will structure the lecture time**
+
+**The chapter content below is the reference for what students are expected to know.** During the lecture time Owen will talk through and explain hopefully most of the content of this chapter. He will write on a tablet, show figures and other content of this chapter, and may live-code in RStudio. He will also present questions and ask students to *Think, Pair, Share*. The *Share* part will sometime be via clicker, sometimes by telling the class. The same will happen in lecture 3-6.
+
 
 # Regression (L3&4) {.unnumbered}
 

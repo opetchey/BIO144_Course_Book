@@ -34,9 +34,9 @@ When we have only one categorical explanatory variable, we will use a one-way AN
 We have already looked at categorical variables with more than two groups. Let us recap that material from lecture 5.
 
 
+## ANOVA
 
-
-## Understanding anlysis of variance (ANOVA)
+### Understanding anlysis of variance (ANOVA)
 
 In ANOVA, we often talk of *within-group variance*, *between-group variance*, and *total variance*. These are not new things:
 
@@ -180,15 +180,15 @@ where:
 
 * $\overline{y}_{i}$ is the mean blood pressure of group $i$
 
-*Residual variability (within group variability)**: = SSE = $\sum_{i=1}^k \sum_{j=1}^{n_i}  (y_{ij} - \overline{y}_{i} )^2$
+**Residual variability (within group variability)**: = SSE = $\sum_{i=1}^k \sum_{j=1}^{n_i}  (y_{ij} - \overline{y}_{i} )^2$
 
 
 
-*SST degrees of freedom**: $n - 1$ (total degrees of freedom is number of observations $n$ minus 1)
+**SST degrees of freedom**: $n - 1$ (total degrees of freedom is number of observations $n$ minus 1)
 
-*SSM degrees of freedom**: $k - 1$ (model degrees of freedom is number of groups $k$ minus 1)
+**SSM degrees of freedom**: $k - 1$ (model degrees of freedom is number of groups $k$ minus 1)
 
-*SSE degrees of freedom**: $n - k$ (residual degrees of freedom is total degrees of freedom $n - 1$ minus model degrees of freedom $k - 1$)
+**SSE degrees of freedom**: $n - k$ (residual degrees of freedom is total degrees of freedom $n - 1$ minus model degrees of freedom $k - 1$)
 
 
 From these sums of squares and degrees of freedom we can calculate the mean squares and $F$-statistic:
@@ -270,7 +270,7 @@ The **sources of variance table** is a table that conveniently and clearly gives
 
 
 
-## Doing ANOVA in R
+### Doing ANOVA in R
 
 Let's go back again the question of how diet effects blood pressure. Here is the data:
 
@@ -312,7 +312,7 @@ anova(fit)
 A suitable sentence to report our findings would be: "Diet has a significant effect on blood pressure ($F(2, 27) = 20.7, p < 0.0001$)". This means that the probability of observing such a large $F$ value under the null hypothesis is less than 0.01%.
 
 
-### Difference between pairs of groups
+## Difference between pairs of groups
 
 If the $F$-test of the null hypothesis that $\beta_1=\ldots= \beta_{g-1}=0$ is rejected, a researcher might then be interested:
 
@@ -664,15 +664,15 @@ Here's a graphical representation of how the coefficients in the summary table r
 ![Understanding coefficients](assets/twowayanova1.png){width=300}
 
 ::: {.callout-tip}
-## Think, Pair, Share (veghigh-estimate)
+## Think, Pair, Share (#veghigh-estimate)
 
 From the values in the coefficients table, calculate the estimated mean of the treatment combination "vegetarian, High".
-::
+:::
 
 
 ## Why not perform multiple $t$-tests?
 
-To carry out pairwise $t$-tests between any two groups.
+Why not carry out pairwise $t$-tests between every pair of groups?
 
 -   How many tests would this imply?
 -   Why is this not a very clever idea?

@@ -248,18 +248,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
-  <li><a href="#understanding-anlysis-of-variance-anova" id="toc-understanding-anlysis-of-variance-anova" class="nav-link" data-scroll-target="#understanding-anlysis-of-variance-anova">Understanding anlysis of variance (ANOVA)</a>
+  <li><a href="#anova" id="toc-anova" class="nav-link" data-scroll-target="#anova">ANOVA</a>
   <ul class="collapse">
+  <li><a href="#understanding-anlysis-of-variance-anova" id="toc-understanding-anlysis-of-variance-anova" class="nav-link" data-scroll-target="#understanding-anlysis-of-variance-anova">Understanding anlysis of variance (ANOVA)</a></li>
   <li><a href="#rewrite-the-model" id="toc-rewrite-the-model" class="nav-link" data-scroll-target="#rewrite-the-model">Rewrite the model</a></li>
   <li><a href="#the-anova-test-the-f-test" id="toc-the-anova-test-the-f-test" class="nav-link" data-scroll-target="#the-anova-test-the-f-test">The ANOVA test: The <span class="math inline">\(F\)</span>-test</a></li>
   <li><a href="#calculating-and-analysing-the-variances" id="toc-calculating-and-analysing-the-variances" class="nav-link" data-scroll-target="#calculating-and-analysing-the-variances">Calculating and analysing the variances</a></li>
   <li><a href="#interpretation-of-the-f-statistic" id="toc-interpretation-of-the-f-statistic" class="nav-link" data-scroll-target="#interpretation-of-the-f-statistic">Interpretation of the <span class="math inline">\(F\)</span> statistic</a></li>
   <li><a href="#interpretation-of-the-f-statistic-ii" id="toc-interpretation-of-the-f-statistic-ii" class="nav-link" data-scroll-target="#interpretation-of-the-f-statistic-ii">Interpretation of the <span class="math inline">\(F\)</span> statistic II</a></li>
   <li><a href="#source-of-variance-table" id="toc-source-of-variance-table" class="nav-link" data-scroll-target="#source-of-variance-table">Source of variance table</a></li>
+  <li><a href="#doing-anova-in-r" id="toc-doing-anova-in-r" class="nav-link" data-scroll-target="#doing-anova-in-r">Doing ANOVA in R</a></li>
   </ul></li>
-  <li><a href="#doing-anova-in-r" id="toc-doing-anova-in-r" class="nav-link" data-scroll-target="#doing-anova-in-r">Doing ANOVA in R</a>
+  <li><a href="#difference-between-pairs-of-groups" id="toc-difference-between-pairs-of-groups" class="nav-link" data-scroll-target="#difference-between-pairs-of-groups">Difference between pairs of groups</a>
   <ul class="collapse">
-  <li><a href="#difference-between-pairs-of-groups" id="toc-difference-between-pairs-of-groups" class="nav-link" data-scroll-target="#difference-between-pairs-of-groups">Difference between pairs of groups</a></li>
   <li><a href="#bonferroni-correction" id="toc-bonferroni-correction" class="nav-link" data-scroll-target="#bonferroni-correction">Bonferroni correction</a></li>
   <li><a href="#tukey-hsd-approach" id="toc-tukey-hsd-approach" class="nav-link" data-scroll-target="#tukey-hsd-approach">Tukey HSD approach</a></li>
   <li><a href="#fishers-lsd-approach" id="toc-fishers-lsd-approach" class="nav-link" data-scroll-target="#fishers-lsd-approach">Fisher’s LSD approach</a></li>
@@ -314,8 +315,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>When we have only one categorical explanatory variable, we will use a one-way ANOVA. When we have two categorical explanatory variables, we will use a two-way ANOVA (we’ll look at this in the second half of this chapter).</p>
 <p>We have already looked at categorical variables with more than two groups. Let us recap that material from lecture 5.</p>
 </section>
-<section id="understanding-anlysis-of-variance-anova" class="level2">
-<h2 class="anchored" data-anchor-id="understanding-anlysis-of-variance-anova">Understanding anlysis of variance (ANOVA)</h2>
+<section id="anova" class="level2">
+<h2 class="anchored" data-anchor-id="anova">ANOVA</h2>
+<section id="understanding-anlysis-of-variance-anova" class="level3">
+<h3 class="anchored" data-anchor-id="understanding-anlysis-of-variance-anova">Understanding anlysis of variance (ANOVA)</h3>
 <p>In ANOVA, we often talk of <em>within-group variance</em>, <em>between-group variance</em>, and <em>total variance</em>. These are not new things:</p>
 <ul>
 <li>Within-group variance is the variance of the residuals, <span class="math inline">\(MS_{residual}\)</span>.</li>
@@ -340,6 +343,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><img src="7-ANOVA_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
+</section>
 <section id="rewrite-the-model" class="level3">
 <h3 class="anchored" data-anchor-id="rewrite-the-model">Rewrite the model</h3>
 <p>One common way to rewrite the model is to define one of the groups as the reference group, and make the mean of that equal to the intercept of the model:</p>
@@ -396,10 +400,10 @@ Important
 <ul>
 <li><span class="math inline">\(\overline{y}_{i}\)</span> is the mean blood pressure of group <span class="math inline">\(i\)</span></li>
 </ul>
-<p>*Residual variability (within group variability)**: = SSE = <span class="math inline">\(\sum_{i=1}^k \sum_{j=1}^{n_i} (y_{ij} - \overline{y}_{i} )^2\)</span></p>
-<p>*SST degrees of freedom**: <span class="math inline">\(n - 1\)</span> (total degrees of freedom is number of observations <span class="math inline">\(n\)</span> minus 1)</p>
-<p>*SSM degrees of freedom**: <span class="math inline">\(k - 1\)</span> (model degrees of freedom is number of groups <span class="math inline">\(k\)</span> minus 1)</p>
-<p>*SSE degrees of freedom**: <span class="math inline">\(n - k\)</span> (residual degrees of freedom is total degrees of freedom <span class="math inline">\(n - 1\)</span> minus model degrees of freedom <span class="math inline">\(k - 1\)</span>)</p>
+<p><strong>Residual variability (within group variability)</strong>: = SSE = <span class="math inline">\(\sum_{i=1}^k \sum_{j=1}^{n_i} (y_{ij} - \overline{y}_{i} )^2\)</span></p>
+<p><strong>SST degrees of freedom</strong>: <span class="math inline">\(n - 1\)</span> (total degrees of freedom is number of observations <span class="math inline">\(n\)</span> minus 1)</p>
+<p><strong>SSM degrees of freedom</strong>: <span class="math inline">\(k - 1\)</span> (model degrees of freedom is number of groups <span class="math inline">\(k\)</span> minus 1)</p>
+<p><strong>SSE degrees of freedom</strong>: <span class="math inline">\(n - k\)</span> (residual degrees of freedom is total degrees of freedom <span class="math inline">\(n - 1\)</span> minus model degrees of freedom <span class="math inline">\(k - 1\)</span>)</p>
 <p>From these sums of squares and degrees of freedom we can calculate the mean squares and <span class="math inline">\(F\)</span>-statistic:</p>
 <p><span class="math display">\[MS_{model} = \frac{SS_{\text{between}}}{k-1} = \frac{SSM}{k-1}\]</span></p>
 <p><span class="math display">\[MS_{residual} = \frac{SS_{\text{within}}}{n-k} = \frac{SSE}{n-k}\]</span></p>
@@ -486,9 +490,8 @@ Important
 </tbody>
 </table>
 </section>
-</section>
-<section id="doing-anova-in-r" class="level2">
-<h2 class="anchored" data-anchor-id="doing-anova-in-r">Doing ANOVA in R</h2>
+<section id="doing-anova-in-r" class="level3">
+<h3 class="anchored" data-anchor-id="doing-anova-in-r">Doing ANOVA in R</h3>
 <p>Let’s go back again the question of how diet effects blood pressure. Here is the data:</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
@@ -530,8 +533,10 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
 <p>A suitable sentence to report our findings would be: “Diet has a significant effect on blood pressure (<span class="math inline">\(F(2, 27) = 20.7, p &lt; 0.0001\)</span>)”. This means that the probability of observing such a large <span class="math inline">\(F\)</span> value under the null hypothesis is less than 0.01%.</p>
-<section id="difference-between-pairs-of-groups" class="level3">
-<h3 class="anchored" data-anchor-id="difference-between-pairs-of-groups">Difference between pairs of groups</h3>
+</section>
+</section>
+<section id="difference-between-pairs-of-groups" class="level2">
+<h2 class="anchored" data-anchor-id="difference-between-pairs-of-groups">Difference between pairs of groups</h2>
 <p>If the <span class="math inline">\(F\)</span>-test of the null hypothesis that <span class="math inline">\(\beta_1=\ldots= \beta_{g-1}=0\)</span> is rejected, a researcher might then be interested:</p>
 <ol type="1">
 <li>in finding the actual group(s) that deviate(s) from the others.</li>
@@ -549,7 +554,6 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <li>Tukey <strong>H</strong>onest <strong>S</strong>ignificant <strong>D</strong>ifferences (HSD) approach</li>
 <li>Fisher <strong>L</strong>east <strong>S</strong>ignificant <strong>D</strong>ifferences (LSD) approach</li>
 </ul>
-</section>
 <section id="bonferroni-correction" class="level3">
 <h3 class="anchored" data-anchor-id="bonferroni-correction">Bonferroni correction</h3>
 <p><strong>Idea:</strong> If a total of <span class="math inline">\(m\)</span> tests are carried out, simply divide the type-I error level <span class="math inline">\(\alpha_0\)</span> (often 5%) such that</p>
@@ -909,13 +913,24 @@ Vegetarian (3)
 <figcaption class="figure-caption">Understanding coefficients</figcaption>
 </figure>
 </div>
-<p>::: {.callout-tip} ## Think, Pair, Share (veghigh-estimate)</p>
-<p>From the values in the coefficients table, calculate the estimated mean of the treatment combination “vegetarian, High”. ::</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Think, Pair, Share (#veghigh-estimate)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>From the values in the coefficients table, calculate the estimated mean of the treatment combination “vegetarian, High”.</p>
+</div>
+</div>
 </section>
 </section>
 <section id="why-not-perform-multiple-t-tests" class="level2">
 <h2 class="anchored" data-anchor-id="why-not-perform-multiple-t-tests">Why not perform multiple <span class="math inline">\(t\)</span>-tests?</h2>
-<p>To carry out pairwise <span class="math inline">\(t\)</span>-tests between any two groups.</p>
+<p>Why not carry out pairwise <span class="math inline">\(t\)</span>-tests between every pair of groups?</p>
 <ul>
 <li>How many tests would this imply?</li>
 <li>Why is this not a very clever idea?</li>

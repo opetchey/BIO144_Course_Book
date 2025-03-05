@@ -983,7 +983,7 @@ Think, Pair, Share (#like-weight)
 <h2 class="anchored" data-anchor-id="overview-of-this-week-l4">Overview of this week (L4)</h2>
 <p>Now that we have a satisfactory model, we can start to use it. In the following material, you will learn:</p>
 <ul>
-<li>How to measure how good is the regression (correlation and <span class="math inline">\(R^2\)</span>).</li>
+<li>How to measure how good is the regression (<span class="math inline">\(R^2\)</span>).</li>
 <li>How to test if the parameter estimates are compatible with some specific value (<span class="math inline">\(t\)</span>-test).</li>
 <li>How to find the range of parameters values are compatible with the data (confidence intervals).</li>
 <li>How to find the regression lines compatible with the data (confidence band).</li>
@@ -999,6 +999,7 @@ Think, Pair, Share (#like-weight)
 <p><img src="3-regression_files/figure-html/unnamed-chunk-41-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>Which do you think is showing a model (linear regression) which is better explaining the observations?</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1010,6 +1011,12 @@ Think, Pair, Share (#better-model)
 </div>
 <div class="callout-body-container callout-body">
 <p>In which of these two would you say the model is better, and in which is it worse?</p>
+</div>
+</div>
+<p>Now consider the following two graphs. The left one is with the dependent variable <span class="math inline">\(y_1\)</span> and the right one is with the dependent variable <span class="math inline">\(y_1 * 2\)</span>. Since the data is effectively the same (just the units of <span class="math inline">\(y\)</span> changed) the regression model should be equally “good” in both cases. But we can see that the residuals are larger in the right graph. How could we quantitatively measure how good the regression model is, in a way that is not sensitive to the units in which the dependent variable is measured?</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="3-regression_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 <p>The first model seems to fit the data well, while the second one does not. But how can we quantify this?</p>
@@ -1031,7 +1038,7 @@ Think, Pair, Share (#better-model)
 <p>Graphically, this is the sum of the square of the blue residuals as shown in the following graph, where the horizontal dashed line is at the value of the mean of the dependent variable.</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid" width="480"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-43-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 <p>We can calculate this in R as follows:</p>
@@ -1044,7 +1051,7 @@ Think, Pair, Share (#better-model)
 <p>Now the next two steps, that is getting the model sum of squares (SSM) and the error sum of squares (SSE) are a bit more complicated. To do this we need to fit a regression model to the data. Let’s see this graphically, and divide the data into the explained and unexplained parts.</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-44-1.png" class="img-fluid" width="480"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-45-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 <p>In this graph, the square of the length of the green lines is the model sum of squares (<span class="math inline">\(SSM\)</span>). The square of the length of the red lines is the error sum of squares (<span class="math inline">\(SSE\)</span>).</p>
@@ -1064,7 +1071,7 @@ Think, Pair, Share (#better-model)
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>SSM <span class="ot">&lt;-</span> <span class="fu">sum</span>((y1_predicted <span class="sc">-</span> <span class="fu">mean</span>(y1))<span class="sc">^</span><span class="dv">2</span>)</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>SSM</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 306.4576</code></pre>
+<pre><code>[1] 303.5038</code></pre>
 </div>
 </div>
 </section>
@@ -1076,7 +1083,7 @@ Think, Pair, Share (#better-model)
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>SSE <span class="ot">&lt;-</span> <span class="fu">sum</span>((y1 <span class="sc">-</span> y1_predicted)<span class="sc">^</span><span class="dv">2</span>)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>SSE</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 8.163797</code></pre>
+<pre><code>[1] 7.632995</code></pre>
 </div>
 </div>
 <p>Or…</p>
@@ -1084,7 +1091,7 @@ Think, Pair, Share (#better-model)
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>SSE <span class="ot">&lt;-</span> SST <span class="sc">-</span> SSM</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>SSE</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 8.163797</code></pre>
+<pre><code>[1] 7.632995</code></pre>
 </div>
 </div>
 </section>
@@ -1094,7 +1101,7 @@ Think, Pair, Share (#better-model)
 <p><span class="math display">\[R^2 = \frac{SSM}{SST}\]</span></p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.974052</code></pre>
+<pre><code>[1] 0.9754674</code></pre>
 </div>
 </div>
 </section>
@@ -1104,7 +1111,7 @@ Think, Pair, Share (#better-model)
 <p>Here are the four examples and their r-squared.</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-49-1.png" class="img-fluid" width="672"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-50-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -1163,7 +1170,7 @@ x             7.629066  0.1356499</code></pre>
 <p>Here is a graph of the value of the slope estimate versus the standard error of the estimate:</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-51-1.png" class="img-fluid" width="480"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-52-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -1189,7 +1196,7 @@ Think, Pair, Share (#chance-area)
 <p>But what is the <span class="math inline">\(t\)</span>-distribution? It is a bell-shaped distribution that is centered on zero. The spread of the distribution is determined by the degrees of freedom, which is <span class="math inline">\(n-2\)</span> for a simple linear regression model. Fewer degrees of freedom ( = fewer data points) makes for a more “spread” distribution.</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-52-1.png" class="img-fluid" width="480"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-53-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -1209,13 +1216,13 @@ Note
 <p>Here is a graph of the <span class="math inline">\(t\)</span>-distribution with the tails of the distribution shaded so that the area of the shaded region is 0.05 (i.e., 5% of the total area).</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-53-1.png" class="img-fluid" width="480"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-54-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 <p>Let’s go back to the age - blood pressure data and calculate the p-value for the slope estimate.</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-54-1.png" class="img-fluid" width="480"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-55-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 <p>Here’s the model:</p>
@@ -1249,13 +1256,13 @@ Note
 <p>We can then imagine two cases. The 95% confidence interval of the slope includes 0:</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-58-1.png" class="img-fluid" width="960"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-59-1.png" class="img-fluid" width="960"></p>
 </div>
 </div>
 <p>Or where the confidence interval does not include zero:</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-59-1.png" class="img-fluid" width="960"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-60-1.png" class="img-fluid" width="960"></p>
 </div>
 </div>
 <p><strong>When the confidence interval includes 0 then we conclude that a slope of 0 is compatible with the data. When the confidence interval doesn’t include zero, we conclude that a slope of 0 is not compatible with the data.</strong></p>
@@ -1328,7 +1335,7 @@ Note
 <p>Here is the confidence band for the blood pressure data:</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-63-1.png" class="img-fluid" width="480"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-64-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 <p>Very narrow confidence bands indicate that the estimates are very precise. In this case the estimated intercept and slope are precise because the sample size is large and the data points are close to the regression line.</p>
@@ -1341,7 +1348,7 @@ Note
 <p>Here’s a graph showing the prediction band for the blood pressure data:</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-64-1.png" class="img-fluid" width="480"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-65-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 <p>Another way to think of the 95% confidence band is that it is where we would expect 95% of the regression lines to lie if we were to collect many samples from the same population. The 95% prediction band is where we would expect 95% of the future observations to lie.</p>
@@ -1355,7 +1362,7 @@ Note
 <li>What to do when things go wrong?</li>
 <li>Transformation of variables/the response.</li>
 <li>Handling of outliers.</li>
-<li>Goodness of the model: Correlation and <span class="math inline">\(R^2\)</span></li>
+<li>Goodness of the model: <span class="math inline">\(R^2\)</span></li>
 <li>Tests and confidence intervals</li>
 <li>Confidence and prediction bands</li>
 </ul>
@@ -1380,32 +1387,32 @@ Note
 </div>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-68-1.png" class="img-fluid" width="480"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-69-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 <p>Now we’ll use randomisation to test the null hypothesis. We can create lots of examples where the relationship is expected to have a slope of zero by shuffling randomly the <span class="math inline">\(y\)</span> values. Here are 20:</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-69-1.png" class="img-fluid" width="960"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-70-1.png" class="img-fluid" width="960"></p>
 </div>
 </div>
 <p>Now let’s create 19 and put the real one in there somewhere random. Here’s a case where the real data has a quite strong relationship:</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-70-1.png" class="img-fluid" width="960"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-71-1.png" class="img-fluid" width="960"></p>
 </div>
 </div>
 <p>We can confidently find the real data in the shuffled data. But what if the relationship is weaker?</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-71-1.png" class="img-fluid" width="960"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-72-1.png" class="img-fluid" width="960"></p>
 </div>
 </div>
 <p>Now its less clear which is the real data. We can use this idea to test the null hypothesis.</p>
 <p>We do the same procedure of but instead of just looking at the graphs, we calculate the slope of the regression line each time. This gives us a distribution of slopes we would expect to observe if the null hypothesis is true. We can then see where the observed slope lies in this distribution of null hypothesis slopes.</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-72-1.png" class="img-fluid" width="480"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-73-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 <p>We can now calculate the probability of observing the data we have, given the null hypothesis is true.</p>
@@ -1427,7 +1434,7 @@ Note
 <p>Graphically these would look like this:</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-74-1.png" class="img-fluid" width="768"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-75-1.png" class="img-fluid" width="768"></p>
 </div>
 </div>
 <p>And here we calculate the one-tailed and two-tailed <span class="math inline">\(p\)</span>-values:</p>

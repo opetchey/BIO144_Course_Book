@@ -1016,7 +1016,7 @@ This is clearly a linear model.
 
 Now that we have a satisfactory model, we can start to use it. In the following material, you will learn:
 
-* How to measure how good is the regression (correlation and $R^2$).
+* How to measure how good is the regression ($R^2$).
 * How to test if the parameter estimates are compatible with some specific value ($t$-test).
 * How to find the range of parameters values are compatible with the data (confidence intervals).
 * How to find the regression lines compatible with the data (confidence band).
@@ -1031,6 +1031,7 @@ Take these two examples.
 
 ```{r fig.width = 7, fig.height = 4}
 ## two side by sides graphs, one with a good fit, one with a bad fit
+set.seed(123)
 x <- 1:10
 y1 <- 2*x + rnorm(10,0,1)
 y2 <- 2*x + rnorm(10,0,5)
@@ -1047,8 +1048,10 @@ p2 <- ggplot() +
   geom_line(aes(x=x,y=y2_predicted)) +
   theme_minimal()
 p1 + p2
-
 ```
+
+Which do you think is showing a model (linear regression) which is better explaining the observations?
+
 
 
 ::: {.callout-tip}
@@ -1056,6 +1059,32 @@ p1 + p2
 
 In which of these two would you say the model is better, and in which is it worse?
 :::
+
+
+
+Now consider the following two graphs. The left one is with the dependent variable $y_1$ and the right one is with the dependent variable $y_1 * 2$. Since the data is effectively the same (just the units of $y$ changed) the regression model should be equally "good" in both cases. But we can see that the residuals are larger in the right graph. How could we quantitatively measure how good the regression model is, in a way that is not sensitive to the units in which the dependent variable is measured?
+
+
+```{r}
+ylims <- c(0, 40)
+p1 <- ggplot() +
+  geom_point(aes(x=x,y=y1)) +
+  geom_line(aes(x=x,y=y1_predicted)) +
+  geom_segment(aes(x=x, y=y1, xend=x, yend=y1_predicted), color="red") +
+  theme_minimal() +
+  ylim(ylims)
+y3 <- 2 * y1
+m3 <- lm(y3 ~ x)
+y3_predicted <- predict(m3)
+p3 <- ggplot() +
+  geom_point(aes(x=x,y=y3)) +
+  geom_line(aes(x=x,y=y3_predicted)) +
+  geom_segment(aes(x=x, y=y3, xend=x, yend=y3_predicted), color="red") +
+  theme_minimal() +
+  ylim(ylims)
+p1 + p3
+```
+
 
 
 The first model seems to fit the data well, while the second one does not. But how can we quantify this?
@@ -1606,7 +1635,7 @@ Another way to think of the 95% confidence band is that it is where we would exp
 * What to do when things go wrong?
 * Transformation of variables/the response.
 * Handling of outliers.
-* Goodness of the model: Correlation and $R^2$
+* Goodness of the model: $R^2$
 * Tests and confidence intervals
 * Confidence and prediction bands
 

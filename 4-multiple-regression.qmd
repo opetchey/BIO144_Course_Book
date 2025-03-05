@@ -283,24 +283,24 @@ The $F$-test is widely used in various contexts, including comparing variances, 
 
 ### But what is the $F$-statistic?
 
-**The F-statistic is calculated as the ratio of the mean square error of the model to the mean square error of the residuals.**
+**The F-statistic is calculated as the ratio of the mean square of the model to the mean square error.**
 
 Here's the formula for the F-statistic:
-$$\frac{MSE_{model}}{MSE_{residual}}$$
+$$\frac{MSM}{MSE}$$
 
 where:
-* $MSE_{model}$ is the mean square error of the model.
-* $MSE_{residual}$ is the mean square error of the residuals.
+* $MSM$ is the mean square of the model.
+* $MSE$ is the mean square error.
 
 What on earth does that mean? Put simply, the F-statistic is a measure of how well the model fits the data. It compares the how much variability (variance) is explained to how much is not explained.
 
-The mean square of the model ($MSE_{model}$) is a measure of how much variability is explained.
+The mean square of the model ($MSM$) is a measure of how much variability is explained.
 
-The mean square of the residuals ($MSE_{residual}$) is a measure of how much variability is not explained.
+The mean square of the residuals ($MSE$) is a measure of how much variability is not explained.
 
-1. If there are strong relationships in our data, a lot of variance will be explained (large $MSE_{model}$) and not much will remain unexplained (low $MES_{residual}$). The $F$-statistic will be large.
+1. If there are strong relationships in our data, a lot of variance will be explained (large $MSM$) and not much will remain unexplained (low $MES_{residual}$). The $F$-statistic will be large.
 
-2. If there are weak relationships in our data, not much variance will be explained (low $MSE_{model}$)  and a lot will remain unexplained (large $MES_{residual}$). The F-statistic will be small.
+2. If there are weak relationships in our data, not much variance will be explained (low $MSM$)  and a lot will remain unexplained (large $MES_{residual}$). The F-statistic will be small.
 
 So, if the $F$-statistic is large, we suspect that we can reject the null hypothesis that the explained explained variance is greater than we would expect by chance (i.e., when the slopes are zero). If the $F$-statistic is small, we suspect that we cannot reject the null hypothesis that the explained variance is no greater than we would expect by chance, and we suspect that we cannot reject the null hypothesis that the slopes are zero.
 
@@ -308,15 +308,15 @@ The $F$-statistic is then compared to the $F$-distribution with $p$ and $n-p-1$ 
 
 ### Calculating the F-statistic
 
-The mean square error of a model is the sum of squares of the model divided by the degrees of freedom of the model:
+The mean square of a model is the sum of squares of the model divided by the degrees of freedom of the model:
 
-$$MSE_{model} = \frac{SSM}{df_{model}}$$
+$$MSM = \frac{SSM}{df_{model}}$$
 
 where $SSM$ is the sum of squares of the model and $df_{model}$ is the degrees of freedom of the model.
 
-The mean square error of the residuals is the sum of squares of the residuals divided by the degrees of freedom of the residuals:
+The mean square error is the sum of squares of the residuals divided by the degrees of freedom of the residuals:
 
-$$MSE_{residuals} = \frac{SSE}{df_{residuals}}$$
+$$MSE = \frac{SSE}{df_{residuals}}$$
 
 where $SSE$ is the sum of squares of the residuals and $df_{residuals}$ is the degrees of freedom of the residuals.
 
@@ -449,7 +449,7 @@ $$(n-1) = (p) + (n-1-p)$$
 
 ### Is my $F$-statistic large or small?
 
-Recall that "The $F$-statistic is calculated as the ratio of the mean square error of the model to the mean square error of the residuals." And that a large $F$-statistic is evidence against the null hypothesis that the slopes of the explanatory variables are zero. And that a small $F$-statistic is evidence to not reject the null hypothesis that the slopes of the explanatory variables are zero.
+Recall that "The $F$-statistic is calculated as the ratio of the mean square of the model to the mean square error." And that a large $F$-statistic is evidence against the null hypothesis that the slopes of the explanatory variables are zero. And that a small $F$-statistic is evidence to not reject the null hypothesis that the slopes of the explanatory variables are zero.
 
 But how big does the F-statistic need to be in order to confidently reject the null hypothesis?
 
@@ -496,7 +496,7 @@ The F-distribution is skewed to the right and has a long tail. The area to the r
 The $F$-statistic and $F$-test is briefly recaptured in 3.1.f) of the
 Stahel script, but see also Mat183 chapter 6.2.5. It uses the fact that
 
-$$\frac{MSE_{model}}{MSE_{residual}} =  \frac{SSM/p}{SSE/(n-1-p)} \sim F_{p,n-1-p}$$
+$$\frac{MSM}{MSE} =  \frac{SSM/p}{SSE/(n-1-p)} \sim F_{p,n-1-p}$$
 
 follows an $F$-distribution with $p$ and $(n-1-p)$ degrees of freedom,
 where $p$ are the number of continuous variables, $n$ the number of data points.
@@ -515,7 +515,7 @@ The **sources of variance table** is a table that conveniently and clearly gives
 
 | Source | Sum of squares | Degrees of freedom | Mean square                       | F-statistic                       |
 |--------|----------------|--------------------|-----------------------------------|-----------------------------------|
-| Model  | $SSM$          | $p$                | $MSE_{model} = SSM / p$           | $\frac{MSE_{model}}{MSE_{error}}$ |
+| Model  | $SSM$          | $p$                | $MSM = SSM / p$           | $\frac{MSM}{MSE_{error}}$ |
 | Error  | $SSE$          | $n - 1 - p$        | $MSE_{error} = SSE / (n - 1 - p)$ |                                   |
 | Total  | $SST$          | $n - 1$            |                                   |                                   |
 

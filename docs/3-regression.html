@@ -312,6 +312,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#randomisation-based-approaches-to-hypothesis-testing" id="toc-randomisation-based-approaches-to-hypothesis-testing" class="nav-link" data-scroll-target="#randomisation-based-approaches-to-hypothesis-testing">Randomisation-based approaches to hypothesis testing</a></li>
   <li><a href="#one--and-two-sided-tests" id="toc-one--and-two-sided-tests" class="nav-link" data-scroll-target="#one--and-two-sided-tests">One- and two-sided tests</a></li>
   </ul></li>
+  <li><a href="#sec-thisone" id="toc-sec-thisone" class="nav-link" data-scroll-target="#sec-thisone">Its this one</a></li>
   </ul>
 </nav>
     </div>
@@ -1378,11 +1379,14 @@ Note
 <p>Let’s use randomisation as a method to understand how likely we are to observe the data we have, given the null hypothesis is true.</p>
 <p>If the null hypothesis is true, we expect no relationship between <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>. Therefore, we can shuffle the <span class="math inline">\(y\)</span> values and fit a regression model to the shuffled data. We can repeat this many times and calculate the slope of the regression line each time. This will give us a distribution of slopes we would expect to observe if the null hypothesis is true.</p>
 <p>First, we’ll make some data and get the slope of the regression line. Here is the observed slope and relationship:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>example_data1 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/example_data1.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p><a href="data/example_data1.csv" download=""> Download the dataset. </a></p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
-<pre><code>x 
-0 </code></pre>
+<pre><code>        x 
+0.1251108 </code></pre>
 </div>
 </div>
 <div class="cell">
@@ -1402,12 +1406,14 @@ Note
 <p><img src="3-regression_files/figure-html/unnamed-chunk-71-1.png" class="img-fluid" width="960"></p>
 </div>
 </div>
-<p>We can confidently find the real data in the shuffled data. But what if the relationship is weaker?</p>
+<p>We can pretty confidently find the real data in the shuffled data. But what if the relationship is weaker?</p>
+<p>(See here for which it is: <a href="#sec-thisone"><span>Section&nbsp;17</span></a>)</p>
 <div class="cell">
 <div class="cell-output-display">
 <p><img src="3-regression_files/figure-html/unnamed-chunk-72-1.png" class="img-fluid" width="960"></p>
 </div>
 </div>
+<p>(See here for which it is: <a href="#sec-thisone"><span>Section&nbsp;17</span></a>)</p>
 <p>Now its less clear which is the real data. We can use this idea to test the null hypothesis.</p>
 <p>We do the same procedure of but instead of just looking at the graphs, we calculate the slope of the regression line each time. This gives us a distribution of slopes we would expect to observe if the null hypothesis is true. We can then see where the observed slope lies in this distribution of null hypothesis slopes.</p>
 <div class="cell">
@@ -1418,7 +1424,7 @@ Note
 <p>We can now calculate the probability of observing the data we have, given the null hypothesis is true.</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 1</code></pre>
+<pre><code>[1] 0.0236</code></pre>
 </div>
 </div>
 <p>When we do linear regression we usually don’t use this randomisation approach. Instead,</p>
@@ -1448,9 +1454,14 @@ Note
 7.493917e-51 </code></pre>
 </div>
 </div>
-
-
 </section>
+</section>
+<section id="sec-thisone" class="level2">
+<h2 class="anchored" data-anchor-id="sec-thisone">Its this one</h2>
+<p>(It’s this one: 12).</p>
+<p>(It’s this one: 7).</p>
+
+
 </section>
 
 </main> <!-- /main -->

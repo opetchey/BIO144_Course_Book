@@ -1666,6 +1666,7 @@ write.csv(dd, "data/example_data1.csv")
 ```
 
 ```{r}
+#| echo = TRUE
 example_data1 <- read.csv("data/example_data1.csv")
 ```
 
@@ -1674,12 +1675,12 @@ example_data1 <- read.csv("data/example_data1.csv")
 </a>
 
 ```{r}
-m <- lm(y ~ x)
+m <- lm(y ~ x, data = example_data1)
 coef(m)[2]
 ```
 
 ```{r}
-ggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +
+ggplot(example_data1, aes(x = x, y = y)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE, formula = y ~ x) +
   theme_minimal()
@@ -1690,9 +1691,9 @@ Now we'll use randomisation to test the null hypothesis. We can create lots of e
 ```{r fig.width=10, fig.height=10}
 par(mfrow = c(5, 4))
 for (i in 1:20) {
-  y_rand <- sample(y)
-  m_rand <- lm(y_rand ~ x)
-  plot(x, y_rand, main = paste("Slope = ", round(coef(m_rand)[2], 2)))
+  y_rand <- sample(example_data1$y)
+  m_rand <- lm(y_rand ~ example_data1$x)
+  plot(example_data1$x, y_rand, main = paste("Slope = ", round(coef(m_rand)[2], 2)))
   abline(m_rand)
 }
 ```
@@ -1704,29 +1705,31 @@ n <- 100
 x <- 1:n
 y <- 0.5*x + rnorm(n, 0, 15)
 par(mfrow = c(5, 4))
-this_one <- 12
+this_one1 <- 12
 for (i in 1:20) {
-  if (i == this_one) {
-    plot(x, y, main = paste(i))
+  if (i == this_one1) {
+    plot(example_data1$x, example_data1$y, main = paste(i))
     #abline(m)
   } else {
-    y_rand <- sample(y)
-    m_rand <- lm(y_rand ~ x)
-    plot(x, y_rand, main = paste(i))
+    y_rand <- sample(example_data1$y)
+    m_rand <- lm(y_rand ~ example_data1$x)
+    plot(example_data1$x, y_rand, main = paste(i))
     #abline(m_rand)
   }
 }
 
 ```
 
-We can confidently find the real data in the shuffled data. But what if the relationship is weaker?
+We can pretty confidently find the real data in the shuffled data. But what if the relationship is weaker?
+
+(See here for which it is: @sec-thisone)
 
 ```{r fig.width=10, fig.height=10}
 y <- 0.15*x + rnorm(n, 0, 15)
 par(mfrow = c(5, 4))
-this_one <- 7
+this_one2 <- 7
 for (i in 1:20) {
-  if (i == this_one) {
+  if (i == this_one2) {
     plot(x, y, main = paste(i), ylab = "y")
     #abline(m)
   } else {
@@ -1737,6 +1740,8 @@ for (i in 1:20) {
   }
 }
 ```
+
+(See here for which it is: @sec-thisone)
 
 Now its less clear which is the real data. We can use this idea to test the null hypothesis.
 
@@ -1818,3 +1823,11 @@ two_tailed_p_value <- 2 * one_tailed_p_value
 one_tailed_p_value
 two_tailed_p_value
 ```
+
+
+## Its this one {#sec-thisone}
+
+
+(It's this one: `r this_one1`).
+
+(It's this one: `r this_one2`).

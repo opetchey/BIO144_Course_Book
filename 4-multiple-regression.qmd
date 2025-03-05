@@ -21,13 +21,28 @@ When we have multiple explanatory variables, we are often interested in question
 * Question 3: What proportion of variability is explained?
 * Question 4: Are some explanatory variables more important than others?
 
-Lets make an example of blood pressure data, with age and lifestyle as two explanatory variables. Lifestyle will be a continuous variable that is the number of minutes of exercise per week.
+Lets get an example of blood pressure data, with age and lifestyle as two explanatory variables. Lifestyle will be a continuous variable that is the number of minutes of exercise per week.
 
 ```{r}
+#| eval = FALSE
+set.seed(123)
 bp_data <- data.frame(age = ceiling(runif(100, 20, 80)),
                        mins_exercise = ceiling(runif(100, 0, 300)))
 bp_data$bp <- ceiling(90 + 0.5 * bp_data$age - 0.1 * bp_data$mins_exercise + rnorm(100, 0, 10))
+write.csv(bp_data, "data/bp_age_exercise.csv")
 ```
+
+
+<a href="data/bp_age_exercise.csv" download>
+  Download the dataset.
+</a>
+
+
+```{r}
+#| echo = FALSE
+bp_data <- read.csv("data/bp_age_exercise.csv")
+```
+
 
 Here is a look at the dataset:
 
@@ -262,11 +277,20 @@ Key Points Behind the Name:
 2.	Ronald Fisher’s Contribution: Fisher introduced the $F$-distribution in the early 20th century as a way to test hypotheses about the equality of variances and to analyze variance in regression and experimental designs. The "$F$" in $F$-distribution honors him.
 3.	Variance Ratio: The test statistic for the $F$-test is the ratio of two variances (termed mean squares in this case), making the $F$-distribution the natural choice for modeling this ratio when the null hypothesis is true.
 
+
+
 The $F$-test is widely used in various contexts, including comparing variances, assessing the significance of regression models, conducting ANOVA to test for differences among group means, and comparing different models.
 
 ### But what is the $F$-statistic?
 
 **The F-statistic is calculated as the ratio of the mean square error of the model to the mean square error of the residuals.**
+
+Here's the formula for the F-statistic:
+$$\frac{MSE_{model}}{MSE_{residual}}$$
+
+where:
+* $MSE_{model}$ is the mean square error of the model.
+* $MSE_{residual}$ is the mean square error of the residuals.
 
 What on earth does that mean? Put simply, the F-statistic is a measure of how well the model fits the data. It compares the how much variability (variance) is explained to how much is not explained.
 
@@ -747,12 +771,26 @@ If there is correlation between the explanatory variables, then the model coeffi
 Here is a new version of the blood pressure data in which the age and minutes of exercise variables are correlated:
 
 ```{r fig.width = 4, fig.height = 4, fig.align = "center"}
+#| eval = FALSE
 set.seed(123)
 n <- 100
 age <- ceiling(runif(n, 20, 80))
 mins_exercise <- 100 - age + rnorm(n, 0, 10)
 bp <- 100 + 0.5 * age - 0.1 * mins_exercise + rnorm(n, 0, 15)
 bp_data_correlated <- data.frame(age = age, mins_exercise = mins_exercise, bp = bp)
+write.csv(bp_data_correlated, "data/bp_data_correlated.csv")
+```
+
+<a href="data/bp_data_correlated.csv" download>
+  Download the dataset.
+</a>
+
+```{r}
+bp_data_correlated <- read.csv("data/bp_data_correlated.csv")
+```
+
+
+```{r fig.width = 4, fig.height = 4, fig.align = "center"}
 ggplot(bp_data_correlated, aes(x = age, y = mins_exercise)) +
   geom_point()
 ```

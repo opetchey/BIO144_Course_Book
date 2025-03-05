@@ -286,11 +286,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#so-what-is-a-linear-model" id="toc-so-what-is-a-linear-model" class="nav-link" data-scroll-target="#so-what-is-a-linear-model">So what is a linear model?</a></li>
   </ul></li>
   <li><a href="#end-of-l3-start-of-l4" id="toc-end-of-l3-start-of-l4" class="nav-link" data-scroll-target="#end-of-l3-start-of-l4">End of L3 / Start of L4</a></li>
-  <li><a href="#regression-continued" id="toc-regression-continued" class="nav-link" data-scroll-target="#regression-continued">Regression continued</a></li>
-  <li><a href="#overview-of-this-week-l4" id="toc-overview-of-this-week-l4" class="nav-link" data-scroll-target="#overview-of-this-week-l4">Overview of this week (L4)</a>
-  <ul class="collapse">
-  <li><a href="#accompanying-reading-material" id="toc-accompanying-reading-material" class="nav-link" data-scroll-target="#accompanying-reading-material">Accompanying reading material</a></li>
-  </ul></li>
+  <li><a href="#overview-of-this-week-l4" id="toc-overview-of-this-week-l4" class="nav-link" data-scroll-target="#overview-of-this-week-l4">Overview of this week (L4)</a></li>
   <li><a href="#how-good-is-the-regression-model" id="toc-how-good-is-the-regression-model" class="nav-link" data-scroll-target="#how-good-is-the-regression-model">How good is the regression model?</a>
   <ul class="collapse">
   <li><a href="#sst" id="toc-sst" class="nav-link" data-scroll-target="#sst"><span class="math inline">\(SST\)</span></a></li>
@@ -299,19 +295,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#sse" id="toc-sse" class="nav-link" data-scroll-target="#sse"><span class="math inline">\(SSE\)</span></a></li>
   <li><a href="#r2" id="toc-r2" class="nav-link" data-scroll-target="#r2"><span class="math inline">\(R^2\)</span></a></li>
   <li><a href="#is-my-r-squared-good" id="toc-is-my-r-squared-good" class="nav-link" data-scroll-target="#is-my-r-squared-good">Is my R squared good?</a></li>
-  <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions">Questions</a></li>
   </ul></li>
   <li><a href="#how-unlikey-is-the-observed-data-given-the-null-hypothesis" id="toc-how-unlikey-is-the-observed-data-given-the-null-hypothesis" class="nav-link" data-scroll-target="#how-unlikey-is-the-observed-data-given-the-null-hypothesis">How unlikey is the observed data given the null hypothesis?</a>
   <ul class="collapse">
   <li><a href="#recap-formal-definition-of-the-p-value" id="toc-recap-formal-definition-of-the-p-value" class="nav-link" data-scroll-target="#recap-formal-definition-of-the-p-value">Recap: Formal definition of the <span class="math inline">\(p\)</span>-value</a></li>
   <li><a href="#a-cautionary-note-on-the-use-of-p-values" id="toc-a-cautionary-note-on-the-use-of-p-values" class="nav-link" data-scroll-target="#a-cautionary-note-on-the-use-of-p-values">A cautionary note on the use of <span class="math inline">\(p\)</span>-values</a></li>
   </ul></li>
-  <li><a href="#how-strong-is-the-relationship" id="toc-how-strong-is-the-relationship" class="nav-link" data-scroll-target="#how-strong-is-the-relationship">How strong is the relationship?</a></li>
+  <li><a href="#confidence-interval-for-the-slope" id="toc-confidence-interval-for-the-slope" class="nav-link" data-scroll-target="#confidence-interval-for-the-slope">Confidence interval for the slope</a></li>
   <li><a href="#confidence-and-prediction-bands" id="toc-confidence-and-prediction-bands" class="nav-link" data-scroll-target="#confidence-and-prediction-bands">Confidence and Prediction Bands</a></li>
   <li><a href="#calculation-of-the-confidence-band" id="toc-calculation-of-the-confidence-band" class="nav-link" data-scroll-target="#calculation-of-the-confidence-band">Calculation of the confidence band</a></li>
   <li><a href="#calculations-of-the-prediction-band" id="toc-calculations-of-the-prediction-band" class="nav-link" data-scroll-target="#calculations-of-the-prediction-band">Calculations of the prediction band</a></li>
   <li><a href="#that-is-regression-done-at-least-for-our-current-purposes" id="toc-that-is-regression-done-at-least-for-our-current-purposes" class="nav-link" data-scroll-target="#that-is-regression-done-at-least-for-our-current-purposes">That is regression done (at least for our current purposes)</a></li>
   <li><a href="#additional-reading-material" id="toc-additional-reading-material" class="nav-link" data-scroll-target="#additional-reading-material">Additional reading material</a></li>
+  <li><a href="#additional-information" id="toc-additional-information" class="nav-link" data-scroll-target="#additional-information">Additional information</a>
+  <ul class="collapse">
+  <li><a href="#randomisation-based-approaches-to-hypothesis-testing" id="toc-randomisation-based-approaches-to-hypothesis-testing" class="nav-link" data-scroll-target="#randomisation-based-approaches-to-hypothesis-testing">Randomisation-based approaches to hypothesis testing</a></li>
+  <li><a href="#one--and-two-sided-tests" id="toc-one--and-two-sided-tests" class="nav-link" data-scroll-target="#one--and-two-sided-tests">One- and two-sided tests</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -337,7 +337,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <p><strong>How Owen will structure the lecture time</strong></p>
 <p><strong>The chapter content below is the reference for what students are expected to know.</strong> During the lecture time Owen will talk through and explain hopefully most of the content of this chapter. He will write on a tablet, show figures and other content of this chapter, and may live-code in RStudio. He will also present questions and ask students to <em>Think, Pair, Share</em>. The <em>Share</em> part will sometime be via clicker, sometimes by telling the class. The same will happen in lecture 3-6.</p>
-<p>This chapter contains the content of the third and fourth Monday lecture of the course BIO144 Data Analysis in Biology at the University of Zurich. When</p>
+<p>This chapter contains the content of the third and fourth Monday lecture of the course BIO144 Data Analysis in Biology at the University of Zurich.</p>
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
 <p>Linear regression is a common statistical method that models the relationship between a dependent (response) variable and one or more independent (explanatory) variables. The relationship is modeled with the equation for a straight line (<span class="math inline">\(y = a + bx\)</span>).</p>
@@ -375,6 +375,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Here is an example of a study that used linear regression to answer this question: https://journals.lww.com/jhypertension/fulltext/2021/06000/association_of_age_and_blood_pressure_among_3_3.15.aspx</p>
 <p>In this study, the authors used linear regression to model the relationship between age and blood pressure. They found that systolic blood pressure increased by 0.28–0.85 mmHg/year. This is a small increase, but it is statistically significant. This means that the observed relationship between age and blood pressure is unlikely to be due to chance.</p>
 <p>Lets look at some simulated example data:</p>
+<p><a href="data/Simulated_Blood_Pressure_and_Age_Data.csv" download=""> Download the dataset. </a></p>
 <div class="cell">
 <div class="cell-output-display">
 <p><img src="3-regression_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="480"></p>
@@ -548,6 +549,7 @@ Think, pair, share (#what-units)
 <section id="lets-do-it-in-r" class="level3">
 <h3 class="anchored" data-anchor-id="lets-do-it-in-r">Let’s do it in R</h3>
 <p>First we read in the dataset:</p>
+<p><a href="data/Simulated_Blood_Pressure_and_Age_Data.csv" download=""> Download the dataset. </a></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>bp_age_data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/Simulated_Blood_Pressure_and_Age_Data.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -977,9 +979,6 @@ Think, Pair, Share (#like-weight)
 <section id="end-of-l3-start-of-l4" class="level2">
 <h2 class="anchored" data-anchor-id="end-of-l3-start-of-l4">End of L3 / Start of L4</h2>
 </section>
-<section id="regression-continued" class="level2">
-<h2 class="anchored" data-anchor-id="regression-continued">Regression continued</h2>
-</section>
 <section id="overview-of-this-week-l4" class="level2">
 <h2 class="anchored" data-anchor-id="overview-of-this-week-l4">Overview of this week (L4)</h2>
 <p>Now that we have a satisfactory model, we can start to use it. In the following material, you will learn:</p>
@@ -990,9 +989,6 @@ Think, Pair, Share (#like-weight)
 <li>How to find the regression lines compatible with the data (confidence band).</li>
 <li>How to calculate plausible values of newly collected data (prediction band).</li>
 </ul>
-<section id="accompanying-reading-material" class="level3">
-<h3 class="anchored" data-anchor-id="accompanying-reading-material">Accompanying reading material</h3>
-</section>
 </section>
 <section id="how-good-is-the-regression-model" class="level2">
 <h2 class="anchored" data-anchor-id="how-good-is-the-regression-model">How good is the regression model?</h2>
@@ -1046,13 +1042,12 @@ Think, Pair, Share (#better-model)
 <section id="ssm-and-sse" class="level3">
 <h3 class="anchored" data-anchor-id="ssm-and-sse">SSM and SSE</h3>
 <p>Now the next two steps, that is getting the model sum of squares (SSM) and the error sum of squares (SSE) are a bit more complicated. To do this we need to fit a regression model to the data. Let’s see this graphically, and divide the data into the explained and unexplained parts.</p>
-<p>Make a graph with vertical lines connecting the data to the mean of the data, but with each line two parts, one from the mean to the data, and one from the data to the predicted value.</p>
 <div class="cell">
 <div class="cell-output-display">
 <p><img src="3-regression_files/figure-html/unnamed-chunk-44-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
-<p>In this graph, the square of the length of the green lines is the model sum of squares (<span class="math inline">\(SST\)</span>). The square of the length of the red lines is the error sum of squares (<span class="math inline">\(SSE\)</span>).</p>
+<p>In this graph, the square of the length of the green lines is the model sum of squares (<span class="math inline">\(SSM\)</span>). The square of the length of the red lines is the error sum of squares (<span class="math inline">\(SSE\)</span>).</p>
 <p>In a better model the length of the green lines will be <strong>longer</strong> (the square of these gives the <span class="math inline">\(SMM\)</span>, the variability explained by the model). And the length of the red lines will be <strong>shorter</strong> (the square of these gives the <span class="math inline">\(SSE\)</span>, the variability not explained by the model).</p>
 </section>
 <section id="ssm" class="level3">
@@ -1112,9 +1107,6 @@ Think, Pair, Share (#better-model)
 <p><img src="3-regression_files/figure-html/unnamed-chunk-49-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-</section>
-<section id="questions" class="level3">
-<h3 class="anchored" data-anchor-id="questions">Questions</h3>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1152,59 +1144,13 @@ Think, Pair, Share (#null-hypothesis)
 <p>The null hypothesis is that the slope of the regression line is zero: <span class="math display">\[H_0: \beta_1 = 0\]</span></p>
 <p>What is the alternative hypothesis?</p>
 <p><span class="math display">\[H_1: \beta_1 \neq 0\]</span></p>
-<p>So, how do we test the null hypothesis?</p>
-<p>Let’s use randomisation as a method to understand how likely we are to observe the data we have, given the null hypothesis is true.</p>
-<p>If the null hypothesis is true, we expect no relationship between <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>. Therefore, we can shuffle the <span class="math inline">\(y\)</span> values and fit a regression model to the shuffled data. We can repeat this many times and calculate the slope of the regression line each time. This will give us a distribution of slopes we would expect to observe if the null hypothesis is true.</p>
-<p>First, we’ll make some data and get the slope of the regression line. Here is the observed slope and relationship:</p>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>        x 
-0.1251108 </code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-51-1.png" class="img-fluid" width="480"></p>
-</div>
-</div>
-<p>Now we’ll use randomisation to test the null hypothesis. We can create lots of examples where the relationship is expected to have a slope of zero by shuffling randomly the <span class="math inline">\(y\)</span> values. Here are 20:</p>
-<div class="cell">
-<div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-52-1.png" class="img-fluid" width="960"></p>
-</div>
-</div>
-<p>Now let’s create 19 and put the real one in there somewhere random. Here’s a case where the real data has a quite strong relationship:</p>
-<div class="cell">
-<div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-53-1.png" class="img-fluid" width="960"></p>
-</div>
-</div>
-<p>We can confidently find the real data amont the shuffled data. But what if the relationship is weaker?</p>
-<div class="cell">
-<div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-54-1.png" class="img-fluid" width="960"></p>
-</div>
-</div>
-<p>Now its less clear which is the real data. We can use this idea to test the null hypothesis.</p>
-<p>We do the same procedure of but instead of just looking at the graphs, we calculate the slope of the regression line each time. This gives us a distribution of slopes we would expect to observe if the null hypothesis is true. We can then see where the observed slope lies in this distribution of null hypothesis slopes.</p>
-<div class="cell">
-<div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-55-1.png" class="img-fluid" width="480"></p>
-</div>
-</div>
-<p>We can now calculate the probability of observing the data we have, given the null hypothesis is true.</p>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.0172</code></pre>
-</div>
-</div>
-<p>When we do linear regression we usually don’t use this randomisation approach. Instead, we can use the fact that the the slope of the regression line is an estimate of the true slope. This estimate has uncertainty associated with it. We can use this uncertainty to calculate the probability of observing the data we have, given the null hypothesis is true.</p>
+<p>So, how do we test the null hypothesis? We can use the fact that the the slope of the regression line is an estimate of the true slope. <strong>The slope estimate has uncertainty associated with it.</strong> We can use this uncertainty to calculate the probability of observing the data we have, given the null hypothesis is true.</p>
 <p>We can see that the slope estimate (the <span class="math inline">\(x\)</span> row) has uncertainty by looking at the regression output:</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>              Estimate Std. Error
-(Intercept) -0.3640385   1.842874
-x            0.1251108   0.031682</code></pre>
+(Intercept) -13.006987  0.8338264
+x             7.629066  0.1356499</code></pre>
 </div>
 </div>
 <p>The estimate is the mean of the distribution of the parameter (slope) and the standard error is a measure of the uncertainty of the estimate.</p>
@@ -1217,7 +1163,7 @@ x            0.1251108   0.031682</code></pre>
 <p>Here is a graph of the value of the slope estimate versus the standard error of the estimate:</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-58-1.png" class="img-fluid" width="480"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-51-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -1240,58 +1186,43 @@ Think, Pair, Share (#chance-area)
 <p><span class="math display">\[t = \frac{\hat\beta_1}{\sigma^{(\beta_1)}}\]</span></p>
 <p><strong>The <span class="math inline">\(t\)</span>-statistic is a measure of how many standard errors the slope estimate is from the null hypothesis value of the slope. The larger the <span class="math inline">\(t\)</span>-statistic, the less likely the slope estimate was observed by chance.</strong></p>
 <p>How can we transform the value of a <span class="math inline">\(t\)</span>-statistic into a p-value? We can use the <strong><span class="math inline">\(t\)</span>-distribution</strong>, which quantifies the probability of observing a value of the <span class="math inline">\(t\)</span>-statistic under the null hypothesis.</p>
-<p>But what is the <span class="math inline">\(t\)</span>-distribution? It is a distribution of the <span class="math inline">\(t\)</span>-statistic under the null hypothesis. It is a bell-shaped distribution that is centered on zero. The shape of the distribution is determined by the degrees of freedom, which is <span class="math inline">\(n-2\)</span> for a simple linear regression model.</p>
+<p>But what is the <span class="math inline">\(t\)</span>-distribution? It is a bell-shaped distribution that is centered on zero. The spread of the distribution is determined by the degrees of freedom, which is <span class="math inline">\(n-2\)</span> for a simple linear regression model. Fewer degrees of freedom ( = fewer data points) makes for a more “spread” distribution.</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-59-1.png" class="img-fluid" width="480"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-52-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
 <p>By the way, it is named the <span class="math inline">\(t\)</span>-distribution by it’s developer, William Sealy Gosset, who worked for the Guinness brewery in Dublin, Ireland. In his 1908 paper, Gosset introduced the <span class="math inline">\(t\)</span>-distribution but he didn’t explicitly explain his choice of the letter <span class="math inline">\(t\)</span>. The choice of the letter <span class="math inline">\(t\)</span> could be to indicate “Test”, as the <span class="math inline">\(t\)</span>-distribution was developed specifically for hypothesis testing.</p>
-<p>Now, recall that the p-value is the probability of observing the value of the test statistic (so here the <span class="math inline">\(t\)</span>-statistic) at least as extreme as the one we have, given the null hypothesis is true. We can calculate this probability by integrating the <span class="math inline">\(t\)</span>-distribution from the observed <span class="math inline">\(t\)</span>-statistic to the tails of the distribution.</p>
-<p>Here is a graph of the <span class="math inline">\(t\)</span>-distribution with 100 degrees of freedom with the tails of the distribution shaded so that the area of the shaded region is 0.05 (i.e., 5% of the total area).</p>
+</div>
+</div>
+<p>Now, recall that the p-value is the probability of observing the value of the test statistic (here the <span class="math inline">\(t\)</span>-statistic) at least as extreme as the one we have, given the null hypothesis is true. We can calculate this probability by integrating the <span class="math inline">\(t\)</span>-distribution from the observed <span class="math inline">\(t\)</span>-statistic to the tails of the distribution.</p>
+<p>Here is a graph of the <span class="math inline">\(t\)</span>-distribution with the tails of the distribution shaded so that the area of the shaded region is 0.05 (i.e., 5% of the total area).</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-60-1.png" class="img-fluid" width="480"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-53-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
-<p>Graph of the <span class="math inline">\(t\)</span>-distribution with 1000 degrees of freedom (blue line) and the normal distribution (green dashed line):</p>
-<div class="cell">
-<div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-61-1.png" class="img-fluid" width="480"></p>
-</div>
-</div>
-<p>So, with a large number of observations, the <span class="math inline">\(t\)</span>-distribution approaches the normal distribution. For the normal distribution, the 95% area is between -1.96 and 1.96.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="do">## x value for 95% area of normal distribution</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>x_value <span class="ot">&lt;-</span> <span class="fu">qnorm</span>(<span class="fl">0.975</span>)</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>x_value</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 1.959964</code></pre>
-</div>
-</div>
-<p><code>qnorm</code> is a function that calculates the <span class="math inline">\(x\)</span> value for a given quantile (probability) of the normal distribution. In simpler terms, it finds the value <span class="math inline">\(x\)</span> at which the area under the normal curve (up to <span class="math inline">\(x\)</span>) equals the given probability <span class="math inline">\(p\)</span> (0.975 in the example immediately above here).</p>
 <p>Let’s go back to the age - blood pressure data and calculate the p-value for the slope estimate.</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-65-1.png" class="img-fluid" width="480"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-54-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 <p>Here’s the model:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>mod1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Systolic_BP <span class="sc">~</span> Age, <span class="at">data =</span> bp_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>mod1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Systolic_BP <span class="sc">~</span> Age, <span class="at">data =</span> bp_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Here we calculate the <span class="math inline">\(t\)</span>-statistic for the slope estimate:</p>
-<p>And here we calculate the one-tailed and two-tailed <span class="math inline">\(p\)</span>-values:</p>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>         Age 
-3.746958e-51 </code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>         Age 
-7.493917e-51 </code></pre>
-</div>
-</div>
 <p>We can get the <span class="math inline">\(p\)</span>-value directly from the <code>summary</code> function:</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
@@ -1304,36 +1235,30 @@ Think, Pair, Share (#chance-area)
 <section id="recap-formal-definition-of-the-p-value" class="level3">
 <h3 class="anchored" data-anchor-id="recap-formal-definition-of-the-p-value">Recap: Formal definition of the <span class="math inline">\(p\)</span>-value</h3>
 <p>The formal definition of <span class="math inline">\(p\)</span>-value is the probability to observe a data summary (e.g., an average or a slope) that is at least as extreme as the one observed, given that the null hypothesis is correct.</p>
-<p>Example (normal distribution): Assume that we calculated that <span class="math inline">\(t\)</span>-value = -1.96</p>
-<p><span class="math inline">\(\Rightarrow\)</span> <span class="math inline">\(Pr(|t|\geq 1.96)=0.05\)</span> and <span class="math inline">\(Pr(t\leq-1.96)=0.025\)</span>.</p>
-<div class="cell">
-<div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-70-1.png" class="img-fluid" width="768"></p>
-</div>
-</div>
 </section>
 <section id="a-cautionary-note-on-the-use-of-p-values" class="level3">
 <h3 class="anchored" data-anchor-id="a-cautionary-note-on-the-use-of-p-values">A cautionary note on the use of <span class="math inline">\(p\)</span>-values</h3>
 <p>Maybe you have seen that in statistical testing, often the criterion <span class="math inline">\(p\leq 0.05\)</span> is used to test whether <span class="math inline">\(H_0\)</span> should be rejected. This is often done in a black-or-white manner. However, we will put a lot of attention to a more reasonable and cautionary interpretation of <span class="math inline">\(p\)</span>-values in this course!</p>
 </section>
 </section>
-<section id="how-strong-is-the-relationship" class="level2">
-<h2 class="anchored" data-anchor-id="how-strong-is-the-relationship">How strong is the relationship?</h2>
-<p>The actual value of the parameter has practical meaning. The slope of the regression line tells us how much the dependent variable changes when the independent variable changes by one unit. The slope is one measure of the strength of the relationship between the two variables.</p>
+<section id="confidence-interval-for-the-slope" class="level2">
+<h2 class="anchored" data-anchor-id="confidence-interval-for-the-slope">Confidence interval for the slope</h2>
+<p>We are not only interested in whether the slope differs from zero. The value of the parameter has practical meaning. The slope of the regression line tells us how much the dependent variable changes when the independent variable changes by one unit. The slope is one measure of the strength of the relationship between the two variables.</p>
 <p>We can ask what values of a parameter estimate are compatible with the data (confidence intervals)? To answer this question, we can determine the confidence intervals of the regression parameters.</p>
 <p>The confidence interval of a parameter estimate is defined as the interval that contains the true parameter value with a certain probability. So the 95% confidence interval of the slope is the interval that contains the true slope with a probability of 95%.</p>
 <p>We can then imagine two cases. The 95% confidence interval of the slope includes 0:</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-71-1.png" class="img-fluid" width="960"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-58-1.png" class="img-fluid" width="960"></p>
 </div>
 </div>
 <p>Or where the confidence interval does not include zero:</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-72-1.png" class="img-fluid" width="960"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-59-1.png" class="img-fluid" width="960"></p>
 </div>
 </div>
+<p><strong>When the confidence interval includes 0 then we conclude that a slope of 0 is compatible with the data. When the confidence interval doesn’t include zero, we conclude that a slope of 0 is not compatible with the data.</strong></p>
 <p>How do we calculate the lower and upper limits of the 95% confidence interval of the slope?</p>
 <p>Recall that the <span class="math inline">\(t\)</span>-value for a null hypothesis of slope of zero is defined as:</p>
 <p><span class="math display">\[t = \frac{\hat\beta_1}{\hat\sigma^{(\beta_1)}}\]</span></p>
@@ -1343,39 +1268,39 @@ Think, Pair, Share (#chance-area)
 <p><span class="math display">\[\hat\beta_1 \pm t_{0.975} \cdot \hat\sigma^{(\beta_1)}\]</span></p>
 <p>In our blood pressure example the estimated slope is 0.8240678 and the standard error of the slope is 0.0277096. We can calculate the 95% confidence interval of the slope as follows:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>t_0975 <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, <span class="at">df =</span> n <span class="sc">-</span> <span class="dv">2</span>)</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>half_interval <span class="ot">&lt;-</span> t_0975 <span class="sc">*</span> <span class="fu">summary</span>(mod1)<span class="sc">$</span>coef[<span class="dv">2</span>,<span class="dv">2</span>]</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>lower_limit <span class="ot">&lt;-</span> <span class="fu">coef</span>(mod1)[<span class="dv">2</span>] <span class="sc">-</span> half_interval</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>upper_limit <span class="ot">&lt;-</span> <span class="fu">coef</span>(mod1)[<span class="dv">2</span>] <span class="sc">+</span> half_interval</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>ci_slope <span class="ot">&lt;-</span> <span class="fu">c</span>(lower_limit, upper_limit)</span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>slope <span class="ot">&lt;-</span> <span class="fu">coef</span>(mod1)[<span class="dv">2</span>]</span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>slope</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>t_0975 <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, <span class="at">df =</span> n <span class="sc">-</span> <span class="dv">2</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>half_interval <span class="ot">&lt;-</span> t_0975 <span class="sc">*</span> <span class="fu">summary</span>(mod1)<span class="sc">$</span>coef[<span class="dv">2</span>,<span class="dv">2</span>]</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>lower_limit <span class="ot">&lt;-</span> <span class="fu">coef</span>(mod1)[<span class="dv">2</span>] <span class="sc">-</span> half_interval</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>upper_limit <span class="ot">&lt;-</span> <span class="fu">coef</span>(mod1)[<span class="dv">2</span>] <span class="sc">+</span> half_interval</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>ci_slope <span class="ot">&lt;-</span> <span class="fu">c</span>(lower_limit, upper_limit)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>slope <span class="ot">&lt;-</span> <span class="fu">coef</span>(mod1)[<span class="dv">2</span>]</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>slope</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      Age 
 0.8240678 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>ci_slope</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>ci_slope</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      Age       Age 
 0.7690791 0.8790565 </code></pre>
 </div>
 </div>
-<p>R can do all this for us:</p>
+<p>Or we can do it using values from the coefficients table:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>coefs <span class="ot">&lt;-</span> <span class="fu">summary</span>(mod1)<span class="sc">$</span>coef</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">&lt;-</span> coefs[<span class="dv">2</span>,<span class="dv">1</span>]</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>sdbeta <span class="ot">&lt;-</span> coefs[<span class="dv">2</span>,<span class="dv">2</span>] </span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>beta <span class="sc">+</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>) <span class="sc">*</span> <span class="fu">qt</span>(<span class="fl">0.975</span>,<span class="dv">241</span>) <span class="sc">*</span> sdbeta </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.7694840 0.8786516</code></pre>
+</div>
+</div>
+<p>Or we can have R do all the hard work for us:</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>    2.5 %    97.5 % 
 0.7690791 0.8790565 </code></pre>
-</div>
-</div>
-<p>Or we can do it using values from the coefficients table:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>coefs <span class="ot">&lt;-</span> <span class="fu">summary</span>(mod1)<span class="sc">$</span>coef</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">&lt;-</span> coefs[<span class="dv">2</span>,<span class="dv">1</span>]</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>sdbeta <span class="ot">&lt;-</span> coefs[<span class="dv">2</span>,<span class="dv">2</span>] </span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>beta <span class="sc">+</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>) <span class="sc">*</span> <span class="fu">qt</span>(<span class="fl">0.975</span>,<span class="dv">241</span>) <span class="sc">*</span> sdbeta </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.7694840 0.8786516</code></pre>
 </div>
 </div>
 <p><em>Interpretation</em>: for an increase in the age by one year, roughly 0.82 mmHg increase in blood pressure is expected, and all true values for <span class="math inline">\(\beta_1\)</span> between 0.77 and 0.88 are compatible with the observed data.</p>
@@ -1390,7 +1315,7 @@ Think, Pair, Share (#chance-area)
 <li><p>Which other regression lines are compatible with the observed data? This leads to the <em>confidence band</em>.</p></li>
 <li><p>Where do future observations (<span class="math inline">\(y\)</span>) with a given <span class="math inline">\(x\)</span> coordinate lie? This leads to the <em>prediction band</em>.</p></li>
 </ol>
-<p>Note: The prediction band is much broader than the confidence band.</p>
+<p>Note: The prediction band is broader than the confidence band.</p>
 </section>
 <section id="calculation-of-the-confidence-band" class="level2">
 <h2 class="anchored" data-anchor-id="calculation-of-the-confidence-band">Calculation of the confidence band</h2>
@@ -1403,7 +1328,7 @@ Think, Pair, Share (#chance-area)
 <p>Here is the confidence band for the blood pressure data:</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-76-1.png" class="img-fluid" width="480"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-63-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 <p>Very narrow confidence bands indicate that the estimates are very precise. In this case the estimated intercept and slope are precise because the sample size is large and the data points are close to the regression line.</p>
@@ -1416,7 +1341,7 @@ Think, Pair, Share (#chance-area)
 <p>Here’s a graph showing the prediction band for the blood pressure data:</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-78-1.png" class="img-fluid" width="480"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-64-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 <p>Another way to think of the 95% confidence band is that it is where we would expect 95% of the regression lines to lie if we were to collect many samples from the same population. The 95% prediction band is where we would expect 95% of the future observations to lie.</p>
@@ -1438,8 +1363,87 @@ Think, Pair, Share (#chance-area)
 <section id="additional-reading-material" class="level2">
 <h2 class="anchored" data-anchor-id="additional-reading-material">Additional reading material</h2>
 <p>If you’d like another perspective and a deeper delve into some of the mathematical details, please look at Chapter 2 of <em>Lineare Regression</em>, p.7-20 (Stahel script), Chapters 3.1, 3.2a-q of <em>Lineare Regression</em>, and Chapters 4.1 4.2f, 4.3a-e of <em>Lineare Regression</em></p>
+</section>
+<section id="additional-information" class="level2">
+<h2 class="anchored" data-anchor-id="additional-information">Additional information</h2>
+<section id="randomisation-based-approaches-to-hypothesis-testing" class="level3">
+<h3 class="anchored" data-anchor-id="randomisation-based-approaches-to-hypothesis-testing">Randomisation-based approaches to hypothesis testing</h3>
+<p>Let’s use randomisation as a method to understand how likely we are to observe the data we have, given the null hypothesis is true.</p>
+<p>If the null hypothesis is true, we expect no relationship between <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>. Therefore, we can shuffle the <span class="math inline">\(y\)</span> values and fit a regression model to the shuffled data. We can repeat this many times and calculate the slope of the regression line each time. This will give us a distribution of slopes we would expect to observe if the null hypothesis is true.</p>
+<p>First, we’ll make some data and get the slope of the regression line. Here is the observed slope and relationship:</p>
+<p><a href="data/example_data1.csv" download=""> Download the dataset. </a></p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>x 
+0 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="3-regression_files/figure-html/unnamed-chunk-68-1.png" class="img-fluid" width="480"></p>
+</div>
+</div>
+<p>Now we’ll use randomisation to test the null hypothesis. We can create lots of examples where the relationship is expected to have a slope of zero by shuffling randomly the <span class="math inline">\(y\)</span> values. Here are 20:</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="3-regression_files/figure-html/unnamed-chunk-69-1.png" class="img-fluid" width="960"></p>
+</div>
+</div>
+<p>Now let’s create 19 and put the real one in there somewhere random. Here’s a case where the real data has a quite strong relationship:</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="3-regression_files/figure-html/unnamed-chunk-70-1.png" class="img-fluid" width="960"></p>
+</div>
+</div>
+<p>We can confidently find the real data in the shuffled data. But what if the relationship is weaker?</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="3-regression_files/figure-html/unnamed-chunk-71-1.png" class="img-fluid" width="960"></p>
+</div>
+</div>
+<p>Now its less clear which is the real data. We can use this idea to test the null hypothesis.</p>
+<p>We do the same procedure of but instead of just looking at the graphs, we calculate the slope of the regression line each time. This gives us a distribution of slopes we would expect to observe if the null hypothesis is true. We can then see where the observed slope lies in this distribution of null hypothesis slopes.</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="3-regression_files/figure-html/unnamed-chunk-72-1.png" class="img-fluid" width="480"></p>
+</div>
+</div>
+<p>We can now calculate the probability of observing the data we have, given the null hypothesis is true.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1</code></pre>
+</div>
+</div>
+<p>When we do linear regression we usually don’t use this randomisation approach. Instead,</p>
+</section>
+<section id="one--and-two-sided-tests" class="level3">
+<h3 class="anchored" data-anchor-id="one--and-two-sided-tests">One- and two-sided tests</h3>
+<p>Most often we are interested in whether there is a relationship between <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>. This is a two-sided test. We are interested in whether the slope of the regression line is different from zero.</p>
+<p>Assume that we calculated that <span class="math inline">\(t\)</span>-value = -1.96</p>
+<p>A two sided test would be written as, with vertical bars surrounding the <span class="math inline">\(t\)</span> value, which mean we are here concerned with the absolute value of the <span class="math inline">\(t\)</span> value, and don’t care about the sign:</p>
+<p><span class="math inline">\(Pr(|t|\geq 1.96)=0.05\)</span></p>
+<p>In contrast, a one-sided test would be written as, with not vertical bars surrounding the <span class="math inline">\(t\)</span> value, which mean we are here concerned with the sign of the <span class="math inline">\(t\)</span> value:</p>
+<p><span class="math inline">\(Pr(t\leq-1.96)=0.025\)</span>.</p>
+<p>Graphically these would look like this:</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="3-regression_files/figure-html/unnamed-chunk-74-1.png" class="img-fluid" width="768"></p>
+</div>
+</div>
+<p>And here we calculate the one-tailed and two-tailed <span class="math inline">\(p\)</span>-values:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>         Age 
+3.746958e-51 </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         Age 
+7.493917e-51 </code></pre>
+</div>
+</div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

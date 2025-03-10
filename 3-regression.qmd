@@ -1159,7 +1159,7 @@ Next we will do the second step, that is calculate the model sum of squares ($SS
 
 This is the difference between the predicted value of the dependent variable and the mean of the dependent variable, squared and summed:
 
-$$SSE = \sum_{i=1}^{n} (\hat{y}_i - \bar{y})^2$$
+$$SSM = \sum_{i=1}^{n} (\hat{y}_i - \bar{y})^2$$
 
 where:
 $\hat{y}_i$ is the predicted value of the dependent variable,

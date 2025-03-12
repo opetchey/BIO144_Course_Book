@@ -6,6 +6,7 @@ suppressMessages(library(gtsummary))
 suppressMessages(library(tidyr))
 suppressMessages(library(here))
 suppressMessages(library(kableExtra))
+suppressMessages(library(plotly))
 ```
 
 
@@ -18,15 +19,28 @@ This chapter contains the content of the fifth lecture of the course BIO144 Data
 
 Interactions are some of the most interesting phenomena in science, including biology. We are not talking about interactions between species, like predation, though these are also very interesting. We are talking about effects of one thing, like diet, depending on another thing, like exercise. Lets break that down a bit...
 
-Imagine we make a study of the effect of exercise (minutes per week) on blood pressure for people with a meat heavy diet. We might find the following:
+Imagine we make a study of the effect of exercise (minutes per week) on blood pressure for people with a meat heavy diet.
 
 ```{r}
+#| eval = FALSE
 set.seed(1)
 n <- 50
 mins_per_week <- runif(n, 0, 200)
 diet <- rep("meat heavy", n)
 bp <- 100 - 0.1*mins_per_week + rnorm(n, 0, 10)
 bp_diet_meatheavy <- data.frame(bp, mins_per_week, diet)
+write_csv(bp_diet_meatheavy, here::here("data", "bp_diet_meatheavy.csv"))
+```
+
+
+<a href="data/bp_diet_meatheavy.csv" download>
+  Download the dataset.
+</a>
+
+
+```{r}
+#| echo = TRUE
+bp_diet_meatheavy <- read_csv(here::here("data", "bp_diet_meatheavy.csv"))
 head(bp_diet_meatheavy)
 ```
 
@@ -45,11 +59,24 @@ p_meat
 We see that exercise seems to lower blood pressure. But what if we look at the effect of exercise on blood pressure for people with a vegetarian diet?
 
 ```{r}
+#| eval = FALSE
 n <- 50
 mins_per_week <- runif(n, 0, 200)
 diet <- rep("vegetarian", n)
 bp <- 85 - 0.01*mins_per_week + rnorm(n, 0, 10)
 bp_diet_vegetarian <- data.frame(bp, mins_per_week, diet)
+write_csv(bp_diet_vegetarian, here::here("data", "bp_diet_vegetarian.csv"))
+```
+
+
+<a href="data/bp_diet_vegetarian.csv" download>
+  Download the dataset.
+</a>
+
+
+```{r}
+#| echo = TRUE
+bp_diet_vegetarian <- read_csv(here::here("data", "bp_diet_vegetarian.csv"))
 head(bp_diet_vegetarian)
 ```
 
@@ -124,6 +151,7 @@ When the regression lines are not parallel, there is evidence of an interaction.
 Two categorical variables: diet and exercise
 
 ```{r}
+#| eval = FALSE
 set.seed(1)
 reps <- 1:10
 bp_data_2cat <- crossing(diet = c("meat heavy", "vegetarian"),
@@ -134,6 +162,16 @@ bp_data_2cat <- crossing(diet = c("meat heavy", "vegetarian"),
          bp = bp + error) |> 
   arrange(reps, diet, exercise) |>
   mutate(exercise = relevel(factor(exercise), "low"))
+write_csv(bp_data_2cat, here::here("data", "bp_data_2cat.csv"))
+```
+
+<a href="data/bp_data_2cat.csv" download>
+  Download the dataset.
+</a>
+
+```{r}
+#| echo = TRUE
+bp_data_2cat <- read_csv(here::here("data", "bp_data_2cat.csv"))
 head(bp_data_2cat)
 ```
 
@@ -157,12 +195,24 @@ ggplot(bp_data_2cat, aes(x=exercise, y=bp, col=diet)) +
 Two continuous explanatory variables (age and exercise minutes) and one continuous response variable (blood pressure)
 
 ```{r}
+#| eval = FALSE
 set.seed(1)
 n <- 100
 age <- runif(n, 20, 80)
 mins_per_week <- runif(n, 0, 200)
 bp <- 100 - 0.5*mins_per_week + 0.1*age + 0.005 * mins_per_week * age + rnorm(n, 0, 0.1)
 bp_data_cont <- data.frame(bp, age, mins_per_week)
+write_csv(bp_data_cont, here::here("data", "bp_data_cont.csv"))
+```
+
+<a href="data/bp_data_cont.csv" download>
+  Download the dataset.
+</a>
+
+
+```{r}
+#| echo = TRUE
+bp_data_cont <- read_csv(here::here("data", "bp_data_cont.csv"))
 head(bp_data_cont)
 ```
 
@@ -183,7 +233,7 @@ ggplot(bp_data_cont, aes(x=age, y=bp, col = mins_per_week)) +
 ```
 
 ```{r}
-plotly::plot_ly(bp_data_cont, x = ~mins_per_week, y = ~age, z = ~bp, type = "scatter3d", mode = "markers", color = age)
+#plot_ly(bp_data_cont, x = ~mins_per_week, y = ~age, z = ~bp, type = "scatter3d", mode = "markers", color = age)
 ```
 
 ```{r}

@@ -4,6 +4,7 @@ suppressMessages(library(gtsummary))
 suppressMessages(library(broom))
 suppressMessages(library(knitr))
 suppressMessages(library(kableExtra))
+suppressMessages(library(here))
 ```
 
 
@@ -66,11 +67,26 @@ What statistical test can we use to test the null hypothesis here?
 Let's take a graphical view of the case of a binary response variable.
 
 ```{r}
+#| eval = FALSE
+set.seed(123)
 n <- 50
 smoke_01 <- sample(c(0,1), n, replace = TRUE)
 bp <- 80 + 15*smoke_01 + rnorm(n, 0, 2)
 bp_data_smoking <- data.frame(smoke_01, bp)
+write_csv(bp_data_smoking, here("data", "bp_data_smoking.csv"))
 ```
+
+<a href="data/bp_data_smoking.csv" download>
+  Download the dataset.
+</a>
+
+
+```{r}
+#| echo = TRUE
+bp_data_smoking <- read_csv(here("data", "bp_data_smoking.csv"))
+head(bp_data_smoking)
+```
+
 
 ```{r}
 ggplot(bp_data_smoking, aes(x = smoke_01, y = bp)) +
@@ -134,8 +150,22 @@ The other plots are a little different from before, because we have only two fit
 Here is how it could have looked if smoking also increased the variability in the blood pressure among individuals:
 
 ```{r}
-bp <- 80 + 15*smoke_01 + rnorm(n, 0, 5 + 5*smoke_01)
+#| eval = FALSE
+bp <- 80 + 15*smoke_01 + rnorm(n, 0, 5 + 10*smoke_01)
 bp_data_smoking_het <- data.frame(smoke_01, bp)
+write_csv(bp_data_smoking_het, here("data", "bp_data_smoking_het.csv"))
+```
+
+<a href="data/bp_data_smoking_het.csv" download>
+  Download the dataset.
+</a>
+
+```{r}
+bp_data_smoking_het <- read_csv(here("data", "bp_data_smoking_het.csv"))
+```
+
+
+```{r}
 ggplot(bp_data_smoking_het, aes(x = smoke_01, y = bp)) +
   geom_point() +
   labs(x = "Smoking (0=no, 1=yes)", y = "Blood pressure")
@@ -254,6 +284,7 @@ Image we have a new question: "Is a person's blood pressure related to their die
 Here is an example dataset:
 
 ```{r}
+#| eval = FALSE
 set.seed(1)
 bp_data_diet <- tibble(diet = sample(c("meat heavy", "Mediterranean",
                                        "vegetarian", "vegan"),
@@ -263,8 +294,18 @@ bp_data_diet <- tibble(diet = sample(c("meat heavy", "Mediterranean",
                                               ifelse(diet == "vegetarian", 100, 90))),
                    sd = 10)),
          person_ID = paste0("person_", 1:50))
+write_csv(bp_data_diet, "data/bp_data_diet.csv")
+```
+
+<a href="data/bp_data_diet.csv" download>
+  Download the dataset.
+</a>
+
+```{r}
+bp_data_diet <- read_csv("data/bp_data_diet.csv")
 head(bp_data_diet)
 ```
+
 
 And here's a graph of the dataset:
 

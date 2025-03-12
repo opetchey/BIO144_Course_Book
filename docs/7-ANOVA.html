@@ -332,6 +332,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><span class="math inline">\(\epsilon_{i}\sim N(0,\sigma^2)\)</span> is an independent error term.</li>
 </ul>
 <p>Graphically, with the blood pressure and diet data, this looks like:</p>
+<p><a href="data/bp_data_diet.csv" download=""> Download the dataset. </a></p>
 <div class="cell">
 <div class="cell-output cell-output-stderr">
 <pre><code>`summarise()` has grouped output by 'diet'. You can override using the
@@ -416,15 +417,41 @@ Important
 <li><span class="math inline">\(MS_{residual}\)</span>: Quantifies the variability <strong>within</strong> groups.</li>
 </ul>
 <p>Here is an example with very low within group variability, and high between group variability:</p>
+<p><a href="data/bp_data_lowwithin.csv" download=""> Download the dataset. </a></p>
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 30 Columns: 2
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (1): diet
+dbl (1): bp
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="7-ANOVA_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="480"></p>
+<p><img src="7-ANOVA_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 <p>And here’s an example with very high within group variability, and low between group variability:</p>
+<p><a href="data/bp_data_highwithin.csv" download=""> Download the dataset. </a></p>
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 30 Columns: 2
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (1): diet
+dbl (1): bp
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="7-ANOVA_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="480"></p>
+<p><img src="7-ANOVA_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 </section>
@@ -495,27 +522,25 @@ Important
 <p>Let’s go back again the question of how diet effects blood pressure. Here is the data:</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 6 × 3
-     bp diet          person_ID
-  &lt;dbl&gt; &lt;chr&gt;         &lt;chr&gt;    
-1   120 meat heavy    person_1 
-2    89 vegan         person_2 
-3    86 vegetarian    person_3 
-4   116 meat heavy    person_4 
-5   115 Mediterranean person_5 
-6   134 meat heavy    person_6 </code></pre>
+<pre><code>   bp          diet person_ID
+1 120    meat heavy  person_1
+2  89         vegan  person_2
+3  86    vegetarian  person_3
+4 116    meat heavy  person_4
+5 115 Mediterranean  person_5
+6 134    meat heavy  person_6</code></pre>
 </div>
 </div>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="7-ANOVA_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="480"></p>
+<p><img src="7-ANOVA_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 <p>And here is how we fit a linear model to this data:</p>
 <p>Next we check the diagnostic plots:</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="7-ANOVA_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="480"></p>
+<p><img src="7-ANOVA_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 <p>Nothing looks too bad.</p>
@@ -572,26 +597,24 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <p>We can design other contrasts, for example: are diets that contain meat different from diets that do not contain meat?</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 6 × 4
-     bp diet          person_ID meat_or_no_meat
-  &lt;dbl&gt; &lt;chr&gt;         &lt;chr&gt;     &lt;chr&gt;          
-1   120 meat heavy    person_1  no meat        
-2    89 vegan         person_2  no meat        
-3    86 vegetarian    person_3  no meat        
-4   116 meat heavy    person_4  no meat        
-5   115 Mediterranean person_5  meat           
-6   134 meat heavy    person_6  no meat        </code></pre>
+<pre><code>   bp          diet person_ID meat_or_no_meat
+1 120    meat heavy  person_1         no meat
+2  89         vegan  person_2         no meat
+3  86    vegetarian  person_3         no meat
+4 116    meat heavy  person_4         no meat
+5 115 Mediterranean  person_5            meat
+6 134    meat heavy  person_6         no meat</code></pre>
 </div>
 </div>
 <p>Here we defined a new explanatory variable that groups the meat heavy and Mediterranean diet together into a single “meat” group and vegetarian and vegan into a single “no meat” group. We then fit a model with this explanatory variable:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>fit_mnm <span class="ot">&lt;-</span> <span class="fu">lm</span>(bp <span class="sc">~</span> meat_or_no_meat, <span class="at">data =</span> bp_data_diet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>fit_mnm <span class="ot">&lt;-</span> <span class="fu">lm</span>(bp <span class="sc">~</span> meat_or_no_meat, <span class="at">data =</span> bp_data_diet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>(We should not look at model diagnostics here, before using the model. But let us continue as if the assumptions are sufficiently met.)</p>
 <p>We now do something a bit more complicated: we compare the variance explained by the model with four diets to the model with two diets. This is done by comparing the two models using an <span class="math inline">\(F\)</span>-test. We are testing the null hypothesis that the two models are equally good at explaining the data, in which case the two diet model will explain as much variance as the four diet model.</p>
 <p>Let’s look at the ANOVA table of the model comparison:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(fit, fit_mnm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(fit, fit_mnm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Variance Table
 
@@ -711,11 +734,24 @@ Vegetarian (3)
 <p>The six empty cells in the table represent the six treatment combinations.</p>
 <p>This type of study, with all possible combinations, is known as a <em>factorial design</em>. The two treatments are called factors, and the levels of the factors are called factor levels. A <em>fully factorial design</em> is one where all possible combinations of the factor levels are present.</p>
 <p>Let’s look at example data:</p>
+<p><a href="data/bp_data_2cat2.csv" download=""> Download the dataset. </a></p>
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 60 Columns: 4
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (2): diet, exercise
+dbl (2): reps, bp
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 4
   diet          exercise  reps    bp
-  &lt;chr&gt;         &lt;fct&gt;    &lt;int&gt; &lt;dbl&gt;
+  &lt;chr&gt;         &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt;
 1 Mediterranean high         1  110.
 2 Mediterranean low          1  119.
 3 meat heavy    high         1  102.
@@ -726,20 +762,20 @@ Vegetarian (3)
 </div>
 <p>We can use the <code>xtabs</code> function to create a table of the data, by cross-tabulating the two treatments diet and exercise:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">xtabs</span>(<span class="sc">~</span>diet <span class="sc">+</span> exercise, <span class="at">data =</span> bp_data_2cat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">xtabs</span>(<span class="sc">~</span>diet <span class="sc">+</span> exercise, <span class="at">data =</span> bp_data_2cat2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>               exercise
-diet            low high
-  meat heavy     10   10
-  Mediterranean  10   10
-  vegetarian     10   10</code></pre>
+diet            high low
+  meat heavy      10  10
+  Mediterranean   10  10
+  vegetarian      10  10</code></pre>
 </div>
 </div>
 <p>This tells us there are 10 replicates in each of the six treatment combinations.</p>
 <p>And a visualisation of the data:</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="7-ANOVA_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="480"></p>
+<p><img src="7-ANOVA_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -781,13 +817,13 @@ Think, Pair, Share (#twoway-plot)
 <h3 class="anchored" data-anchor-id="using-r-for-2-way-anova">Using R for 2-way ANOVA</h3>
 <p>In R, a two-way ANOVA is as simple as one-way ANOVA, just add another variable:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>mod1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(bp <span class="sc">~</span> diet <span class="sc">*</span> exercise, <span class="at">data =</span> bp_data_2cat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>mod1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(bp <span class="sc">~</span> diet <span class="sc">*</span> exercise, <span class="at">data =</span> bp_data_2cat2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Note that, as we saw in the chapter about interactions, we include the main effects of diet and exercise and the interaction term with the short hand <code>diet * exercise</code>.</p>
 <p>Of course we next check the model diagnostics:</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="7-ANOVA_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="480"></p>
+<p><img src="7-ANOVA_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 <p>No clear patterns: all is good.</p>

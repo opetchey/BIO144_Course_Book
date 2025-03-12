@@ -55,17 +55,15 @@ where:
 
 Graphically, with the blood pressure and diet data, this looks like:
 
+
+<a href="data/bp_data_diet.csv" download>
+  Download the dataset.
+</a>
+
 ```{r}
-set.seed(1)
-bp_data_diet <- tibble(diet = sample(c("meat heavy", "Mediterranean",
-                                       "vegetarian", "vegan"),
-                                     50, replace = TRUE)) |> 
-  mutate(bp = ceiling(rnorm(50, mean = ifelse(diet == "meat heavy", 120,
-                                       ifelse(diet == "Mediterranean", 110,
-                                              ifelse(diet == "vegetarian", 100, 90))),
-                   sd = 10)),
-         person_ID = paste0("person_", 1:50))
+bp_data_diet <- read.csv("data/bp_data_diet.csv")
 ```
+
 
 ```{r}
 group_means <- bp_data_diet %>%
@@ -207,15 +205,29 @@ $$F = \frac{MS_{model}}{MS_{residual}}$$
 
 Here is an example with very low within group variability, and high between group variability:
 
+<a href="data/bp_data_lowwithin.csv" download>
+  Download the dataset.
+</a>
+
 ```{r}
+#| eval = FALSE
 set.seed(123)
 n <- 10
 g <- 3
-bp_data <- data.frame(bp = c(rnorm(n, 100, 1), rnorm(n, 110, 1), rnorm(n, 120, 1)),
+bp_data_low_within <- data.frame(bp = c(rnorm(n, 100, 1), rnorm(n, 110, 1), rnorm(n, 120, 1)),
                       diet = rep(c("meat", "med", "vegan"), each = n))
-bp_data$diet <- factor(bp_data$diet)
-bp_data$diet <- relevel(bp_data$diet, ref = "meat")
-ggplot(bp_data, aes(x = diet, y = bp)) +
+bp_data_low_within$diet <- factor(bp_data_low_within$diet)
+bp_data_low_within$diet <- relevel(bp_data_low_within$diet, ref = "meat")
+write_csv(bp_data_low_within, "data/bp_data_lowwithin.csv")
+```
+
+```{r}
+bp_data_low_within <- read_csv("data/bp_data_lowwithin.csv")
+```
+
+
+```{r}
+ggplot(bp_data_low_within, aes(x = diet, y = bp)) +
   geom_point() +
   labs(title = "Blood pressure by diet",
        x = "Diet",
@@ -225,20 +237,33 @@ ggplot(bp_data, aes(x = diet, y = bp)) +
 And here's an example with very high within group variability, and low between group variability:
 
 ```{r}
+#| eval = FALSE
 set.seed(123)
 n <- 10
 g <- 3
-bp_data <- data.frame(bp = c(rnorm(n, 100, 10), rnorm(n, 101, 10), rnorm(n, 102, 10)),
+bp_data_highwithin <- data.frame(bp = c(rnorm(n, 100, 10), rnorm(n, 101, 10), rnorm(n, 102, 10)),
                       diet = rep(c("meat", "med", "vegan"), each = n))
-bp_data$diet <- factor(bp_data$diet)
-bp_data$diet <- relevel(bp_data$diet, ref = "meat")
-ggplot(bp_data, aes(x = diet, y = bp)) +
+bp_data_highwithin$diet <- factor(bp_data_highwithin$diet)
+bp_data_highwithin$diet <- relevel(bp_data_highwithin$diet, ref = "meat")
+write_csv(bp_data_highwithin, "data/bp_data_highwithin.csv")
+```
+
+<a href="data/bp_data_highwithin.csv" download>
+  Download the dataset.
+</a>
+
+```{r}
+bp_data_highwithin <- read_csv("data/bp_data_highwithin.csv")
+```
+
+```{r}
+ggplot(bp_data_highwithin, aes(x = diet, y = bp)) +
   geom_point() +
   labs(title = "Blood pressure by diet",
        x = "Diet",
        y = "Blood pressure")
-```
 
+```
 
 
 
@@ -469,9 +494,10 @@ This type of study, with all possible combinations, is known as a *factorial des
 Let's look at example data:
 
 ```{r}
+#| eval = FALSE
 set.seed(1)
 reps <- 1:10
-bp_data_2cat <- crossing(diet = c("meat heavy", "vegetarian", "Mediterranean"),
+bp_data_2cat2 <- crossing(diet = c("meat heavy", "vegetarian", "Mediterranean"),
          exercise = c("low", "high"),
          reps = reps) %>%
   mutate(bp = 120 -
@@ -484,14 +510,28 @@ bp_data_2cat <- crossing(diet = c("meat heavy", "vegetarian", "Mediterranean"),
   arrange(reps, diet, exercise) |>
   mutate(exercise = relevel(factor(exercise), "low")) |> 
   select(-error)
-head(bp_data_2cat)
+write_csv(bp_data_2cat2, "data/bp_data_2cat2.csv")
+```
+
+<a href="data/bp_data_2cat2.csv" download>
+  Download the dataset.
+</a>
+
+
+```{r}
+bp_data_2cat2 <- read_csv("data/bp_data_2cat2.csv")
+```
+
+
+```{r}
+head(bp_data_2cat2)
 ```
 
 We can use the `xtabs` function to create a table of the data, by cross-tabulating the two treatments diet and exercise:
 
 ```{r}
 #| echo = TRUE
-xtabs(~diet + exercise, data = bp_data_2cat)
+xtabs(~diet + exercise, data = bp_data_2cat2)
 ```
 
 This tells us there are 10 replicates in each of the six treatment combinations.
@@ -499,9 +539,9 @@ This tells us there are 10 replicates in each of the six treatment combinations.
 And a visualisation of the data:
 
 ```{r}
-grouped_data <- group_by(bp_data_2cat, diet, exercise) %>%
+grouped_data <- group_by(bp_data_2cat2, diet, exercise) %>%
   summarise(mean_bp = mean(bp), sd_bp = sd(bp), .groups = "drop")
-ggplot(bp_data_2cat, aes(x=exercise, y=bp, col=diet)) + 
+ggplot(bp_data_2cat2, aes(x=exercise, y=bp, col=diet)) + 
   geom_point(position=position_dodge(width=0.1)) + 
   geom_point(data = grouped_data, aes(x=exercise, y=mean_bp, col=diet),
              position=position_dodge(width=0.1), size=5) +
@@ -561,7 +601,7 @@ In R, a two-way ANOVA is as simple as one-way ANOVA, just add another
 variable:
 
 ```{r echo = TRUE, message = FALSE, warning = FALSE}
-mod1 <- lm(bp ~ diet * exercise, data = bp_data_2cat)
+mod1 <- lm(bp ~ diet * exercise, data = bp_data_2cat2)
 ```
 
 Note that, as we saw in the chapter about interactions, we include the main effects of diet and exercise and the interaction term with the short hand `diet * exercise`.

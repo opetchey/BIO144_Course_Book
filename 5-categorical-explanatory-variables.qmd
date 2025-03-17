@@ -286,7 +286,7 @@ Here is an example dataset:
 ```{r}
 #| eval = FALSE
 set.seed(1)
-bp_data_diet <- tibble(diet = sample(c("meat heavy", "Mediterranean",
+bp_data_diet2 <- tibble(diet = sample(c("meat heavy", "Mediterranean",
                                        "vegetarian", "vegan"),
                                      50, replace = TRUE)) |> 
   mutate(bp = ceiling(rnorm(50, mean = ifelse(diet == "meat heavy", 120,
@@ -294,23 +294,23 @@ bp_data_diet <- tibble(diet = sample(c("meat heavy", "Mediterranean",
                                               ifelse(diet == "vegetarian", 100, 90))),
                    sd = 10)),
          person_ID = paste0("person_", 1:50))
-write_csv(bp_data_diet, "data/bp_data_diet.csv")
+write_csv(bp_data_diet2, "data/bp_data_diet2.csv")
 ```
 
-<a href="data/bp_data_diet.csv" download>
+<a href="data/bp_data_diet2.csv" download>
   Download the dataset.
 </a>
 
 ```{r}
-bp_data_diet <- read_csv("data/bp_data_diet.csv")
-head(bp_data_diet)
+bp_data_diet2 <- read_csv("data/bp_data_diet2.csv")
+head(bp_data_diet2)
 ```
 
 
 And here's a graph of the dataset:
 
 ```{r}
-ggplot(bp_data_diet, aes(x = diet, y = bp)) +
+ggplot(bp_data_diet2, aes(x = diet, y = bp)) +
   geom_point() +
   labs(x = "Diet", y = "Blood pressure")
 ```
@@ -332,18 +332,18 @@ Another way to think about why we need one less binary variable than the number 
 Here is the dataset with four binary variables:
 
 ```{r}
-bp_data_diet <- bp_data_diet %>%
+bp_data_diet2 <- bp_data_diet2 %>%
   mutate(meat_heavy = ifelse(diet == "meat heavy", 1, 0),
          Mediterranean = ifelse(diet == "Mediterranean", 1, 0),
          vegetarian = ifelse(diet == "vegetarian", 1, 0),
          vegan = ifelse(diet == "vegan", 1, 0))
-head(bp_data_diet)
+head(bp_data_diet2)
 ```
 
 And here it is with three:
 
 ```{r}
-select(bp_data_diet, -meat_heavy) |> head()
+select(bp_data_diet2, -meat_heavy) |> head()
 ```
 
 The point is that the second table with one less binary variable has exactly the same information as the first table with four binary variables. It has the same information because we know that there are only four possible diets in the dataset.
@@ -389,11 +389,11 @@ So, each of the three coefficients $\beta_1$, $\beta_2$, and $\beta_3$ is the ex
 Here is a visualisation of the model:
 
 ```{r}
-bp_model_diet <- lm(bp ~ diet, data = bp_data_diet)
-group_means <- bp_data_diet %>%
+bp_model_diet <- lm(bp ~ diet, data = bp_data_diet2)
+group_means <- bp_data_diet2 %>%
   group_by(diet, .groups = "drop") %>%
   summarise(mean_bp = mean(bp))
-ggplot(bp_data_diet, aes(x = diet, y = bp)) +
+ggplot(bp_data_diet2, aes(x = diet, y = bp)) +
   geom_point() +
   geom_hline(yintercept = coef(bp_model_diet)[1], color = "red") +
   geom_point(data = group_means, aes(y = mean_bp), color = "blue", size = 3) +
@@ -428,7 +428,7 @@ In R, we can fit a linear model with a categorical variable using the `lm()` fun
 
 ```{r}
 #| echo = TRUE
-bp_model_diet <- lm(bp ~ diet, data = bp_data_diet)
+bp_model_diet <- lm(bp ~ diet, data = bp_data_diet2)
 ```
 
 No news is good news!
@@ -466,7 +466,7 @@ Just for fun, let's fit the model using the three binary dummy variables:
 
 ```{r}
 #| echo = TRUE
-bp_model_diet_bin <- lm(bp ~ Mediterranean + vegetarian + vegan, data = bp_data_diet)
+bp_model_diet_bin <- lm(bp ~ Mediterranean + vegetarian + vegan, data = bp_data_diet2)
 summary(bp_model_diet_bin)$coefficients
 ```
 
@@ -476,7 +476,7 @@ And for even more fun, lets see what happens if we fit a model with four binary 
 
 ```{r}
 #| echo = TRUE
-bp_data_diet_bin <- bp_data_diet %>%
+bp_data_diet_bin <- bp_data_diet2 %>%
   select(bp, meat_heavy, Mediterranean, vegetarian, vegan)
 bp_model_diet_bin_all <- lm(bp ~ - Mediterranean + vegetarian + vegan + meat_heavy,
                             data = bp_data_diet_bin)

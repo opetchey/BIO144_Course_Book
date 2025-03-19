@@ -794,22 +794,22 @@ Think, Pair, Share (#twoway-plot)
 <section id="the-model-for-2-way-anova" class="level3">
 <h3 class="anchored" data-anchor-id="the-model-for-2-way-anova">The model for 2-way ANOVA</h3>
 <p>Assume we have a factorial design with two treatments (factors), factor <span class="math inline">\(B\)</span> and factor <span class="math inline">\(G\)</span>.</p>
-<p>And that we can label the levels of factor <span class="math inline">\(B\)</span> as <span class="math inline">\(i=1,2...\)</span> and factor <span class="math inline">\(\G\)</span> as <span class="math inline">\(j=1,2...\)</span>.</p>
-<p>Then we can denote a particular treatment combination as <span class="math inline">\(B_iG_j\)</span>.</p>
-<p>And let us set the one of the treatment combinations as the intercept of the model, and the let the intercept be equal to the mean of the observations in the treatment combination <span class="math inline">\(B1G1\)</span>.</p>
-<p><span class="math display">\[intercept = \frac{1}{n_{11}}\sum_{k=1}^{n_{11}} y_{1,1,k}\]</span></p>
+<p>And that we can label the levels of factor <span class="math inline">\(B\)</span> as <span class="math inline">\(j=1,2...\)</span> and factor <span class="math inline">\(\G\)</span> as <span class="math inline">\(k=1,2...\)</span>.</p>
+<p>Then we can denote a particular treatment combination as <span class="math inline">\(B_jG_k\)</span>.</p>
+<p>And let us set the one of the treatment combinations as the intercept of the model, and the let the intercept be equal to the mean of the observations in the treatment combination <span class="math inline">\(B_1G_1\)</span>.</p>
+<p><span class="math display">\[intercept = \frac{1}{n_{11}}\sum_{i=1}^{n_{11}} y_{i,1,1}\]</span></p>
 <p>where:</p>
 <ul>
-<li><span class="math inline">\(y_{1,1,k}\)</span> is the <span class="math inline">\(k\)</span>th observation in the treatment combination <span class="math inline">\(B1G1\)</span></li>
-<li><span class="math inline">\(n_{11}\)</span> is the number of observations in the treatment combination <span class="math inline">\(B1G1\)</span>.</li>
+<li><span class="math inline">\(y_{i,1,1}\)</span> is the <span class="math inline">\(i\)</span>th observation in the treatment combination <span class="math inline">\(B_1G_1\)</span></li>
+<li><span class="math inline">\(n_{11}\)</span> is the number of observations in the treatment combination <span class="math inline">\(B_1G_1\)</span>.</li>
 </ul>
-<p>And we will let all of the other treatment combinations be represented by the <strong>effects</strong> <span class="math inline">\(\beta_i\)</span> and <span class="math inline">\(\gamma_j\)</span>.</p>
+<p>And we will let all of the other treatment combinations be represented by the <strong>effects</strong> <span class="math inline">\(\beta_j\)</span> and <span class="math inline">\(\gamma_k\)</span>.</p>
 <p>The resulting linear model is:</p>
-<p><span class="math display">\[y_{ijk} = intercept + \beta_i + \gamma_j + (\beta\gamma)_{ij} + \epsilon_{ijk} \quad \text{with} \quad \epsilon_{ijk} \sim N(0,\sigma^2)\]</span></p>
+<p><span class="math display">\[y_{ijk} = intercept + \beta_j + \gamma_k + (\beta\gamma)_{jk} + \epsilon_{ijk} \quad \text{with} \quad \epsilon_{ijk} \sim N(0,\sigma^2)\]</span></p>
 <p>where</p>
 <ul>
-<li><span class="math inline">\(y_{ijk}\)</span> is the <span class="math inline">\(k\)</span>th observation in the treatment combination of <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span>.</li>
-<li><span class="math inline">\((\beta\gamma)_{ij}\)</span> is the interaction effect between the <span class="math inline">\(i\)</span>th level of factor <span class="math inline">\(\beta\)</span> and the <span class="math inline">\(j\)</span>th level of factor <span class="math inline">\(\gamma\)</span>.</li>
+<li><span class="math inline">\(y_{ijk}\)</span> is the <span class="math inline">\(i\)</span>th observation in the treatment combination of <span class="math inline">\(j\)</span> and <span class="math inline">\(k\)</span>.</li>
+<li><span class="math inline">\((\beta\gamma)_{jk}\)</span> is the interaction effect between the <span class="math inline">\(j\)</span>th level of factor <span class="math inline">\(\beta\)</span> and the <span class="math inline">\(k\)</span>th level of factor <span class="math inline">\(\gamma\)</span>.</li>
 </ul>
 <p>In this model, we set <span class="math inline">\(\beta_1=\gamma_1=0\)</span> and <span class="math inline">\((\beta\gamma)_{11}=0\)</span> because they are already included in the intercept.</p>
 </section>

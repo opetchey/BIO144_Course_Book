@@ -566,29 +566,29 @@ What do you conclude from this plot?
 
 Assume we have a factorial design with two treatments (factors), factor $B$ and factor $G$.
 
-And that we can label the levels of factor $B$ as $i=1,2...$ and factor $\G$ as $j=1,2...$.
+And that we can label the levels of factor $B$ as $j=1,2...$ and factor $\G$ as $k=1,2...$.
 
-Then we can denote a particular treatment combination as $B_iG_j$.
+Then we can denote a particular treatment combination as $B_jG_k$.
 
-And let us set the one of the treatment combinations as the intercept of the model, and the let the intercept be equal to the mean of the observations in the treatment combination $B1G1$.
+And let us set the one of the treatment combinations as the intercept of the model, and the let the intercept be equal to the mean of the observations in the treatment combination $B_1G_1$.
 
-$$intercept = \frac{1}{n_{11}}\sum_{k=1}^{n_{11}} y_{1,1,k}$$
+$$intercept = \frac{1}{n_{11}}\sum_{i=1}^{n_{11}} y_{i,1,1}$$
 
 where:
 
-* $y_{1,1,k}$ is the $k$th observation in the treatment combination $B1G1$
-* $n_{11}$ is the number of observations in the treatment combination $B1G1$.
+* $y_{i,1,1}$ is the $i$th observation in the treatment combination $B_1G_1$
+* $n_{11}$ is the number of observations in the treatment combination $B_1G_1$.
 
-And we will let all of the other treatment combinations be represented by the **effects** $\beta_i$ and $\gamma_j$.
+And we will let all of the other treatment combinations be represented by the **effects** $\beta_j$ and $\gamma_k$.
 
 The resulting linear model is:
 
-$$y_{ijk} = intercept + \beta_i + \gamma_j + (\beta\gamma)_{ij} + \epsilon_{ijk} \quad \text{with} \quad \epsilon_{ijk} \sim N(0,\sigma^2)$$
+$$y_{ijk} = intercept + \beta_j + \gamma_k + (\beta\gamma)_{jk} + \epsilon_{ijk} \quad \text{with} \quad \epsilon_{ijk} \sim N(0,\sigma^2)$$
 
 where
 
-* $y_{ijk}$ is the $k$th observation in the treatment combination of $i$ and $j$.
-* $(\beta\gamma)_{ij}$ is the interaction effect between the $i$th level of factor $\beta$ and the $j$th level of factor $\gamma$.
+* $y_{ijk}$ is the $i$th observation in the treatment combination of $j$ and $k$.
+* $(\beta\gamma)_{jk}$ is the interaction effect between the $j$th level of factor $\beta$ and the $k$th level of factor $\gamma$.
 
 In this model, we set $\beta_1=\gamma_1=0$ and $(\beta\gamma)_{11}=0$ because they are already included in the intercept.
 

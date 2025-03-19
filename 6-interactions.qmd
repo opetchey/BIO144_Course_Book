@@ -118,7 +118,7 @@ ggplot(bp_diet, aes(x=mins_per_week, y=bp, col=diet)) +
 Can we say anything general about the effect of diet on blood pressure?
 :::
 
-No, we can't. We cannot, for example, state that a vegetarian diet lowers blood pressure. We can say, however, that a vegatarian diet lowers blood pressure of people that do little exercise.
+No, we can't. For example, we can't state that a vegetarian diet lowers blood pressure. We can say, however, that a vegatarian diet lowers blood pressure of people that do little exercise.
 
 ::: {.callout-tip}
 ## Think, Pair, Share (#general-exercise)
@@ -126,7 +126,7 @@ No, we can't. We cannot, for example, state that a vegetarian diet lowers blood 
 Can we say anything general about the effect of exercise on blood pressure?
 :::
 
-Well, we can say that exercise lowers blood pressure, but we have to be careful. We have to say that exercise lowers blood pressure of people with a vegetarian diet more than of people with a meat heavy diet.
+Well, not really. I would not be confident stating that diet reduces blood pressure. There is only rather weak evidence for an effect of exercise on blood pressure of vegetarians. (But there is strong evidence that exercise lowers blood pressure of people with a meat heavy diet.)
 
 
 I think it is clear that the interaction was easier to see when we plotted all the data in one graph... it is much easier to visually compare the slopes of the two regression lines when they are on the same graph.

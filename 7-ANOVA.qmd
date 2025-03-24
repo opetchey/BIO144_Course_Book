@@ -50,7 +50,7 @@ $$y_{ij} = \mu_j + \epsilon_{i}$$
 where:
 
 -   $y_{ij}$ = Blood pressure of individual $i$ with diet $j$
--   $\mu_i$ = Mean blood pressure of an individual with diet $j$
+-   $\mu_j$ = Mean blood pressure of an individual with diet $j$
 -   $\epsilon_{i}\sim N(0,\sigma^2)$ is an independent error term.
 
 Graphically, with the blood pressure and diet data, this looks like:
@@ -163,22 +163,26 @@ Because we are testing a null hypothesis that concerns all the groups, we need t
 
 To derive the ingredients of the $F$-test, we look at the variances :
 
-**Total variability:** SST = $\sum_{i=1}^k \sum_{j=1}^{n_i} (y_{ij}-\overline{y})^2$
+**Total variability:** SST = $\sum_{j=1}^k \sum_{i=1}^{n_j} (y_{ij}-\overline{y})^2$
 
 where:
 
-* $y_{ij}$ is the blood pressure of individual $j$ in group $i$
+* $y_{ij}$ is the blood pressure of individual $i$ in group $j$
 * $\overline{y}$ is the overall mean blood pressure
-* $n_i$ is the number of individuals in group $i$
+* $n_j$ is the number of individuals in group $j$
 * $k$ is the number of groups
 
-**Explained variability (between group variability)**: == SSM = $\sum_{i=1}^k n_i (\overline{y}_{i} - \overline{y})^2$
+**Explained variability (between group variability)**: == SSM = $\sum_{j=1}^k n_j (\overline{y}_{j} - \overline{y})^2$
 
 where:
 
-* $\overline{y}_{i}$ is the mean blood pressure of group $i$
+* $\overline{y}_{j}$ is the mean blood pressure of group $j$
 
-**Residual variability (within group variability)**: = SSE = $\sum_{i=1}^k \sum_{j=1}^{n_i}  (y_{ij} - \overline{y}_{i} )^2$
+**Residual variability (within group variability)**: = SSE = $\sum_{j=1}^k \sum_{i=1}^{n_j}  (y_{ij} - \overline{y}_{j} )^2$
+
+where:
+
+* $\overline{y}_{j}$ is the mean blood pressure of group $j$
 
 
 
@@ -566,7 +570,7 @@ What do you conclude from this plot?
 
 Assume we have a factorial design with two treatments (factors), factor $B$ and factor $G$.
 
-And that we can label the levels of factor $B$ as $j=1,2...$ and factor $\G$ as $k=1,2...$.
+And that we can label the levels of factor $B$ as $j=1,2...$ and factor $G$ as $k=1,2...$.
 
 Then we can denote a particular treatment combination as $B_jG_k$.
 

@@ -328,7 +328,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>where:</p>
 <ul>
 <li><span class="math inline">\(y_{ij}\)</span> = Blood pressure of individual <span class="math inline">\(i\)</span> with diet <span class="math inline">\(j\)</span></li>
-<li><span class="math inline">\(\mu_i\)</span> = Mean blood pressure of an individual with diet <span class="math inline">\(j\)</span></li>
+<li><span class="math inline">\(\mu_j\)</span> = Mean blood pressure of an individual with diet <span class="math inline">\(j\)</span></li>
 <li><span class="math inline">\(\epsilon_{i}\sim N(0,\sigma^2)\)</span> is an independent error term.</li>
 </ul>
 <p>Graphically, with the blood pressure and diet data, this looks like:</p>
@@ -388,20 +388,24 @@ Important
 <section id="calculating-and-analysing-the-variances" class="level3">
 <h3 class="anchored" data-anchor-id="calculating-and-analysing-the-variances">Calculating and analysing the variances</h3>
 <p>To derive the ingredients of the <span class="math inline">\(F\)</span>-test, we look at the variances :</p>
-<p><strong>Total variability:</strong> SST = <span class="math inline">\(\sum_{i=1}^k \sum_{j=1}^{n_i} (y_{ij}-\overline{y})^2\)</span></p>
+<p><strong>Total variability:</strong> SST = <span class="math inline">\(\sum_{j=1}^k \sum_{i=1}^{n_j} (y_{ij}-\overline{y})^2\)</span></p>
 <p>where:</p>
 <ul>
-<li><span class="math inline">\(y_{ij}\)</span> is the blood pressure of individual <span class="math inline">\(j\)</span> in group <span class="math inline">\(i\)</span></li>
+<li><span class="math inline">\(y_{ij}\)</span> is the blood pressure of individual <span class="math inline">\(i\)</span> in group <span class="math inline">\(j\)</span></li>
 <li><span class="math inline">\(\overline{y}\)</span> is the overall mean blood pressure</li>
-<li><span class="math inline">\(n_i\)</span> is the number of individuals in group <span class="math inline">\(i\)</span></li>
+<li><span class="math inline">\(n_j\)</span> is the number of individuals in group <span class="math inline">\(j\)</span></li>
 <li><span class="math inline">\(k\)</span> is the number of groups</li>
 </ul>
-<p><strong>Explained variability (between group variability)</strong>: == SSM = <span class="math inline">\(\sum_{i=1}^k n_i (\overline{y}_{i} - \overline{y})^2\)</span></p>
+<p><strong>Explained variability (between group variability)</strong>: == SSM = <span class="math inline">\(\sum_{j=1}^k n_j (\overline{y}_{j} - \overline{y})^2\)</span></p>
 <p>where:</p>
 <ul>
-<li><span class="math inline">\(\overline{y}_{i}\)</span> is the mean blood pressure of group <span class="math inline">\(i\)</span></li>
+<li><span class="math inline">\(\overline{y}_{j}\)</span> is the mean blood pressure of group <span class="math inline">\(j\)</span></li>
 </ul>
-<p><strong>Residual variability (within group variability)</strong>: = SSE = <span class="math inline">\(\sum_{i=1}^k \sum_{j=1}^{n_i} (y_{ij} - \overline{y}_{i} )^2\)</span></p>
+<p><strong>Residual variability (within group variability)</strong>: = SSE = <span class="math inline">\(\sum_{j=1}^k \sum_{i=1}^{n_j} (y_{ij} - \overline{y}_{j} )^2\)</span></p>
+<p>where:</p>
+<ul>
+<li><span class="math inline">\(\overline{y}_{j}\)</span> is the mean blood pressure of group <span class="math inline">\(j\)</span></li>
+</ul>
 <p><strong>SST degrees of freedom</strong>: <span class="math inline">\(n - 1\)</span> (total degrees of freedom is number of observations <span class="math inline">\(n\)</span> minus 1)</p>
 <p><strong>SSM degrees of freedom</strong>: <span class="math inline">\(k - 1\)</span> (model degrees of freedom is number of groups <span class="math inline">\(k\)</span> minus 1)</p>
 <p><strong>SSE degrees of freedom</strong>: <span class="math inline">\(n - k\)</span> (residual degrees of freedom is total degrees of freedom <span class="math inline">\(n - 1\)</span> minus model degrees of freedom <span class="math inline">\(k - 1\)</span>)</p>
@@ -794,7 +798,7 @@ Think, Pair, Share (#twoway-plot)
 <section id="the-model-for-2-way-anova" class="level3">
 <h3 class="anchored" data-anchor-id="the-model-for-2-way-anova">The model for 2-way ANOVA</h3>
 <p>Assume we have a factorial design with two treatments (factors), factor <span class="math inline">\(B\)</span> and factor <span class="math inline">\(G\)</span>.</p>
-<p>And that we can label the levels of factor <span class="math inline">\(B\)</span> as <span class="math inline">\(j=1,2...\)</span> and factor <span class="math inline">\(\G\)</span> as <span class="math inline">\(k=1,2...\)</span>.</p>
+<p>And that we can label the levels of factor <span class="math inline">\(B\)</span> as <span class="math inline">\(j=1,2...\)</span> and factor <span class="math inline">\(G\)</span> as <span class="math inline">\(k=1,2...\)</span>.</p>
 <p>Then we can denote a particular treatment combination as <span class="math inline">\(B_jG_k\)</span>.</p>
 <p>And let us set the one of the treatment combinations as the intercept of the model, and the let the intercept be equal to the mean of the observations in the treatment combination <span class="math inline">\(B_1G_1\)</span>.</p>
 <p><span class="math display">\[intercept = \frac{1}{n_{11}}\sum_{i=1}^{n_{11}} y_{i,1,1}\]</span></p>

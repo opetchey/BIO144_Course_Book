@@ -511,6 +511,44 @@ qqline(ss,xlab="")
 
 Each of the graphs above has data points that are randomly generated from a normal distribution. In all cases the data points are close to the line. This is what we would expect if the data were normally distributed. The amount of deviation from the line is what we would expect from random variation, and so seeing this amount of variation in a QQ-plot of your model should not be cause for concern.
 
+We can also make a graph that shows the observed QQ-plot and the simulated QQ-plots:
+
+```{r}
+set.seed(390457)
+ss <- rnorm(100)
+qqnorm(ss,main="")
+qqline(ss,xlab="")
+for (ii in 1:100){
+  ss <- rnorm(100)
+  points(sort(ss),sort(rnorm(100)),col=rgb(0,0,0,0.1))
+}
+```
+
+If the observed QQ-plot is within the range of the simulated QQ-plots, then we can conclude that the residuals are normally distributed.
+
+We can also look at QQ-plots that are clearly not normal, to get an impression of what it could look like when we should start to get worried and not trust the normality assumption:
+
+```{r}
+
+```{r}
+## QQ-plot of a uniform distribution
+qqnorm(runif(100),main="")
+qqline(runif(100),xlab="")
+## add a title to the plot
+mtext("QQ-plot of a uniform distribution",3)
+```
+
+```{r}
+```
+
+```{r}
+## QQ-plot of a chi-squared distribution
+## with 1 degree of freedom
+qqnorm(rchisq(100,1),main="")
+qqline(rchisq(100,1),xlab="")
+## add a title to the plot
+mtext("QQ-plot of a chi-squared distribution with 1 degree of freedom",3)
+```
 
 ### (b) Equal variance (homoscedasticity)
 

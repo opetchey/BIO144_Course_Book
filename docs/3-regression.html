@@ -669,6 +669,24 @@ F-statistic: 884.4 on 1 and 98 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 </div>
 <p>Each of the graphs above has data points that are randomly generated from a normal distribution. In all cases the data points are close to the line. This is what we would expect if the data were normally distributed. The amount of deviation from the line is what we would expect from random variation, and so seeing this amount of variation in a QQ-plot of your model should not be cause for concern.</p>
+<p>We can also make a graph that shows the observed QQ-plot and the simulated QQ-plots:</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="3-regression_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="480"></p>
+</div>
+</div>
+<p>If the observed QQ-plot is within the range of the simulated QQ-plots, then we can conclude that the residuals are normally distributed.</p>
+<p>We can also look at QQ-plots that are clearly not normal, to get an impression of what it could look like when we should start to get worried and not trust the normality assumption:</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="3-regression_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="480"></p>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="3-regression_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid" width="480"></p>
+</div>
+</div>
 </section>
 </section>
 <section id="b-equal-variance-homoscedasticity" class="level3">
@@ -681,7 +699,7 @@ F-statistic: 884.4 on 1 and 98 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>The idea is to plot the square root of the (standardized) residuals <span class="math inline">\(\sqrt{|R_i|}\)</span> against the fitted values <span class="math inline">\(\hat{y_i}\)</span>. There should be <strong>no trend</strong>:</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="480"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 <section id="how-it-looks-with-the-variance-increasing-with-the-fitted-values" class="level4">
@@ -690,13 +708,13 @@ F-statistic: 884.4 on 1 and 98 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>First here is a graph of the relationship:</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="480"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 <p>And here the scale-location plot for a linear model of that data:</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="480"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 </section>
@@ -722,40 +740,40 @@ F-statistic: 884.4 on 1 and 98 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>The blood pressure data seems to be linear:</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" width="480"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 <p>In contrast, look at this linear regression through data that appears non-linear:</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid" width="480"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 <p>And with the residuals shown as red lines:</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid" width="480"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 <p>At low values of <span class="math inline">\(y\)</span>, the residuals are positive, at intermediate values of <span class="math inline">\(y\)</span> the residuals are negative, and at high values of <span class="math inline">\(y\)</span> the residuals are positive. This pattern in the residuals is a sign that the relationship between <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> is not linear.</p>
 <p>We can plot the value of the residuals against the <span class="math inline">\(y\)</span> value directly, instead of looking at the pattern in the graph above. This is called a <strong>Tukey-Anscombe plot</strong>. It is a graph of the residuals versus the fitted <span class="math inline">\(y\)</span> values.</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid" width="480"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 <p>We can very clearly see pattern in the residuals in this Tukey-Anscombe plot. The residuals are positive, then negative, then positive, as the fitted <span class="math inline">\(y\)</span> value gets larger.</p>
 <p>The red line in the Tukey-Anscombe plot is a loess smooth. It is automatically added to the plot. It is a way of estimating the pattern in the residuals. If the red line is not flat, then there is a pattern in the residuals. However, the loess smooth is not always reliable. It is a good idea to look at the residuals directly, without this smooth.</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid" width="480"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 <p>The data here is simulated to show a very clear pattern in the residuals. In real data, the pattern might not be so clear. But if you suspect you see a pattern in the residuals, it could be a sign that the relationship between the independent and dependent variable is not linear.</p>
 <p>Here is the Tukey-Anscombe plot for the blood pressure data:</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid" width="480"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 <p>There is very little evidence of any pattern in the residuals. This data is simulated with a truly linear relationship, so we would not expect to see any pattern in the residuals.</p>
@@ -766,7 +784,7 @@ F-statistic: 884.4 on 1 and 98 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>Lets again look at the blood pressure versus age data:</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid" width="480"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 <p>There are no obvious outliers in this data. The data points are all close to the line of best fit. This is a good sign that the line of best fit is a good representation of the data.</p>
@@ -809,14 +827,14 @@ Think, Pair, Share (#like-weight)
 <p>Lets add a rather extreme data point to the blood pressure versus age data:</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid" width="480"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 <p>This is a bit ridiculous, but it is a good example of an outlier. The data point is far from the other data points. It has a large residual. And it is a long way from the pivot (the middle of the <span class="math inline">\(x\)</span> data) so has large leverage.</p>
 <p>We can make a histogram of the residuals and see that the outlier has a large residual:</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid" width="480"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 <p>And we can see that the leverage is large.</p>
@@ -825,13 +843,13 @@ Think, Pair, Share (#like-weight)
 <p>where <span class="math inline">\(\hat{y}_j\)</span> is the predicted value of the dependent variable for data point <span class="math inline">\(j\)</span>, <span class="math inline">\(\hat{y}_{j(i)}\)</span> is the predicted value of the dependent variable for data point <span class="math inline">\(j\)</span> when data point <span class="math inline">\(i\)</span> is removed, <span class="math inline">\(p\)</span> is the number of parameters in the model (2 in this case), <span class="math inline">\(MSE\)</span> is the mean squared error of the model.</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid" width="480"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-37-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 <p>But does it have a large influence on the value of the slope?</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid" width="480"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-38-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 <p>The outlier has a large leverage. It is far from the pivot. But it does not have such a large effect (influence) on the slope. This is in large part because there are a lot data points (100) that are quite tightly arranged around the regression line.</p>
@@ -840,7 +858,7 @@ Think, Pair, Share (#like-weight)
 <p>Data points with <span class="math inline">\(x_i\)</span> values far from the mean have a stronger leverage effect than when <span class="math inline">\(x_i\approx \overline{x}\)</span>:</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid" width="768"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-39-1.png" class="img-fluid" width="768"></p>
 </div>
 </div>
 <p>The outlier in the middle plot “pulls” the regression line in its direction and has large influence on the slope.</p>
@@ -850,7 +868,7 @@ Think, Pair, Share (#like-weight)
 <p>In the leverage plot, (standardized) residuals <span class="math inline">\(\tilde{R_i}\)</span> are plotted against the leverage <span class="math inline">\(H_{ii}\)</span> :</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid" width="480"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-40-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 <p>Critical ranges are the top and bottom right corners!!</p>
@@ -882,28 +900,28 @@ Think, Pair, Share (#like-weight)
 <p>Here’s another example of <span class="math inline">\(y\)</span> and <span class="math inline">\(x\)</span> that are not linearly related:</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid" width="672"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-41-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>One way to deal with this is to transform the response variable <span class="math inline">\(Y\)</span>. Here we try two different transformations: <span class="math inline">\(\log_{10}(Y)\)</span> and <span class="math inline">\(\sqrt{Y}\)</span>.</p>
 <p>Square root transform of the response variable <span class="math inline">\(Y\)</span>:</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-37-1.png" class="img-fluid" width="672"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Not great.</p>
 <p>Log transformation of the response variable <span class="math inline">\(Y\)</span>:</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-38-1.png" class="img-fluid" width="672"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-43-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Nope. Still some evidence of non-linearity.</p>
 <p>What about transforming the explanatory variable <span class="math inline">\(X\)</span> as well?</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-39-1.png" class="img-fluid" width="672"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-44-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Let’s look at the four diagnostic plots for the log-log-transformed data:</p>
@@ -911,7 +929,7 @@ Think, Pair, Share (#like-weight)
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-40-1.png" class="img-fluid figure-img" style="width:7cm"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-45-1.png" class="img-fluid figure-img" style="width:7cm"></p>
 </figure>
 </div>
 </div>
@@ -997,7 +1015,7 @@ Think, Pair, Share (#like-weight)
 <p>Take these two examples.</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-41-1.png" class="img-fluid" width="672"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-46-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Which do you think is showing a model (linear regression) which is better explaining the observations?</p>
@@ -1017,7 +1035,7 @@ Think, Pair, Share (#better-model)
 <p>Now consider the following two graphs. The left one is with the dependent variable <span class="math inline">\(y_1\)</span> and the right one is with the dependent variable <span class="math inline">\(y_1 * 2\)</span>. Since the data is effectively the same (just the units of <span class="math inline">\(y\)</span> changed) the regression model should be equally “good” in both cases. But we can see that the residuals are larger in the right graph. How could we quantitatively measure how good the regression model is, in a way that is not sensitive to the units in which the dependent variable is measured?</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid" width="480"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-47-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 <p>The first model seems to fit the data well, while the second one does not. But how can we quantify this?</p>
@@ -1039,7 +1057,7 @@ Think, Pair, Share (#better-model)
 <p>Graphically, this is the sum of the square of the blue residuals as shown in the following graph, where the horizontal dashed line is at the value of the mean of the dependent variable.</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-43-1.png" class="img-fluid" width="480"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-48-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 <p>We can calculate this in R as follows:</p>
@@ -1052,7 +1070,7 @@ Think, Pair, Share (#better-model)
 <p>Now the next two steps, that is getting the model sum of squares (SSM) and the error sum of squares (SSE) are a bit more complicated. To do this we need to fit a regression model to the data. Let’s see this graphically, and divide the data into the explained and unexplained parts.</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-45-1.png" class="img-fluid" width="480"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-50-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 <p>In this graph, the square of the length of the green lines is the model sum of squares (<span class="math inline">\(SSM\)</span>). The square of the length of the red lines is the error sum of squares (<span class="math inline">\(SSE\)</span>).</p>
@@ -1112,7 +1130,7 @@ Think, Pair, Share (#better-model)
 <p>Here are the four examples and their r-squared.</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-50-1.png" class="img-fluid" width="672"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-55-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -1171,7 +1189,7 @@ x             7.629066  0.1356499</code></pre>
 <p>Here is a graph of the value of the slope estimate versus the standard error of the estimate:</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-52-1.png" class="img-fluid" width="480"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-57-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -1197,7 +1215,7 @@ Think, Pair, Share (#chance-area)
 <p>But what is the <span class="math inline">\(t\)</span>-distribution? It is a bell-shaped distribution that is centered on zero. The spread of the distribution is determined by the degrees of freedom, which is <span class="math inline">\(n-2\)</span> for a simple linear regression model. Fewer degrees of freedom ( = fewer data points) makes for a more “spread” distribution.</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-53-1.png" class="img-fluid" width="480"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-58-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -1217,13 +1235,13 @@ Note
 <p>Here is a graph of the <span class="math inline">\(t\)</span>-distribution with the tails of the distribution shaded so that the area of the shaded region is 0.05 (i.e., 5% of the total area).</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-54-1.png" class="img-fluid" width="480"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-59-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 <p>Let’s go back to the age - blood pressure data and calculate the p-value for the slope estimate.</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-55-1.png" class="img-fluid" width="480"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-60-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 <p>Here’s the model:</p>
@@ -1257,13 +1275,13 @@ Note
 <p>We can then imagine two cases. The 95% confidence interval of the slope includes 0:</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-59-1.png" class="img-fluid" width="960"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-64-1.png" class="img-fluid" width="960"></p>
 </div>
 </div>
 <p>Or where the confidence interval does not include zero:</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-60-1.png" class="img-fluid" width="960"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-65-1.png" class="img-fluid" width="960"></p>
 </div>
 </div>
 <p><strong>When the confidence interval includes 0 then we conclude that a slope of 0 is compatible with the data. When the confidence interval doesn’t include zero, we conclude that a slope of 0 is not compatible with the data.</strong></p>
@@ -1336,7 +1354,7 @@ Note
 <p>Here is the confidence band for the blood pressure data:</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-64-1.png" class="img-fluid" width="480"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-69-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 <p>Very narrow confidence bands indicate that the estimates are very precise. In this case the estimated intercept and slope are precise because the sample size is large and the data points are close to the regression line.</p>
@@ -1349,7 +1367,7 @@ Note
 <p>Here’s a graph showing the prediction band for the blood pressure data:</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-65-1.png" class="img-fluid" width="480"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-70-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 <p>Another way to think of the 95% confidence band is that it is where we would expect 95% of the regression lines to lie if we were to collect many samples from the same population. The 95% prediction band is where we would expect 95% of the future observations to lie.</p>
@@ -1391,26 +1409,26 @@ Note
 </div>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-69-1.png" class="img-fluid" width="480"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-74-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 <p>Now we’ll use randomisation to test the null hypothesis. We can create lots of examples where the relationship is expected to have a slope of zero by shuffling randomly the <span class="math inline">\(y\)</span> values. Here are 20:</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-70-1.png" class="img-fluid" width="960"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-75-1.png" class="img-fluid" width="960"></p>
 </div>
 </div>
 <p>Now let’s create 19 and put the real one in there somewhere random. Here’s a case where the real data has a quite strong relationship:</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-71-1.png" class="img-fluid" width="960"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-76-1.png" class="img-fluid" width="960"></p>
 </div>
 </div>
 <p>We can pretty confidently find the real data in the shuffled data. But what if the relationship is weaker?</p>
 <p>(See here for which it is: <a href="#sec-thisone"><span>Section&nbsp;17</span></a>)</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-72-1.png" class="img-fluid" width="960"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-77-1.png" class="img-fluid" width="960"></p>
 </div>
 </div>
 <p>(See here for which it is: <a href="#sec-thisone"><span>Section&nbsp;17</span></a>)</p>
@@ -1418,7 +1436,7 @@ Note
 <p>We do the same procedure of but instead of just looking at the graphs, we calculate the slope of the regression line each time. This gives us a distribution of slopes we would expect to observe if the null hypothesis is true. We can then see where the observed slope lies in this distribution of null hypothesis slopes.</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-73-1.png" class="img-fluid" width="480"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-78-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 <p>We can now calculate the probability of observing the data we have, given the null hypothesis is true.</p>
@@ -1440,7 +1458,7 @@ Note
 <p>Graphically these would look like this:</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="3-regression_files/figure-html/unnamed-chunk-75-1.png" class="img-fluid" width="768"></p>
+<p><img src="3-regression_files/figure-html/unnamed-chunk-80-1.png" class="img-fluid" width="768"></p>
 </div>
 </div>
 <p>And here we calculate the one-tailed and two-tailed <span class="math inline">\(p\)</span>-values:</p>

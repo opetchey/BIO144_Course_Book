@@ -388,11 +388,11 @@ variance (namely the pooled variance of all groups).
 
 ### Other contrasts
 
-We can design other contrasts, for example: are diets that contain meat different from diets that do not contain meat?
+We can design other contrasts, for example: are diets that contain meat (meat heavy and Mediterranean) different from diets that do not contain meat?
 
 ```{r}
 bp_data_diet <- mutate(bp_data_diet,
-                       meat_or_no_meat = ifelse(diet == "meat" |
+                       meat_or_no_meat = ifelse(diet == "meat heavy" |
                                                 diet == "Mediterranean",
                                                 "meat", "no meat"))
 head(bp_data_diet)
@@ -416,9 +416,16 @@ Let's look at the ANOVA table of the model comparison:
 anova(fit, fit_mnm)
 ```
 
-We see the residual sum of squares of the model with meat or no meat is over 9'000, while that of the four diet model is less than 4'000. That is, the four diet model explains much more variance in the data than the two diet model. The $F$-test is highly significant, so we reject the null hypothesis that the two models are equally good at explaining the data. And we conclude that its not just whether people eat meat or not, but rather what kind of diet they eat that affects their blood pressure.
+```{r}
+an1 <- anova(fit, fit_mnm)
+```
 
-Ideally we do not make a lot of contrasts after we have collected and looked at our data. Rather, we would specify the contrasts we are interested in before we collect the data. This is called a priori contrasts. But sometimes we do exploratory data analysis and then we can make post hoc contrasts. In this case we should be careful to adjust for multiple comparisons.
+
+
+
+We see the residual sum of squares of the model with meat or no meat is ´r round(an1$RSS[2],1)´, while that of the four diet model is less than 4'000. That is, the four diet model explains much more variance in the data than the two diet model. The $F$-test comparing the two models is highly significant, so we reject the null hypothesis that the two models are equally good at explaining the data. And we conclude that its not just whether people eat meat or not, but that also other dietary factors affect their blood pressure.
+
+Ideally we do not think of and construct a lot of contrasts after we have collected and looked at our data. Rather, we would specify contrasts before we collect the data. This is called a priori contrasts. But sometimes we do exploratory data analysis and then we can make post hoc contrasts. In this case we should be careful to adjust for multiple comparisons.
 
 ### Choosing the reference category
 

@@ -598,16 +598,16 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </section>
 <section id="other-contrasts" class="level3">
 <h3 class="anchored" data-anchor-id="other-contrasts">Other contrasts</h3>
-<p>We can design other contrasts, for example: are diets that contain meat different from diets that do not contain meat?</p>
+<p>We can design other contrasts, for example: are diets that contain meat (meat heavy and Mediterranean) different from diets that do not contain meat?</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>   bp          diet person_ID meat_or_no_meat
-1 120    meat heavy  person_1         no meat
+1 120    meat heavy  person_1            meat
 2  89         vegan  person_2         no meat
 3  86    vegetarian  person_3         no meat
-4 116    meat heavy  person_4         no meat
+4 116    meat heavy  person_4            meat
 5 115 Mediterranean  person_5            meat
-6 134    meat heavy  person_6         no meat</code></pre>
+6 134    meat heavy  person_6            meat</code></pre>
 </div>
 </div>
 <p>Here we defined a new explanatory variable that groups the meat heavy and Mediterranean diet together into a single “meat” group and vegetarian and vegan into a single “no meat” group. We then fit a model with this explanatory variable:</p>
@@ -624,15 +624,15 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 
 Model 1: bp ~ diet
 Model 2: bp ~ meat_or_no_meat
-  Res.Df    RSS Df Sum of Sq      F    Pr(&gt;F)    
-1     46 3901.5                                  
-2     48 9173.4 -2   -5271.9 31.078 2.886e-09 ***
+  Res.Df    RSS Df Sum of Sq      F   Pr(&gt;F)   
+1     46 3901.5                                
+2     48 5231.6 -2     -1330 7.8407 0.001175 **
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
-<p>We see the residual sum of squares of the model with meat or no meat is over 9’000, while that of the four diet model is less than 4’000. That is, the four diet model explains much more variance in the data than the two diet model. The <span class="math inline">\(F\)</span>-test is highly significant, so we reject the null hypothesis that the two models are equally good at explaining the data. And we conclude that its not just whether people eat meat or not, but rather what kind of diet they eat that affects their blood pressure.</p>
-<p>Ideally we do not make a lot of contrasts after we have collected and looked at our data. Rather, we would specify the contrasts we are interested in before we collect the data. This is called a priori contrasts. But sometimes we do exploratory data analysis and then we can make post hoc contrasts. In this case we should be careful to adjust for multiple comparisons.</p>
+<p>We see the residual sum of squares of the model with meat or no meat is ´r round(an1$RSS[2],1)´, while that of the four diet model is less than 4’000. That is, the four diet model explains much more variance in the data than the two diet model. The <span class="math inline">\(F\)</span>-test comparing the two models is highly significant, so we reject the null hypothesis that the two models are equally good at explaining the data. And we conclude that its not just whether people eat meat or not, but that also other dietary factors affect their blood pressure.</p>
+<p>Ideally we do not think of and construct a lot of contrasts after we have collected and looked at our data. Rather, we would specify contrasts before we collect the data. This is called a priori contrasts. But sometimes we do exploratory data analysis and then we can make post hoc contrasts. In this case we should be careful to adjust for multiple comparisons.</p>
 </section>
 <section id="choosing-the-reference-category" class="level3">
 <h3 class="anchored" data-anchor-id="choosing-the-reference-category">Choosing the reference category</h3>
@@ -779,7 +779,7 @@ diet            high low
 <p>And a visualisation of the data:</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="7-ANOVA_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid" width="480"></p>
+<p><img src="7-ANOVA_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -827,7 +827,7 @@ Think, Pair, Share (#twoway-plot)
 <p>Of course we next check the model diagnostics:</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="7-ANOVA_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid" width="480"></p>
+<p><img src="7-ANOVA_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid" width="480"></p>
 </div>
 </div>
 <p>No clear patterns: all is good.</p>

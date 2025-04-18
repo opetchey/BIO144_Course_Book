@@ -336,9 +336,17 @@ Now we can look at the ANOVA table:
 
 ```{r}
 anova(fit)
+an1 <- anova(fit)
+F_val <- round(an1$`F value`[1],1)
+p_val <- 0.0001
 ```
 
-A suitable sentence to report our findings would be: "Diet has a significant effect on blood pressure ($F(2, 27) = 20.7, p < 0.0001$)". This means that the probability of observing such a large $F$ value under the null hypothesis is less than 0.01%.
+
+
+A suitable sentence to report our findings would be: "Diet has a significant effect on blood pressure ($F_{3,46} = 20.7, p < 0.0001$)". This means that the probability of observing such a large $F$ value under the null hypothesis is less than 0.01%.
+
+`
+
 
 
 ## Difference between pairs of groups

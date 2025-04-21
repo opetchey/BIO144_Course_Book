@@ -461,7 +461,7 @@ kable(anova(mod2), format="html") %>%
   kable_styling()
 ```
 
-We also might use a sentence like this to report the results: "The effect of minutes of exercise is generally negative, but the effect is stronger for people on a meat heavy diet than for people on a vegetarian diet ($t$-statistics of interaction term = `r round(summary(mod2)$coefficients[4,3],2)`, degree of freedom = 2, p = `r round(summary(mod2)$coefficients[4,4],2)`). The greater beneficial effect of exercise on blood pressure for people on a meat heavy diet is largely caused by the high blood pressure of people on a meat heavy diet that do not exercise."
+We also might use a sentence like this to report the results: "The effect of minutes of exercise is generally negative, but the effect is stronger for people on a meat heavy diet than for people on a vegetarian diet ($t$-statistics of interaction term = `r round(summary(mod2)$coefficients[4,3],2)`, degree of freedom = `r df.residual(mod2)`, p = `r round(summary(mod2)$coefficients[4,4],2)`). The greater beneficial effect of exercise on blood pressure for people on a meat heavy diet is largely caused by the high blood pressure of people on a meat heavy diet that do not exercise."
 
 
 ## Multiple regression vs. many single regressions

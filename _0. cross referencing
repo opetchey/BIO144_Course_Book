@@ -1,0 +1,13 @@
+
+
+https://quarto.org/docs/authoring/cross-references.html
+
+Also avoid using underscores (_) in labels and IDs as this can cause problems when rendering to PDF with LaTeX.
+
+Quarto enables you to create cross-references to figures, tables, equations, sections, code listings, theorems, proofs, and more. Cross references can also be applied to dynamic output from Knitr and Jupyter.
+
+Section
+
+# Introduction {#sec-introduction}
+
+See @sec-introduction for additional discussion.

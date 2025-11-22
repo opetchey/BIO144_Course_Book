@@ -1,74 +1,23 @@
 {
   "index.qmd": {
-    "index.html": "2d0f4b3c"
+    "index.html": "20d63e4b"
   },
-  "intro.qmd": {
-    "intro.html": "dbd34626"
+  "1.1-intro.qmd": {
+    "1.1-intro.html": "ceafceef"
   },
-  "summary.qmd": {
-    "summary.html": "303ef762"
+  "2.1-R-and-RStudio.qmd": {
+    "2.1-R-and-RStudio.html": "cf488c9b"
   },
-  "references.qmd": {
-    "references.html": "97291019"
+  "3.1-study-design.qmd": {
+    "3.1-study-design.html": "b45232ad"
   },
-  "regression.qmd": {
-    "regression.html": "9b5ca3f5"
+  "4.1-regression-part1.qmd": {
+    "4.1-regression-part1.html": "125666bf"
   },
-  "1-intro.qmd": {
-    "1-intro.html": "dcb7a944"
+  "5.1-regression-part2.qmd": {
+    "5.1-regression-part2.html": "bd33260d"
   },
-  "2-data-wrangling.qmd": {
-    "2-data-wrangling.html": "e1b02de7"
-  },
-  "3-regression.qmd": {
-    "3-regression.html": "98ce3150"
-  },
-  "3-regression-part1.qmd": {
-    "3-regression-part1.html": "c51fc846"
-  },
-  "4-regression-part2-and-multiple-regression.qmd": {
-    "4-regression-part2-and-multiple-regression.html": "091d990f"
-  },
-  "4-multiple-regression.qmd": {
-    "4-multiple-regression.html": "caeffe18"
-  },
-  "5-ANOVA.qmd": {
-    "5-ANOVA.html": "5e6db30e"
-  },
-  "6-interactions.qmd": {
-    "6-interactions.html": "f99f439b"
-  },
-  "5-categorical-explanatory-variables.qmd": {
-    "5-categorical-explanatory-variables.html": "29f0fc4b"
-  },
-  "7-ANOVA.qmd": {
-    "7-ANOVA.html": "9ab1dfe7"
-  },
-  "8-ANCOVA.qmd": {
-    "8-ANCOVA.html": "903392db"
-  },
-  "9-linear-algebra.qmd": {
-    "9-linear-algebra.html": "81ab0767"
-  },
-  "10-variable-selection.qmd": {
-    "10-variable-selection.html": "3b59cafc"
-  },
-  "11-interpretation.qmd": {
-    "11-interpretation.html": "8ee8cf27"
-  },
-  "12-count-data.qmd": {
-    "12-count-data.html": "39fdb5cb"
-  },
-  "13-binary-data.qmd": {
-    "13-binary-data.html": "20fb1930"
-  },
-  "14-measurement-error.qmd": {
-    "14-measurement-error.html": "684388ab"
-  },
-  "15-mixed-models.qmd": {
-    "15-mixed-models.html": "9158d5f9"
-  },
-  "16-what-next.qmd": {
-    "16-what-next.html": "2020ab7a"
+  "6.1-anova.qmd": {
+    "6.1-anova.html": "450f024b"
   }
 }

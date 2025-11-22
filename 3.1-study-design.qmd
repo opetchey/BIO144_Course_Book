@@ -1,0 +1,36 @@
+```{r}
+#| echo: false
+source("_common.R")
+```
+
+
+# Study design (L3) {.unnumbered}
+
+::: {.callout-note}
+This chapter in under development.
+:::
+
+## Different studies, different goals, different designs, different analyses
+
+
+
+## Paradigms of study design
+
+### Observational studies
+
+Observational studies are used to observe and analyze the effects of interventions or exposures without manipulating the study environment.
+
+### Experimental studies
+
+Experimental studies involve the manipulation of one or more variables to determine their effect on a response variable. The manipulation is typically done through random assignment of subjects to different treatment groups, which means that on average the only thing that differs among the subjects in the different groups is the treatment they receive. This helps to ensure that any differences in outcomes can be attributed to the treatment rather than other factors that might affect the subjects.
+
+Key aspects of experimental studies:
+
+* A treatment is applied to one or more groups of subjects.
+* Subjects are randomly assigned to treatment groups, which helps to control for confounding variables.
+* There are typically one or more control groups that do not receive the treatment, allowing for comparison of outcomes between treated and untreated groups.
+* There is replication, meaning that there are multiple subjects in each treatment group to ensure that estimates of within group variability can be made.
+
+### Other terms
+
+Unfortunately, the terms "observational" and "experimental" are not always used consistently. In particular, the term "experiment" is often used to refer to any study that involves a comparison of two or more groups, regardless of whether the groups were assigned randomly or not. This can lead to confusion, as some studies that are called "experiments" are actually observational studies. Some studies use the term "mensurative experiment" to refer to observational studies (e.g., [Burdon *et al* 2018 *Global Change Biology*](https://onlinelibrary.wiley.com/doi/10.1111/gcb.15302)). 

@@ -1,0 +1,1105 @@
+```{r}
+#| echo: false
+source("_common.R")
+```
+
+**How Owen will structure the lecture time**
+
+**The chapter content below is the reference for what students are expected to know.** During the lecture time Owen will talk through and explain hopefully most of the content of this chapter. He will write on a tablet, show figures and other content of this chapter, and may live-code in RStudio. He will also present questions and ask students to *Think, Pair, Share*. The *Share* part will sometime be via clicker, sometimes by telling the class. The same will happen in lecture 3-6.
+
+
+# Regression Part 1 {.unnumbered}
+
+## Introduction
+
+Linear regression is a common statistical method that models the relationship between a dependent (response) variable and one or more independent (explanatory) variables. The relationship is modeled with the equation for a straight line ($y = a + bx$).
+
+With linear regression we can answer questions such as:
+
+* How does the dependent (response) variable change with respect to the independent (explanatory) variable?
+* What amount of variation in the dependent variable can be explained by the independent variable?
+* Is there a statistically significant relationship between the dependent variable and the independent variable?
+* Does the linear model fit the data well?
+
+In this chapter / lesson we will explore what is linear regression and how to use it to answer these questions. We'll cover the following topics:
+
+* Why use linear regression?
+* What is the linear regression model?
+* Fitting the regression model (= finding the intercept and the slope).
+* Is linear regression a good enough model to use?
+* What do we do when things go wrong?
+* Transformation of variables/the response.
+* Identifying and handling odd data points (aka outliers).
+
+In this chapter / lesson we will not discuss the statistical significance of the model. We will cover this topic in the next chapter / lesson.
+
+
+### Why use linear regression?
+
+* It's a good starting point because it is a relatively simple model.
+* Relationships are sometimes close enough to linear.
+* It's easy to interpret.
+* It's easy to use.
+* It's actually quite flexible (e.g. can be used for non-linear relationships, e.g., a quadratic model is still a linear model!!! See @sec-kind-of-magic.).
+
+### An example - blood pressure and age
+
+There are lots of situations in which linear regression can be useful. For example, consider hypertension. Hypertension is a condition in which the blood pressure in the arteries is persistently elevated. Hypertension is a major risk factor for heart disease, stroke, and kidney disease. It is estimated that hypertension affects about 1 billion people worldwide. Hypertension is a complex condition that is influenced by many factors, including age. In fact, it is well known that blood pressure increases with age. But how much does blood pressure increase with age? This is a question that can be answered using linear regression.
+
+Here is an example of a study that used linear regression to answer this question:
+https://journals.lww.com/jhypertension/fulltext/2021/06000/association_of_age_and_blood_pressure_among_3_3.15.aspx
+
+In this study, the authors used linear regression to model the relationship between age and blood pressure. They found that systolic blood pressure increased by 0.28--0.85 mmHg/year. This is a small increase, but it is statistically significant. This means that the observed relationship between age and blood pressure is unlikely to be due to chance.
+
+Lets look at some simulated example data:
+
+```{r}
+# Load the data
+bp_age_data <- read.csv("data/Simulated_Blood_Pressure_and_Age_Data.csv")
+
+# How many data points with both age and blood pressure?
+bp_age_data <- na.omit(bp_age_data)
+# No rows with missing values
+
+# Visualize the data
+ggplot(bp_age_data, aes(x = Age, y = Systolic_BP)) +
+  geom_point() +
+  labs(title = "Systolic Blood Pressure vs. Age",
+       x = "Age",
+       y = "Systolic Blood Pressure")
+
+```
+
+Well, that is pretty conclusive. We hardly need statistics. There is a clear positive relationship between age and systolic blood pressure. But how can we quantify this relationship? And in less clear-cut cases what is the strength of evidence for a relationship? This is where linear regression comes in. Linear regression models the relationship between age and systolic blood pressure. With linear regression we can answer the following questions:
+
+* What is the value of the intercept and slope of the relationship?
+* Is the relationship different from what we would expect if there were no relationship?
+* How well does the mathematical representation match the observed values?
+* How much uncertainty is there in predictions?
+
+Lets try to figure some of these out from the visualisation.
+
+::: {.callout-tip}
+## Think, Pair, Share (#guess-params)
+
+* Make a guess of the slope.
+* Make a guess of the intercept (hint be careful, lots of people get this wrong).
+:::
+
+
+## Calculating the intercept and slope
+
+### Regression from a mathematical perspective
+
+Given an **independent/explanatory variable** ($X$) and a **dependent/response variable** ($Y$) all points $(x_i,y_i)$, $i= 1,\ldots, n$, on a  straight line follow the equation
+
+$$y_i = \beta_0 + \beta_1 x_i\ .$$
+
+* $\beta_0$ is the **intercept** - the value of $Y$ when $x_i = 0$
+* $\beta_1$ the **slope** of the line, also known as the regression coefficient of $X$.
+* If $\beta_0=0$ the line goes through the origin $(x,y)=(0,0)$.
+* **Interpretation** of linear dependency: proportional increase in $y$ with increase (decrease) in $x$.
+
+
+
+### Finding the intercept and the slope
+
+In a regression analysis, one task is to estimate the intercept and the slope. These are known as the **regression coefficients** $\beta_0$, $\beta_1$.
+
+* **Problem**: For more than two points $(x_i,y_i)$, $i=1,\ldots, n$, there is generally no perfectly fitting line.
+
+* **Aim:** We want to estimate the parameters $(\beta_0,\beta_1)$ of the **best fitting** line $Y = \beta_0 + \beta_1 x$.
+
+* **Idea:** Find the **best fitting line** by minimizing the deviations between the data points $(x_i,y_i)$ and the regression line. I.e., minimising the residuals.
+
+But which deviations?
+
+These ones?
+
+```{r}
+set.seed(9670)
+n <- 10
+x <- rnorm(n)
+y <- 4 - 2*x + rnorm(n,0,sd=1)
+x[11]  <- -0.5
+y[11] <- 6.2
+plot(x,y)
+x1 <- -0.66
+abline(c(4,-2),lwd=2)
+segments(x[11],y[11],x1,4-2*(x1),col=2,lwd=2)
+```
+
+Or these?
+
+```{r}
+set.seed(9670)
+n <- 10
+x <- rnorm(n)
+y <- 4 - 2*x + rnorm(n,0,sd=1)
+x[11]  <- -0.5
+y[11] <- 6.2
+plot(x,y)
+abline(c(4,-2),lwd=2)
+segments(x[11],y[11],x[11],4-2*x[11],col=2,lwd=2)
+```
+
+Or maybe even these?
+
+```{r}
+set.seed(9670)
+n <- 10
+x <- rnorm(n)
+y <- 4 - 2*x + rnorm(n,0,sd=1)
+x[11]  <- -0.5
+y[11] <- 6.2
+plot(x,y)
+abline(c(4,-2),lwd=2)
+segments(x[11],y[11],(y[11]-4)/(-2),y[11],col=2,lwd=2)
+```
+
+Well, actually its none of these!!!
+
+### Least squares
+
+For multiple reasons (theoretical aspects and mathematical convenience), the intercept and slope are estimated using the **least squares** approach. In this, yet something else is minimized:
+
+The parameters $\beta_0$ and $\beta_1$ are estimated such that the **sum of squared vertical distances** (sum of squared residuals / errors) is minimised.
+
+**SSE** means **S**um of **S**quared **E**rrors:
+
+$$SSE = \sum_{i=1}^n e_i^2 $$
+
+where,
+
+$$e_i = y_i - \underbrace{(\beta_0 + \beta_1 x_i)}_{=\hat{y}_i} $$
+**Note:** $\hat y_i = \beta_0 + \beta_1 x_i$ are the *predicted values*.
+
+In the graph just below, one of these squares is shown in red. 
+
+
+```{r}
+set.seed(9670)
+n <- 10
+x <- rnorm(n)
+y <- 4 - 2*x + rnorm(n,0,sd=1)
+x[11]  <- -0.5
+y[11] <- 6.2
+dd <- 0.38
+from_x <- c(x[11],x[11],x[11]+dd,x[11] + dd) 
+from_y <- c(y[11],(4-2*x[11]),(4-2*x[11]),y[11])
+
+to_x <- c(x[11],x[11] + dd,x[11]+ dd,x[11])
+to_y <- c(4-2*x[11],4-2*x[11],y[11], y[11])
+
+plot(x,y)
+abline(c(4,-2),lwd=2)
+polygon(from_x,from_y,to_x,to_y,col=2,lwd=2)
+```
+
+### Least squares estimates
+
+With a linear model, we can calculate the least squares estimates of the parameters $\beta_0$ and $\beta_1$ directly using the following formulas.
+
+For a given sample of data $(x_i,y_i), i=1,..,n$, with mean values $\overline{x}$ and $\overline{y}$, the least squares estimates $\hat\beta_0$ and $\hat\beta_1$ are computed as 
+
+
+$$ \hat\beta_1 = \frac{\sum_{i=1}^n  (y_i - \overline{y}) (x_i - \overline{x})}{ \sum_{i=1}^n (x_i - \overline{x})^2 } = \frac{cov(x,y)}{var(x)}$$
+
+$$\hat\beta_0 = \overline{y} - \hat\beta_1 \overline{x}  $$
+
+Moreover,
+
+
+$$ \hat\sigma^2 = \frac{1}{n-2}\sum_{i=1}^n e_i^2 \quad \text{with residuals  } e_i = y_i - (\hat\beta_0 + \hat\beta_1 x_i) $$
+
+is an unbiased estimate of the residual variance $\sigma^2$.
+
+(Derivations of the equations above are in the Stahel script 2.A b. Hint: differentiate, set to zero, solve.)
+
+### Why division by $n-2$ ensures an unbiased estimator
+
+When estimating parameters ($\beta_0$ and $\beta_1$), the square of the residuals is minimised. This fitting process inherently *uses up* two *degrees of freedom*, as the model forces the residuals to sum to zero and aligns the slope to best fit the data. I.e., one degree of freedom is lost due to the estimation of the intercept, and another due to the estimation of the slope.
+
+The adjustment (division by $n-2$ instead of $n$) compensates for the loss of variability due to parameter estimation, ensuring the estimator of the residual variance is unbiased. Mathematically, dividing by n - 2 adjusts for this loss and gives an accurate estimate of the population variance when working with sample data.
+
+We'll look at degrees of freedom in more detail later, so don't worry if this is a bit confusing right now.
+
+### Let's do it in R
+
+First we read in the dataset:
+
+```{r}
+#| echo: true
+bp_age_data <- read.csv("data/Simulated_Blood_Pressure_and_Age_Data.csv")
+```
+
+The we make a graph of the data:
+
+```{r}
+ggplot(bp_age_data, aes(x = Age, y = Systolic_BP)) +
+  geom_point() +
+  labs(x = "Age (years)", y = "Systolic Blood Pressure (mmHg)")
+```
+
+
+
+Then we make the linear model, using the `lm()` function:
+
+```{r}
+bp_age_model <- lm(Systolic_BP ~ Age, data = bp_age_data)
+```
+
+Then we can look at the summary of the model. It contains a lot of information, so can be a bit confusing at first. 
+
+```{r}
+summary(bp_age_model)
+```
+
+How do our guesses of the intercept and slope compare to the guesses we made earlier?
+
+Recal that the units of the *Age* coefficient are in mmHg per year. This means that for each additional year of age, the systolic blood pressure increases by ´r round(coef(bp_age_model)[2],2)´ mmHg.
+
+
+
+
+
+
+
+
+
+
+
+## Dealing with the error
+
+```{r}
+# Visualize the data
+ggplot(bp_age_data, aes(x = Age, y = Systolic_BP)) +
+  geom_point() +
+  labs(title = "Systolic Blood Pressure vs. Age",
+       x = "Age",
+       y = "Systolic Blood Pressure") +
+  geom_smooth(formula = y ~ x, method = "lm", se = FALSE)
+
+```
+
+The line is not a perfect fit to the data. There is scatter around the line. 
+
+Some of this scatter could be caused by other factors that influence blood pressure, such as diet, exercise, and genetics. Also, the there could be differences due to the measurement instrument (i.e., some measurement error).
+
+These other factors are not included in the model (only age is in the model), so they create variation that can only appear in error term.
+
+In the linear regression model the dependent variable $Y$ is related to the independent variable $x$ as
+
+$$Y = \beta_0 + \beta_1 x + \epsilon \ $$
+where
+
+* $\epsilon$ is the error term
+* $\beta_0$ is the intercept
+* $\beta_1$ is the slope
+* $\epsilon$ is the error term.
+
+The error term captures the difference between the observed value of the dependent variable and the value predicted by the model. The error term includes the effects of other factors that influence the dependent variable, as well as measurement error.
+
+
+$$Y \quad= \quad \underbrace{\text{expected value}}_{E(Y) = \beta_0 + \beta_1 x} \quad + \quad \underbrace{\text{random error}}_{\epsilon}  \ .$$
+
+
+Graphically the error term is the vertical distance between the observed value of the dependent variable and the value predicted by the model.
+
+
+```{r}
+# filter for only one data point per age
+filtered_data <- bp_age_data[!duplicated(bp_age_data$Age),]
+# First make the linear model and getting the predicted values
+model <- lm(Systolic_BP ~ Age, data = filtered_data)
+predicted_values <- predict(model)
+# Then show the residuals with vertical lines
+ggplot(filtered_data, aes(x = Age, y = Systolic_BP)) +
+  geom_point() +
+  geom_smooth(formula = y ~ x, method = "lm", se = FALSE, color = "blue") +
+  geom_segment(aes(xend = Age, yend = predicted_values), color = "red") +
+  labs(title = "Systolic Blood Pressure vs. Age\nFiltered for only one data point per age year",
+       x = "Age",
+       y = "Systolic Blood Pressure") 
+```
+
+The error term is also known as the residual. It is the variation that *resides* (is left over / is left unexplained) after accounting for the relationship between the dependent and independent variables.
+
+### Example in R
+
+Let's look at observed values, expected (predicted) values, and residuals (error) in R.
+
+The observed values of the response (dependent) variable are already in the dataset:
+
+```{r}
+head(bp_age_data$Systolic_BP)
+```
+
+To get the expected values, we need to find the intercept and slope of the linear model. We can do this using the `lm()` function in R.
+
+```{r}
+lm1 <- lm(Systolic_BP ~ Age, data = bp_age_data)
+```
+
+And we can get the intercept and slope using the `coef()` function:
+
+```{r}
+coef(lm1)
+```
+
+We can then use the mutate function from the dplyr package to add the expected values to the dataset:
+
+```{r}
+bp_age_data <- bp_age_data %>%
+  mutate(Expected_BP = coef(lm1)[1] + coef(lm1)[2] * Age)
+```
+
+And we can get the residuals by subtracting the expected values from the observed values:
+
+```{r}
+bp_age_data <- bp_age_data %>%
+  mutate(Residuals = Systolic_BP - Expected_BP)
+```
+
+::: {.callout-tip}
+We can also get the expected values and residuals directly from the `lm` object using the `fitted()` (or `predicted()`) and `residuals()` functions:
+
+```{r}
+bp_age_data <- bp_age_data %>%
+  mutate(Expected_BP = fitted(lm1),
+         Residuals = residuals(lm1))
+```
+:::
+
+Now we have a model that gives the expected values (on the regression line) and that gives us a residual. Because the expected value plus the residual equals the observed value, if we use each of the residuals as the error for each respective data point, we end up with a perfect fit to the data. All we are doing is describing the observed data in a different way. This is known as over-fitting. In fact, we have gained very little by fitting the model. We have simply memorized / copied the data!!!
+
+In order to avoid this, we need to assume something about the residuals -- we need to *model* the residuals. The most common model for the residuals is a normal distribution with mean 0 and constant variance.
+
+$$\epsilon \sim N(0,\sigma^2)$$
+
+**This is known as the normality assumption.** The normality assumption is important because it allows us to make inferences about the *population parameters* based on the *sample data*.
+
+The linear regression model then becomes:
+
+$$Y = \beta_0 + \beta_1 x + N(0,\sigma^2) \ $$
+
+where $\sigma^2$ is the variance of the error term. The variance of the error term is the amount of variation in the dependent variable that is not explained by the independent variable. The variance of the error term is also known as the residual variance.
+
+An alternate and equivalent formulation is that $Y$ is a random variable that follows a normal distribution with mean $\beta_0 + \beta_1 x$ and variance $\sigma^2$.
+
+$$Y \sim N(\beta_0 + \beta_1 x, \sigma^2)$$
+
+So, the answer to the question "how do we deal with the error term" is that we model the error term as normally distributed with mean 0 and constant variance. Put another way, the error term is assumed to be normally distributed with mean 0 and constant variance. 
+
+
+
+### Back to blood pressure and age
+
+The mathematical model in this case is:
+
+$$SystolicBP = \beta_0 + \beta_1 \times Age + \epsilon$$
+
+where:
+*SystolicBP* is the dependent (response) variable,
+$\beta_0$ is the intercept,
+$\beta_1$ is the coefficient of Age,
+*Age* is the independent (explanatory) variable,
+$\epsilon$ is the error term.
+
+Let's ensure we understand this, by thinking about the units of the variables in this model. This can be very useful because it can help us to understand the model better and to check that the model makes sense.
+
+
+::: {.callout-tip}
+## Think, pair, share (#what-units)
+
+* What are the units of blood pressure?
+* What are the units of age?
+* What are the units of the intercept?
+* What are the units of the coefficient of Age?
+* What are the units of the error term?
+:::
+
+
+
+
+## Is the model good enough to use?
+
+* All models are wrong, but is ours good enough to be useful?
+* Are the assumption of the model justified?
+* It would be very unwise to use the model before we know if it is good enough to use.
+* *Don't jump out of an aeroplane until you know your parachute is good enough!*
+
+
+
+### What assumptions do we make?
+
+We already heard about one. We assume that the residuals follow a $N(0,\sigma^2)$ distribution (that is, a Gaussian / Normal distrution with mean of zero and variance of $\sigma^2$). We make this assumption because it is often well enough met, and it gives great mathematical tractability.
+
+This assumption implies that:
+
+(a) The $\epsilon_i$ are normally distributed.
+(b) $\epsilon_i$ has constant variance: $Var(\epsilon_i)=\sigma^2$.
+(c) The $\epsilon_i$ are independent of each other.
+
+Furthermore:
+
+(d) we assumed a linear relationship.
+(e) implies there are no outliers (implied by (a) above)
+
+
+Lets go through each five assumptions.
+
+### (a) Normally distributed residuals
+
+Recall that we make the assumption that the residuals are normally distributed with mean 0 and constant variance:
+
+$$\epsilon \sim N(0,\sigma^2)$$
+
+Here we are concerned with the first part of this assumption, that the residuals are normally distributed.
+
+What does this mean? How can we check it?
+
+A normal distribution is symmetric and bell-shaped...
+
+```{r}
+ggplot(data.frame(x = c(-4, 4)), aes(x)) + 
+  stat_function(fun = dnorm, n = 101) + 
+  theme_minimal()
+```
+
+Lets look at the frequency distribution of the residuals of the linear regression of blood pressure and age:
+
+
+```{r}
+ggplot(data = bp_age_data, aes(x = Residuals)) +
+  geom_histogram(bins = 10) +
+  theme_minimal()
+```
+
+The normal distribution assumption (a) seems ok as well.
+
+
+### (a) Normally distributed residuals: The QQ-plot
+
+Usually, not the histogram of the residuals is plotted, but the
+so-called **quantile-quantile** (QQ) plot. The quantiles of the
+observed distribution are plotted against the quantiles of the
+respective theoretical (normal) distribution:
+
+```{r}
+qqnorm(residuals(bp_age_model))
+qqline(residuals(bp_age_model))
+```
+
+If the points lie approximately on a straight line, the data is fairly
+normally distributed.
+
+This is often "tested" by eye, and needs some experience.
+
+*But what on earth is a quantile???*
+
+Imagine we make 21 measures of something, say 21 blood pressures:
+
+```{r fig.width=8, fig.height=2}
+set.seed(1)
+dd <- dplyr::tibble(Blood_Pressure = round(rnorm(21, 120, 20),1))
+ggplot(dd) +
+  geom_jitter(aes(y=1, x=Blood_Pressure)) +
+  theme(axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())
+```
+
+The median of these is `r median(dd$Blood_Pressure)`. The median is the
+50% or 0.5 quantile, because half the data points are above it, and half
+below.
+
+```{r}
+quantile(dd$Blood_Pressure, 0.5)
+```
+
+
+The *theoretical quantiles* come from the normal distribution. The
+*sample quantiles* come from the distribution of our residuals.
+
+```{r fig.width=8, fig.height=4}
+par(mfrow=c(1,2))
+x<-seq(-3,3,0.1)
+stdr <- sort(scale(bp_age_model$residuals))
+
+s <- seq(2)  # one shorter than data
+x <- c(-2.5,qnorm(0.6),qnorm(0.6))
+y <- c(0.6,0.6,0)
+
+plot(stdr,pnorm(stdr),xlab="Theoretical quantiles",ylab="Theoretical cumulative distribution")
+arrows(x[s], y[s], x[s+1], y[s+1])
+n<-nrow(bp_age_data)
+plot(stdr,(1:n)/n,xlab="Sample quantiles of the residuals",ylab="Empirical cumulative distribution")
+arrows(x[s], y[s], x[s+1], y[s+1])
+```
+
+
+#### How do I know if a QQ-plot looks "good"?
+
+There is **no quantitative rule** to answer this question. Instead experience is needed. You can gain this experience from simulations. To this end, we can generate the same number of data points of a normally distributed variable and compare this simulated qqplot to our observed one.
+
+Example: Generate 100 points $\epsilon_i \sim N(0,1)$ each time:
+
+```{r}
+set.seed(390457)
+par(mfrow=c(2,3),mar=c(4,4,1,1))
+for (ii in 1:6){
+  ss <- rnorm(100)
+qqnorm(ss,main="")
+qqline(ss,xlab="")
+}
+```
+
+Each of the graphs above has data points that are randomly generated from a normal distribution. In all cases the data points are close to the line. This is what we would expect if the data were normally distributed. The amount of deviation from the line is what we would expect from random variation, and so seeing this amount of variation in a QQ-plot of your model should not be cause for concern.
+
+
+### (b) Constant error variance (homoscedasticity)
+
+Recall that we assume the errors are normally distributed with constant variance $\sigma^2$: 
+
+$$\epsilon_i \sim N(0, \sigma^2)$$
+
+Here we're concerned with the second part of this assumption, that the variance is constant.That is, variance of the residuals is a constant: $\text{Var}(\epsilon_i) = \sigma^2$. And not, for example $\text{Var}(\epsilon_i) = \sigma^2 \cdot x_i$.
+
+Put another way, we're interested if the size of the residuals tends to show a pattern with the fitted values. By *size* of the residuals we mean the *absolute value* of the residuals. In fact, we often look at the square root of the absolute value of the standardized residuals:
+
+$$R_i = \frac{\epsilon_i}{\hat{\sigma}}$$
+Where $\hat{\sigma}$ is the estimated standard deviation of the residuals:
+
+$$\hat{\sigma} = \sqrt{\frac{1}{n-2} \sum_{i=1}^n \epsilon_i^2}$$
+
+So that the full equation of the square root of the standardised residuals is:
+
+$$\sqrt{|R_i|} = \sqrt{\left|\frac{\epsilon_i}{\hat{\sigma}}\right|}$$
+
+To look to see if the variance of the residuals is constant, we need to see if there is any relationship between the size of the residuals and the fitted values. A commonly used visualistion for this is a plot of the size of the residuals against the fitted values.
+
+Lets first calculated the $\sqrt{|R_i|}$ values for our blood pressure model:
+
+```{r}
+bp_age_data <- bp_age_data %>%
+  mutate(fitted = predict(bp_age_model),
+         residuals = residuals(bp_age_model),
+         sigma_hat = sqrt(sum(residuals^2)/(n()-2)),
+         R_i = residuals / sigma_hat,
+         sqrt_abs_R_i = sqrt(abs(R_i)))
+```
+
+And now visualise the relationship between the fitted values and the size of the residuals:
+
+```{r}
+ggplot(bp_age_data, aes(x = fitted, y = sqrt_abs_R_i)) +
+  geom_point() +
+  labs(x = "Fitted values", y = expression(sqrt(abs(R[i])))) +
+  theme_minimal()
+```
+
+
+This graph is known as the scale-location plot. It is particularly suited to check the assumption of equal variances (__homoscedasticity / Homoskedastizität__). There should be __no trend__ or pattern.
+
+::: {.callout-tip}
+
+We can also use the built-in plot function for linear models to create this plot. It is the third plot in the set of diagnostic plots.
+
+```{r}
+#| evaluate: false
+plot(bp_age_model, which=3, add.smooth = FALSE)
+```
+:::
+
+
+
+#### How it looks with the variance increasing with the fitted values
+
+Here's a graphical example of how it would look if the variance of the residuals increases with the fitted values.
+
+First here is a graph of the relationship:
+
+```{r}
+set.seed(2)
+x <- runif(100, 1, 10)
+y <- 100 + 5*x + 2*x*rnorm(100,0,1)
+ggplot(data.frame(x=x,y=y), aes(x=x,y=y)) +
+  geom_point() +
+  geom_smooth(formula = y ~ x, method="lm", se=FALSE)
+```
+
+And here the scale-location plot for a linear model of that data:
+
+```{r}
+m <- lm(y~x)
+plot(m,which=3)
+```
+
+
+
+### (c) Independence (residuals are independent of each other)
+
+We assume that the residuals ($\epsilon_i$) are independent of each other. This means that the value of one residual is not somehow related to the value of another.
+
+The dataset about blood pressure we looked at contained 100 observations, each one made from a different person. In such a study design, we could be safe in the assumption that the people are independent, and therefore the assumption that the residuals are independent.
+
+Imagine, however, if we had 100 observations of blood pressure collected from 50 people, because we measured the blood pressure of each person twice. In this case, the residuals would not be independent, because two measures of the blood pressure of the same person are likely to be similar. A person is likely to have a high blood pressure in both measurements, or a low blood pressure in both measurements. This would mean they have a high residual in both measurements, or a low residual in both measurements.
+
+In this case, we would need to account for the fact that the residuals are not independent. We would need to use a more complex model, such as a mixed effects model, to account for the fact that the residuals are not independent. We will talk about this again in the last week of this course.
+
+In general, you should always think about the study design when you are analysing data. You should always think about whether the residuals are likely to be independent of each other. If they are not, you should think about how you can account for this in your analysis.
+
+A good way to assess if there could be dependencies in the residuals is to be critical about what is the unit of observation in the data. In the blood pressure example, the unit of observation is the person. Count the number of persons in the study. If there are fewer persons than observations, then at least some people must have been measured at least twice. Repeating measures on the same person is a common way to get dependent residuals.
+
+So, to check the assumption of independence, you should:
+  
+* Think carefully about the study design.
+* Think carefully about the unit of observation in the data.
+* Compare the number of observations to the number of units of observation.
+
+
+
+### (d) Linearity assumption
+
+The linearity assumption states that the relationship between the independent variable and the dependent variable is linear. This means that the dependent variable changes by a constant amount for a one-unit change in the independent variable. And that this slope is does not change with the value of the independent variable.
+
+The blood pressure data seems to be linear:
+  
+```{r}
+ggplot(bp_age_model, aes(x = Age, y=Systolic_BP)) +
+  geom_point() +
+  geom_smooth(formula = y ~ x, method="lm", se=FALSE)
+```
+
+In contrast, look at this linear regression through data that appears non-linear:
+
+```{r}
+set.seed(1)
+x <- runif(100, 1, 10)
+y <- 2*x + rnorm(100,0,2) + 0.5*x^2
+m <- lm(y~x)
+ggplot(data.frame(x=x,y=y), aes(x=x,y=y)) +
+  geom_point() +
+  geom_smooth(formula = y ~ x, method="lm", se=FALSE)
+```
+
+And with the residuals shown as red lines:
+
+```{r}
+ggplot(data.frame(x=x,y=y), aes(x=x,y=y)) +
+  geom_point() +
+  geom_smooth(formula = y ~ x, method="lm", se=FALSE) +
+  geom_segment(aes(xend=x, yend=m$fitted), color="red")
+```
+
+At low values of $y$, the residuals are positive, at intermediate values of $y$ the residuals are negative, and at high values of $y$ the residuals are positive. This pattern in the residuals is a sign that the relationship between $x$ and $y$ is not linear.
+
+We can plot the value of the residuals against the $y$ value directly, instead of looking at the pattern in the graph above. This is called a **Tukey-Anscombe plot**. It is a graph of the residuals versus the fitted $y$ values:
+
+```{r}
+ggplot(mapping = aes(x = fitted(m), y = resid(m))) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype="dashed", color="red")
+```
+
+We can very clearly see pattern in the residuals in this Tukey-Anscombe plot. The residuals are positive, then negative, then positive, as the fitted $y$ value gets larger.
+
+We can also make this Tukey-Anscombe plot using the built-in plot function for linear models in R:
+
+```{r}
+plot(m, which=1)
+```
+
+The red line in the Tukey-Anscombe plot is a loess smooth. It is automatically added to the plot. It is a way of estimating the pattern in the residuals. If the red line is not flat, then there is a pattern in the residuals. However, the loess smooth is not always reliable. It is a good idea to look at the residuals directly, without this smooth.
+
+```{r}
+plot(m, which=1, add.smooth = FALSE)
+```
+
+
+The data here is simulated to show a very clear pattern in the residuals. In real data, the pattern might not be so clear. But if you suspect you see a pattern in the residuals, it could be a sign that the relationship between the independent and dependent variable is not linear.
+
+Here is the Tukey-Anscombe plot for the blood pressure data:
+
+```{r}
+plot(bp_age_model, which=1, add.smooth = FALSE)
+```
+
+There is very little evidence of any pattern in the residuals. This data is simulated with a truly linear relationship, so we would not expect to see any pattern in the residuals.
+
+
+### (e) No outliers
+
+An outlier is a data point that is very different from the other data points. Outliers can have a big effect on the results of a regression analysis. They can pull the line of best fit towards them, and make the line of best fit a poor representation of the data.
+
+Lets again look at the blood pressure versus age data:
+
+```{r}
+ggplot(bp_age_model, aes(x = Age, y=Systolic_BP)) +
+  geom_point() +
+  geom_smooth(formula = y ~ x, method="lm", se=FALSE) +
+  xlim(10, 85) +
+  ylim(100, 180)
+```
+
+There are no obvious outliers in this data. The data points are all close to the line of best fit. This is a good sign that the line of best fit is a good representation of the data.
+
+::: {.callout-tip}
+## Think, Pair, Share (#odd-data)
+
+Where on this graph would you expect to see particularly influential outliers? Influential in the sense that they would have a large effect on the slope of the line of best fit.
+:::
+
+Data points that are far from the mean of the independent variable have a large effect on the value of the slope. These data points have a large leverage. They are data points that are far from the other data points in the $x$ direction.
+
+We can think of this with the analogy of a seesaw. The slope of the line of best fit is like the pivot point of a seesaw. Data points that are far from the pivot point have a large effect on the slope. Data points that are close to the pivot point have a small effect on the slope.
+
+A measure of distance from the pivot point is called the $leverage$ of a data point. In simple regression, the leverage of individual $i$ is defined as
+
+$h_{i} = (1/n) + (x_i-\overline{x})^2 / SSX$.
+
+where
+$SSX = \sum_{i=1}^n (x_i - \overline{x})^2$. (**S**um of **S**quares of **$X$**)
+
+So, the leverage of a data point is inversely related to $n$ (the number of data points). The leverage of a data point is also inversely related to the sum of the squares of the $x$ values. The leverage of a data point is directly related to the square of the distance of the $x$ value from the mean of the $x$ values.
+
+More intuitively perhaps, the leverage of a data point will be greater when the are fewer other data points. It will also be greater when the distance from the mean value of $x$ is greater.
+
+Going back to the analogy of a seesaw, with data points as children on the seesaw, the leverage of a data point is like the distance from the pivot a child sits. But we also have children of different weights. A lighter child will have less effect on the tilt of the seesaw. A heavier one will have a greater effect on the tilt. A heavier child sitting far from the pivot will have a very large effect.
+
+
+::: {.callout-tip}
+## Think, Pair, Share (#like-weight)
+
+What quantity that we already experienced is like the weight of the child?
+:::
+
+
+The size of the residuals are like the weight of the child. Data points with large residuals have a large effect on the slope of the line of best fit. Data points with small residuals have a small effect on the slope of the line of best fit.
+
+So the overall effect of a data point on the slope of the line of best fit is a combination of the leverage and the residual. This quantity is called the $influence$ of a data point.
+
+Let's add a rather extreme data point to the blood pressure versus age data:
+
+```{r}
+bp_age_data <- read.csv("data/Simulated_Blood_Pressure_and_Age_Data.csv")
+bp_age_model_outlier <- rbind(bp_age_data, data.frame(Age=80, Systolic_BP=120))
+ggplot(bp_age_model_outlier, aes(x = Age, y=Systolic_BP)) +
+  geom_point() +
+  geom_smooth(formula = y ~ x, method="lm", se=FALSE) +
+  geom_smooth(formula = y ~ x, data = bp_age_data, method="lm", se=FALSE, color="red") +
+  xlim(10, 85) +
+  ylim(100, 180)
+```
+
+This is a bit ridiculous, but it is a good example of an outlier. The data point is far from the other data points. It has a large residual. And it is a long way from the pivot (the middle of the $x$ data) so has large leverage.
+
+We can make a histogram of the residuals and see that the outlier has a large residual:
+
+```{r}
+bp_age_model_outlier <- lm(Systolic_BP ~ Age, data=bp_age_model_outlier)
+ggplot(bp_age_model_outlier, aes(x = .resid)) +
+  geom_histogram(bins=10) +
+  geom_vline(xintercept = 0, color="red")
+```
+
+And we can see that the leverage is large.
+
+There is a graph that we can look at to see the influence of a data point. This is called a $Cook's$ $distance$ plot. The Cook's distance of a data point is a measure of how much the slope of the line of best fit changes when that data point is removed. The Cook's distance of a data point is defined as
+
+$D_i = \sum_{j=1}^n (\hat{y}_j - \hat{y}_{j(i)})^2 / (p \times MSE)$.
+
+where
+$\hat{y}_j$ is the predicted value of the dependent variable for data point $j$,
+$\hat{y}_{j(i)}$ is the predicted value of the dependent variable for data point $j$ when data point $i$ is removed,
+$p$ is the number of parameters in the model (2 in this case),
+$MSE$ is the mean squared error of the model.
+
+
+```{r}
+plot(bp_age_model_outlier, which=5)
+```
+
+But does it have a large influence on the value of the slope? In the next graph we show the line of best fit with the outlier (blue line) and without the outlier (red line).
+
+```{r}
+bp_age_data_outlier <- rbind(bp_age_data, data.frame(Age=80, Systolic_BP=120))
+bp_age_model_outlier <- lm(Systolic_BP ~ Age, data=bp_age_data_outlier)
+ggplot(bp_age_data_outlier, aes(x = Age, y=Systolic_BP)) +
+  geom_point() +
+  geom_smooth(formula = y ~ x, method="lm", se=FALSE) +
+  geom_smooth(formula = y ~ x, data = bp_age_data, method="lm", se=FALSE, color="red") +
+  xlim(10, 85) +
+  ylim(100, 180)
+```
+
+No, the outlier doesn't have much influence on the slope. The outlier has a large leverage. It is far from the pivot. But it does not have such a large effect (influence) on the slope. This is in large part because there are a lot data points (100) that are quite tightly arranged around the regression line.
+
+
+#### Graphical illustration of the leverage effect
+
+Data points with $x_i$ values far from the mean have a stronger leverage effect than when $x_i\approx \overline{x}$:
+
+```{r, fig.height=3, fig.width=8}
+set.seed(37489)
+par(mfrow=c(1,3),mar=c(4,4,1,1))
+x <- sort(rnorm(18))
+y <- 2*x + rnorm(18,0,0.4)
+plot(y~x)
+abline(lm(y~x))
+y1 <- y
+y1[18] <- y[18] -5
+plot(y1~x,col=c(rep(1,17),2))
+abline(lm(y~x))
+abline(lm(y1~x),col=2,lty=2)
+y2 <- y
+y2[9] <- y2[9] + 5
+plot(y2~x,col=c(rep(1,8),2,rep(1,9)))
+abline(lm(y~x))
+abline(lm(y2~x),col=2,lty=2)
+```
+
+The outlier (red circle) in the middle plot "pulls" the regression line in its direction and has large influence on the slope. THe outlier (red circle) in the right plot has less influence on the slope because it is closer to the mean of $x$.
+
+
+
+#### Leverage plot (Hebelarm-Diagramm)
+
+In the leverage plot, (standardized) residuals $\tilde{R_i}$ are plotted against the leverage $H_{ii}$ :
+
+```{r}
+plot(bp_age_model, which=5, add.smooth = FALSE)
+```
+
+Critical ranges are the top and bottom right corners!!
+
+Here, observations 71, 85, and 87 are labelled as potential outliers.
+
+
+Some texts will give a rule of thumb that points with Cook’s distances greater than 1 should be considered influential, while others claim a reasonable rule of thumb is  $4 / ( n - p - 1 )$
+ where $n$ is the sample size, and $p$ is the number of $beta$ parameters.
+
+
+## What can go "wrong" during the modeling process?
+
+Answer: a lot of things!
+
+* Non-linearity. We assumed a linear relationship between the response and the explanatory variables. But this is not always the case in practice. We might find that the relationship is curved and not well represtented by a straight line.
+* Non-normal distribution of residuals. The QQ-plot data might deviate from the straight line so much that we get worried!
+* Heteroscadisticity (non-constant variance). We assumed homoscadisticity, but the residuals might show a pattern.
+* Data point with high influence. We might have a data point that has a large influence on the slope of the line of best fit.
+
+
+### What to do when things "go wrong"?
+
+1. Now: Transform the response and/or explanatory variables.
+2. Now: Take care of outliers.
+3. Later in the course: Improve the model, e.g., by adding additional terms or interactions.
+4. Later in the course: Use another model family (generalized or nonlinear regression model).
+
+
+### Dealing with non-linearity
+
+Here's another example of $y$ and $x$ that are not linearly related:
+
+```{r fig.height=4, fig.width=7}
+require(tidyverse)
+eg_data <- tibble(x = runif(50)) %>%
+  mutate(log_y = log(0.1) + 0.5* log(x) + rnorm(50,0,0.1),
+         y = exp(log_y),
+         log_y = log(y),
+         log_x = log(x),
+         sqrt_y = sqrt(y))
+
+p1 <- ggplot(eg_data, aes(x = x, y = y)) +
+  geom_point() + 
+  theme_bw() + geom_smooth(formula = y ~ x, method = "lm", se = FALSE)
+
+m1 <- lm(y ~ x, eg_data)
+
+p2 <- ggplot(mapping = aes(x = fitted(m1), y = residuals(m1))) +
+  geom_point() + theme_bw() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_smooth(formula = y ~ x, method = "loess")
+
+
+library(patchwork)
+
+p1 + p2
+```
+
+One way to deal with this is to transform the response variable $Y$. Here we try two different transformations: $\log_{10}(Y)$ and $\sqrt{Y}$.
+
+Square root transform of the response variable $Y$:
+
+```{r fig.height=7, fig.width=7}
+p3 <- ggplot(eg_data, aes(x = x, y = sqrt_y)) +
+  geom_point() + 
+  theme_bw() + geom_smooth(formula = y ~ x, method = "lm", se = FALSE)
+m2 <- lm(sqrt_y ~ x, eg_data)
+p4 <- ggplot(mapping = aes(x = fitted(m2), y = residuals(m2))) +
+  geom_point() + theme_bw() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_smooth(formula = y ~ x, method = "loess")
+
+
+
+(p1 + p2) / (p3 + p4)
+```
+
+Not great.
+
+Log transformation of the response variable $Y$:
+
+```{r fig.height=10.5, fig.width=7}
+p5 <- ggplot(eg_data, aes(x = x, y = log_y)) +
+  geom_point() + 
+  theme_bw() + geom_smooth(formula = y ~ x, method = "lm", se = FALSE)
+m3 <- lm(log_y ~ x, eg_data)
+p6 <- ggplot(mapping = aes(x = fitted(m3), y = residuals(m3))) +
+  geom_point() + theme_bw() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_smooth(formula = y ~ x, method = "loess")
+
+(p1 + p2) / (p3 + p4) / (p5 + p6)
+```
+
+Nope. Still some evidence of non-linearity.
+
+What about transforming the explanatory variable $X$ as well?
+
+```{r fig.height=4, fig.width=7}
+p7 <- ggplot(eg_data, aes(x = log_x, y = log_y)) +
+  geom_point() + 
+  theme_bw() + geom_smooth(formula = y ~ x, method = "lm", se = FALSE)
+m4 <- lm(log_y ~ log_x, eg_data)
+p8 <- ggplot(mapping = aes(x = fitted(m4), y = residuals(m4))) +
+  geom_point() + theme_bw() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_smooth(formula = y ~ x, method = "loess")
+
+
+p7 + p8
+```
+
+
+
+
+Let's look at the four diagnostic plots for the log-log-transformed data:
+
+```{r out.width="7cm", fig.align='center', echo=FALSE, message=FALSE, warning=FALSE}
+par(mfrow=c(2,2))
+plot(m4)
+```
+
+All looks pretty good except for the scale-location plot, which shows a bit of a pattern. But overall, this looks much better than our original model.
+
+But... how to know which transformation to use...? It's a bit of trial and error. But we can use the diagnostic plots to help us.
+
+**Very very important** is that we do this trial and error before we start using the model. E.g., we don't want to jump from the aeroplane and then find out that our parachute is not working properly! And then try to fix the parachute while we are falling....
+
+Likewise, we must not start using the model and then try to fix it. We need to make sure our model is in good working order before we start using it.
+
+One of the traps we could fall into is called "p-hacking". This is when we try different transformation until we find one that gives us the **result we want**, for example significant relationship. This is a big no-no in statistics. We need to decide on the model (including any transformations) before we start using it.
+
+
+### Common transformations
+
+Which transformations could be considered? There is no simple answer. But some guidelines. E.g. if we see non-linearity and increasing variance with increasing fitted values, then a log transform may improve matter.
+
+Some common and useful transformations are:
+
+* The log transformation for concentrations and absolute values.
+* The square-root transformation for count data.
+* The arcsin square-root $\arcsin(\sqrt{\cdot})$ transformation for proportions/percentages.
+
+Transformations can also be applied on explanatory variables, as we saw in the example above.
+
+
+
+### Outliers
+
+What do we do when we identify the presence of one or more outliers?
+
+1. Start by checking the "correctness" of the data. Is there a typo or a decimal point that was shifted by mistake? Check both the response and explanatory variables.
+2. If not, ask whether the model could be improved. Do reasonable transformations of the response and/or explanatory variables eliminate the outlier? Do the residuals have a distribution with a long tail (which makes it more likely that extreme observations occur)?
+3. Sometimes, an outlier may be the most interesting observation in a dataset! Was the outlier created by some interesting but different process from the other data points?
+4. Consider that outliers can also occur just by chance!
+5. Only if you decide to report the results of both scenario can you check if inclusion/exclusion changes the qualitative conclusion, and by how much it changes the quantitative conclusion.
+
+
+### Removing outliers
+
+It might seem tempting to remove observations that apparently don't fit into the picture. However:
+
+* Do this __only with greatest care__ e.g., if an observation has extremely implausible values!  
+* Before deleting outliers, check points 1-5 above.
+* When removing outliers, **you must mention this in your report**.
+
+
+During the course we'll see many more examples of things going at least a bit wrong. And we'll do our best to improve the model, so we can be confident in it, and start to use it. Which we will start to do in the next lesson. But before we wrap up, some good news...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Its a kind of magic... {#sec-kind-of-magic}
+
+Above, we learned about linear regression, the equation for it, how to estimate the coefficients, and how to check the assumptions. There was a lot of information, and it might seem a bit overwhelming.
+
+You might also be aware that there are quite a few other types of statistical model, such as multiple regression, t-test, ANOVA, two-way ANOVA, and ANCOVA. It could be worrying to think that you need to learn so much new information for each of these types of tests.
+
+But this is where the kind-of-magic happens. The good news is that the linear regression model is a special case of what is called a *general linear model*, or just *linear model* for short. And that all the tests mentioned above are also types of *linear model*. So, once you have learned about linear regression, you have learned a lot about linear models, and therefore also a lot about all of these other tests as well.
+
+Moreover, the same function in R 'lm' is used to make all those statistical models Awesome.
+
+### So what is a linear model?
+
+A linear model is a model where the relationship between the dependent variable and the independent variables is linear. That is, the dependent variable can be expressed as a linear combination of the independent variables. An example of a linear model is:
+
+$$y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \ldots + \beta_p x_p + \epsilon$$
+
+where:
+$y$ is the dependent variable,
+$\beta_0$ is the intercept,
+$\beta_1, \beta_2, \ldots, \beta_p$ are the coefficients of the independent variables,
+$x_1, x_2, \ldots, x_p$ are the independent variables,
+$\epsilon$ is the error term.
+
+
+In contrast, a non-linear model is a model where the relationship between the dependent variable and the independent variables is non-linear. An example of a non-linear model is the exponential growth model:
+
+$$y = \beta_0 + \beta_1 e^{\beta_2 x} + \epsilon$$
+
+where:
+y is the dependent variable,
+$\beta_0$ is the intercept,
+$\beta_1, \beta_2$ are the coefficients of the independent variables,
+$x$ is the independent variable,
+$\epsilon$ is the error term.
+
+Keep in mind that a model with a quadratic term is still a linear model. For example:
+
+$$y = \beta_0 + \beta_1 x_1 + \beta_2 x^2 + \epsilon$$
+
+is still a linear model. We can see this if we substitute $x^2$ with a new variable $x_2$, where $x_2 = x^2$. The model then becomes:
+
+$$y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \epsilon$$
+
+This is clearly a linear model.
+
+
+
+

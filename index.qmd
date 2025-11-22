@@ -1,12 +1,24 @@
+::: {.callout-warning}
+**Under construction**: The 2026 version of this book is currently being prepared. Some chapters are not yet available, and some content may change before the course starts in February 2026.*
+:::
+
+
 # Preface {.unnumbered}
 
-This book contains content of the first six Monday lectures of the course BIO144 Data Analysis in Biology at the University of Zurich. Information for the remaining lectures are available on the OLAT course website.
 
-## Making a copy for yourself
+This book contains the content of the course BIO144 Data Analysis in Biology at the University of Zurich. It is intended to be used as a companion to the lectures and practical exercises of the course. All of the required content of the course (i.e., what could be in the final exam) is included in this book. Additional content is included for those who want to learn more.
 
-If you'd like a copy of this book for yourself, there are a couple of ways:
+Beware that Owen sometimes makes updates to the book during the semester, so the version you have may not exactly match the lectures you attend. However, all of the required content will be the same, and any changes will be correcting typos or improving explanations.
 
-* From your web browser print a PDF of a chapter of the book. Sometime graphs will be displayed across a page, which is not so nice. Sorry. But it should be ok for your learning and to make notes on.
+If you'd like a copy of this book for yourself, there are a few ways. But beware: if you take a local copy then it will not be updated when Owen makes changes to the online version!
+
+* You can download a PDF version of the entire book: <a href="BIO144-Course-Book.pdf" target="_blank">
+  📄 Download PDF
+</a>
+
+* You can download a complete local copy of the HTML version of the BIO144 course book from here:  
+[https://github.com/opetchey/BIO144_Course_Book/tree/main](https://github.com/opetchey/BIO144_Course_Book/tree/main). The html files for the book are in the `_book` folder, and this is the only folder you need for your offline html copy of the book. You can open the `index.html` file in your web browser to read the book offline.
+
 * You can get all of the source code for the book from the [GitHub repository](https://github.com/opetchey/BIO144_Course_Book). However, you may find it a little complicated to do anything useful with it!
 
 

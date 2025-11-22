@@ -1,0 +1,25 @@
+callout blocks
+
+https://quarto.org/docs/authoring/callouts.html
+
+note
+warning
+important
+tip
+caution
+
+
+::: {.callout-note}
+Note that there are five types of callouts, including:
+`note`, `warning`, `important`, `tip`, and `caution`.
+:::
+
+::: {.callout-tip}
+## Tip with Title
+
+This is an example of a callout with a title.
+:::
+
+
+
+

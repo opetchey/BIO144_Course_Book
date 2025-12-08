@@ -4,7 +4,7 @@ source("_common.R")
 ```
 
 
-# ANOVA (L6) {.unnumbered}
+# Analysis of variance (ANOVA) (L6) {.unnumbered}
 
 
 -   One-way ANOVA
@@ -218,6 +218,13 @@ ggplot(bp_data_diet, aes(x = diet, y = bp)) +
             label = "beta_3", hjust = -0.1) 
 
 ```
+
+
+Insert a callout box
+::: {.callout-hint}
+Here is something to warp you mind... we described one-way ANOVA as a linear model with one categorical explanatory variable. But as you can see above, we can also describe it as a linear model with multiple binary explanatory variables (one for each group except the reference group). And when we make a linear model in R it really does create multiple binary explanatory variables behind the scenes. So one-way ANOVA and multiple linear regression with multiple binary explanatory variables are really the same thing! And, even more mind-warping, one-way ANOVA and multiple regression (regression with multiple continuous explanatory variables) are also the same thing! So when we look at multiple regression later in the course, you can think of it as just an extension of one-way ANOVA.
+:::
+
 
 
 ### The ANOVA test: The $F$-test

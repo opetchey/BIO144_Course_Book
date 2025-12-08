@@ -1,16 +1,36 @@
 ```{r}
-suppressMessages(library(tidyverse))
-suppressMessages(library(gtsummary))
+#| echo: false
+source("_common.R")
 ```
 
+# Multiple explanatory variables
 
+In the previous chapters we covered simple linear regression and one-way analysis of variance. In both we had one response variable and one explanatory variable. In both cases we made a linear model to relate the response variable to the explanatory variable. The two cases differed in the type of explanatory variable. In the case of simple linear regression, the explanatory variable was continuous. In the case of one-way ANOVA, the explanatory variable was categorical.
 
+In this chapter, we will extend the linear model and analyses to cases with more than one (i.e., multiple) explanatory variables. The explanatory variables can be continuous or categorical, and can be a mixture of the two.
+
+Some combinations of explanatory variables have special names:
+
+* Multiple continuous explanatory variables -> Multiple linear regression.
+* Two categorical explanatory variables -> Two-way ANOVA.
+* One continuous and one categorical explanatory variable -> Analysis of covariance (ANCOVA).
+
+We will look at each of these, and start with multiple linear regression. As well as the details of a particular case (e.g., multiple linear regression), we will also cover general concepts that apply to all cases with multiple explanatory variables, such as:
+
+* Visualising data and models with multiple explanatory variables.
+* Correlations between explanatory variables and the implications.
+* Interactions between explanatory variables, and the implications.
+* The linear model equation for multiple explanatory variables.
+* Specifying models in $R$ with multiple explanatory variables.
+* Assessing model assumptions with multiple explanatory variables.
+* Measuring model fit ($R^2$, adjusted $R^2$) with multiple explanatory variables.
+* Hypothesis testing with multiple explanatory variables.
+* Interpretation of model parameters with multiple explanatory variables.
+* Model selection with multiple explanatory variables.
+
+Let's get started with multiple linear regression, which is usually shortened to just multiple regression.
 
 # Multiple regression (L4) {.unnumbered}
-
-This chapter contains the content of the fourth lecture of the course BIO144 Data Analysis in Biology at the University of Zurich.
-
-## Introduction
 
 We previously looked at whether blood pressure is associated with age. This is an important question, because blood pressure has many health implications. However, blood pressure is not only associated with age, but also with other factors, such as weight, height, and lifestyle. In this chapter, we will look at how to investigate the association between blood pressure and multiple explanatory variables.
 
@@ -21,10 +41,12 @@ When we have multiple explanatory variables, we are often interested in question
 * Question 3: What proportion of variability is explained?
 * Question 4: Are some explanatory variables more important than others?
 
-Lets make an example of blood pressure data, with age and lifestyle as two explanatory variables. Lifestyle will be a continuous variable that is the number of minutes of exercise per week.
+## An example dataset
+
+Blood pressure is again the response variable, with age and lifestyle as two explanatory variables. Lifestyle is a continuous variable that is the number of minutes of exercise per week.
 
 ```{r}
-bp_data <- data.frame(age = ceiling(runif(100, 20, 80)),
+bp_data <- tibble(age = ceiling(runif(100, 20, 80)),
                        mins_exercise = ceiling(runif(100, 0, 300)))
 bp_data$bp <- ceiling(90 + 0.5 * bp_data$age - 0.1 * bp_data$mins_exercise + rnorm(100, 0, 10))
 ```
@@ -32,30 +54,40 @@ bp_data$bp <- ceiling(90 + 0.5 * bp_data$age - 0.1 * bp_data$mins_exercise + rno
 Here is a look at the dataset:
 
 ```{r}
-head(bp_data)
+bp_data
 ```
 
-We can get insights by visualising the data by looking at three graphs:
+Since there are three variables, we can make three different scatter plots to visualise the relationships:
 
-1. Age vs blood pressure. This is the graph of the response variable (blood pressure) against one of the explanatory variables (age). It looks like there is evidence of a positive relationship.
+**1. Age vs blood pressure.** This is the graph of the response variable (blood pressure) against one of the explanatory variables (age). It looks like there is evidence of a positive relationship.
 
 ```{r}
-ggplot2::ggplot(bp_data, aes(x = age, y = bp)) + geom_point() + labs(x = "Age", y = "Blood pressure")
+ggplot2::ggplot(bp_data, aes(x = age, y = bp)) +
+  geom_point() +
+  labs(x = "Age", y = "Blood pressure")
 ```
 
-2. Minutes of exercise vs blood pressure. This is a graph of the response variable (blood pressure) against the other explanatory variable (minutes of exercise). It looks like there is evidence of a negative relationship.
+Here we see a positive relationship between age and blood pressure. Blood pressure tends to increase with age.
+
+**2. Minutes of exercise vs blood pressure.** This is a graph of the response variable (blood pressure) against the other explanatory variable (minutes of exercise). It looks like there is evidence of a negative relationship.
 
 ```{r}
-ggplot2::ggplot(bp_data, aes(x = mins_exercise, y = bp)) + geom_point() + labs(x = "Minutes of exercise", y = "Blood pressure")
+ggplot2::ggplot(bp_data, aes(x = mins_exercise, y = bp)) +
+  geom_point() +
+  labs(x = "Minutes of exercise", y = "Blood pressure")
 ```
 
-3. Age vs minutes of exercise. This is a graph of the two explanatory variables against each other. It looks like there is no relationship.
+Here we see a negative relationship between minutes of exercise and blood pressure. Blood pressure tends to decrease with more minutes of exercise.
+
+**3. Age vs minutes of exercise.** This is a graph of the two explanatory variables against each other. It looks like there is no relationship.
 
 ```{r}
-ggplot2::ggplot(bp_data, aes(x = age, y = mins_exercise)) + geom_point() + labs(x = "Age", y = "Minutes of exercise")
+ggplot2::ggplot(bp_data, aes(x = age, y = mins_exercise)) +
+  geom_point() +
+  labs(x = "Age", y = "Minutes of exercise")
 ```
 
-
+And here we see no relationship between age and minutes of exercise. The two explanatory variables appear to be independent.
 
 We can also look at this in a plot with three axes. The y-axis is blood pressure, the x-axis is age, and the z-axis is minutes of exercise. Here is a 3d plot that we can interactive with and rotate:
 

@@ -54,3 +54,411 @@ Throughout the course, we will use the following notation:
 * *df* is the degrees of freedom.
 * $p$ is the p-value.
 
+
+## Using Generative AI in R and Data Analysis: Guidance and Good Practice
+
+::: {.callout-important}
+For the final examination, you will use your own computer, but the test will run inside the Safe Exam Browser, which will be configured to block all access to generative AI tools, browser-based assistants, external software, online services, and any AI code copilots inside RStudio or other IDEs. This means **no form of generative AI will be available during the exam**. Because of this, please avoid becoming overly reliant on GenAI—such as ChatGPT, Claude, Gemini, Copilot, or similar tools for answering quiz questions, explaining results, fixing errors, guiding your analysis, or writing code. You must be able to perform all tasks independently. We also strongly recommend that you do not use RStudio with Copilot integration during the course, as it will not function in the exam environment and may leave you under prepared. Throughout the semester, be sure to practice writing your own R code, interpreting outputs yourself, and applying statistical reasoning without AI assistance, as your exam performance will depend entirely on your own knowledge and skills.
+:::
+
+
+Generative AI (GenAI) tools can support learning, exploration, and coding in R. They can be powerful assistants, but they must be used with care. This section introduces the types of tools available, provides guidelines for responsible use, highlights red flags for problematic usage, and gives examples of good and poor practice.
+
+Typical uses:
+
+- asking conceptual questions  
+- summarizing methods  
+- generating example code  
+- explaining error messages  
+
+Strengths:
+
+- flexible and conversational  
+- good for brainstorming  
+- can generate starter code  
+
+Limitations:
+
+- often wrong in subtle ways  
+- may hallucinate functions  
+- cannot see your working R session  
+
+
+
+### Guidelines for Good Use of Generative AI
+
+#### Use GenAI as a Helper, Not a Source of Truth
+
+Best uses:
+
+- drafting  
+- explanation  
+- syntax reminders  
+- scaffolding  
+
+Not reliable for:
+
+- model choice  
+- statistical inference  
+- interpreting coefficients  
+- designing analysis workflows  
+- checking assumptions  
+
+#### Always Verify AI-Generated Code and Explanations
+
+Check:
+
+- does the code run?  
+- do variable names match?  
+- is the model appropriate?  
+- are assumptions addressed?  
+- is the explanation logically correct?  
+
+
+#### Keep Human Judgement Central
+
+GenAI cannot:
+
+- understand scientific questions  
+- evaluate model assumptions  
+- know ecological/biological reasoning  
+- determine appropriate models  
+
+
+#### Provide Context Carefully
+
+When asking GenAI:
+
+- describe variables  
+- provide example data  
+- specify your goal  
+- show your existing code  
+
+Better context = better answers.
+
+
+#### Use GenAI to Improve Understanding, Not Bypass It
+
+Helpful:
+
+- *“Explain logistic regression.”*  
+- *“Why do residuals fan out?”*  
+
+Not helpful:
+
+- *“Do my assignment for me.”*  
+
+
+### Indicators of Problematic Usage
+
+#### Code That Does Not Reflect Ability
+
+Signs:
+
+- unfamiliar advanced syntax  
+- unexplained packages  
+- inconsistent style  
+
+#### Hallucinated Functions or Nonsensical Code
+
+Examples:
+
+- `slope(x)` in mixed models  
+- missing arguments  
+- fabricated packages  
+
+#### Statistical Errors Typical of AI
+
+Common issues:
+
+- wrong model family  
+- wrong inference logic  
+- invented assumptions  
+- incorrect explanation of coefficients  
+
+#### Lack of Understanding
+
+Indicators:
+
+- cannot explain model  
+- inconsistent interpretations  
+- identical phrasing to AI output  
+
+#### Over-Reliance on AI
+
+Signs:
+
+- using AI for every step  
+- no debugging effort  
+- stagnation in skill development  
+
+
+### Examples of Good and Problematic Use
+
+#### Good Use Examples
+
+**A. Syntax help**  
+*“How do I specify a random slope in `lme4`?”*
+
+**B. Clarification**  
+*“How does adding an interaction change interpretation?”*
+
+**C. Debugging**  
+*“What does ‘object not found’ usually mean?”*
+
+**D. Brainstorming**  
+*“How can I visualise a logistic regression?”*
+
+
+
+#### Problematic Use Examples
+
+**A. Blindly copying model code**
+```r
+lm(y ~ x1 + x2 * x3 * x1)
+```
+
+**B. Incorrect statistical logic**  
+AI code labelled as a bootstrap but is actually a permutation test.
+
+**C. Misleading interpretation**  
+Claims that coefficients assume predictor independence.
+
+**D. Presenting AI-generated plots without understanding**  
+
+**E. Outsourcing entire workflow**  
+*“Write a script that loads data, cleans it, runs models, interprets, and writes the report.”*
+
+
+
+#### Summary
+
+Generative AI can:
+
+- help learning  
+- support debugging  
+- provide code scaffolds  
+- explain concepts  
+
+But it can also:
+
+- hallucinate  
+- produce incorrect models  
+- misinterpret statistics  
+
+**Use GenAI as a supportive tool—never as an unquestioned authority.**  
+Good use of GenAI *supports* learning. Problematic use *replaces* it.
+
+
+
+
+### Common GenAI Errors in R and Statistical Modelling
+
+Generative AI tools can be helpful for writing R code, exploring ideas, and learning syntax.  
+However, they sometimes produce *plausible but incorrect* code or explanations.  
+This section provides real examples of typical GenAI mistakes, with correct solutions and teaching points.
+
+**Why this matters:** GenAI is a **pattern-matching system**, not a statistical reasoning engine.   It does not understand assumptions, inference, or modelling logic.Therefore, students should **never accept code or explanations without checking them**.
+
+---
+
+#### Incorrect formula structure in `lm()`
+
+**Prompt:** *Fit a linear model with main effects and a two-way interaction between `x2` and `x3`.*
+
+**Incorrect GenAI output:**
+```r
+lm(y ~ x1 + x2 * x3 * x1, data = df)
+```
+
+This includes an unintended **three-way interaction** and extra terms.
+
+**Correct:**
+```r
+lm(y ~ x1 + x2 * x3, data = df)
+```
+
+**Teaching point:** Always check model formulas carefully. AI often adds or removes interactions.
+
+
+
+#### Confusing bootstrap and permutation tests
+
+**Documented case:** GenAI was asked for a *bootstrap t-test*.
+
+**Incorrect GenAI code (actually a permutation test):**
+```r
+t_stats <- replicate(1000, {
+  perm <- sample(df$group)
+  t.test(df$value ~ perm)$statistic
+})
+```
+
+**Correct bootstrap approach:**
+```r
+t_stats <- replicate(1000, {
+  sample_df <- df[sample(nrow(df), replace = TRUE), ]
+  t.test(value ~ group, data = sample_df)$statistic
+})
+```
+
+**Teaching point:** The logic of inference matters. Code that runs is not necessarily correct.
+
+---
+
+#### Incorrect explanation of linear-model coefficients
+
+**Incorrect claim:** *“Coefficients assume independence among predictors.”*
+
+This is false. Linear model coefficients describe **conditional effects within the model**, regardless of collinearity.
+
+**Teaching point:** Interpretations come from the model structure, not from simplistic assumptions GenAI sometimes invents.
+
+---
+
+####  Hallucinated functions in mixed models
+
+**Incorrect GenAI output:**
+```r
+lmer(y ~ x + (slope(x) | group), data = df)
+```
+
+`slope()` does not exist.
+
+**Correct random-slope specification:**
+```r
+lmer(y ~ x + (x | group), data = df)
+```
+
+**Teaching point:** Always verify syntax in package documentation.
+
+---
+
+####  Wrong variable names
+
+The dataset has variables `height` and `age`.
+
+**Incorrect GenAI output:**
+```r
+lm(Height ~ Age, data = df)
+```
+
+**Correct:**
+```r
+lm(height ~ age, data = df)
+```
+
+**Teaching point:** GenAI often guesses variable names. Check against your data.
+
+---
+
+####  Wrong model family for binary data
+
+**Incorrect GenAI output (linear regression):**
+```r
+lm(y ~ x, data = df)
+```
+
+**Correct logistic regression:**
+```r
+glm(y ~ x, data = df, family = binomial)
+```
+
+**Teaching point:** For binary response variables, specify the model family explicitly.
+
+---
+
+####  Incorrect explanation of random intercepts
+
+**Incorrect claim:**  
+*“Random intercepts eliminate correlation among repeated measures.”*
+
+Incorrect — they **model** correlation, not eliminate it.
+
+**Teaching point:** Random effects structure determines the implied correlation. AI explanations are often vague or wrong here.
+
+---
+
+#### Omitting interaction terms in ANOVA
+
+**Prompt:** *Two-way ANOVA with interaction.*
+
+**Incorrect:**
+```r
+aov(y ~ factor1 + factor2, data = df)
+```
+
+**Correct:**
+```r
+aov(y ~ factor1 * factor2, data = df)
+```
+
+**Teaching point:** Confirm that the model matches the experimental design.
+
+---
+
+#### Incorrect use of `predict()`
+
+**Prompt:** *Predict for new x values.*
+
+**Incorrect GenAI output:**
+```r
+predict(model)
+```
+
+This gives **in-sample fitted values**, not predictions for new data.
+
+**Correct:**
+```r
+predict(model, newdata = data.frame(x = c(1, 2, 3)))
+```
+
+**Teaching point:** Always specify `newdata` for predictions.
+
+---
+
+#### Poor explanations of multicollinearity
+
+**Incorrect GenAI claim:**  
+*“Multicollinearity is indicated when the model p-value is low but the individual predictor p-values are high.”*
+
+This is an unreliable and incomplete diagnostic.
+
+**Better diagnostics:**
+```r
+car::vif(model)
+cor(df)
+model.matrix(model)
+```
+
+**Teaching point:** AI often repeats common internet tropes rather than robust statistical principles.
+
+---
+
+#### Summary
+
+GenAI can:
+
+- write useful scaffolding code,  
+- provide quick reminders,  
+- help with simple tasks.
+
+But it can also:
+
+- hallucinate functions,  
+- give subtly incorrect models,  
+- invent statistical logic,  
+- provide plausible but wrong explanations.
+
+**Advice for students:**  
+Use GenAI as a starting point, not an authority.  
+Always check:
+
+- function names,  
+- model formulas,  
+- assumptions,  
+- interpretations,  
+- and logic.
+
+In statistics, clarity of reasoning matters more than code that merely *runs*.
+

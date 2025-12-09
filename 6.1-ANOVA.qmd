@@ -163,8 +163,9 @@ ggplot(bp_data_diet, aes(x = diet, y = bp)) +
 ```
 
 ::: {.callout-note}
-
 There is lots of hidden code used to create the data used in the graph above, and to make the graph itself. You can see the code by going to the [Github repository for this book](https://github.com/opetchey/BIO144_Course_Book). 
+:::
+
 
 ### Rewrite the model
 
@@ -220,7 +221,7 @@ ggplot(bp_data_diet, aes(x = diet, y = bp)) +
 ```
 
 
-Insert a callout box
+
 ::: {.callout-hint}
 Here is something to warp you mind... we described one-way ANOVA as a linear model with one categorical explanatory variable. But as you can see above, we can also describe it as a linear model with multiple binary explanatory variables (one for each group except the reference group). And when we make a linear model in R it really does create multiple binary explanatory variables behind the scenes. So one-way ANOVA and multiple linear regression with multiple binary explanatory variables are really the same thing! And, even more mind-warping, one-way ANOVA and multiple regression (regression with multiple continuous explanatory variables) are also the same thing! So when we look at multiple regression later in the course, you can think of it as just an extension of one-way ANOVA.
 :::
@@ -758,268 +759,6 @@ There are many many plotting styles and preferences. The important thing is to c
 Please referring to the learning objectives document and the learning objectives for this chapter.
 
 
-## end
-
-## end
-
-
-
-## Two-way ANOVA (Zweiweg-Varianzanalyse)
-
-Two-way ANOVA is used to analyse a specific type of study design. When we have a study with two categorical treatments and all possible combinations of them, we can use a two-way ANOVA.
-
-For example, take the question of how diet and exercise affect blood pressure. Let's say we can have three levels of diet: meat heavy, Mediterranean, and vegetarian. And that we have two levels of exercise: low and high. And that we have all possible combinations of these two treatments: i.e., we have a total of $3 \times 2 = 6$ **treatment combinations**.
-
-We can also represent this study design in a table:
-
-
-<style type="text/css">
-.tg  {border-collapse:collapse;border-spacing:0;}
-.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
-  overflow:hidden;padding:10px 5px;word-break:normal;}
-.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
-  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
-.tg .tg-fymr{border-color:inherit;font-weight:bold;text-align:left;vertical-align:top}
-.tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}
-</style>
-<table class="tg"><thead>
-  <tr>
-    <th class="tg-fymr"></th>
-    <th class="tg-fymr" colspan="2">Exercise (G)</th>
-  </tr></thead>
-<tbody>
-  <tr>
-    <td class="tg-0pky">Diet (B)</td>
-    <td class="tg-0pky">Low (1)</td>
-    <td class="tg-0pky">High (2)</td>
-  </tr>
-  <tr>
-    <td class="tg-0pky">Meat heavy (1)</td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-  </tr>
-  <tr>
-    <td class="tg-0pky">Mediterranean (2)</td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-  </tr>
-  <tr>
-    <td class="tg-0pky">Vegetarian (3)</td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-  </tr>
-</tbody>
-</table>
-
-The six empty cells in the table represent the six treatment combinations.
-
-This type of study, with all possible combinations, is known as a *factorial design*. The two treatments are called factors, and the levels of the factors are called factor levels. A *fully factorial design* is one where all possible combinations of the factor levels are present.
-
-Let's look at example data:
-
-```{r}
-set.seed(1)
-reps <- 1:10
-bp_data_2cat <- crossing(diet = c("meat heavy", "vegetarian", "Mediterranean"),
-         exercise = c("low", "high"),
-         reps = reps) %>%
-  mutate(bp = 120 -
-           15*(exercise=="high") -
-           8*(diet=="Mediterranean") - 11*(diet=="vegetarian") +
-           8*(exercise=="high" & diet=="Mediterranean") +
-          11*(exercise=="high" & diet=="vegetarian"), 
-         error = rnorm(nrow(.), 0, 5),
-         bp = bp + error) |> 
-  arrange(reps, diet, exercise) |>
-  mutate(exercise = relevel(factor(exercise), "low")) #|> 
-  #select(-error)
-head(bp_data_2cat)
-```
-
-We can use the `xtabs` function to create a table of the data, by cross-tabulating the two treatments diet and exercise:
-
-```{r}
-#| echo = TRUE
-xtabs(~diet + exercise, data = bp_data_2cat)
-```
-
-This tells us there are 10 replicates in each of the six treatment combinations.
-
-And a visualisation of the data:
-
-```{r}
-grouped_data <- group_by(bp_data_2cat, diet, exercise) %>%
-  summarise(mean_bp = mean(bp), sd_bp = sd(bp), .groups = "drop")
-ggplot(bp_data_2cat, aes(x=exercise, y=bp, col=diet)) + 
-  geom_point(position=position_dodge(width=0.1)) + 
-  geom_point(data = grouped_data, aes(x=exercise, y=mean_bp, col=diet),
-             position=position_dodge(width=0.1), size=5) +
-  geom_line(data = grouped_data, aes(x=exercise, y=mean_bp, group=diet),
-            position=position_dodge(width=0.1)) +
-  labs(title="Blood pressure vs exercise",
-       x="Exercise",
-       y="Blood pressure",
-       col="Diet")
-```
-
-
-::: {.callout-tip}
-## Think, Pair, Share (#twoway-plot)
-
-What do you conclude from this plot?
-:::
-
-
-### The model for 2-way ANOVA
-
-
-Assume we have a factorial design with two treatments (factors), factor $B$ and factor $G$.
-
-And that we can label the levels of factor $B$ as $i=1,2...$ and factor $G$ as $j=1,2...$.
-
-Then we can denote a particular treatment combination as $B_iG_j$.
-
-And let us set the one of the treatment combinations as the intercept of the model, and the let the intercept be equal to the mean of the observations in the treatment combination $B1G1$.
-
-$$intercept = \frac{1}{n_{11}}\sum_{k=1}^{n_{11}} y_{1,1,k}$$
-
-where:
-
-* $y_{1,1,k}$ is the $k$th observation in the treatment combination $B1G1$
-* $n_{11}$ is the number of observations in the treatment combination $B1G1$.
-
-And we will let all of the other treatment combinations be represented by the **effects** $\beta_i$ and $\gamma_j$.
-
-The resulting linear model is:
-
-$$y_{ijk} = intercept + \beta_i + \gamma_j + (\beta\gamma)_{ij} + \epsilon_{ijk} \quad \text{with} \quad \epsilon_{ijk} \sim N(0,\sigma^2)$$
-
-where
-
-* $y_{ijk}$ is the $k$th observation in the treatment combination of $i$ and $j$.
-* $(\beta\gamma)_{ij}$ is the interaction effect between the $i$th level of factor $\beta$ and the $j$th level of factor $\gamma$.
-
-In this model, we set $\beta_1=\gamma_1=0$ and $(\beta\gamma)_{11}=0$ because they are already included in the intercept.
-
-
-
-
-### Using R for 2-way ANOVA
-
-In R, a two-way ANOVA is as simple as one-way ANOVA, just add another
-variable:
-
-```{r echo = TRUE, message = FALSE, warning = FALSE}
-mod1 <- lm(bp ~ diet * exercise, data = bp_data_2cat)
-```
-
-Note that, as we saw in the chapter about interactions, we include the main effects of diet and exercise and the interaction term with the short hand `diet * exercise`.
-
-Of course we next check the model diagnostics:
-
-```{r}
-par(mfrow=c(2,2))
-plot(mod1, add.smooth = FALSE)
-```
-
-No clear patterns: all is good.
-
-### Hypothesis testing
-
-As is implied by the name "Analysis of variance" we analyse variances, here mean squares, to test hypotheses. And as before we use an $F$-test to do this. Remember that the $F$-test is a ratio of two mean squares (where mean squares are a kind of variance).
-
-
-
-::: {.callout-tip}
-## Think, Pair, Share (#full-degrees)
-
-How many degrees of freedom for error will there be when we fit this model with both main effects and the interaction term? Hint: remember that the degrees of freedom for error is the number of observations minus the number of parameters estimated.
-:::
-
-We can have have a null hypothesis of no effect for each of the two main effects and for the interaction. So we can do an $F$-test for each of these null hypotheses.
-
-Here is the ANOVA table:
-
-```{r}
-anova(mod1)
-```
-
-**Interpretation**: All three of the null hypotheses are rejected. Importantly, we see that the interaction term is significant, which means that the effect of one treatment is different depending on the level of the other treatment. This means that even though the main effects are significant, we cannot interpret them without considering the interaction term. I.e., we cannot say anything general about the effect of diet or exercise alone on blood pressure. We have to qualify any statement about the effect of diet or exercise with "depending on the level of the other treatment". Or state something like "the exercise reduces blood pressure greatly for people with a meat heavy diet, but reduces blood pressure only slightly for people with a vegetarian diet or Mediterranean diet".
-
-### Interpreting coefficients
-
-We can look at the estimated coefficients to see the size of the effects, but be aware that it contains only a subset of the possible effects; it would contain different values if a different treatment combination were set to be the intercept of the model. Also be aware that often we are mostly interested in the $F$-test and their hypotheses test, and are less interest in the coefficients and their $t$-tests (unlike in a regression model where we are often interested in the coefficients and their $t$-tests).
-
-Finally, be aware that it needs a bit of work to interpret the coefficients, because they are relative to the intercept. Let's try to figure out what that means. First, back to the table of the experimental design. This time we will put in the cells an expression for the mean of that treatment combination:
-
-
-<style type="text/css">
-.tg  {border-collapse:collapse;border-spacing:0;}
-.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
-  overflow:hidden;padding:10px 5px;word-break:normal;}
-.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
-  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
-.tg .tg-fymr{border-color:inherit;font-weight:bold;text-align:left;vertical-align:top}
-.tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}
-</style>
-<table class="tg"><thead>
-  <tr>
-    <th class="tg-fymr"></th>
-    <th class="tg-fymr" colspan="2">Exercise (G)</th>
-  </tr></thead>
-<tbody>
-  <tr>
-    <td class="tg-0pky">Diet (B)</td>
-    <td class="tg-0pky">Low (1)</td>
-    <td class="tg-0pky">High (2)</td>
-  </tr>
-  <tr>
-    <td class="tg-0pky">Meat heavy (1)</td>
-    <td class="tg-0pky">$B_1G_1$</td>
-    <td class="tg-0pky">$B_1G_2$</td>
-  </tr>
-  <tr>
-    <td class="tg-0pky">Mediterranean (2)</td>
-    <td class="tg-0pky">$B_2G_1$</td>
-    <td class="tg-0pky">$B_2G_2$</td>
-  </tr>
-  <tr>
-    <td class="tg-0pky">Vegetarian (3)</td>
-    <td class="tg-0pky">$B_2G_1$</td>
-    <td class="tg-0pky">$B_3G_2$</td>
-  </tr>
-</tbody>
-</table>
-
-
-So, for example, the mean of the treatment combination "Meat heavy, Low" is $B_1G_1$. And the mean of the treatment combination "Mediterranean, High" is $B_2G_2$.
-
-However, the coefficients in the summary table given by R are not like this. They are coefficients relative to an intercept / reference treatment combination. The reference treatment combination chosen by R is the first level of the first factor and the first level of the second factor. In this case, that is "**Meat heavy, Low**" -- $B_1G_1$.
-
-All of the other coefficients are about differences from this reference treatment combination.
-
-So, for example, the coefficient for "High" in the "Exercise" factor (appearing as `exercisehigh` in the summary table) is the difference in mean blood pressure between the treatment combination "Meat heavy, High" ($B_1G_2$) and the treatment combination "Meat heavy, Low". Put another way, $B_1G_2 = B_1G_1 + \gamma_2$ where $\gamma_2$ is the coefficient for "High" in the "Exercise" factor.
-
-And the coefficient for "Mediterranean" in the "Diet" factor (appearing as `dietMediterranean` in the summary table) is the difference in mean blood pressure between the treatment combination "Mediterranean, Low" and the treatment combination "Meat heavy, Low". Put another way, $B_2G_1 = B_1G_1 + \beta_2$ where $\beta_2$ is the coefficient for "Mediterranean" in the "Diet" factor.
-
-**Let us for a  moment assume that the effects of diet and exercise are additive.** If this is the case, then the mean for $B_2G_2$ = $B_1G_1 + \beta_2 + \gamma_2$. That is, the mean for "Mediterranean, High" is the mean for "Meat heavy, Low" plus the effect of "Mediterranean" plus the effect of "High".
-
-However, if the effects are not additive, then the mean for $B_2G_2$ is not $B_1G_1 + \beta_2 + \gamma_2$. Rather, it is $B_2G_2 = B_1G_1 + \beta_2 + \gamma_2 + (\beta\gamma)_{22}$. That is, the mean for "Mediterranean, High" is the mean for "Meat heavy, Low" $B_1G_1$ plus the effect of "Mediterranean" $\beta_2$ plus the effect of "High" $\gamma_2$ plus the non-additive effect between "Mediterranean" and "High" $(\beta\gamma)_{22}$.
-
-Non-additivity implies an interaction, therefore the non-additive effect is the interaction effect. In the summary table these interaction effects are those that contain a colon (:), e.g., `dietMediterranean:exercisehigh`.
-
-Here's a graphical representation of how the coefficients in the summary table relate to the means of the treatment combinations:
-
-![Understanding coefficients](assets/twowayanova1.png){width=300}
-
-::: {.callout-tip}
-## Think, Pair, Share (#veghigh-estimate)
-
-From the values in the coefficients table, calculate the estimated mean of the treatment combination "vegetarian, High".
-:::
-
-
-
 
 
 ## Summing up
@@ -1030,12 +769,5 @@ From the values in the coefficients table, calculate the estimated mean of the t
 * We can use contrasts and post-hoc tests to test specific hypotheses about the means of the groups.
 * Two-way ANOVA is used when we have two categorical explanatory variables and can be used to test for interactions between them.
 
-
-## Additional reading
-
-Please feel free to look at the follow resources for a slightly different perspective and some more information on ANOVA:
-
--   Chapter 12 from Stahel book *Statistische Datenenalyse*
--   *Getting Started with R* chapters 5.6 and 6.2
 
 

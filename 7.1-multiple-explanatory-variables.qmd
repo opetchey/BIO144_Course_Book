@@ -7,11 +7,11 @@ source("_common.R")
 
 In the previous chapters we covered simple linear regression and one-way analysis of variance. In both we had one response variable and one explanatory variable. In both cases we made a linear model to relate the response variable to the explanatory variable. The two cases differed in the type of explanatory variable. In the case of simple linear regression, the explanatory variable was continuous. In the case of one-way ANOVA, the explanatory variable was categorical.
 
-In this chapter, we will extend the linear model and analyses to cases with more than one (i.e., multiple) explanatory variables. The explanatory variables can be continuous or categorical, and can be a mixture of the two.
+We will now extend the linear model and analyses to cases with more than one (i.e., multiple) explanatory variables. The explanatory variables can be continuous or categorical, and can be a mixture of the two.
 
 Some combinations of explanatory variables have special names:
 
-* Multiple continuous explanatory variables -> Multiple linear regression.
+* Multiple (more than one) continuous explanatory variables -> Multiple linear regression.
 * Two categorical explanatory variables -> Two-way ANOVA.
 * One continuous and one categorical explanatory variable -> Analysis of covariance (ANCOVA).
 
@@ -30,18 +30,17 @@ We will look at each of these, and start with multiple linear regression. As wel
 
 Let's get started with multiple linear regression, which is usually shortened to just multiple regression.
 
-# Multiple regression (L4) {.unnumbered}
+## Multiple regression (L4) {.unnumbered}
 
 We previously looked at whether blood pressure is associated with age. This is an important question, because blood pressure has many health implications. However, blood pressure is not only associated with age, but also with other factors, such as weight, height, and lifestyle. In this chapter, we will look at how to investigate the association between blood pressure and multiple explanatory variables.
 
 When we have multiple explanatory variables, we are often interested in questions such as:
 
-* Question 1: As an ensemble, are the explanatory variables associated with the response? 
-* Question 2: Are each of the explanatory variables associated with the response?
-* Question 3: What proportion of variability is explained?
-* Question 4: Are some explanatory variables more important than others?
+* Question 1: Are each of the explanatory variables associated with the response?
+* Question 2: What proportion of variability is explained?
+* Question 3: Are some explanatory variables more important than others?
 
-## An example dataset
+### An example dataset
 
 Blood pressure is again the response variable, with age and lifestyle as two explanatory variables. Lifestyle is a continuous variable that is the number of minutes of exercise per week.
 
@@ -89,13 +88,11 @@ ggplot2::ggplot(bp_data, aes(x = age, y = mins_exercise)) +
 
 And here we see no relationship between age and minutes of exercise. The two explanatory variables appear to be independent.
 
-We can also look at this in a plot with three axes. The y-axis is blood pressure, the x-axis is age, and the z-axis is minutes of exercise. Here is a 3d plot that we can interactive with and rotate:
+::: {.callout-important}
+The lack of correlation between the two explanatory variables is very important. If the two explanatory variables were correlated, we would have a situation known as multicollinearity. Multicollinearity can greatly complicate the interpretation of the results of a multiple regression analysis. We will discuss multicollinearity later.
+:::
 
-```{r fig.width = 8, fig.height = 8}
-plotly::plot_ly(bp_data, x = ~age, y = ~mins_exercise, z = ~bp, type = "scatter3d", mode = "markers", marker = list(size = 5))
-```
 
-All very good, and this makes sense. We can see that blood pressure is positively associated with age and negatively associated with minutes of exercise. But we need to be more quantitative about this. We need to build a model that relates blood pressure to age and minutes of exercise.
 
 ## The multiple linear regression model
 
@@ -242,10 +239,9 @@ And what is missing?
 
 **What we don't know** is how to answer the four questions already mentioned above:
 
-* Question 1: As an ensemble, are the explanatory variables associated with the response? 
-* Question 2: Are each of the explanatory variables associated with the response?
-* Question 3: What proportion of variability is explained?
-* Question 4: Are some explanatory variables more important than others?
+* Question 1: Are each of the explanatory variables associated with the response?
+* Question 2: What proportion of variability is explained?
+* Question 3: Are some explanatory variables more important than others?
 
 Let's answer these questions using the blood pressure example.
 
@@ -278,182 +274,48 @@ e) No outliers: No points with high leverage or high residuals.
 
 ## Question 1: As an ensemble, are the explanatory variables associated with the response?
 
-To answer this question, we can use the **$F$-test**. The null hypothesis is that the residual error variance is not significantly different from what would be expected by chance. The alternative hypothesis is that the residuals error variance is significantly lower than what would be expected by chance.
+Recall that when we learned about ANOVA we saw that a single categorical explanatory variable with multiple levels can be represented as multiple binary (0/1) explanatory variables. In that case, we used the $F$-test to test the null hypothesis of no effect / relationship for all binary variables together.
 
-This hypothesis is similar to the null hypothesis that all of the slopes (regression coefficients) are equal to zero. If the null hypothesis is rejected, then at least one of the regression coefficients is significantly different from zero, and we can conclude that the explanatory variables are associated with the response.
+Likewise, when we have multiple continuous explanatory variables, we use the $F$-test to test the null hypothesis that **together** the explanatory variables have no association with the response variable. That is, we use the $F$-test to test the null hypothesis that the ensemble of explanatory variables is not associated with the response variable.
+
+Recall that the $F$-test compares the variance explained by the model to the variance not explained by the model (i.e., the variance of the residuals). If the variance explained by the model is significantly greater than the variance not explained by the model, then we can conclude that the explanatory variables are associated with the response variable.
+
+If we reject the null hypothesis, we can conclude that some combination of the explanatory variables is associated with the response variable. However, we cannot conclude which specific explanatory variables are associated with the response variable. To determine which specific explanatory variables are associated with the response variable, we need to perform individual $t$-tests for each explanatory variable. We will do this in the next section.
 
 OK, back to the $F$-test.
 
-::: {.callout-note}
-The $F$-test is called the "$F$-test" because it is based on the $F$-distribution, which was named after the statistician [Sir Ronald A. Fisher](https://en.wikipedia.org/wiki/Ronald_Fisher). Fisher developed this statistical method as part of his pioneering work in analysis of variance (ANOVA) and other fields of experimental design and statistical inference.
-:::
+We know a lot already from the ANOVA chapter. Let's review how we calculate the $F$-statistic and how we interpret it.
 
-Key Points Behind the Name:
 
-1.	$F$-Distribution: The test statistics of the $F$-test (that is, the $F$-statistic) follows the $F$-distribution under the null hypothesis. This distribution arises when comparing the ratio of two independent sample variances or mean squares.
-2.	Ronald Fisher’s Contribution: Fisher introduced the $F$-distribution in the early 20th century as a way to test hypotheses about the equality of variances and to analyze variance in regression and experimental designs. The "$F$" in $F$-distribution honors him.
-3.	Variance Ratio: The test statistic for the $F$-test is the ratio of two variances (termed mean squares in this case), making the $F$-distribution the natural choice for modeling this ratio when the null hypothesis is true.
 
-The $F$-test is widely used in various contexts, including comparing variances, assessing the significance of regression models, conducting ANOVA to test for differences among group means, and comparing different models.
+The $F$-statistic is calculated as the ratio of two mean squares:
 
-### But what is the $F$-statistic?
+1. The mean square of the model ($MSE_{model}$).
+2. The mean square of the residuals ($MSE_{residual}$).
 
-**The F-statistic is calculated as the ratio of the mean square error of the model to the mean square error of the residuals.**
+Recall that a mean square is a sum of squares divided by the associated degrees of freedom. The formulas for these are the same as for ANOVA.
 
-What on earth does that mean? Put simply, the F-statistic is a measure of how well the model fits the data. It compares the how much variability (variance) is explained to how much is not explained.
+So, to calculate these two mean squares, we need to calculate three sums of squares:
 
-The mean square of the model ($MSE_{model}$) is a measure of how much variability is explained.
+1. The total sum of squares ($SST$).
+2. The sum of squares of the model ($SSM$).
+3. The sum of squares of the residuals ($SSE$).
 
-The mean square of the residuals ($MSE_{residual}$) is a measure of how much variability is not explained.
+We also need to calculate the degrees of freedom associated with each sum of squares.
 
-1. If there are strong relationships in our data, a lot of variance will be explained (large $MSE_{model}$) and not much will remain unexplained (low $MES_{residual}$). The $F$-statistic will be large.
+1. The total degrees of freedom is $n-1$, where $n$ is the number of observations.
+2. The model degrees of freedom is $p$, where $p$ is the number of explanatory variables. This is because for each explanatory variable we estimate one parameter (the slope), and each estimated parameter uses up one degree of freedom.
+3. The residual degrees of freedom is $n-1-p$.
 
-2. If there are weak relationships in our data, not much variance will be explained (low $MSE_{model}$)  and a lot will remain unexplained (large $MES_{residual}$). The F-statistic will be small.
+### The F-statistic in R
 
-So, if the $F$-statistic is large, we suspect that we can reject the null hypothesis that the explained explained variance is greater than we would expect by chance (i.e., when the slopes are zero). If the $F$-statistic is small, we suspect that we cannot reject the null hypothesis that the explained variance is no greater than we would expect by chance, and we suspect that we cannot reject the null hypothesis that the slopes are zero.
+In R, we can get the degrees of freedom, sums of squares, mean squares, and 
+$F$-statistic for the multiple linear regression model using the `anova()` function. Here is table for the blood pressure example:
 
-The $F$-statistic is then compared to the $F$-distribution with $p$ and $n-p-1$ degrees of freedom, where $p$ is the number of explanatory variables and $n$ is the number of observations.
+```{r echo = TRUE}
+anova(m1)
+```
 
-### Calculating the F-statistic
-
-The mean square error of a model is the sum of squares of the model divided by the degrees of freedom of the model:
-
-$$MSE_{model} = \frac{SSM}{df_{model}}$$
-
-where $SSM$ is the sum of squares of the model and $df_{model}$ is the degrees of freedom of the model.
-
-The mean square error of the residuals is the sum of squares of the residuals divided by the degrees of freedom of the residuals:
-
-$$MSE_{residuals} = \frac{SSE}{df_{residuals}}$$
-
-where $SSE$ is the sum of squares of the residuals and $df_{residuals}$ is the degrees of freedom of the residuals.
-
-
-
-#### SSM, SSE, and SST
-
-This is a recap, since its the same as we learned in the simple linear regression model.
-
-**$SST$**: The total sum of squares is the sum of the squared differences between the observed values of the response variable and the mean of the response variable. The $SST$ is a measure of the total variability in the response variable.
-
-The formula for the $SST$ is:
-
-$$SST = \sum_{i=1}^n (y_i - \bar{y})^2$$
-
-where $y_i$ is the observed value of the response variable for the $i$th observation, $\bar{y}$ is the mean of the response variable, and $n$ is the number of observations.
-
-**$SSE$**: The residual sum of squares ($SSE$) is the sum of the squared differences between the observed values of the response variable and the predicted values of the response variable. The equation is:
-
-$$SSE = \sum_{i=1}^{n} (y_i - \hat{y}_i)^2$$
-
-where $y_i$ is the observed value of the response variable, $\hat{y}_i$ is the predicted value of the response variable, and $n$ is the number of observations.
-
-**$SSM$**: The model sum of squares is the sum of squares explained by the model. The model sum of squares can be calculated as:
-
-$$SSM = SST - SSE$$
-
-That is, the model sum of squares is the difference between the total sum of squares and the residual sum of squares.
-
-
-
-#### Total degrees of freedom
-
-The total degrees of freedom are the degrees of freedom associated with the total sum of squares ($SST$).
-
-In order to calculate the $SST$, we need to calculate the mean of the response variable. This implies that we estimate one parameter (the mean of the response variable). As a consequence, we lose one degree of freedom and so there remain $n-1$ degrees of freedom associated with the total sum of squares (where $n$ is the number of observations).
-
-What do we mean by "lose one degree of freedom"? Imagine we have ten observations. We can calculate the mean of these ten observations. But if we know the mean and nine of the observations, we can calculate the tenth observation. So, in a sense, once we calculate the mean, the value of one of the ten observations is fixed. This is what we mean by "losing one degree of freedom". When we calculate and use the mean, one of the observations "loses its freedom".
-
-For example, take the numbers 1, 3, 5, 7, 9. The mean is 5. The sum of the squared differences between the observations and the mean is $(1-5)^2 + (3-5)^2 + (5-5)^2 + (7-5)^2 + (9-5)^2 = 20$. This is the total sum of squares. The degrees of freedom are $5-1 = 4$.
-
-The total degrees of freedom are the total number of observations minus one. That is, the total sum of squares is associated with $n-1$ degrees of freedom.
-
-Another perspective in which to think about the total sum of squares and total degrees of freedom is to consider the intercept only model. The intercept only model is a model that only includes the intercept term. The equation of this model would be:
-
-$$y_i = \beta_0 + \epsilon_i$$
-The sum of the square of the residuals for this model is minimised when the predicted value of the response variable is the mean of the response variable. That is, the least squares estimate of $\beta_0$ is the mean of the response variable:
-
-$$\hat{\beta}_0 = \bar{y}$$
-
-Hence, the predicted value of the response variable is the mean of the response variable. The equation is:
-
-$$\hat{y}_i = \bar{y} + \epsilon_i$$
-
-The error term is therefore:
-
-$$\epsilon_i = y_i - \bar{y}$$
-And the total sum of squares is:
-
-$$SST = \sum_{i=1}^n (y_i - \bar{y})^2$$
-
-where $\hat{y}_i$ is the predicted value of the response variable for the $i$th observation, $\bar{y}$ is the mean of the response variable, and $\epsilon_i$ is the residual for the $i$th observation.
-
-The intercept only model involves estimating only one parameter, so the total degrees of freedom are the total number of observations minus one $n - 1$.
-
-Therefore, the total degrees of freedom are the total number of observations minus one.
-
-Bottom line: $SST$ is the residual sum of squares when we fit the intercept only model. The total degrees of freedom are the total number of observations minus one.
-
-#### Model degrees of freedom
-
-The model degrees of freedom are the degrees of freedom associated with the model sum of squares ($SSM$).
-
-In the case of the intercept only model, we estimated one parameter, the mean of the response variable.
-
-In the case of a regression model with one continuous explanatory variable, we estimate one parameter in addition to the intercept. That is, we estimate the slope of the explanatory variable. 
-
-In the case of a regression model with two continuous explanatory variables, we estimate two parameters in addition to the intercept. That is, we estimate the slopes of the two explanatory variables.
-
-More generally, in the case of a regression model with $p$ continuous explanatory variables, we estimate $p$ parameters in addition to the intercept. That is, we estimate the slopes of the $p$ explanatory variables.
-
-Each time we estimate a new parameter, we lose a degree of freedom.
-
-::: {.callout-tip}
-## Think, Pair, Share (#lost-degrees)
-
-How many degrees of freedom are lost when this model is fit?:
-
-$$y_i = \beta_0 + \beta_1 x_{1i} + \beta_2 x_{2i} + \epsilon_i$$
-:::
-
-The model has three parameters: $\beta_0$, $\beta_1$, and $\beta_2$. So, three degrees of freedom are lost. These three degrees of freedom are one for the intercept ($\beta_0$) and two for the slopes of each of the two ($p$) continuous explanatory variables ($\beta_1$ and $\beta_2$).
-
-
-In the case of a regression model with $p$ continuous explanatory variables, we estimate $p+1$ parameters when we include the degree of freedom used by the intercept. But recall that the hypothesis we are testing is that the slopes of the explanatory variables are zero. This means we are interested in the sum of squares explained by the model with the two slopes, compared to the sum of squares explained by the model with only the intercept. Hence the relevant degrees of freedom of the model are the difference between the degrees of freedom of the model with the two slopes and the degrees of freedom of the model with only the intercept. That is, the model degrees of freedom are $p$.
-
-
-#### Residual degrees of freedom
-
-The residual degrees of freedom are the total degrees of freedom ($n-1$) minus the degrees of freedom used by the regression model ($p$).
-
-Therefore, the residual degrees of freedom are the degrees of freedom remaining after we estimate the intercept and the slopes of the explanatory variables. There is one intercept and $p$ slopes, so the residual degrees of freedom are $n-1-p$.
-
-#### Finally...
-
-We have everything we need to calculate the two mean squares:
-
-$$MSE_{\text{model}} = \frac{SSM}{p}$$
-$$MSE_{\text{residual}} = \frac{SSE}{n-1-p}$$
-
-**Why divide by the degrees of freedom?** The more observations we have, the greater will be the total sum of squares. The more observations we have, the greater will be the residual sum of squares. So it is not very informative to compare totals. Rather, we need to compare the mean of the sums of squares. Except we don't calculate the mean by dividing by the number of observations. Rather we divide by the degrees of freedom. The total mean square is an estimate of the variance of the response variable. And the residual mean square is an estimate of the variance of the residuals.
-
-
-
-### $SST$, $SSM$, $SSE$, and degrees of freedom
-
-Just a reminder and a summary of some of the material above:
-
-* $SST$: degrees of freedom = $n-1$
-* $SSM$: degrees of freedom = $p$
-*$SSE$: degrees of freedom = $n-1-p$
-
-The sum of squares add up:
-
-$$SST = SSM + SSE$$
-
-and the degrees of freedom add up
-
-$$(n-1) = (p) + (n-1-p)$$
 
 ### Is my $F$-statistic large or small?
 
@@ -867,4 +729,17 @@ Multiple regression:
 * $R^2$ in multiple linear regression
 * $t$-tests, $F$-tests and $p$-values
 
+
+
+## Extras
+
+### 3D plot of multiple linear regression
+
+We can also look at this in a plot with three axes. The y-axis is blood pressure, the x-axis is age, and the z-axis is minutes of exercise. Here is a 3d plot that we can interactive with and rotate:
+
+```{r fig.width = 8, fig.height = 8}
+plotly::plot_ly(bp_data, x = ~age, y = ~mins_exercise, z = ~bp, type = "scatter3d", mode = "markers", marker = list(size = 5))
+```
+
+All very good, and this makes sense. We can see that blood pressure is positively associated with age and negatively associated with minutes of exercise. But we need to be more quantitative about this. We need to build a model that relates blood pressure to age and minutes of exercise.
 

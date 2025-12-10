@@ -19,5 +19,11 @@
   },
   "6.1-anova.qmd": {
     "6.1-anova.html": "450f024b"
+  },
+  "7.1-multiple-regression.qmd": {
+    "7.1-multiple-regression.html": "979b7e39"
+  },
+  "7.1-multiple-explanatory-variables-part1.qmd": {
+    "7.1-multiple-explanatory-variables-part1.html": "e77cd24b"
   }
 }

@@ -24,10 +24,10 @@ book:
     - index.qmd
     - 1.1-intro.qmd
     - 2.1-R-and-RStudio.qmd
-    - 3.1-study-design.qmd
     - 4.1-regression-part1.qmd
     - 5.1-regression-part2.qmd
     - 6.1-anova.qmd
+    - 7.1-multiple-explanatory-variables-part1.qmd
    
 
 format:

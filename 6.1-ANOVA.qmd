@@ -4,7 +4,7 @@ source("_common.R")
 ```
 
 
-# Analysis of variance (ANOVA) (L6) {.unnumbered}
+# Analysis of variance (ANOVA) (L5) {.unnumbered}
 
 
 -   One-way ANOVA
@@ -455,7 +455,7 @@ The **sources of variance table** is a table that conveniently and clearly gives
 
 : Sources of variance table
 
-### Back to the $F$-test
+### Is my $F$-statistic large or small?
 
 OK, so we have calculated the $F$ statistic. But how do we use it to test our hypothesis?
 

@@ -4,7 +4,7 @@ source("_common.R")
 ```
 
 
-# Introduction {.unnumbered}
+# Introduction (L1) {.unnumbered}
 
 
 The first lecture of the course introduces it, gives some important information, and sets the stage for the rest of the course. Some of the time in the lecture will be used to create a dataset for use during the course. It also gives an opportunity to review some of the things about R and statistics that it is very useful to already know.

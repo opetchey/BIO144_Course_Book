@@ -6,7 +6,7 @@ suppressMessages(library(gtsummary))
 
 
 
-# Multiple regression (L4) {.unnumbered}
+# Multiple regression (L6) {.unnumbered}
 
 This chapter contains the content of the fourth lecture of the course BIO144 Data Analysis in Biology at the University of Zurich.
 

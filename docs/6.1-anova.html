@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>ANOVA (L6) – BIO144 Course Book (version 2026)</title>
+<title>Analysis of variance (ANOVA) (L5) – BIO144 Course Book (version 2026)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -65,6 +65,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
+<link href="./7.1-multiple-explanatory-variables-part1.html" rel="next">
 <link href="./5.1-regression-part2.html" rel="prev">
 <link href="./cover.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
@@ -146,7 +147,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./6.1-anova.html">ANOVA (L6)</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./6.1-anova.html">Analysis of variance (ANOVA) (L5)</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -188,7 +189,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./1.1-intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Introduction</span></a>
+ <span class="menu-text">Introduction (L1)</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -199,26 +200,26 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./3.1-study-design.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Study design (L3)</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="./4.1-regression-part1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Regression Part 1</span></a>
+ <span class="menu-text">Regression Part 1 (L3)</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./5.1-regression-part2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Regression Part 2</span></a>
+ <span class="menu-text">Regression Part 2 (L4)</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./6.1-anova.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">ANOVA (L6)</span></a>
+ <span class="menu-text">Analysis of variance (ANOVA) (L5)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./7.1-multiple-explanatory-variables-part1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Multiple explanatory variables Part 1 (L6)</span></a>
   </div>
 </li>
     </ul>
@@ -236,6 +237,7 @@ window.Quarto = {
   <li><a href="#what-is-anova" id="toc-what-is-anova" class="nav-link" data-scroll-target="#what-is-anova">What is ANOVA?</a></li>
   <li><a href="#anova-as-a-linear-model" id="toc-anova-as-a-linear-model" class="nav-link" data-scroll-target="#anova-as-a-linear-model">ANOVA as a linear model</a>
   <ul class="collapse">
+  <li><a href="#rewrite-the-model" id="toc-rewrite-the-model" class="nav-link" data-scroll-target="#rewrite-the-model">Rewrite the model</a></li>
   <li><a href="#the-anova-test-the-f-test" id="toc-the-anova-test-the-f-test" class="nav-link" data-scroll-target="#the-anova-test-the-f-test">The ANOVA test: The <span class="math inline">\(F\)</span>-test</a></li>
   <li><a href="#interpretation-of-the-f-statistic" id="toc-interpretation-of-the-f-statistic" class="nav-link" data-scroll-target="#interpretation-of-the-f-statistic">Interpretation of the <span class="math inline">\(F\)</span> statistic</a></li>
   <li><a href="#calculating-the-f-statistic" id="toc-calculating-the-f-statistic" class="nav-link" data-scroll-target="#calculating-the-f-statistic">Calculating the <span class="math inline">\(F\)</span> statistic</a></li>
@@ -244,7 +246,7 @@ window.Quarto = {
   <li><a href="#calculating-the-mean-square-and-f-statistic" id="toc-calculating-the-mean-square-and-f-statistic" class="nav-link" data-scroll-target="#calculating-the-mean-square-and-f-statistic">Calculating the mean square and <span class="math inline">\(F\)</span> statistic</a></li>
   <li><a href="#sst-ssm-sse-and-degrees-of-freedom" id="toc-sst-ssm-sse-and-degrees-of-freedom" class="nav-link" data-scroll-target="#sst-ssm-sse-and-degrees-of-freedom"><span class="math inline">\(SST\)</span>, <span class="math inline">\(SSM\)</span>, <span class="math inline">\(SSE\)</span>, and degrees of freedom</a></li>
   <li><a href="#source-of-variance-table" id="toc-source-of-variance-table" class="nav-link" data-scroll-target="#source-of-variance-table">Source of variance table</a></li>
-  <li><a href="#back-to-the-f-test" id="toc-back-to-the-f-test" class="nav-link" data-scroll-target="#back-to-the-f-test">Back to the <span class="math inline">\(F\)</span>-test</a></li>
+  <li><a href="#is-my-f-statistic-large-or-small" id="toc-is-my-f-statistic-large-or-small" class="nav-link" data-scroll-target="#is-my-f-statistic-large-or-small">Is my <span class="math inline">\(F\)</span>-statistic large or small?</a></li>
   </ul></li>
   <li><a href="#doing-anova-in-r" id="toc-doing-anova-in-r" class="nav-link" data-scroll-target="#doing-anova-in-r">Doing ANOVA in R</a></li>
   <li><a href="#difference-between-pairs-of-groups" id="toc-difference-between-pairs-of-groups" class="nav-link" data-scroll-target="#difference-between-pairs-of-groups">Difference between pairs of groups</a>
@@ -257,17 +259,7 @@ window.Quarto = {
   </ul></li>
   <li><a href="#communicating-the-results-of-anova" id="toc-communicating-the-results-of-anova" class="nav-link" data-scroll-target="#communicating-the-results-of-anova">Communicating the results of ANOVA</a></li>
   <li><a href="#summary-of-what-you-have-learned" id="toc-summary-of-what-you-have-learned" class="nav-link" data-scroll-target="#summary-of-what-you-have-learned">Summary of what you have learned</a></li>
-  <li><a href="#end" id="toc-end" class="nav-link" data-scroll-target="#end">end</a></li>
-  <li><a href="#end-1" id="toc-end-1" class="nav-link" data-scroll-target="#end-1">end</a></li>
-  <li><a href="#two-way-anova-zweiweg-varianzanalyse" id="toc-two-way-anova-zweiweg-varianzanalyse" class="nav-link" data-scroll-target="#two-way-anova-zweiweg-varianzanalyse">Two-way ANOVA (Zweiweg-Varianzanalyse)</a>
-  <ul class="collapse">
-  <li><a href="#the-model-for-2-way-anova" id="toc-the-model-for-2-way-anova" class="nav-link" data-scroll-target="#the-model-for-2-way-anova">The model for 2-way ANOVA</a></li>
-  <li><a href="#using-r-for-2-way-anova" id="toc-using-r-for-2-way-anova" class="nav-link" data-scroll-target="#using-r-for-2-way-anova">Using R for 2-way ANOVA</a></li>
-  <li><a href="#hypothesis-testing" id="toc-hypothesis-testing" class="nav-link" data-scroll-target="#hypothesis-testing">Hypothesis testing</a></li>
-  <li><a href="#interpreting-coefficients" id="toc-interpreting-coefficients" class="nav-link" data-scroll-target="#interpreting-coefficients">Interpreting coefficients</a></li>
-  </ul></li>
   <li><a href="#summing-up" id="toc-summing-up" class="nav-link" data-scroll-target="#summing-up">Summing up</a></li>
-  <li><a href="#additional-reading" id="toc-additional-reading" class="nav-link" data-scroll-target="#additional-reading">Additional reading</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/opetchey/BIO144_Course_Book/edit/main/6.1-anova.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/opetchey/BIO144_Course_Book/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -276,7 +268,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">ANOVA (L6)</h1>
+<h1 class="title">Analysis of variance (ANOVA) (L5)</h1>
 </div>
 
 
@@ -420,6 +412,8 @@ Note
 </div>
 <div class="callout-body-container callout-body">
 <p>There is lots of hidden code used to create the data used in the graph above, and to make the graph itself. You can see the code by going to the <a href="https://github.com/opetchey/BIO144_Course_Book">Github repository for this book</a>.</p>
+</div>
+</div>
 <section id="rewrite-the-model" class="level3">
 <h3 class="anchored" data-anchor-id="rewrite-the-model">Rewrite the model</h3>
 <p>We usually use a different formulation of the linear model for ANOVA. This is because we usually prefer to express the estimated parameters in terms of <em>differences between means</em> (rather than the means themselves). The reason for this is that then the null hypothesis can be that the differences are zero.</p>
@@ -443,10 +437,10 @@ Note
 </div>
 </div>
 </div>
-<p>Insert a callout box ::: {.callout-hint} Here is something to warp you mind… we described one-way ANOVA as a linear model with one categorical explanatory variable. But as you can see above, we can also describe it as a linear model with multiple binary explanatory variables (one for each group except the reference group). And when we make a linear model in R it really does create multiple binary explanatory variables behind the scenes. So one-way ANOVA and multiple linear regression with multiple binary explanatory variables are really the same thing! And, even more mind-warping, one-way ANOVA and multiple regression (regression with multiple continuous explanatory variables) are also the same thing! So when we look at multiple regression later in the course, you can think of it as just an extension of one-way ANOVA.</p>
+<div class="callout-hint">
+<p>Here is something to warp you mind… we described one-way ANOVA as a linear model with one categorical explanatory variable. But as you can see above, we can also describe it as a linear model with multiple binary explanatory variables (one for each group except the reference group). And when we make a linear model in R it really does create multiple binary explanatory variables behind the scenes. So one-way ANOVA and multiple linear regression with multiple binary explanatory variables are really the same thing! And, even more mind-warping, one-way ANOVA and multiple regression (regression with multiple continuous explanatory variables) are also the same thing! So when we look at multiple regression later in the course, you can think of it as just an extension of one-way ANOVA.</p>
+</div>
 </section>
-</div>
-</div>
 <section id="the-anova-test-the-f-test" class="level3">
 <h3 class="anchored" data-anchor-id="the-anova-test-the-f-test">The ANOVA test: The <span class="math inline">\(F\)</span>-test</h3>
 <p><strong>Aim of ANOVA</strong>: to test <em>globally</em> if the groups differ. That is we want to test the null hypothesis that all of the group means are equal:</p>
@@ -659,8 +653,8 @@ Note
 </tbody>
 </table>
 </section>
-<section id="back-to-the-f-test" class="level3">
-<h3 class="anchored" data-anchor-id="back-to-the-f-test">Back to the <span class="math inline">\(F\)</span>-test</h3>
+<section id="is-my-f-statistic-large-or-small" class="level3">
+<h3 class="anchored" data-anchor-id="is-my-f-statistic-large-or-small">Is my <span class="math inline">\(F\)</span>-statistic large or small?</h3>
 <p>OK, so we have calculated the <span class="math inline">\(F\)</span> statistic. But how do we use it to test our hypothesis?</p>
 <p>We can use the <span class="math inline">\(F\)</span> statistic to calculate a <span class="math inline">\(p\)</span>-value, which tells us how likely our data is under the null hypothesis.</p>
 <p>Some key points:</p>
@@ -1030,303 +1024,6 @@ F-statistic: 20.73 on 3 and 46 DF,  p-value: 1.214e-08</code></pre>
 <h2 class="anchored" data-anchor-id="summary-of-what-you-have-learned">Summary of what you have learned</h2>
 <p>Please referring to the learning objectives document and the learning objectives for this chapter.</p>
 </section>
-<section id="end" class="level2">
-<h2 class="anchored" data-anchor-id="end">end</h2>
-</section>
-<section id="end-1" class="level2">
-<h2 class="anchored" data-anchor-id="end-1">end</h2>
-</section>
-<section id="two-way-anova-zweiweg-varianzanalyse" class="level2">
-<h2 class="anchored" data-anchor-id="two-way-anova-zweiweg-varianzanalyse">Two-way ANOVA (Zweiweg-Varianzanalyse)</h2>
-<p>Two-way ANOVA is used to analyse a specific type of study design. When we have a study with two categorical treatments and all possible combinations of them, we can use a two-way ANOVA.</p>
-<p>For example, take the question of how diet and exercise affect blood pressure. Let’s say we can have three levels of diet: meat heavy, Mediterranean, and vegetarian. And that we have two levels of exercise: low and high. And that we have all possible combinations of these two treatments: i.e., we have a total of <span class="math inline">\(3 \times 2 = 6\)</span> <strong>treatment combinations</strong>.</p>
-<p>We can also represent this study design in a table:</p>
-<style type="text/css">
-.tg  {border-collapse:collapse;border-spacing:0;}
-.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
-  overflow:hidden;padding:10px 5px;word-break:normal;}
-.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
-  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
-.tg .tg-fymr{border-color:inherit;font-weight:bold;text-align:left;vertical-align:top}
-.tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}
-</style>
-<table class="tg">
-<thead>
-<tr>
-<th class="tg-fymr">
-</th>
-<th class="tg-fymr" colspan="2">
-Exercise (G)
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tg-0pky">
-Diet (B)
-</td>
-<td class="tg-0pky">
-Low (1)
-</td>
-<td class="tg-0pky">
-High (2)
-</td>
-</tr>
-<tr>
-<td class="tg-0pky">
-Meat heavy (1)
-</td>
-<td class="tg-0pky">
-</td>
-<td class="tg-0pky">
-</td>
-</tr>
-<tr>
-<td class="tg-0pky">
-Mediterranean (2)
-</td>
-<td class="tg-0pky">
-</td>
-<td class="tg-0pky">
-</td>
-</tr>
-<tr>
-<td class="tg-0pky">
-Vegetarian (3)
-</td>
-<td class="tg-0pky">
-</td>
-<td class="tg-0pky">
-</td>
-</tr>
-</tbody>
-</table>
-<p>The six empty cells in the table represent the six treatment combinations.</p>
-<p>This type of study, with all possible combinations, is known as a <em>factorial design</em>. The two treatments are called factors, and the levels of the factors are called factor levels. A <em>fully factorial design</em> is one where all possible combinations of the factor levels are present.</p>
-<p>Let’s look at example data:</p>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 6 × 5
-  diet          exercise  reps    bp  error
-  &lt;chr&gt;         &lt;fct&gt;    &lt;int&gt; &lt;dbl&gt;  &lt;dbl&gt;
-1 Mediterranean high         1  110.  4.59 
-2 Mediterranean low          1  119.  6.79 
-3 meat heavy    high         1  102. -3.13 
-4 meat heavy    low          1  128.  7.56 
-5 vegetarian    high         1  104. -0.823
-6 vegetarian    low          1  111.  1.99 </code></pre>
-</div>
-</div>
-<p>We can use the <code>xtabs</code> function to create a table of the data, by cross-tabulating the two treatments diet and exercise:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">xtabs</span>(<span class="sc">~</span>diet <span class="sc">+</span> exercise, <span class="at">data =</span> bp_data_2cat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>               exercise
-diet            low high
-  meat heavy     10   10
-  Mediterranean  10   10
-  vegetarian     10   10</code></pre>
-</div>
-</div>
-<p>This tells us there are 10 replicates in each of the six treatment combinations.</p>
-<p>And a visualisation of the data:</p>
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="6.1-anova_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="480"></p>
-</figure>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Think, Pair, Share (#twoway-plot)
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>What do you conclude from this plot?</p>
-</div>
-</div>
-<section id="the-model-for-2-way-anova" class="level3">
-<h3 class="anchored" data-anchor-id="the-model-for-2-way-anova">The model for 2-way ANOVA</h3>
-<p>Assume we have a factorial design with two treatments (factors), factor <span class="math inline">\(B\)</span> and factor <span class="math inline">\(G\)</span>.</p>
-<p>And that we can label the levels of factor <span class="math inline">\(B\)</span> as <span class="math inline">\(i=1,2...\)</span> and factor <span class="math inline">\(G\)</span> as <span class="math inline">\(j=1,2...\)</span>.</p>
-<p>Then we can denote a particular treatment combination as <span class="math inline">\(B_iG_j\)</span>.</p>
-<p>And let us set the one of the treatment combinations as the intercept of the model, and the let the intercept be equal to the mean of the observations in the treatment combination <span class="math inline">\(B1G1\)</span>.</p>
-<p><span class="math display">\[intercept = \frac{1}{n_{11}}\sum_{k=1}^{n_{11}} y_{1,1,k}\]</span></p>
-<p>where:</p>
-<ul>
-<li><span class="math inline">\(y_{1,1,k}\)</span> is the <span class="math inline">\(k\)</span>th observation in the treatment combination <span class="math inline">\(B1G1\)</span></li>
-<li><span class="math inline">\(n_{11}\)</span> is the number of observations in the treatment combination <span class="math inline">\(B1G1\)</span>.</li>
-</ul>
-<p>And we will let all of the other treatment combinations be represented by the <strong>effects</strong> <span class="math inline">\(\beta_i\)</span> and <span class="math inline">\(\gamma_j\)</span>.</p>
-<p>The resulting linear model is:</p>
-<p><span class="math display">\[y_{ijk} = intercept + \beta_i + \gamma_j + (\beta\gamma)_{ij} + \epsilon_{ijk} \quad \text{with} \quad \epsilon_{ijk} \sim N(0,\sigma^2)\]</span></p>
-<p>where</p>
-<ul>
-<li><span class="math inline">\(y_{ijk}\)</span> is the <span class="math inline">\(k\)</span>th observation in the treatment combination of <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span>.</li>
-<li><span class="math inline">\((\beta\gamma)_{ij}\)</span> is the interaction effect between the <span class="math inline">\(i\)</span>th level of factor <span class="math inline">\(\beta\)</span> and the <span class="math inline">\(j\)</span>th level of factor <span class="math inline">\(\gamma\)</span>.</li>
-</ul>
-<p>In this model, we set <span class="math inline">\(\beta_1=\gamma_1=0\)</span> and <span class="math inline">\((\beta\gamma)_{11}=0\)</span> because they are already included in the intercept.</p>
-</section>
-<section id="using-r-for-2-way-anova" class="level3">
-<h3 class="anchored" data-anchor-id="using-r-for-2-way-anova">Using R for 2-way ANOVA</h3>
-<p>In R, a two-way ANOVA is as simple as one-way ANOVA, just add another variable:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>mod1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(bp <span class="sc">~</span> diet <span class="sc">*</span> exercise, <span class="at">data =</span> bp_data_2cat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Note that, as we saw in the chapter about interactions, we include the main effects of diet and exercise and the interaction term with the short hand <code>diet * exercise</code>.</p>
-<p>Of course we next check the model diagnostics:</p>
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="6.1-anova_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid figure-img" width="480"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>No clear patterns: all is good.</p>
-</section>
-<section id="hypothesis-testing" class="level3">
-<h3 class="anchored" data-anchor-id="hypothesis-testing">Hypothesis testing</h3>
-<p>As is implied by the name “Analysis of variance” we analyse variances, here mean squares, to test hypotheses. And as before we use an <span class="math inline">\(F\)</span>-test to do this. Remember that the <span class="math inline">\(F\)</span>-test is a ratio of two mean squares (where mean squares are a kind of variance).</p>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Think, Pair, Share (#full-degrees)
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>How many degrees of freedom for error will there be when we fit this model with both main effects and the interaction term? Hint: remember that the degrees of freedom for error is the number of observations minus the number of parameters estimated.</p>
-</div>
-</div>
-<p>We can have have a null hypothesis of no effect for each of the two main effects and for the interaction. So we can do an <span class="math inline">\(F\)</span>-test for each of these null hypotheses.</p>
-<p>Here is the ANOVA table:</p>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>Analysis of Variance Table
-
-Response: bp
-              Df  Sum Sq Mean Sq F value    Pr(&gt;F)    
-diet           2  390.74  195.37  9.9672 0.0002069 ***
-exercise       1 1297.52 1297.52 66.1966 5.952e-11 ***
-diet:exercise  2  340.67  170.33  8.6901 0.0005346 ***
-Residuals     54 1058.46   19.60                      
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
-</div>
-</div>
-<p><strong>Interpretation</strong>: All three of the null hypotheses are rejected. Importantly, we see that the interaction term is significant, which means that the effect of one treatment is different depending on the level of the other treatment. This means that even though the main effects are significant, we cannot interpret them without considering the interaction term. I.e., we cannot say anything general about the effect of diet or exercise alone on blood pressure. We have to qualify any statement about the effect of diet or exercise with “depending on the level of the other treatment”. Or state something like “the exercise reduces blood pressure greatly for people with a meat heavy diet, but reduces blood pressure only slightly for people with a vegetarian diet or Mediterranean diet”.</p>
-</section>
-<section id="interpreting-coefficients" class="level3">
-<h3 class="anchored" data-anchor-id="interpreting-coefficients">Interpreting coefficients</h3>
-<p>We can look at the estimated coefficients to see the size of the effects, but be aware that it contains only a subset of the possible effects; it would contain different values if a different treatment combination were set to be the intercept of the model. Also be aware that often we are mostly interested in the <span class="math inline">\(F\)</span>-test and their hypotheses test, and are less interest in the coefficients and their <span class="math inline">\(t\)</span>-tests (unlike in a regression model where we are often interested in the coefficients and their <span class="math inline">\(t\)</span>-tests).</p>
-<p>Finally, be aware that it needs a bit of work to interpret the coefficients, because they are relative to the intercept. Let’s try to figure out what that means. First, back to the table of the experimental design. This time we will put in the cells an expression for the mean of that treatment combination:</p>
-<style type="text/css">
-.tg  {border-collapse:collapse;border-spacing:0;}
-.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
-  overflow:hidden;padding:10px 5px;word-break:normal;}
-.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
-  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
-.tg .tg-fymr{border-color:inherit;font-weight:bold;text-align:left;vertical-align:top}
-.tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}
-</style>
-<table class="tg">
-<thead>
-<tr>
-<th class="tg-fymr">
-</th>
-<th class="tg-fymr" colspan="2">
-Exercise (G)
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tg-0pky">
-Diet (B)
-</td>
-<td class="tg-0pky">
-Low (1)
-</td>
-<td class="tg-0pky">
-High (2)
-</td>
-</tr>
-<tr>
-<td class="tg-0pky">
-Meat heavy (1)
-</td>
-<td class="tg-0pky">
-<span class="math inline">\(B_1G_1\)</span>
-</td>
-<td class="tg-0pky">
-<span class="math inline">\(B_1G_2\)</span>
-</td>
-</tr>
-<tr>
-<td class="tg-0pky">
-Mediterranean (2)
-</td>
-<td class="tg-0pky">
-<span class="math inline">\(B_2G_1\)</span>
-</td>
-<td class="tg-0pky">
-<span class="math inline">\(B_2G_2\)</span>
-</td>
-</tr>
-<tr>
-<td class="tg-0pky">
-Vegetarian (3)
-</td>
-<td class="tg-0pky">
-<span class="math inline">\(B_2G_1\)</span>
-</td>
-<td class="tg-0pky">
-<span class="math inline">\(B_3G_2\)</span>
-</td>
-</tr>
-</tbody>
-</table>
-<p>So, for example, the mean of the treatment combination “Meat heavy, Low” is <span class="math inline">\(B_1G_1\)</span>. And the mean of the treatment combination “Mediterranean, High” is <span class="math inline">\(B_2G_2\)</span>.</p>
-<p>However, the coefficients in the summary table given by R are not like this. They are coefficients relative to an intercept / reference treatment combination. The reference treatment combination chosen by R is the first level of the first factor and the first level of the second factor. In this case, that is “<strong>Meat heavy, Low</strong>” – <span class="math inline">\(B_1G_1\)</span>.</p>
-<p>All of the other coefficients are about differences from this reference treatment combination.</p>
-<p>So, for example, the coefficient for “High” in the “Exercise” factor (appearing as <code>exercisehigh</code> in the summary table) is the difference in mean blood pressure between the treatment combination “Meat heavy, High” (<span class="math inline">\(B_1G_2\)</span>) and the treatment combination “Meat heavy, Low”. Put another way, <span class="math inline">\(B_1G_2 = B_1G_1 + \gamma_2\)</span> where <span class="math inline">\(\gamma_2\)</span> is the coefficient for “High” in the “Exercise” factor.</p>
-<p>And the coefficient for “Mediterranean” in the “Diet” factor (appearing as <code>dietMediterranean</code> in the summary table) is the difference in mean blood pressure between the treatment combination “Mediterranean, Low” and the treatment combination “Meat heavy, Low”. Put another way, <span class="math inline">\(B_2G_1 = B_1G_1 + \beta_2\)</span> where <span class="math inline">\(\beta_2\)</span> is the coefficient for “Mediterranean” in the “Diet” factor.</p>
-<p><strong>Let us for a moment assume that the effects of diet and exercise are additive.</strong> If this is the case, then the mean for <span class="math inline">\(B_2G_2\)</span> = <span class="math inline">\(B_1G_1 + \beta_2 + \gamma_2\)</span>. That is, the mean for “Mediterranean, High” is the mean for “Meat heavy, Low” plus the effect of “Mediterranean” plus the effect of “High”.</p>
-<p>However, if the effects are not additive, then the mean for <span class="math inline">\(B_2G_2\)</span> is not <span class="math inline">\(B_1G_1 + \beta_2 + \gamma_2\)</span>. Rather, it is <span class="math inline">\(B_2G_2 = B_1G_1 + \beta_2 + \gamma_2 + (\beta\gamma)_{22}\)</span>. That is, the mean for “Mediterranean, High” is the mean for “Meat heavy, Low” <span class="math inline">\(B_1G_1\)</span> plus the effect of “Mediterranean” <span class="math inline">\(\beta_2\)</span> plus the effect of “High” <span class="math inline">\(\gamma_2\)</span> plus the non-additive effect between “Mediterranean” and “High” <span class="math inline">\((\beta\gamma)_{22}\)</span>.</p>
-<p>Non-additivity implies an interaction, therefore the non-additive effect is the interaction effect. In the summary table these interaction effects are those that contain a colon (:), e.g., <code>dietMediterranean:exercisehigh</code>.</p>
-<p>Here’s a graphical representation of how the coefficients in the summary table relate to the means of the treatment combinations:</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="assets/twowayanova1.png" class="img-fluid figure-img" width="300"></p>
-<figcaption>Understanding coefficients</figcaption>
-</figure>
-</div>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Think, Pair, Share (#veghigh-estimate)
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>From the values in the coefficients table, calculate the estimated mean of the treatment combination “vegetarian, High”.</p>
-</div>
-</div>
-</section>
-</section>
 <section id="summing-up" class="level2">
 <h2 class="anchored" data-anchor-id="summing-up">Summing up</h2>
 <ul>
@@ -1335,14 +1032,6 @@ Think, Pair, Share (#veghigh-estimate)
 <li>We use <span class="math inline">\(F\)</span>-tests to test the null hypothesis of no difference among the means of the groups (categories).</li>
 <li>We can use contrasts and post-hoc tests to test specific hypotheses about the means of the groups.</li>
 <li>Two-way ANOVA is used when we have two categorical explanatory variables and can be used to test for interactions between them.</li>
-</ul>
-</section>
-<section id="additional-reading" class="level2">
-<h2 class="anchored" data-anchor-id="additional-reading">Additional reading</h2>
-<p>Please feel free to look at the follow resources for a slightly different perspective and some more information on ANOVA:</p>
-<ul>
-<li>Chapter 12 from Stahel book <em>Statistische Datenenalyse</em></li>
-<li><em>Getting Started with R</em> chapters 5.6 and 6.2</li>
 </ul>
 
 
@@ -1750,11 +1439,14 @@ Think, Pair, Share (#veghigh-estimate)
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./5.1-regression-part2.html" class="pagination-link" aria-label="Regression Part 2">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Regression Part 2</span>
+      <a href="./5.1-regression-part2.html" class="pagination-link" aria-label="Regression Part 2 (L4)">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Regression Part 2 (L4)</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="./7.1-multiple-explanatory-variables-part1.html" class="pagination-link" aria-label="Multiple explanatory variables Part 1 (L6)">
+        <span class="nav-page-text">Multiple explanatory variables Part 1 (L6)</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav>
 </div> <!-- /content -->

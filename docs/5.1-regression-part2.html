@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Regression Part 2 – BIO144 Course Book (version 2026)</title>
+<title>Regression Part 2 (L4) – BIO144 Course Book (version 2026)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -147,7 +147,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./5.1-regression-part2.html">Regression Part 2</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./5.1-regression-part2.html">Regression Part 2 (L4)</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -189,7 +189,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./1.1-intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Introduction</span></a>
+ <span class="menu-text">Introduction (L1)</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -200,26 +200,26 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./3.1-study-design.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Study design (L3)</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="./4.1-regression-part1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Regression Part 1</span></a>
+ <span class="menu-text">Regression Part 1 (L3)</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./5.1-regression-part2.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Regression Part 2</span></a>
+ <span class="menu-text">Regression Part 2 (L4)</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./6.1-anova.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">ANOVA (L6)</span></a>
+ <span class="menu-text">Analysis of variance (ANOVA) (L5)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./7.1-multiple-explanatory-variables-part1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Multiple explanatory variables Part 1 (L6)</span></a>
   </div>
 </li>
     </ul>
@@ -270,7 +270,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Regression Part 2</h1>
+<h1 class="title">Regression Part 2 (L4)</h1>
 </div>
 
 
@@ -287,13 +287,6 @@ window.Quarto = {
 </header>
 
 
-<ul>
-<li>r-squared</li>
-<li>Multiple r-squared</li>
-<li>Adjusted r-squared</li>
-<li>Conditional r-squared</li>
-<li>Marginal r-squared</li>
-</ul>
 <p><strong>How Owen will structure the lecture time</strong></p>
 <p><strong>The chapter content below is the reference for what students are expected to know.</strong> During the lecture time Owen will talk through and explain hopefully most of the content of this chapter. He will write on a tablet, show figures and other content of this chapter, and may live-code in RStudio. He will also present questions and ask students to <em>Think, Pair, Share</em>. The <em>Share</em> part will sometime be via clicker, sometimes by telling the class. The same will happen in lecture 3-6.</p>
 <section id="introduction" class="level2">
@@ -397,7 +390,7 @@ Think, Pair, Share (#better-model)
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>SSM <span class="ot">&lt;-</span> <span class="fu">sum</span>((y1_predicted <span class="sc">-</span> <span class="fu">mean</span>(y1))<span class="sc">^</span><span class="dv">2</span>)</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>SSM</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 258.6914</code></pre>
+<pre><code>[1] 353.9543</code></pre>
 </div>
 </div>
 </section>
@@ -409,7 +402,7 @@ Think, Pair, Share (#better-model)
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>SSE <span class="ot">&lt;-</span> <span class="fu">sum</span>((y1 <span class="sc">-</span> y1_predicted)<span class="sc">^</span><span class="dv">2</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>SSE</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 12.38292</code></pre>
+<pre><code>[1] 6.954259</code></pre>
 </div>
 </div>
 <p>Or…</p>
@@ -417,7 +410,7 @@ Think, Pair, Share (#better-model)
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>SSE <span class="ot">&lt;-</span> SST <span class="sc">-</span> SSM</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>SSE</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 12.38292</code></pre>
+<pre><code>[1] 6.954259</code></pre>
 </div>
 </div>
 </section>
@@ -427,7 +420,7 @@ Think, Pair, Share (#better-model)
 <p><span class="math display">\[R^2 = \frac{SSM}{SST}\]</span></p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.9543191</code></pre>
+<pre><code>[1] 0.9807312</code></pre>
 </div>
 </div>
 </section>
@@ -1280,13 +1273,13 @@ Tip
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./4.1-regression-part1.html" class="pagination-link" aria-label="Regression Part 1">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Regression Part 1</span>
+      <a href="./4.1-regression-part1.html" class="pagination-link" aria-label="Regression Part 1 (L3)">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Regression Part 1 (L3)</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./6.1-anova.html" class="pagination-link" aria-label="ANOVA (L6)">
-        <span class="nav-page-text">ANOVA (L6)</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./6.1-anova.html" class="pagination-link" aria-label="Analysis of variance (ANOVA) (L5)">
+        <span class="nav-page-text">Analysis of variance (ANOVA) (L5)</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

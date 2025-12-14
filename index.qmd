@@ -1,5 +1,5 @@
 ::: {.callout-warning}
-**Under construction**: The 2026 version of this book is currently being prepared. Some chapters are not yet available, and some content may change before the course starts in February 2026.*
+**Under construction**: This 2026 version of this book is currently being prepared. Some chapters are not yet available, and some content may change before the course starts in February 2026.
 :::
 
 
@@ -8,11 +8,13 @@
 
 This book contains the content of the course BIO144 Data Analysis in Biology at the University of Zurich. It is intended to be used as a companion to the lectures and practical exercises of the course. All of the required content of the course (i.e., what could be in the final exam) is included in this book. Additional content is included for those who want to learn more.
 
-Beware that Owen sometimes makes updates to the book during the semester, so the version you have may not exactly match the lectures you attend. However, all of the required content will be the same, and any changes will be correcting typos or improving explanations.
+Beware that Owen sometimes makes updates to the book during the semester, so if you have downloaded a copy or taken screenshots, your copy may not exactly match the most current version. However, all of the required content will be the same, and any changes will be correcting typos or improving explanations. If content does change in a way that would change the answer to a question in the final exam, Owen will announce this in the lectures and on OLAT.
+
+## How to get a copy of this book {.unnumbered}
 
 If you'd like a copy of this book for yourself, there are a few ways. But beware: if you take a local copy then it will not be updated when Owen makes changes to the online version!
 
-* You can download a PDF version of the entire book: <a href="BIO144-Course-Book.pdf" target="_blank">
+* You can download a PDF version of the entire book: <a href="BIO144-Course-Book--version-2026-.pdf" target="_blank">
   📄 Download PDF
 </a>
 
@@ -21,6 +23,11 @@ If you'd like a copy of this book for yourself, there are a few ways. But beware
 
 * You can get all of the source code for the book from the [GitHub repository](https://github.com/opetchey/BIO144_Course_Book). However, you may find it a little complicated to do anything useful with it!
 
+## If you think you found a mistake in this book {.unnumbered}
+
+If you think you have found a mistake in the book, please say. A really nice way is to submit an issue on the GitHub repository for the book: [Issues page of the GitHub repository](https://github.com/opetchey/BIO144_Course_Book/issues). You will need a GitHub account to do this, but they are free and easy to set up. Otherwise tell Owen in person sometime, or in the OLAT Forum, or by email.
+
+When reporting a mistake, please be as specific as possible about where the mistake is. A screenshot works well. Or give the chapter and section number, and copy a chunk of text, as well as a description of the issue problem of course!
 
 ## How this book was made
 

@@ -3,7 +3,9 @@
 source("_common.R")
 ```
 
-# Multiple explanatory variables Part 1 (L6) {.unnumbered}
+# Multiple regression (L6) {.unnumbered}
+
+## Introduction
 
 In the previous chapters we covered simple linear regression and one-way analysis of variance. In both we had one response variable and one explanatory variable. In both cases we made a linear model to relate the response variable to the explanatory variable. The two cases differed in the type of explanatory variable. In the case of simple linear regression, the explanatory variable was continuous. In the case of one-way ANOVA, the explanatory variable was categorical.
 
@@ -15,22 +17,9 @@ Some combinations of explanatory variables have special names:
 * Two categorical explanatory variables -> Two-way ANOVA.
 * One continuous and one categorical explanatory variable -> Analysis of covariance (ANCOVA).
 
-We will look at each of these, and start with multiple linear regression. As well as the details of a particular case (e.g., multiple linear regression), we will also cover general concepts that apply to all cases with multiple explanatory variables, such as:
+We will look at each of these, and start with multiple linear regression which is usually shortened to just multiple regression.
 
-* Visualising data and models with multiple explanatory variables.
-* Correlations between explanatory variables and the implications.
-* Interactions between explanatory variables, and the implications.
-* The linear model equation for multiple explanatory variables.
-* Specifying models in $R$ with multiple explanatory variables.
-* Assessing model assumptions with multiple explanatory variables.
-* Measuring model fit ($R^2$, adjusted $R^2$) with multiple explanatory variables.
-* Hypothesis testing with multiple explanatory variables.
-* Interpretation of model parameters with multiple explanatory variables.
-* Model selection with multiple explanatory variables.
-
-Let's get started with multiple linear regression, which is usually shortened to just multiple regression.
-
-## Multiple regression (L4) {.unnumbered}
+## Multiple regression
 
 We previously looked at whether blood pressure is associated with age. This is an important question, because blood pressure has many health implications. However, blood pressure is not only associated with age, but also with other factors, such as weight, height, and lifestyle. In this chapter, we will look at how to investigate the association between blood pressure and multiple explanatory variables.
 
@@ -95,9 +84,7 @@ The lack of correlation between the two explanatory variables is very important.
 
 
 
-## The multiple linear regression model
-
-### The model
+### The multiple linear regression model
 
 The multiple linear regression model is an extension of the simple linear regression model. Recall the simple linear regression model is:
 
@@ -179,8 +166,6 @@ fig
 ```
 
 
-### The blood pressure example
-
 Let's write the equation for the blood pressure data:
 
 $$bp_i = \beta_0 + \beta_1 \cdot age_i + \beta_2 \cdot mins\_exercise_i + \epsilon_i$$
@@ -200,9 +185,37 @@ and the error term is assumed to be normally distributed with mean 0 and constan
 $$\epsilon_i \sim N(0, \sigma^2)$$
 
 
-### We already know a lot!
 
-**First**, the five assumptions of the multiple linear regression model are the same as for the simple linear regression model:
+
+
+
+
+**Seventh**, we know how to make predictions using the model, and to make a prediction band.
+
+**What we don't know** is how to answer the four questions already mentioned above:
+
+* Question 1: As an ensemble (i.e., all together), are the explanatory variables "useful"? 
+* Question 2: Are each of the explanatory variables associated with the response?
+* Question 3: What proportion of variability is explained?
+* Question 4: Are some explanatory variables more important than others?
+
+Let's answer these questions using the blood pressure example.
+
+### Fitting the model
+
+We know how to estimate the parameters $\beta_0, \beta_1, \ldots, \beta_p$ using the method of least squares.
+
+In R, we can fit a multiple linear regression model using the `lm()` function in a very similar way to the simple linear regression model. Here is the code for the blood pressure example. To fit two explanatory variables, we simply add the second variable to the formula using the `+` sign:
+
+```{r eval=T,echo=T}
+m1 <- lm(bp ~ age + mins_exercise, data = bp_data)
+```
+
+
+
+### Checking the assumptions
+
+Great news --> the five assumptions of the multiple linear regression model are the same as for the simple linear regression model:
 
 a) Normality of residuals.
 b) Homoscedasticity = constant variance of residuals.
@@ -226,36 +239,7 @@ And what is missing?
 
 :::
 
-**Second**, we know how to estimate the parameters $\beta_0, \beta_1, \ldots, \beta_p$ using the method of least squares.
 
-**Third**, we know how to test the significance of the parameters using the $t$-test.
-
-**Fourth**, we know how to calculate the confidence intervals for the parameters, and to make a confidence band.
-
-**Fifth**, we know how to calculate the $R^2$ value to measure the goodness of fit of the model.
-
-**Sixth**, we know how to infer the strength of the relationship between the response variable and an explanatory variable.
-
-**Seventh**, we know how to make predictions using the model, and to make a prediction band.
-
-**What we don't know** is how to answer the four questions already mentioned above:
-
-* Question 1: As an ensemble (i.e., all together), are the explanatory variables "useful"? 
-* Question 2: Are each of the explanatory variables associated with the response?
-* Question 3: What proportion of variability is explained?
-* Question 4: Are some explanatory variables more important than others?
-
-Let's answer these questions using the blood pressure example.
-
-### Fitting the model
-
-In R, we can fit a multiple linear regression model using the `lm()` function in a very similar way to the simple linear regression model. Here is the code for the blood pressure example. To fit two explanatory variables, we simply add the second variable to the formula using the `+` sign:
-
-```{r eval=T,echo=T}
-m1 <- lm(bp ~ age + mins_exercise, data = bp_data)
-```
-
-### Checking the assumptions
 
 We can check the assumptions of the multiple linear regression model using the same methods as for the simple linear regression model. Here is the code for the blood pressure example:
 
@@ -478,6 +462,11 @@ Take home: when we want to compare the explanatory power of models that differ i
 
 ## Question 4: Are some explanatory variables more important than others?
 
+**Third**, we know how to test the significance of the parameters using the $t$-test.
+
+**Fourth**, we know how to calculate the confidence intervals for the parameters, and to make a confidence band.
+
+
 How important are the explanatory variables and how important are they relative to each other?
 
 ::: {.callout-tip}
@@ -513,69 +502,271 @@ extra_mins_exercise <- coef(m1)["age"] / -coef(m1)["mins_exercise"]
 #extra_mins_exercise
 ```
 
-## An elephant in the room: collinearity
+## Question 5: how do we make predictions?
 
-In the blood pressure data there is no evidence of correlation (collinearity) between the explanatory variables. Recall that we can check for correlation between the explanatory variables by making a scatter plot of the two explanatory variables.
+We already made predictions from a simple linear regression model?
 
-```{r fig.width = 4, fig.height = 4, fig.align = "center"}
-ggplot(bp_data, aes(x = age, y = mins_exercise)) +
-  geom_point()
+Recall that the equation for multiple linear regression is:
+
+$$y_i = \beta_0 + \beta_1 x_i^{(1)} + \beta_2 x_i^{(2)} + \ldots + \beta_p x_i^{(p)} + \epsilon_i$$
+
+Therefore to get a predicted value of $y_i$, we can use the estimated parameters ($\hat\beta_0, \hat\beta_1, \ldots, \hat\beta_p$) and the values of the explanatory variables ($x_i^{(1)}, x_i^{(2)}, \ldots, x_i^{(p)}$):
+
+$$\hat{y}_i = \hat\beta_0 + \hat\beta_1 x_i^{(1)} + \hat\beta_2 x_i^{(2)} + \ldots + \hat\beta_p x_i^{(p)}$$
+
+In R, we can use the `predict()` function to make predictions from a multiple linear regression model. Here is an example of how to make predictions for the values of the explanatory variables in the original dataset:
+
+```{r}
+predictions <- predict(m1)
 ```
 
-The lack of pattern is good, because with no evidence of collinearity between the explanatory variables the model coefficients are stable and easy to interpret. They are stable in the sense that including or excluding one of the explanatory variables does not change the coefficients of the other variables much.
+Where `m1` is the multiple linear regression model fitted earlier. The `predict` function automatically uses the original data because we did not provide any new data.
 
-If there is correlation between the explanatory variables, then the model coefficients can be unstable and difficult to interpret. This is because the model cannot distinguish between the effects of the correlated variables.
+We can also make predictions for new values of the explanatory variables by providing a new data frame to the `predict()` function. Here is an example of how to make predictions for new values of age and minutes of exercise:
 
-Here is a new version of the blood pressure data in which the age and minutes of exercise variables are correlated:
+First we need to make some new values of age and minutes of exercise:
 
-```{r fig.width = 4, fig.height = 4, fig.align = "center"}
+```{r}
+new_data <- data.frame(age = c(30, 40, 50),
+                       mins_exercise = c(50, 100, 150))
+```
+
+Then we can use the `predict()` function to make predictions for these new values:
+
+```{r}
+new_predictions <- predict(m1, newdata = new_data)
+```
+
+::: {.callout-important}
+The new data frame must have the all the explanatory variables used in the model, and the variable names must match exactly those used in the model.
+:::
+
+We can take this to the next level and make what is called a "conditional effects plot" or "effect plot". This is a plot that shows the predicted values of the response variable for different values of one explanatory variable, while holding the other explanatory variables constant. Here is an example of how to make a conditional effects plot for age, while holding minutes of exercise constant at 100:
+
+```{r}
+new_data_effects <- data.frame(age = seq(20, 80, by = 1),
+                                mins_exercise = 100)
+new_data_effects <- new_data_effects |>
+  mutate(new_predictions_effects = predict(m1, newdata = new_data_effects))
+ggplot(data = new_data_effects, aes(x = age, y = new_predictions_effects)) +
+  geom_line() +
+  labs(x = "Age", y = "Predicted blood pressure") +
+  ggtitle("Conditional effects plot for\nage (mins_exercise = 100)")
+```
+
+And lets take this to the next level again and make a conditional effects plot for three different levels of `mins_exercise`:
+
+```{r}
+new_data_effects_3 <- expand.grid(age = seq(20, 80, by = 1),
+                                   mins_exercise = c(0, 150, 300))
+```
+
+A new function! And it's one of Owen's favourites: `expand.grid()`. This function creates a data frame from all combinations of the supplied vectors or factors. Here, we are creating a data frame with all combinations of age (from 20 to 80) and minutes of exercise (0, 150, and 300).
+
+We then give the new data frame to the `predict()` function to get the predicted values for each combination of age and minutes of exercise:
+
+```{r}
+new_data_effects_3 <- new_data_effects_3 |> 
+  mutate(prediction = predict(m1, newdata = new_data_effects_3),
+         mins_exercise_fac = as.factor(mins_exercise)) 
+```
+
+(Note that we changed)
+
+And make a graph:
+
+```{r}
+ggplot(data = new_data_effects_3, aes(x = age, y = prediction,
+                                             col = mins_exercise_fac)) +
+  geom_line() +
+  labs(x = "Age", y = "Predicted blood pressure", color = "Minutes
+ of exercise") +
+  ggtitle("Conditional effects plot for age\nat three levels of minutes of exercise")
+```
+                                               
+
+
+
+
+## Collinearity
+
+In the blood pressure example data used previously in this chapter there is no evidence of correlation between the two explanatory variables. However, in practice, it is common for explanatory variables to be correlated with each other. This is known as collinearity. It can be quite problematic for us!
+
+**Think-pair-share (#collinearity1)** Imagine if there was perfect correlation between age and minutes of exercise. This would mean that a graph of age vs minutes of exercise would show a perfect line. What would be the implications for the multiple linear regression model? For example, what would be the $R^2$ value for a model with one explanatory variable compared to a model with both explanatory variables?
+
+Collinearity, specifically *harmful* collinearity, is extremely common in real dataset that result from observational studies. This is because in observational studies there are often numerous explanatory variables, and they are often correlated with each other. This is a situation that is ripe for collinearity problems. (Collinearity can also happen in data resulting from designed manipulative experiments, but is hopefully relatively rare there because a well-designed experiment will try to avoid collinearity by ensuring that the explanatory variables are independent.)
+
+So what is collinearity, and why is it a problem?
+
+***Put simply, collinearity is when one explanatory variable is predictable from a linear combination of others.***
+
+This can happen due to strong correlation among pairs of explanatory variables, or due to more complex relationships involving three or more explanatory variables.
+
+For example, if we have three explanatory variables, $x_1, x_2,$ and $x_3$, and if $x_3$ can be predicted from a linear combination of $x_1$ and $x_2$, then we have collinearity. For example, if:
+
+$$x_3 = 2 \cdot x_1 + 3 \cdot x_2 + \text{small random noise}$$
+
+In this case, variable $x_3$ is a linear combination of $x_1$ and $x_2$, plus some small random noise. This means that if we know the values of $x_1$ and $x_2$, we can predict the value of $x_3$ quite accurately. Also, in this case we might not have strong correlation between any pair of the explanatory variables, but there is still collinearity because $x_3$ is predictable from $x_1$ and $x_2$. So lack of correlation between pairs of explanatory variables does not guarantee that there is no collinearity.
+
+***It is a problem because it makes the slope estimates unstable and therefore difficult to interpret.***
+
+Let us see this instability in practice. First let's look at the really extreme example of perfect collinearity. Here's a new version of the blood pressure data in which the minutes of exercise variable is perfectly predicted from age:
+
+```{r}
 set.seed(123)
 n <- 100
 age <- ceiling(runif(n, 20, 80))
-mins_exercise <- 100 - age + rnorm(n, 0, 10)
-bp <- 100 + 0.5 * age - 0.1 * mins_exercise + rnorm(n, 0, 15)
-bp_data_correlated <- data.frame(age = age, mins_exercise = mins_exercise, bp = bp)
-ggplot(bp_data_correlated, aes(x = age, y = mins_exercise)) +
-  geom_point()
 ```
 
-Now we fit a multiple linear regression model to the correlated data:
+Here is the line of code that makes the perfect correlation between age and minutes of exercise:
 
 ```{r}
-m2_both <- lm(bp ~ age + mins_exercise, data = bp_data_correlated)
-summary(m2_both)$coefficients
+mins_exercise <- 100 - age
 ```
 
-There is a positive effect of age on blood pressure, and a negative effect of minutes of exercise. The age coefficient is just significant, with $p = 0.473$. The minutes of exercise coefficient is not significant, with $p = 0.125$.
-
-Here is the model with only age included:
+Now we generate the blood pressure variable as before:
 
 ```{r}
-m2_age <- lm(bp ~ age, data = bp_data_correlated)
-summary(m2_age)$coefficients
+bp <- 100 + 0.5 * age + rnorm(n, 0, 15)
+bp_data_perfect <- data.frame(age = age,
+                              mins_exercise = mins_exercise,
+                              bp = bp)
 ```
 
-This gives quite different results for age. The coefficient is much larger (0.57 compared to 0.34) and it is very very unlikely that the observed relationship could have occurred if the null hypothesis were true ($p < 0.001$). 
-
-And here is the model with only minutes of exercise:
+Now we fit a multiple linear regression model with only age:
 
 ```{r}
-m2_mins_exercise <- lm(bp ~ mins_exercise, data = bp_data_correlated)
-summary(m2_mins_exercise)$coefficients
+m1_age <- lm(bp ~ age, data = bp_data_perfect)
+summary(m1_age)
 ```
 
-The same thing happens again. The coefficient for exercise is larger (-0.49 compared to -0.23) and it is very very unlikely that the observed relationship could have occurred if the null hypothesis were true ($p < 0.001$).  
+The estimated slope (coefficient) is `r round(coef(m1_age)["age"], 2)`, which is close to the true value of 0.5. The 95% confidence interval is `r round(confint(m1_age)["age", ], 2)[1]` to `r round(confint(m1_age)["age", ], 2)[2]`, which includes the true value of 0.5. All good then.
 
+Now we fit the multiple linear regression model with both age and minutes of exercise included:
 
-When each of the explanatory variables is included in the model separately, the coefficients are quite different from when both variables are included in the model. And when they are included in the model separately, their p-values are very low (reject null hypothesis of slope of zero), but when they are included in the model together, their p-values are much larger and give quite weak or no evidence to reject the null hypothesis of slope of zero.
+```{r}
+m1_both <- lm(bp ~ mins_exercise + age, data = bp_data_perfect)
+summary(m1_both)
+```
 
-These phenomena occur due to the correlation/collinearity between the explanatory variables. The model cannot distinguish between the effects of the correlated variables, so the coefficients are unstable and difficult to interpret.
+This output is a bit strange. The estimate for age is now `NA`. This is because the model cannot distinguish between the effects of age and minutes of exercise, since they are perfectly correlated. The model is unable to estimate the coefficient for age of exercise, so it returns `NA`.
 
-Unfortunately, collinearity is a common feature of real data, and it can make the interpretation of multiple linear regression models difficult. It is sometimes possible to design observational studies to reduced or avoid collinearity, but in practice it is often difficult to escape from.
+This is an example of instability of coefficients due to collinearity. The coefficient for age is completely unstable, as it changes from a number to `NA` depending on whether minutes of exercise is included in the model or not.
 
-In designed experiments, it is standard to make the design of the experiments so that explanatory variables are completely independent (zero collinearity). A fully-factorial design with balanced replication is a good way to ensure that explanatory variables are independent. Two-way analysis of variance is then an appropriate statistical model. We will look at this design and analysis in a later lecture.
+Actually, you can see that the estimate for `mins_exercise` are the same (except the sign of the coefficient) as the estimate for age in the previous model. This is because minutes of exercise is perfectly correlated with age, so the model is essentially using minutes of exercise as a proxy for age. With perfect collinearity, the model cannot distinguish between the effects of the two variables... they are effectively identical.
+
+You can also see that the $R^2$ value doesn't change when the second variable is added. That is, the model with only age included is identical to the model with both age and minutes of exercise included. This is because minutes of exercise is perfectly correlated age, so including minutes of exercise in the model does not add any new information.
+
+That is a pretty extreme example of perfect collinearity. In practice, collinearity is often not perfect, but still strong enough to cause problems.
+
+Let's look at the less extreme example of collinearity we had earlier, with three explanatory variables, $x_1, x_2,$ and $x_3$, and where $x_3$ can be predicted from a linear combination of $x_1$ and $x_2$ plus some random noise:
+
+```{r}
+set.seed(123)
+n <- 100
+x1 <- rnorm(n)
+x2 <- rnorm(n)
+x3 <- 2 * x1 + 3 * x2 + rnorm(n, 0, 5)
+y <- 5 + 1.5 * x1 - 2 * x2 + 0.5 * x3 + rnorm(n, 0, 1)
+data_collinear <- data.frame(x1 = x1, x2 = x2, x3 = x3, y = y)
+cor(data_collinear)
+```
+
+We see that there is not strong correlation between any pair of the explanatory variables, but there is still collinearity because $x_3$ is predictable from $x_1$ and $x_2$.
+
+Let's look for evidence of instability of the coefficients. First, we fit the multiple linear regression model with all three explanatory variables included:
+
+```{r}
+m_collinear_123 <- lm(y ~ x1 + x2 + x3, data = data_collinear)
+summary(m_collinear_123)$coefficients
+```
+
+Do these change much if we fit the model with only $x_1$ and $x_2$ included?
+
+```{r}
+m_collinear_12 <- lm(y ~ x1 + x2, data = data_collinear)
+summary(m_collinear_12)$coefficients
+```
+
+Yes, they do change quite a bit. The coefficients for $x_1$ and $x_2$ are quite different when $x_3$ is included in the model compared to when it is not included. This is because $x_3$ is predictable from $x_1$ and $x_2$, so including $x_3$ in the model changes the interpretation of the coefficients for $x_1$ and $x_2$.
+
+::: {.callout-note}
+In a not so extreme case such as this one, the coefficients will not be completely unstable (i.e., they will not change from a number to NA) but they can still change quite a bit depending on which other collinear variables are included in the model.
+:::
+
+The bottom line is that collinearity between explanatory variables complicates the interpretation of the model coefficients. If there is collinearity/correlation between the explanatory variables, then the model coefficients can be unstable and difficult to interpret.
+
+Let's have one more look at this instability that is caused by collinearity. And make this demonstration a bit more general. We'll simulate data with two explanatory variables that are correlated with each other to varying degrees. We'll then fit multiple linear regression models with both explanatory variables included, and see how the stability of the coefficients changes as we change the correlation between the explanatory variables.
+
+```{r}
+simulate_beta_hats <- function(r, n = 100, nsim = 200) {
+  
+  tibble(sim = seq_len(nsim)) %>%
+    mutate(
+      data = map(sim, ~ {
+        x1 <- rnorm(n)
+        x2 <- r * x1 + sqrt(1 - r^2) * rnorm(n)
+        y  <- 1 * x1 + rnorm(n)
+        tibble(x1, x2, y)
+      }),
+      beta1_hat = map_dbl(data, ~ coef(lm(y ~ x1 + x2, data = .x))["x1"]),
+      correlation = r
+    ) %>%
+    select(beta1_hat, correlation)
+}
+
+r_values <- seq(0, 0.9, 0.1)
+
+sim_results <- tibble(correlationr = r_values) %>%
+  mutate(results = map(correlationr, simulate_beta_hats)) %>%
+  unnest(results)
+
+## get variance of beta1_hat by correlation
+var_by_corr <- sim_results %>%
+  group_by(correlation) %>%
+  summarise(var_beta1_hat = var(beta1_hat))
+
+p1 <- ggplot(sim_results, aes(x = factor(correlation), y = beta1_hat)) +
+  geom_point(color = "blue", alpha = 0.3, height = 0) +
+  geom_hline(yintercept = 1, linetype = "dashed") +
+  labs(
+    x = "Correlation between predictors (r)\n(i.e., collinearity)",
+    y = "Slope estimate"
+  ) +
+  theme_minimal()
+
+p2 <- ggplot(var_by_corr, aes(x = correlation, y = var_beta1_hat)) +
+  geom_line(color = "red") +
+  geom_point() +
+  labs(
+    x = "Correlation between predictors (r)\n(i.e., collinearity)",
+    y = "Variance (i.e., instability)\nof slope estimate"
+  ) +
+  theme_minimal()
+p1 + p2
+
+```
+
+In the left panel we see the slope estimates for $x_1$ from the multiple linear regression model with both $x_1$ and $x_2$ included, for different levels of correlation between $x_1$ and $x_2$. When there is no correlation between $x_1$ and $x_2$ (i.e., no collinearity), the slope estimates are quite stable and close to the true value of 1.
+
+As the correlation between $x_1$ and $x_2$ increases, the slope estimates become more variable (= less stable). At correlation of 0.9, the slope estimates are quite variable and can be very far from the true value of 1.
+
+The right panel shows the variance of the slope estimates as a function of the correlation between $x_1$ and $x_2$. Variance here is a measure of the amount of vertical spread in the left panel.
+
+We see that the variance of the slope estimates increases as the correlation between $x_1$ and $x_2$ increases. This shows that greater collinearity between explanatory variables leads to greater instability (variance) of the slope estimates.
+
+This increase in variance caused by collinearity is known as the **variance inflation effect**. The variance inflation effect makes it difficult to interpret the coefficients of the model, because the coefficients can be quite unstable and can change a lot depending on which other collinear variables are included in the model.
+
+### Collinearity and interpretation of $R^2$
 
 Collinearity also affects the interpretation of the $R^2$ values. Collinearity will cause the collinear explanatory variables to share some of the explained variance. The $R^2$ value of the multiple regression will then be less than the sum of the $R^2$ values of the individual regressions of the response variable on each of the explanatory variables separately.
+
+```{r}
+#| echo = FALSE
+m2_age <- lm(bp ~ age, data = bp_data)
+m2_mins_exercise <- lm(bp ~ mins_exercise, data = bp_data)
+m2_both <- lm(bp ~ age + mins_exercise, data = bp_data)
+```
 
 $R^2$ of the age only model:
 
@@ -600,7 +791,83 @@ summary(m2_both)$r.squared
 
 In this case the two explanatory variables are strongly correlated and so share a lot of the explained variance. The $R^2$ value of the model with both explanatory variables is much less than the sum of the $R^2$ values of the models with each explanatory variable separately. In fact, either of the models with only one explanatory variable is nearly as good as the model with both explanatory variables. We don't gain much from including another explanatory variable in the model when we already include one explanatory variable that is strongly correlated with the other.
 
-## Recap
+### Do I have a problem (with collinearity)?
+
+There are several ways to measuring collinearity between explanatory variables and to assess if it is a problematic. One way is to look at the correlation matrix of the explanatory variables. If there are strong correlations between any pair of explanatory variables, then there is likely to be collinearity.
+
+But recall that collinearity can also occur without strong pairwise correlations. So another way to detect collinearity is to calculate the Variance Inflation Factor (VIF). This is so named because it measures how much the variance of the estimated regression coefficients is increased due to collinearity. (Recall that we saw the variance inflation effect in the simulation above.)
+
+Recall the definition of collinearity: it is when an explanatory variable is predictable from a linear combination of others. To calculate the VIF for a specific explanatory variable, we fit a linear regression model with that explanatory variable as the response variable, and all the other explanatory variables as the explanatory variables. We then calculate the $R^2$ value for this model. The VIF is then calculated as:
+
+$$VIF_j = \frac{1}{1 - R^2_j}$$
+
+where $R^2_j$ is the $R^2$ value from the model with explanatory variable $j$ as the response variable, and all other explanatory variables as the explanatory variables.
+
+In the case where the explanatory variable $j$ is not predictable from the other explanatory variables at all, then $R^2_j = 0$, and the VIF is 1. This indicates that there is no collinearity.
+
+In the case where the explanatory variable $j$ is perfectly predictable from the other explanatory variables, then $R^2_j = 1$, and the VIF is infinite. This indicates that there is perfect collinearity.
+
+To get the VIF for a multiple linear regression model with multiple explanatory variables, we calculate the VIF for each explanatory variable separately.
+
+The VIF measures how much the variance of the estimated regression coefficients is increased due to collinearity.
+
+In R, we can calculate the VIF using the `vif()` function from the `car` package. Here is the code to calculate the VIF for the blood pressure model:
+
+```{r echo = TRUE}
+library(car)
+vif(m1)
+
+```
+
+We see that the VIF values for both explanatory variables are close to 1, indicating that there is no collinearity between the explanatory variables.
+
+For the previous example with collinearity among three explanatory variables, we can calculate the VIF as follows:
+
+```{r echo = TRUE}
+vif(m_collinear_123)
+```
+
+We see that the VIF values for all three explanatory variables are greater than 1, indicating that there is collinearity between the explanatory variables. The VIF for $x_3$ is highest, indicating that $x_3$ is predictable from $x_1$ and $x_2$. But none of the VIF values are extremely high, indicating that the collinearity is not severe.
+
+A VIF value greater than 5 or 10 is often used as a rule of thumb to indicate that there is collinearity between the explanatory variables.
+
+Let's make an example of three explanatory variables with more severe collinearity:
+
+```{r}
+set.seed(123)
+n <- 100
+x1 <- rnorm(n)
+x2 <- rnorm(n)
+x3 <- 2 * x1 + 3 * x2 + rnorm(n, 0, 1)  # less noise, more collinearity
+y <- 5 + 1.5 * x1 - 2 * x2 + 0.5 * x3 + rnorm(n, 0, 1)
+data_collinear_severe <- data.frame(x1 = x1, x2 = x2, x3 = x3, y = y)
+m_collinear_severe <- lm(y ~ x1 + x2 + x3, data
+ = data_collinear_severe)
+vif(m_collinear_severe)
+```
+
+We see that the VIF values of $x_2$ and $x_3$ are greater than 10, indicating that there is strong collinearity between the explanatory variables. The coefficients for $x_2$ and $x_3$ will be quite unstable and difficult to interpret.
+
+### What to do about collinearity?
+
+Imagine we see high VIFs, we can conclud that there is collinearity between explanatory variables, and that the coefficients for those variables are likely to be unstable and difficult to interpret. What can we do???
+
+The answer is we should *think*!
+
+*	Are predictors measuring the same concept?
+*	Is this collinearity expected from the study design?
+*	Do I care about interpretation, or am I only interested in prediction?
+
+And then consider some possible remedies:
+
+* Combine predictors (index, PCA, biologically meaningful composite).
+*	Remove one of a set of redundant explanatory variables.
+*	Use regularization if prediction is the goal.
+
+We'll look at some of these later in the course.
+
+
+## Review
 
 Simple regression:
 
@@ -653,3 +920,20 @@ tbl_regression(m1)
 To use either approach most efficiently you will, however, need to write your report using R Markdown or Quarto so that the table is automatically created in your report document.
 
 
+### A figure showing the coefficients and confidence intervals
+
+As well as or rather than a table of coefficients, we could make a figure showing the coefficients and confidence intervals for each explanatory variable. This can be a nice way to visualise the results of the multiple linear regression model.
+
+```{r echo = TRUE}
+tidy_m1 <- tidy(m1, conf.int = TRUE)
+tidy_m1 |> 
+  filter(term != "(Intercept)") |> 
+ggplot(aes(x = term, y = estimate)) +
+  geom_point() +
+  geom_errorbar(aes(ymin = conf.low, ymax = conf.high), width =
+                0.2) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
+  labs(x = "Explanatory variable", y = "Coefficient estimate") +
+  ggtitle("Multiple linear regression coefficients\nand confidence intervals") +
+  coord_flip()
+```

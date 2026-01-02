@@ -23,6 +23,14 @@ If you'd like a copy of this book for yourself, there are a few ways. But beware
 
 * You can get all of the source code for the book from the [GitHub repository](https://github.com/opetchey/BIO144_Course_Book). However, you may find it a little complicated to do anything useful with it!
 
+## Datasets are not real
+
+The datasets used in this book are not real datasets. They were created to illustrate the methods taught in the course. Any resemblance to real data is purely coincidental. Please do not use these datasets for any purpose other than learning the methods taught in this course. The patterns in the data may not reflect real-world patterns, and should not be used to draw any conclusions about real-world phenomena.
+
+## Getting the datasets
+
+The datasets used in this book are available for download as a zip file here: [course_book_datasets.zip](course_book_datasets.zip). You can download this file and unzip it to get all of the datasets used in the book. The datasets are in CSV format, which can be opened in R or other statistical software.
+
 ## If you think you found a mistake in this book {.unnumbered}
 
 If you think you have found a mistake in the book, please say. A really nice way is to submit an issue on the GitHub repository for the book: [Issues page of the GitHub repository](https://github.com/opetchey/BIO144_Course_Book/issues). You will need a GitHub account to do this, but they are free and easy to set up. Otherwise tell Owen in person sometime, or in the OLAT Forum, or by email.

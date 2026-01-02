@@ -55,7 +55,7 @@ Lets look at some simulated example data:
 
 ```{r}
 # Load the data
-bp_age_data <- read.csv("data/Simulated_Blood_Pressure_and_Age_Data.csv")
+bp_age_data <- read.csv("datasets/Simulated_Blood_Pressure_and_Age_Data.csv")
 
 # How many data points with both age and blood pressure?
 bp_age_data <- na.omit(bp_age_data)
@@ -230,7 +230,7 @@ First we read in the dataset:
 
 ```{r}
 #| echo: true
-bp_age_data <- read.csv("data/Simulated_Blood_Pressure_and_Age_Data.csv")
+bp_age_data <- read.csv("datasets/Simulated_Blood_Pressure_and_Age_Data.csv")
 ```
 
 The we make a graph of the data:
@@ -783,7 +783,7 @@ So the overall effect of a data point on the slope of the line of best fit is a 
 Let's add a rather extreme data point to the blood pressure versus age data:
 
 ```{r}
-bp_age_data <- read.csv("data/Simulated_Blood_Pressure_and_Age_Data.csv")
+bp_age_data <- read.csv("datasets/Simulated_Blood_Pressure_and_Age_Data.csv")
 bp_age_model_outlier <- rbind(bp_age_data, data.frame(Age=80, Systolic_BP=120))
 ggplot(bp_age_model_outlier, aes(x = Age, y=Systolic_BP)) +
   geom_point() +

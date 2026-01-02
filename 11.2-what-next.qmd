@@ -1,0 +1,31 @@
+# What next (L11-2) {.unnumbered}
+
+What is the next step after this course? What are the options to further improve your skills in data analysis in R? What other types of analyses could you learn about, and when might you need them. Here are a list of other types of problem / question that we might have, and types of analysis that could be relevant.
+
+- **Time series analysis**: If your data are collected over time (e.g., daily, monthly, yearly), you might need to learn about time series analysis techniques such as ARIMA models, seasonal decomposition, and forecasting methods. A key feature of time series data is that observations are not independent, which violates assumptions of many standard statistical methods. This needs to be carefully handled in the analysis.
+
+- **Spatial analysis**: If your data have a spatial component (e.g., locations, regions), you might need to learn about spatial statistics, geostatistics, and spatial modeling techniques. This could include methods such as kriging, spatial autocorrelation analysis, and spatial regression models. Again, spatial data often violate independence assumptions, requiring specialized methods.
+
+- **Non-linear regression**: If the relationship between your predictors and response variable is not linear, you might need to learn about non-linear regression techniques. These can estimate the parameters of specific non-linear functions, and to assess the goodness of fit.
+
+- **Breakpoint analysis**: If you suspect that there are changes in the relationship between variables at certain points (e.g., before and after an intervention), you might need to learn about breakpoint analysis techniques, such as piecewise regression or change point detection methods.
+
+- **Generalized Additive Models (GAMs)**: If you want to model complex, non-linear relationships between predictors and response variables while maintaining some interpretability, you might need to learn about GAMs. These models use smooth functions to capture non-linear effects. They are rather elegant!
+
+- **Structural Equation Modeling (SEM)**: If you want to analyze complex relationships among multiple variables, including latent variables, you might need to learn about SEM techniques. SEM allows for the modeling of direct and indirect effects, as well as measurement error. Effectively, we can build and test complex causal models. Variables can be both predictors and responses at the same time.
+
+- **Machine Learning**: If you want to make predictions or classify data based on patterns, you might need to learn about machine learning techniques such as decision trees, random forests, support vector machines, and neural networks. These methods can handle large datasets and complex relationships but may sacrifice some interpretability.
+
+- **Meta-analysis**: If you want to synthesize results from multiple studies to draw broader conclusions, you might need to learn about meta-analysis techniques. This involves combining effect sizes from different studies and assessing heterogeneity among them.
+
+- **Survival analysis**: If your data involve time-to-event outcomes (e.g., time until failure, time until death), you might need to learn about survival analysis techniques such as Kaplan-Meier estimation, Cox proportional hazards models, and parametric survival models.
+
+- **Non-parametric methods**: If your data do not meet the assumptions of parametric tests (e.g., normality, homoscedasticity), and you really can't figure out how to make a parametric model (e.g., LM or GLM) you might need to learn about non-parametric methods such as rank-based tests, bootstrapping, and permutation tests.
+
+- **Power analysis and sample size estimation**: If you want to design studies with adequate statistical power, you might need to learn about power analysis techniques. This involves calculating the required sample size based on effect sizes, significance levels, and desired power.
+
+- **Bayesian statistics**: If you want to incorporate prior knowledge and uncertainty into your analyses, you might need to learn about Bayesian statistical methods. This involves using Bayes' theorem to update prior beliefs based on observed data.
+
+These are just a few examples of the many types of analyses that you might encounter in your data analysis journey. The choice of which techniques to learn next will depend on your specific research questions, data characteristics, and goals. Continuing to build your skills in R and statistical analysis will open up many opportunities for exploring these advanced topics.
+
+

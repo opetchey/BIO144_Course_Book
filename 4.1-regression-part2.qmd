@@ -405,7 +405,7 @@ ggplot(data.frame(x = seq(-4, 4, 0.01)), aes(x = x)) +
 Let's go back to the age - blood pressure data and calculate the p-value for the slope estimate.
 
 ```{r}
-bp_data <- read.csv(here::here("data/Simulated_Blood_Pressure_and_Age_Data.csv"))
+bp_data <- read.csv(here::here("datasets/Simulated_Blood_Pressure_and_Age_Data.csv"))
 ggplot(bp_data, aes(x = Age, y = Systolic_BP)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE, formula = y ~ x)

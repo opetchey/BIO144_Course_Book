@@ -1,0 +1,27 @@
+# Review (L12) {.unnumbered}
+
+**You need to prepare in advance for this lecture.**
+
+In the final lecture of the course, we will review and repeat any of the content that you find challenging. Please write in the Forum which topics you would like to revisit, so that we can focus on those during the session. There may also be chances to ask during the lecture time questions on topics that you find difficult.
+
+So the preparation for this lecture is to think about which topics you would like to discuss again, and to post these in the Forum.
+
+```{r}
+#| echo: false
+# path to the folder you want to compress
+folder_path <- "datasets"
+
+# name (or full path) of the output zip file
+zip_file <- "course_book_datasets.zip"
+
+# list all files in the folder
+files <- list.files(folder_path, full.names = TRUE)
+
+# safety check: exclude the zip file itself if it is in the same folder
+zip_file_full <- normalizePath(zip_file, mustWork = FALSE)
+files <- files[normalizePath(files, mustWork = FALSE) != zip_file_full]
+
+# create zip archive
+zip(zipfile = zip_file, files = files)
+```
+

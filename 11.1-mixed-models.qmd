@@ -1,0 +1,442 @@
+```{r}
+suppressMessages(library(tidyverse))
+suppressMessages(library(here))
+suppressMessages(library(lme4))       # mixed models
+suppressMessages(library(lmerTest)) # optional: p-values for fixed effects (advanced)
+suppressMessages(library(patchwork))
+```
+
+# Mixed models (L11-1) {.unnumbered}
+
+## Introduction
+
+So far in BIO144 we mostly used models where **each observation is assumed independent**:
+
+- linear models (`lm()`)
+- generalized linear models (`glm()`), e.g. Poisson and binomial
+
+But many biological datasets violate independence because observations come in **groups**:
+
+- repeated measures on the same individual (before/after, time series, multiple tissues)
+- multiple individuals from the same plot / site / stream / lake / cage / family
+- students within classes, patients within hospitals, samples within batches
+
+In these cases, treating all rows as independent often leads to **false confidence** (too-small standard errors, too-small p-values). Mixed models are one standard way to handle this.
+
+::: {.callout-important}
+**Core idea** A *mixed model* extends regression by adding **random effects** that represent grouping structure (clusters) in the data.
+
+* **fixed effects**: effects you want to estimate explicitly (treatments, temperature, time, …)
+* **random effects**: variation among groups (individuals, sites, years, …) that induces correlation within groups
+:::
+
+**Think–Pair–Share (#tps-why-mixed)**  
+Name one example in biology where multiple measurements come from the same "unit" (individual, plot, lake, strain, batch…). What goes wrong if we pretend those measurements are independent?
+
+## Why not just average?
+
+A common workaround is to average repeated measurements to a single value per group and then use `lm()`.
+
+Sometimes this is OK — but often it throws away information.
+
+Reasons *not* to average include:
+
+1. **Imbalanced sampling** (groups have different numbers of observations): averaging changes the weighting.
+2. **Which average?** (mean, median, mode): different choices answer different questions.
+3. **False confidence**: pretending "n rows" are independent can make uncertainty look too small.
+4. **You may want to study variation among groups** (some individuals respond more strongly than others).
+5. **“Sharing information” across groups**: mixed models partially pool group estimates toward the overall mean.
+6. **Keeping information**: you can use all observations without collapsing the design.
+
+::: {.callout-note}
+A mixed model gives you a principled compromise between:
+
+* analysing each observation as a independent one, and
+* averaging everything (too coarse).
+
+This is sometimes called **partial pooling**.
+:::
+
+## The problem: non-independence and pseudoreplication
+
+Imagine we measure the same individual multiple times.
+
+If we fit a simple linear model, the residuals are assumed independent:
+
+$$\varepsilon_i \sim \text{Normal}(0, \sigma^2), \quad \text{independent across } i$$
+
+But repeated measures induce correlation:
+
+- measurements from the same individual tend to be more similar
+- so residuals are not independent
+
+This is one common form of **pseudoreplication**: treating repeated measurements as if they were separate independent replicates.
+
+## Random intercept models
+
+### Random intercept idea
+
+Suppose we measure a response $y$ (e.g. growth) for individuals $j$ at observations $i$. And that we measure each individual more than once. And that we have some treatment, such as temperature $x$.
+
+This means that our data have a **grouping structure**: observations are grouped by individual. If we want to calculate the mean growth, we should account for this grouping.
+
+Let's make an example dataset to illustrate:
+
+```{r}
+set.seed(42)
+n_individuals <- 10
+n_obs_per_ind <- 5
+individual_ids <- factor(sprintf("Ind%02d", 1:n_individuals))
+dat_example <- expand_grid(
+  individual = individual_ids,
+  obs_number = 1:n_obs_per_ind) |> 
+  mutate(x = runif(n_individuals * n_obs_per_ind, 0, 10)
+) %>%
+  arrange(individual) %>%
+  mutate(
+    # random intercept per individual
+    b0 = rnorm(n_individuals, 0, 2)[as.integer(individual)],
+    # fixed effects
+    beta0 = 5,
+    beta1 = 1.5,
+    # response variable
+    y = beta0 + beta1 * x + b0 + rnorm(n(), 0, 1)
+  ) %>%
+  select(individual, temperature = x, growth = y)
+write_csv(dat_example, here("datasets", "mixed_model_example.csv"))
+```
+
+Here are the first few rows:
+
+```{r}
+head(dat_example)
+```
+
+In this data we have two sources of variation in `growth`:
+
+1. **fixed effect** of `temperature` (same for all individuals)
+2. **random effect** of `individual` (different baseline growth for each individual)
+
+A fixed effect is something we want to estimate explicitly (e.g. how growth changes with temperature). Fixed effects are variables in which the values have specific meaning (e.g. temperature = 5°C).
+
+A random effect is something that varies among groups (individuals here), but where we are not interested in the specific values for each group. Instead, we want to estimate the amount of variation among groups. Random effects are variables where the specific values are not of interest, but rather the variation among them (e.g. individual identity). I.e., the value "Ind01" has no specific meaning; we just want to know how much individuals differ from each other on average. That value could be anything.
+
+A random effect is often containing levels that are considered a random sample from a larger population. We did not, for example, choose specific individuals for a reason; they are just a sample of all possible individuals.
+
+An appropriate model for this data is a **random-intercept mixed model**. It is a model in which each group (individual) has its own intercept (baseline), but the intercepts are assumed to come from a common distribution.
+
+A random-intercept mixed model is:
+
+$$y_{ij} = \beta_0 + \beta_1 x_{ij} + b_{0j} + \varepsilon_{ij}$$
+
+where:
+
+- $\beta_0, \beta_1$ are **fixed effects**
+- $x_{ij}$ is the predictor variable for observation $i$ in group $j$. Also called a **fixed effect**.
+- $b_{0j}$ is a **random intercept** for group $j$, typically $b_{0j} \sim \text{Normal}(0,\sigma_b^2)$
+- $\varepsilon_{ij}$ is residual error, $\varepsilon_{ij} \sim \text{Normal}(0,\sigma^2)$
+
+Interpretation:
+
+- each group gets its own intercept (baseline), but
+- those intercepts are assumed to come from a common distribution
+
+### Random intercept syntax in R
+
+To make a mixed model in R we can no longer use `lm()` or `glm()`. Instead, we use the `lmer()` function from the `lme4` package.
+
+In the `lmer` function we have to specify the random effects in a special way. For example, a random-intercept model for `y` with fixed effect `x` and random intercept by `group` is specified as:
+
+```r
+y ~ x + (1 | group)
+```
+
+Read it as: "a model for `y` with fixed effect `x` and a random intercept by `group`".
+
+## Random slope models
+
+Sometimes groups differ not only in baseline level, but also in how they respond to a predictor.
+
+A random-slope model:
+
+$$y_{ij} = \beta_0 + \beta_1 x_{ij} + b_{0j} + b_{1j}x_{ij} + \varepsilon_{ij}$$
+
+In R:
+
+```r
+y ~ x + (1 + x | group)
+```
+
+Here each group has its own intercept **and** its own slope, and these can be correlated.
+
+::: {.callout-caution}
+Random slopes are powerful but can be hard to estimate with small datasets.
+If the model struggles to fit (singular fit warnings), consider simplifying.
+:::
+
+## Nested and crossed random effects
+
+### Nested
+
+**Nested** means one grouping factor is contained within another.
+
+Example: measurements within plants within plots:
+
+```r
+y ~ treatment + (1 | plot/plant)
+```
+
+This expands to `(1 | plot) + (1 | plot:plant)`.
+
+### Crossed
+
+**Crossed** means groups are not nested.
+
+Example: repeated measures with multiple observers (each observer measures many individuals; each individual is measured by many observers):
+
+```r
+y ~ x + (1 | individual) + (1 | observer)
+```
+
+## Hands-on example: plant growth with repeated measures
+
+### Biological story
+
+You are studying how temperature affects plant growth.
+
+- 30 plants are grown at one of three temperatures: 10°C, 15°C, 20°C.
+- Each plant is measured weekly for 8 weeks.
+- Response: plant height (cm).
+
+Because we repeatedly measure the **same plant**, the observations are not independent.
+We will compare:
+
+1. a naive linear model (wrong independence assumption),
+2. a mixed model with plant as a random effect.
+
+### An example dataset
+
+```{r}
+set.seed(11)
+
+n_plants <- 30
+weeks <- 0:7
+
+plant_tbl <- tibble(
+  plant_id = factor(sprintf("P%02d", 1:n_plants)),
+  temp = factor(rep(c("10", "15", "20"), length.out = n_plants))
+)
+
+# Random intercept per plant (baseline differences)
+b0 <- rnorm(n_plants, mean = 0, sd = 1.5)
+
+# Fixed effects
+beta0 <- 10        # baseline height at week 0 (cm)
+beta_week <- 1.8   # growth per week
+beta_temp <- c("10" = -1.0, "15" = 0.0, "20" = 1.2)  # temp effect on baseline
+
+# Optional: allow temp to affect growth rate a little
+beta_week_temp <- c("10" = -0.2, "15" = 0.0, "20" = 0.25)
+
+dat <- expand_grid(plant_tbl, week = weeks) |>
+  arrange(plant_id, week) |>
+  mutate(
+    plant_index = as.integer(plant_id),
+    u0 = b0[plant_index],
+    height = beta0 +
+      beta_temp[as.character(temp)] +
+      (beta_week + beta_week_temp[as.character(temp)]) * week +
+      u0 +
+      rnorm(n(), 0, 1.2)
+  ) |>
+  select(plant_id, temp, week, height)
+
+# Write out so students can re-load it
+write_csv(dat, here("datasets", "plant_growth_repeated.csv"))
+```
+
+```{r}
+head(dat)
+```
+
+### Explore the data
+
+First we make a plot of the data:
+
+```{r}
+ggplot(dat, aes(x = week, y = height, group = plant_id, color = temp)) +
+  geom_line(alpha = 0.25) +
+  geom_point(alpha = 0.5, size = 1) +
+  theme_minimal() +
+  labs(x = "Week", y = "Height (cm)", color = "Temp (°C)")
+```
+
+We can see data from each individual plant because it is connected by a line. We also see that plants at higher temperature tend to be taller. And we see that plants differ in their baseline height (week 0).
+
+There are two challenges here:
+1. We have repeated measures on the same plants (non-independence).
+2. We have variation among plants in baseline height.
+
+A mixed model can handle both of these.
+
+### Wrong model: treat all rows as independent
+
+```{r}
+m_lm <- lm(height ~ week * temp, data = dat)
+anova(m_lm)
+```
+
+This model pretends there are $30 \times 8 = 240$ independent data points.
+But most of that information is repeated measures on the same plants.
+
+We can see that this is pseudoreplication because there are many more residual degrees of freedom (236) than plants (30). This is a classic sign of pseudoreplication. We really cannot trust the p-values or confidence intervals from this model.
+
+
+
+### Mixed model: random intercept for plant
+
+Now let's fit a mixed model with plant identity as a random effect:
+
+```{r}
+m_lmm1 <- lmer(height ~ week * temp + (1 | plant_id), data = dat)
+anova(m_lmm1)
+```
+
+In the anova table, note that there are no degrees of freedom and no p-values for fixed effects. This is because calculating these in mixed models is complicated and there are multiple methods. We will look at this more later in this chapter.
+
+Interpretation:
+
+- fixed effects describe the **average** relationship between height, week, and temperature
+- the random intercept captures baseline differences among plants
+
+
+### model checking
+
+Mixed-model diagnostics can be more involved than `lm()`, but you can still start with:
+
+- residual vs fitted plot (nonlinearity / heteroscedasticity)
+- normal Q–Q of residuals (approximate)
+- check random effect estimates for extreme outliers
+
+```{r}
+par(mfrow = c(2,2))
+``` 
+
+1) Residuals vs fitted
+
+```{r}
+plot(fitted(m_lmm1), resid(m_lmm1),
+     xlab = "Fitted values", ylab = "Residuals")
+abline(h = 0, lty = 2)
+```
+
+2) Normal Q–Q of residuals
+
+```{r}
+qqnorm(resid(m_lmm1)); qqline(resid(m_lmm1))
+```
+
+
+3) Scale–location (sqrt(|resid|) vs fitted)
+```{r}
+plot(fitted(m_lmm1), sqrt(abs(resid(m_lmm1))),
+     xlab = "Fitted values", ylab = "sqrt(|Residuals|)")
+```
+
+
+4) Residuals vs predictor (helpful for nonlinearity with a continuous predictor)
+
+```{r}
+plot(dat$temp, resid(m_lmm1), xlab = "x", ylab = "Residuals")
+abline(h = 0, lty = 2)
+```
+
+```{r}
+par(mfrow = c(1,1))
+```
+
+
+
+::: {.callout-caution}
+**Don’t over-interpret p-values**  
+In mixed models, inference depends on how you handle degrees of freedom and uncertainty.
+In BIO144, focus on:
+- correct model structure (what must be random?)
+- effect sizes and uncertainty (CIs)
+- sensible plots and biological interpretation
+:::
+
+
+### Extension: random slopes for week
+
+If you believe plants differ in growth rate (not only baseline), add a random slope:
+
+```{r}
+m_lmm2 <- lmer(height ~ week * temp + (1 + week | plant_id), data = dat)
+summary(m_lmm2)
+```
+
+Compare the two mixed models:
+
+```{r}
+anova(m_lmm1, m_lmm2)
+```
+
+There is little evidence that adding random slopes improves the model here (p = 0.77). But in other datasets it might.
+
+::: {.callout-note}
+This likelihood ratio test compares nested models. It is widely used, but has subtleties for random effects. In BIO144 you can treat it as a reasonable practical tool, while noting that "testing random effects" is an advanced topic.
+:::
+
+### Visualising fitted values
+
+We can visualise the fitted values from both mixed models:
+
+```{r fig.width=7, fig.height=4}
+dat_aug <- dat |>
+  mutate(fit_lmm1 = predict(m_lmm1),
+         fit_lmm2 = predict(m_lmm2))
+
+p_fit1 <- ggplot(dat_aug, aes(week, height, group = plant_id, color = temp)) +
+  geom_point(alpha = 0.35, size = 1) +
+  geom_line(aes(y = fit_lmm1), alpha = 0.35) +
+  theme_minimal() +
+  labs(title = "Random intercept m_lmm1el", y = "Height (cm)")
+
+p_fit2 <- ggplot(dat_aug, aes(week, height, group = plant_id, color = temp)) +
+  geom_point(alpha = 0.35, size = 1) +
+  geom_line(aes(y = fit_lmm2), alpha = 0.35) +
+  theme_minimal() +
+  labs(title = "Random intercept + slope model", y = "Height (cm)")
+
+p_fit1 + p_fit2
+```
+
+There is not much difference between the two models here, but in other datasets random slopes can make a big difference.
+
+### Significance testing for fixed effects
+
+Calculating p-values for fixed effects in mixed models is complicated, and there are multiple methods (Satterthwaite, Kenward-Roger, likelihood ratio tests, bootstrapping, Bayesian credible intervals). It is difficult because the degrees of freedom depend on the random effects structure and the data. There is no clear and objective method to get the degrees of freedom.
+
+Neverthless, we can get p-values for terms using the `lmerTest` package (optional). This changes the `lmer()` function to provide p-values using Satterthwaite's method for degrees of freedom.
+
+```{r}
+m_lmm1 <- lmer(height ~ week * temp + (1 | plant_id), data = dat)
+anova(m_lmm1)
+```
+
+### Reporting (template)
+
+* We modelled plant height as a function of week, temperature, and their interaction using a linear mixed model with plant identity as a random effect.  
+* Height increased with week (fixed effect of week), and plants at higher temperature were taller on average (fixed effect of temperature).
+* All fixed effects had a p-value < 0.05, calculate using Satterthwaite's method for degrees of freedom (lmerTest package).
+* Including plant as a random effect accounted for non-independence due to repeated measures.
+
+
+## Summary
+
+- Mixed models are used when observations are **grouped** (non-independent).
+- They combine **fixed effects** (average relationships) with **random effects** (group-to-group variation).
+- Random intercepts model different baselines among groups; random slopes allow different responses.
+- Nested and crossed random effects reflect study design.
+- Mixed models let you keep all observations while avoiding pseudoreplication and false confidence.

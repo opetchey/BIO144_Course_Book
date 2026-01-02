@@ -25,5 +25,38 @@
   },
   "7.1-multiple-explanatory-variables-part1.qmd": {
     "7.1-multiple-explanatory-variables-part1.html": "e77cd24b"
+  },
+  "3.1-regression-part1.qmd": {
+    "3.1-regression-part1.html": "b54131fe"
+  },
+  "4.1-regression-part2.qmd": {
+    "4.1-regression-part2.html": "d1f9064b"
+  },
+  "5.1-anova.qmd": {
+    "5.1-anova.html": "aedd391b"
+  },
+  "6.1-multiple-regression.qmd": {
+    "6.1-multiple-regression.html": "3530a973"
+  },
+  "7.1-interactions.qmd": {
+    "7.1-interactions.html": "a4df912f"
+  },
+  "8.1-GLM1-count-data.qmd": {
+    "8.1-GLM1-count-data.html": "e770fcc8"
+  },
+  "9.1-GLM2-binary-data.qmd": {
+    "9.1-GLM2-binary-data.html": "c0acefa3"
+  },
+  "10.1-ordination.qmd": {
+    "10.1-ordination.html": "38550106"
+  },
+  "11.1-mixed-models.qmd": {
+    "11.1-mixed-models.html": "42af598b"
+  },
+  "11.2-what-next.qmd": {
+    "11.2-what-next.html": "add03af8"
+  },
+  "12.1-review.qmd": {
+    "12.1-review.html": "9fcb5bce"
   }
 }

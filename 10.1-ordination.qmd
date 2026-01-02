@@ -1,0 +1,537 @@
+
+```{r}
+suppressMessages(library(tidyverse))
+suppressMessages(library(here))
+suppressMessages(library(vegan))      # ordination + PERMANOVA tools
+suppressMessages(library(patchwork))  # combining ggplots
+```
+
+# Ordination (L10) {.unnumbered}
+
+## Introduction
+
+"Seeing structure in multivariate data."
+
+In earlier chapters, we mostly worked with **one response variable at a time**. But many biological questions are intrinsically **multivariate**:
+
+- morphology: multiple measurements describe *shape* (not just size)
+- communities: abundance of many species describes *composition*
+- physiology / omics: many traits or genes change together
+
+When we have **many response variables**, two practical problems appear:
+
+1. How do we **visualize** patterns across many variables?
+2. How do we **summarize** the dominant patterns without losing the biology?
+
+**Ordination** is a family of methods that helps with both.
+
+It can also help in cases where we have many predictor variables (e.g. environmental gradients). This can be especially useful when predictors are collinear.
+
+::: {.callout-important}
+**Core idea**  
+Ordination finds a low-dimensional representation (often 2D) of *multivariate* data,
+so that points that are "similar" in the original multivariate space end up close together in the ordination plot.
+:::
+
+**Think–Pair–Share (#tps-ordination-why)**  
+Name one dataset you work with (or could imagine working with) that has many response variables.
+What would you like to learn from it that a single-response analysis might miss?
+
+### Working example: skull shape through time
+
+We will use a classic dataset of **human skull dimensions** measured in millimeters.
+The biological question is:
+
+> Has skull **shape** changed through time?
+
+Four measurements of skull were made:
+
+![](assets/skull_figure.png){fig-alt="Four skull measurements used in the ordination example." width=60%}
+
+We will treat the four skull measurements as multivariate responses, and time as an explanatory variable.
+
+First read the dataset from the csv file:
+
+```{r}
+skull <- read_csv(here("datasets", "skull_shape_time.csv"))
+```
+
+
+### Wide vs long format (and why you should care)
+
+Multivariate data often come in **wide format**:
+
+- one row per object (skull)
+- one column per variable (measurement)
+
+That’s great for many ordination functions.
+
+But long format is often easier for:
+- grouped summaries
+- plotting multiple variables with a single ggplot call
+
+We can easily make a long format version with `pivot_longer()`:
+
+```{r}
+skull_long <- skull |>
+  pivot_longer(
+    cols = c(max.breadth, basi.height, basi.length, nasal.height),
+    names_to = "dimension",
+    values_to = "value"
+  )
+```
+
+This will make some of the following exploration easier.
+
+### Explore first: univariate views of a multivariate problem
+
+A good habit:
+
+1) visualize each variable,  
+2) look for patterns and surprises,  
+3) then use ordination to *summarize*.
+
+### Four scatterplots (measurement vs time)
+
+```{r fig.width=8, fig.height=5}
+p_vars <- skull_long |>
+  ggplot(aes(x = thousand.years, y = value)) +
+  geom_point(alpha = 0.6) +
+  facet_wrap(~ dimension, scales = "free_y", ncol = 2) +
+  labs(x = "Thousand years ago", y = "Measurement (mm)")
+
+p_vars
+```
+
+**Interpretation (qualitative):**  
+If all dimensions change similarly through time, that’s mostly a **size** change.
+If some change differently, that suggests **shape** change.
+
+**Think–Pair–Share (#tps-size-shape)**  
+How would you distinguish "size change" from "shape change" using these plots?
+
+### Why not four separate regressions?
+
+Fitting separate regressions for each measurement has two problems:
+1. **Multiple testing**: testing four times increases the chance of false positives.
+2. **Ignoring covariance**: measurements may be correlated, so analyzing them separately misses joint patterns
+
+
+## Ordination I: PCA (Principal Components Analysis)
+
+PCA is the most common entry point.
+
+::: {.callout-important}
+**What PCA does**  
+PCA finds new axes (PC1, PC2, …) that are:
+- linear combinations of the original variables
+- orthogonal (uncorrelated)
+- ordered so that PC1 captures the most variance, PC2 the next most, etc.
+:::
+
+### Intuitive picture of PCA
+
+Imagine that each skull is a point in a space with one axis per measurement (four dimensions here). Together, the skulls form a cloud of points.
+
+PCA asks from which direction does this cloud show the greatest spread?
+
+To answer this, PCA rotates the coordinate system so that:
+
+*	PC1 points in the direction of greatest variation,
+* PC2 points in the next greatest direction, orthogonal to PC1,
+* and so on.
+
+You can think of PCA as turning the data cloud until you find the view where the points are most spread out. That view becomes PC1. Then PCA finds the best second view at right angles to it (PC2).
+
+The key idea is that PCA does not invent new information: it simply re-expresses the same data using new axes that make dominant patterns easier to see.
+
+::: {.callout-note}
+Under the hood, PCA is based on the covariance (or correlation) matrix of the variables. The principal components are eigenvectors of this matrix, and the amount of variance they capture is given by the corresponding eigenvalues. You do not need to compute these by hand, but this explains why PCA is fundamentally about variance and correlation.
+:::
+
+
+
+### Centering and scaling
+
+Before PCA, we usually **center** and **scale** the data, or at least think carefully if we should.
+
+- **Centering** subtracts the mean of each variable (so mean = 0).
+- **Scaling** divides by the SD of each variable (so SD = 1).
+
+Scaling matters if variables are on different scales or if you care about *relative* variation.
+
+::: {.callout-note}
+Note that above it is written that PCA does not change the relative positions of the points. However, if we scale the data before performing PCA, this can affect the relative positions of the points in the PCA space. Scaling ensures that all variables contribute equally to the analysis, which can be important when variables are measured on different scales. If we do not scale the data, variables with larger variances can dominate the PCA results, potentially distorting the relative positions of the points in the PCA space.
+:::
+
+We can make these transformed variables ourself, or use the built-in options in `prcomp()`.
+
+So, let us do our first PCA. We must be sure to only do the PCA on the four skull measurement variables. To do this we will select only those columns from the original data frame, and pipe these into the `prcomp()` function:
+
+```{r}
+skull_pca <- skull |>
+  dplyr::select(max.breadth, basi.height, basi.length, nasal.height) |>
+  prcomp(center = TRUE, scale. = TRUE)
+```
+
+What is this new dataset? Part of it is the new coordinates of each skull in the PC space:
+
+```{r}
+head(skull_pca$x)
+```
+
+### Variance represented
+
+Each of the new PC axes captures some of the variance in the original data. We can summarize this with:
+
+```{r}
+summary(skull_pca)
+```
+
+This shows the standard deviation of each PC axis, the proportion of variance explained by each PC, and the cumulative proportion of variance explained.
+
+The first PC axis captures `r round((skull_pca$sdev[1]^2) / sum(skull_pca$sdev^2) * 100, 1)`% of the variance in the original data. The first two PC axes together capture `r round(sum((skull_pca$sdev[1:2]^2)) / sum(skull_pca$sdev^2) * 100, 1)`% of the variance.
+
+This is quite a lot, so we can visualize the data well with two PC axes. When we do so, we ignore the remaining axes, which capture less variance (`r round(sum((skull_pca$sdev[3:4]^2)) / sum(skull_pca$sdev^2) * 100, 1)`%).
+
+
+### PCA scores plot (PC1 vs PC2)
+
+The **scores** are the coordinates of each skull in the new PC space. We do a bit of data wrangling to combine these with the original data (id and time):
+
+```{r}
+scores <- as_tibble(skull_pca$x) |>
+  mutate(id = skull$id, thousand.years = skull$thousand.years)
+scores |> select(id, PC1, PC2, thousand.years) |> slice_head(n = 5)
+```
+
+```{r}
+ggplot(scores, aes(x = PC1, y = PC2, color = thousand.years)) +
+  geom_point(alpha = 0.8) +
+  labs(color = "Thousand\nyears ago") +
+  theme_minimal()
+```
+
+::: {.callout-note}
+**Interpretation tip**  
+If points separate along PC1 as time increases, that suggests the dominant multivariate trend is associated with time.
+:::
+
+### What do the axes mean?
+
+The **loadings** tell us how each original variable contributes to each PC. In fact, each PC is a linear combination of the original variables, weighted by the loadings.
+
+```{r}
+loadings <- as_tibble(skull_pca$rotation, rownames = "variable")
+loadings
+```
+
+These can help us interpret the PCs. For example, we see a strong positive loading of all four skull measurements on PC1. This suggests that PC1 represents overall size, as all measurements increase together. On the second PC axis, we see a mix of positive and negative loadings, indicating that PC2 captures shape differences where some measurements increase while others decrease. The positive PC2 loadings for head breadth and nasal height, combined with negative loadings for basi height and basi length, suggest that PC2 reflects a shape change where skulls become wider and taller in the nasal region while becoming shorter in the base dimensions.
+
+Another way to interpret PCs is to look at the correlations between the original variables and the PCs. This can provide insights into how each original variable relates to the new PC axes. We can calculate these correlations as follows:
+
+```{r}
+X <- skull |>
+  dplyr::select(max.breadth, basi.height, basi.length, nasal.height)
+round(cor(X, skull_pca$x), 2)
+```
+
+
+**Think–Pair–Share (#tps-pc-meaning)**  
+If PC1 is positively correlated with all four skull measurements, what biological interpretation is most natural?
+
+### A simple biplot (scores + loadings)
+
+Below is a lightweight biplot-style plot.   (There are fancy versions in packages like **factoextra**, but we keep it minimal.)
+
+```{r fig.width=7, fig.height=5}
+# Scale loadings for visibility (a plotting choice, not statistical)
+L <- loadings |> mutate(PC1 = PC1 * 4, PC2 = PC2 * 4)
+
+ggplot(scores, aes(PC1, PC2)) +
+  geom_point(aes(color = thousand.years), alpha = 0.75) +
+  geom_segment(
+    data = L,
+    aes(x = 0, y = 0, xend = PC1, yend = PC2),
+    inherit.aes = FALSE,
+    arrow = arrow(length = unit(0.15, "inches"))
+  ) +
+  geom_text(
+    data = L,
+    aes(x = PC1, y = PC2, label = variable),
+    inherit.aes = FALSE,
+    vjust = -0.4
+  ) +
+  theme_minimal() +
+  labs(color = "Thousand\nyears ago")
+```
+
+In this graph we see all arrow point in the same horizontal direction, indicating that PC1 represents overall size. An increase in any of the four measurements will increase PC1.
+
+In contrast, the arrows for PC2 point in different directions, indicating that PC2 represents shape differences where some measurements increase while others decrease. The two longest arrows are for basi.length and max.breadth, suggesting that these measurements contribute most strongly to shape variation captured by PC2.
+
+
+
+## Ordination II: NMDS (Non-metric Multidimensional Scaling)
+
+PCA is powerful, but it is a **linear** method and it relies on Euclidean geometry in the original variable space.
+
+NMDS is often used when:
+
+* you want ordination based on **distances/dissimilarities**
+* the relationships are not well represented by a linear method
+* you want flexibility in the choice of distance (e.g. Bray–Curtis, Gower, …)
+
+::: {.callout-important}
+**What NMDS does (conceptually)**  
+1) compute pairwise distances among objects  
+2) place points in a low-dimensional space (usually 2D)  
+3) try to preserve the **rank order** of distances (non-metric)  
+4) report **stress**: lower is better (roughly: mismatch between original dissimilarities and ones in the lower-dimensional space)
+:::
+
+
+### Step 1: Choose a distance measure
+
+Here our variables are numeric, so Euclidean distance is a reasonable default.
+
+We will scale first (so variables contribute comparably), then compute distances:
+
+```{r}
+X_scaled <- scale(X)
+D <- dist(X_scaled, method = "euclidean")
+#D
+```
+
+### Step 2: Fit NMDS with multiple random starts
+
+In NMDS, we need to choose some random starting configuration of points. And we want to make sure that we choose a good solution, not just a local optimum. Hence, we try multiple random starts and pick the best one.
+
+In practice, use `metaMDS()` (from **vegan**) rather than calling the low-level optimizer directly. It tries multiple starting configurations and does useful housekeeping.
+
+When calling `metaMDS()`, we specify the following:
+
+* `k = 2` for a 2D solution.
+* `trymax = 50` to try up to 50 random starts.
+* `autotransform = FALSE` because we already scaled the data ourselves. 
+* `trace = FALSE` to suppress output during fitting.
+
+```{r}
+set.seed(1)
+nmds <- metaMDS(D, k = 2, trymax = 50, autotransform = FALSE, trace = FALSE)
+nmds
+```
+
+Lots of information here, for example we have:
+
+* the call used
+* the type of distance
+* the number of dimensions
+* the number of random starts tried
+* the final stress value
+* the scaling of the data
+
+### Step 3: Assess NMDS fit with stress
+
+The stress of an NMDS solution quantifies how well the low-dimensional configuration preserves the rank order of the original dissimilarities. That is, it is a measure of mismatch between the distances in the original high-dimensional space and the distances in the reduced low-dimensional space. Here is the stress plot for our NMDS solution:
+
+```{r}
+stressplot(nmds)
+```
+
+We see a fairly good match between the original distances and the NMDS distances. The correlations are reasonably high, indicating that the NMDS solution captures the rank order of dissimilarities well.
+
+The stress value is another measure of fit. Lower stress values indicate a better fit. A common rule of thumb is that stress < 0.1 is a good fit, stress between 0.1 and 0.2 is acceptable, and stress > 0.2 indicates a poor fit. A poor fit suggests that the data may not be well represented in two dimensions, and a higher-dimensional solution may be needed.
+
+```{r}
+nmds$stress
+```
+
+We are in the range of okay fit in two dimensions.
+
+What improvement in stress do we get if we go to three dimensions?
+
+```{r}
+set.seed(1)
+nmds_3d <- metaMDS(D, k = 3, trymax = 50, autotransform = FALSE, trace = FALSE)
+nmds_3d$stress
+```
+
+The stress decreases when we move to three dimensions, indicating a better fit. However, the improvement may not be substantial enough to justify the added complexity of a three-dimensional solution. In practice, we often prefer two-dimensional solutions for ease of visualization and interpretation, unless the stress reduction is very large.
+
+We can plot the NMDS scores, colored by time:
+
+```{r}
+nmds_scores <- as_tibble(scores(nmds, display = "sites")) |>
+  mutate(id = skull$id, thousand.years = skull$thousand.years)
+
+ggplot(nmds_scores, aes(x = NMDS1, y = NMDS2, color = thousand.years)) +
+  geom_point(alpha = 0.8) +
+  theme_minimal() +
+  labs(color = "Thousand\nyears ago")
+```
+
+::: {.callout-note}
+**Axis directions are arbitrary**  
+Flipping or rotating an NMDS solution (or a PCA) does not change its meaning.
+Only relative distances among points matter.
+:::
+
+If we wanted to know the biological interpretation of the NMDS axes, we would need to look at correlations between the original variables and the NMDS axes. This is just the same as we did for PCA. We could then plot the correlations as arrows on the NMDS plot to help interpret the axes.
+
+```{r}
+cor_nmds <- round(cor(X, nmds_scores |> select(NMDS1, NMDS2)), 2)
+cor_nmds
+```
+
+```{r}
+# Scale correlations for visibility (a plotting choice, not statistical)
+# Here we multiply by 4 to make the arrows longer
+# This is just for visualization purposes
+# In practice, you might choose a different scaling factor
+arrows_nmds <- as_tibble(cor_nmds, rownames = "variable") |>
+  mutate(NMDS1 = NMDS1 * 4, NMDS2 = NMDS2 * 4)
+ggplot(nmds_scores, aes(x = NMDS1, y = NMDS2)) +
+  geom_point(aes(color = thousand.years), alpha = 0.75) +
+  geom_segment(
+    data = arrows_nmds,
+    aes(x = 0, y = 0, xend = NMDS1, yend = NMDS2),
+    inherit.aes = FALSE,
+    arrow = arrow(length = unit(0.15, "inches"))
+  ) +
+  geom_text(
+    data = arrows_nmds,
+    aes(x = NMDS1, y = NMDS2, label = variable),
+    inherit.aes = FALSE,
+    vjust = -0.4
+  ) +
+  theme_minimal() +
+  labs(color = "Thousand\nyears ago")
+```
+
+::: {.callout-note}
+This NMDS graph looks a lot like the PCA biplot. This is because our data are fairly linear and Euclidean distances are appropriate. In more complex datasets, NMDS can reveal patterns that PCA might miss.
+:::
+
+
+
+## Hypothesis testing: avoid "four separate regressions"
+
+If you test time against each skull measurement separately, you face a **multiple testing** problem.
+
+A better match to the question (“do skulls change through time in multivariate space?”) is a **multivariate test**.
+
+Here are four common approaches demonstrated but not deeply explained:
+
+1. MANOVA (parametric, multivariate normality assumptions)  
+2. PERMANOVA (distance-based, permutation test)  
+3. Dispersion checks (are groups equally variable?)
+4. Fitting time onto an ordination (envfit, ordisurf)
+
+### 1) MANOVA (parametric)
+
+```{r}
+man_mod <- manova(cbind(max.breadth, basi.height, basi.length, nasal.height) ~ thousand.years,
+                  data = skull)
+summary(man_mod, test = "Pillai")
+```
+
+If you bin years into categories, MANOVA becomes closer to multivariate ANOVA:
+
+```{r}
+skull <- skull |>
+  mutate(
+    year_class = cut(thousand.years, breaks = 8) |> fct_inorder()
+  )
+
+man_mod_cat <- manova(cbind(max.breadth, basi.height, basi.length, nasal.height) ~ thousand.years,
+                      data = skull)
+summary(man_mod_cat, test = "Pillai")
+```
+
+::: {.callout-caution}
+**MANOVA assumptions matter**  
+MANOVA relies on multivariate normality and homogeneity of covariance matrices.
+In many biological datasets, these are imperfect—so distance-based alternatives are common.
+:::
+
+### 2) PERMANOVA (distance-based)
+
+PERMANOVA tests whether group **centroids** differ in multivariate space, using permutations.
+In vegan, use `adonis2()`.
+
+```{r}
+# Use the same distance matrix D we used for NMDS
+adonis2(D ~ year_class, data = skull, permutations = 999)
+```
+
+### 3) PERMDISP / betadisper: are groups equally variable?
+
+A common pitfall:
+
+- PERMANOVA can be significant either because **centroids differ**
+- or because **dispersion differs** (groups have different spread)
+
+So it’s good practice to check dispersion when comparing groups.
+
+```{r}
+bd <- betadisper(D, skull$year_class)
+bd
+anova(bd)
+permutest(bd, permutations = 999)
+```
+
+### 4) Fitting time onto an ordination: envfit and ordisurf
+
+Even when you use an unconstrained ordination (PCA/NMDS), you may want to show how an explanatory variable aligns with it.
+
+#### envfit: linear fit + permutation test
+
+```{r}
+fit_years <- envfit(nmds ~ thousand.years, data = skull, permutations = 999)
+fit_years
+```
+
+```{r fig.width=6, fig.height=5}
+plot(nmds, type = "n")
+points(nmds, display = "sites", pch = 16, cex = 0.8)
+plot(fit_years, col = "black")  # vector direction and significance
+```
+
+#### ordisurf: non-linear surface (GAM)
+
+```{r fig.width=6, fig.height=5}
+plot(nmds, type = "n")
+points(nmds, display = "sites", pch = 16, cex = 0.8)
+ordisurf(nmds ~ thousand.years, data = skull, add = TRUE)
+```
+
+
+## PCA in multiple regression
+
+PCA can also be used to reduce multivariate predictors into a few uncorrelated components, which can then be used in multiple regression models. This is particularly useful when the predictors are highly correlated, as it helps to avoid multicollinearity issues.
+
+The steps for this would be:
+
+1. Perform PCA on the predictor variables to obtain principal components.
+2. Make a linear regression model using the selected principal components as predictors.
+3. Interpret the results in terms of the original variables, if needed.
+
+The "win" here is that the principal components are uncorrelated, which simplifies the regression analysis and interpretation. The "lose" is that the principal components may not have a straightforward biological interpretation, so care is needed when explaining the results.
+
+## Summary
+
+Ordination is useful when we have multivariate data and when variables within that data are correlated. The correlation structure means that we can represent the data in a lower-dimensional space without losing too much information. If there is a lot of correlation among variables, then ordination becomes very useful. If there is little correlation, then ordination may not help much since most of the variance is spread evenly across many dimensions.
+
+Summary:
+
+* PCA is a linear ordination method that finds orthogonal axes capturing the most variance.
+* NMDS is a flexible, distance-based ordination method that preserves rank order of dissimilarities.
+* Both methods help visualize and summarize multivariate data.
+* Multivariate hypothesis tests (MANOVA, PERMANOVA) assess group differences in multivariate space.
+* Checking dispersion (PERMDISP) is important to interpret PERMANOVA results.
+* Fitting explanatory variables onto ordinations (envfit, ordisurf) helps interpret patterns.
+
+
+
+

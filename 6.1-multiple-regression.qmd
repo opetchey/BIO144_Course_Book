@@ -860,11 +860,98 @@ The answer is we should *think*!
 
 And then consider some possible remedies:
 
-* Combine predictors (index, PCA, biologically meaningful composite).
-*	Remove one of a set of redundant explanatory variables.
-*	Use regularization if prediction is the goal.
+* Combine predictors (index, PCA, biologically meaningful composite) (covered later in the course).
+* Look at the explanatory power of a variable once all other variables are accounted for (see below).
+*	Remove one of a set of redundant explanatory variables (not covered in this course).
+*	Use regularization if prediction is the goal (not covered in this course).
 
-We'll look at some of these later in the course.
+### Assessing the importance of an explanatory variables in the presence of collinearity
+
+Imagine that we want to know the importance of an explanatory variable in the presence of collinearity. For example, we might want to know how important age is in explaining blood pressure. But we also know that we have collinearity with other explanatory variables, such as minutes of exercise. How can we assess the importance of a particular explanatory variable in the presence of collinearity? Let us call the explanatory variable of interest the "focal" explanatory variable.
+
+One way to assess the importance of the focal explanatory variable is to compare two models. Both should have all other explanatory variables included, but one model should have the focal explanatory variable included, and the other model should have the focal explanatory variable removed. We can then make an $F$-test to compare the two models. The null hypothesis is that the focal explanatory variable does not explain any additional variance in the response variable, once all other explanatory variables are accounted for. The alternative hypothesis is that the focal explanatory variable does explain additional variance in the response variable, once all other explanatory variables are accounted for.
+
+The question is essentially: does including the focal explanatory variable improve the model fit, once all other explanatory variables are already accounted for?
+
+Here is an example of how to do this in R. Lets use the data with three explanatory variables, $x_1, x_2,$ and $x_3$, where $x_3$ is predictable from a linear combination of $x_1$ and $x_2$ plus some random noise. We will assess the importance of $x_1$ in explaining the response variable $y$, once $x_2$ and $x_3$ are accounted for. First, we fit the full model with all three explanatory variables included:
+
+```{r}
+m_full <- lm(y ~ x1 + x2 + x3, data = data_collinear)
+```
+
+Then, we fit the reduced model with $x_1$ removed:
+
+```{r}
+m_reduced <- lm(y ~ x2 + x3, data = data_collinear)
+```
+
+Now, we can use the `anova()` function to compare the two models:
+
+```{r}
+anova(m_reduced, m_full)
+```
+
+In the R output we see information about two models.
+
+* **Model 1** is the reduced model with $x_1$ removed.
+* **Model 2** is the second model is the full model with all three explanatory variables included.
+
+Then we have a table that looks somewhat like an ANOVA table. The first column has no title and contain 1 and 2. This indicates the two models being compared.
+
+The second column is **Res.Df**, which is the residual degrees of freedom for each model. We can see that the residual degrees of freedom for Model 2 is one less than that for Model 1, because Model 2 has one more explanatory variable (i.e., $x_1$) than Model 1.
+
+The third column is "RSS", which is the Residual Sum of Squares for each model. The residual sum of squares for Model 2 is less than that for Model 1, because Model 2 has one more explanatory variable (i.e., $x_1$) than Model 1, and because that explanatory variable helps to explain some of the variance in the response variable.
+
+The fourth column is "Df", which is the difference in degrees of freedom between the two models. This is one in this case, because Model 2 has one more explanatory variable than Model 1.
+
+The fifth column is "Sum of Sq", which is the difference in residual sum of squares between the two models. This the amount of variance in the response variable that is explained by the focal explanatory variable (i.e., $x_1$) once all other explanatory variables are already accounted for.
+
+
+The sixth column is "F value", which is the F-statistic for the comparison of the two models. This is calculated as:
+
+$$F = \frac{(RSS_1 - RSS_2) / (df_1-df_2)}{RSS_2 / df_2}$$
+
+where $RSS_1$ and $RSS_2$ are the residual sum of squares for Model 1 and Model 2, respectively, and $df_1$ and $df_2$ are the residual degrees of freedom for Model 1 and Model 2, respectively.
+
+Put another way, the numerator is the mean square difference between the two models, and the denominator is the mean square error for the full model.
+
+In our example data, the numbers are: `r round(anova(m_reduced, m_full)$"RSS"[1],1 )` - `r round(anova(m_reduced, m_full)$"RSS"[2],1 )` = `r round(anova(m_reduced, m_full)$"Sum of Sq"[2],1 )` divided by `r anova(m_reduced, m_full)$"Res.df"[1]` - `r anova(m_reduced, m_full)$"Res.Df"[2]` = `r anova(m_reduced, m_full)$"Df"[2]` for the numerator.
+
+And for the denominator: `r round(anova(m_reduced, m_full)$"RSS"[2],1 )` divided by `r anova(m_reduced, m_full)$"Res.Df"[2]`.
+
+This gives an F value of `r round(anova(m_reduced, m_full)$"F"[2], 2)`. This is a very large F value, indicating that the focal explanatory variable (i.e., $x_1$) explains a significant amount of variance in the response variable, even once all other explanatory variables are already accounted for. This means that even though there is collinearity between the explanatory variables, we can still find that $x_1$ is important in explaining the response variable.
+
+We can also find the partial $R^2$ value for the focal explanatory variable (i.e., $x_1$) from this analysis. The partial $R^2$ value is the proportion of variance in the response variable that is explained by the focal explanatory variable, as a fraction of the variance that is not explained by the other explanatory variables.
+
+The partial $R^2$ is calculated as:
+
+$$R^2_{partial} = \frac{RSS_1 - RSS_2}{RSS_1}$$
+
+We can find this in R with:
+
+```{r}
+rss1 <- anova(m_reduced, m_full)$"RSS"[1]
+rss2 <- anova(m_reduced, m_full)$"RSS"[2]
+partial_r2 <- (rss1 - rss2) / rss1
+partial_r2
+```
+
+Don't confuse this partial $R^2$ with what is sometimes known as the semi-partial $R^2$. The semi-partial $R^2$ is the proportion of variance in the response variable that is explained by the focal explanatory variable, as a fraction of the total variance in the response variable. The semi-partial $R^2$ is calculated as:
+
+$$R^2_{semi-partial} = \frac{RSS_1 - RSS_2}{TSS}$$
+
+where $TSS$ is the total sum of squares of the response variable.
+
+In R in our example this is:
+
+```{r}
+tss <- sum((data_collinear$y - mean(data_collinear$y))^2)
+semi_partial_r2 <- (rss1 - rss2) / tss
+semi_partial_r2
+```
+
+This means that about `r round(semi_partial_r2 * 100, 2)`% of the total variance in the response variable is explained by the focal explanatory variable (i.e., $x_1$), even once all other explanatory variables are already accounted for. This is explanatory power that is unique to the focal explanatory variable.
+
 
 
 ## Review

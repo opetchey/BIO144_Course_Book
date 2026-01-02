@@ -4,7 +4,7 @@ source("_common.R")
 ```
 
 
-# Analysis of variance (ANOVA) (L5) {.unnumbered}
+# Analysis of variance (L5) {.unnumbered}
 
 
 -   One-way ANOVA

@@ -46,7 +46,7 @@ p1 + p2
 ```
 
 
-**Think, Pair, Share** (#better-model) In which of these two would you say the model is better, and in which is it worse?
+**Think-Pair-Share** (#tps-better-model) In which of these two would you say the model is better, and in which is it worse?
 
 
 
@@ -221,7 +221,7 @@ p4 <- ggplot(data.frame(x = x, y4 = y4), aes(x = x, y = y4)) +
 
 
 
-**Think, Pair, Share** (#what-minimised) What is minimised when we fit a regression model? And therefore what is maximised?
+**Think-Pair-Share** (#tps-what-minimised) What is minimised when we fit a regression model? And therefore what is maximised?
 
 
 ## How unlikey is the observed data given the null hypothesis?
@@ -235,7 +235,7 @@ As mentioned, often we're interested in whether there is a relationship between 
 Recall the regression model:
 $$y = \beta_0 + \beta_1 x + \epsilon$$
 
-**Think, Pair, Share** (#null-hypothesis) Write down the null hypothesis of no relationship between $x$ and $y$ in terms of a $\beta$ parameter.
+**Think-Pair-Share** (#tps-null-hypothesis) Write down the null hypothesis of no relationship between $x$ and $y$ in terms of a $\beta$ parameter.
 
 
 The null hypothesis is that the slope of the regression line is zero:
@@ -289,7 +289,7 @@ ggplot(data.frame(slope_estimate = slope_estimate_value,
 
 
 
-**Think, Pair, Share** (#chance-area) In what areas of the graph is the slope estimate more likely to have been observed by chance? And what regions is it less likely to have been observed by chance? Think about this before you look at the end of this chapter for an answer (Section @sec-visual-p-values-regress).
+**Think-Pair-Share** (#tps-chance-area) In what areas of the graph is the slope estimate more likely to have been observed by chance? And what regions is it less likely to have been observed by chance? Think about this before you look at the end of this chapter for an answer (Section @sec-visual-p-values-regress).
 
 
 

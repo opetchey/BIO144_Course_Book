@@ -141,7 +141,7 @@ where:
 $\hat{\beta}_0, \hat{\beta}_1, \ldots, \hat{\beta}_p$ are the estimated parameters.
 
 
-**Think, Pair, Share (#two-shape)** Graphically, a linear regression with one explanatory variable is a line. What is a geometric representation of linear regression with two explanatory variables?
+**Think-Pair-Share** (#tps-two-shape) Graphically, a linear regression with one explanatory variable is a line. What is a geometric representation of linear regression with two explanatory variables?
 
 
 
@@ -228,7 +228,7 @@ d) Linearity.
 e) No outliers.
 
 
-**Think, Pair, Share (#assump-match)** Review how we can check these assumptions in the simple linear regression model. Match the following to the assumptions above:
+**Think-Pair-Share** (#tps-assump-match) Review how we can check these assumptions in the simple linear regression model. Match the following to the assumptions above:
 
 1) Graph of size of residuals vs. fitted values.
 2) QQ-plot.
@@ -470,7 +470,7 @@ Take home: when we want to compare the explanatory power of models that differ i
 How important are the explanatory variables and how important are they relative to each other?
 
 
-**Think, Pair, Share** (#variable-importance) How might we assess how important is each of the explanatory variables, and how important they are relative to each other?
+**Think-Pair-Share** (#tps-variable-importance) How might we assess how important is each of the explanatory variables, and how important they are relative to each other?
 
 
 
@@ -489,7 +489,7 @@ However, the coefficients are then not in the original units of the explanatory 
 One way to relate the coefficients in this case is to realise that to compensate for the blood pressure increase associated with one year of age, one would need to exercise for a certain number of minutes more.
 
 
-**Think, Pair, Share** (#exercise-age) How many minutes of exercise per week would we need to add to our fitness schedule to compensate for the blood pressure increase associated with one year of age?
+**Think-Pair-Share** (#tps-exercise-age) How many minutes of exercise per week would we need to add to our fitness schedule to compensate for the blood pressure increase associated with one year of age?
 
 
 
@@ -588,7 +588,7 @@ ggplot(data = new_data_effects_3, aes(x = age, y = prediction,
 
 In the blood pressure example data used previously in this chapter there is no evidence of correlation between the two explanatory variables. However, in practice, it is common for explanatory variables to be correlated with each other. This is known as collinearity. It can be quite problematic for us!
 
-**Think, pair, share (#collinearity1)** Imagine if there was perfect correlation between age and minutes of exercise. This would mean that a graph of age vs minutes of exercise would show a perfect line. What would be the implications for the multiple linear regression model? For example, what would be the $R^2$ value for a model with one explanatory variable compared to a model with both explanatory variables?
+**Think-Pair-Share** (#tps-collinearity1) Imagine if there was perfect correlation between age and minutes of exercise. This would mean that a graph of age vs minutes of exercise would show a perfect line. What would be the implications for the multiple linear regression model? For example, what would be the $R^2$ value for a model with one explanatory variable compared to a model with both explanatory variables?
 
 Collinearity, specifically *harmful* collinearity, is extremely common in real dataset that result from observational studies. This is because in observational studies there are often numerous explanatory variables, and they are often correlated with each other. This is a situation that is ripe for collinearity problems. (Collinearity can also happen in data resulting from designed manipulative experiments, but is hopefully relatively rare there because a well-designed experiment will try to avoid collinearity by ensuring that the explanatory variables are independent.)
 

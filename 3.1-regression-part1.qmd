@@ -79,7 +79,7 @@ Well, that is pretty conclusive. We hardly need statistics. There is a clear pos
 
 Lets try to figure some of these out from the visualisation.
 
-**Think, Pair, Share** (#guess-params) Make a guess of the slope. Make a guess of the intercept (hint be careful, lots of people get this wrong).
+**Think-Pair-Share** (#tps-guess-params) Make a guess of the slope. Make a guess of the intercept (hint be careful, lots of people get this wrong).
 
 ## Calculating the intercept and slope
 
@@ -395,7 +395,7 @@ $\epsilon$ is the error term.
 Let's ensure we understand this, by thinking about the units of the variables in this model. This can be very useful because it can help us to understand the model better and to check that the model makes sense.
 
 
-**Think, pair, share** (#what-units)
+**Think-Pair-Share** (#tps-what-units)
 
 * What are the units of blood pressure?
 * What are the units of age?
@@ -731,7 +731,7 @@ ggplot(bp_age_model, aes(x = Age, y=Systolic_BP)) +
 There are no obvious outliers in this data. The data points are all close to the line of best fit. This is a good sign that the line of best fit is a good representation of the data.
 
 
-**Think, Pair, Share** (#odd-data) Where on this graph would you expect to see particularly influential outliers? Influential in the sense that they would have a large effect on the slope of the line of best fit.
+**Think-Pair-Share** (#tps-odd-data) Where on this graph would you expect to see particularly influential outliers? Influential in the sense that they would have a large effect on the slope of the line of best fit.
 
 
 Data points that are far from the mean of the independent variable have a large effect on the value of the slope. These data points have a large leverage. They are data points that are far from the other data points in the $x$ direction.
@@ -753,7 +753,7 @@ Going back to the analogy of a seesaw, with data points as children on the seesa
 
 
 
-**Think, Pair, Share** (#like-weight) What quantity that we already experienced is like the weight of the child?
+**Think-Pair-Share** (#tps-like-weight) What quantity that we already experienced is like the weight of the child?
 
 
 

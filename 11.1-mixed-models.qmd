@@ -392,7 +392,7 @@ This likelihood ratio test compares nested models. It is widely used, but has su
 
 We can visualise the fitted values from both mixed models:
 
-```{r fig.width=7, fig.height=4}
+```{r}
 dat_aug <- dat |>
   mutate(fit_lmm1 = predict(m_lmm1),
          fit_lmm2 = predict(m_lmm2))

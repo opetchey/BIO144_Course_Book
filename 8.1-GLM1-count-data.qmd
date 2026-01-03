@@ -1,10 +1,6 @@
-
 ```{r}
-suppressMessages(library(tidyverse))
-suppressMessages(library(gtsummary))
-suppressMessages(library(tidyr))
-suppressMessages(library(here))
-suppressMessages(library(kableExtra))
+#| echo: false
+source("_common.R")
 ```
 
 

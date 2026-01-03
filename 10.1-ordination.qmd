@@ -1,10 +1,8 @@
-
 ```{r}
-suppressMessages(library(tidyverse))
-suppressMessages(library(here))
-suppressMessages(library(vegan))      # ordination + PERMANOVA tools
-suppressMessages(library(patchwork))  # combining ggplots
+#| echo: false
+source("_common.R")
 ```
+
 
 # Ordination (L10) {.unnumbered}
 
@@ -93,7 +91,7 @@ A good habit:
 
 ### Four scatterplots (measurement vs time)
 
-```{r fig.width=8, fig.height=5}
+```{r}
 p_vars <- skull_long |>
   ggplot(aes(x = thousand.years, y = value)) +
   geom_point(alpha = 0.6) +
@@ -244,7 +242,7 @@ If PC1 is positively correlated with all four skull measurements, what biologica
 
 Below is a lightweight biplot-style plot.   (There are fancy versions in packages like **factoextra**, but we keep it minimal.)
 
-```{r fig.width=7, fig.height=5}
+```{r}
 # Scale loadings for visibility (a plotting choice, not statistical)
 L <- loadings |> mutate(PC1 = PC1 * 4, PC2 = PC2 * 4)
 
@@ -270,8 +268,181 @@ In this graph we see all arrow point in the same horizontal direction, indicatin
 
 In contrast, the arrows for PC2 point in different directions, indicating that PC2 represents shape differences where some measurements increase while others decrease. The two longest arrows are for basi.length and max.breadth, suggesting that these measurements contribute most strongly to shape variation captured by PC2.
 
+### When ordination helps
+
+**Think–Pair–Share (#tps-when-ordination)**  
+In what situations would ordination methods like PCA be especially helpful? When would they be less useful? Think about the nature of the data, and, if you like, the biological questions.
+
+We might think that ordination is more useful when we have a greater number of variables, because then the reducing down to two or three dimensions is more helpful. But the key factor is actually the **correlation structure** among the variables. If many variables are correlated, then ordination can capture most of the variance in a few dimensions. If variables are uncorrelated, then ordination may not help much since most of the variance is spread evenly across many dimensions. Let's have a look a this with some simulated data.
+
+```{r}
+make_cov_matrix <- function(
+  p,
+  base_rho = 0.7,
+  var_range = c(0.5, 2),
+  rho_sd = 0.05,
+  seed = NULL
+) {
+  if (!is.null(seed)) set.seed(seed)
+  
+  # sanity checks
+  stopifnot(p >= 2)
+  stopifnot(base_rho > -1 / (p - 1), base_rho < 1)
+  stopifnot(length(var_range) == 2, var_range[1] > 0)
+  stopifnot(rho_sd >= 0)
+  
+  # base correlation matrix
+  R <- matrix(base_rho, p, p)
+  diag(R) <- 1
+  
+  # add small random variation to correlations
+  if (rho_sd > 0) {
+    R[lower.tri(R)] <- R[lower.tri(R)] +
+      rnorm(sum(lower.tri(R)), mean = 0, sd = rho_sd)
+    R[upper.tri(R)] <- t(R)[upper.tri(R)]
+  }
+  
+  # force positive-definite
+  R <- as.matrix(Matrix::nearPD(R)$mat)
+  
+  # generate heterogeneous variances
+  vars <- runif(p, var_range[1], var_range[2])
+  
+  # construct covariance matrix
+  Sigma <- diag(sqrt(vars)) %*% R %*% diag(sqrt(vars))
+  
+  return(Sigma)
+}
+```
 
 
+
+
+```{r}
+num_vars <- 3  # number of variables
+num_samples <- 100
+base_rho <- 0.9
+var_range <- c(0.5, 2)
+rho_sd <- 0.05
+seed <- 123
+Sigma_R0.9 <- make_cov_matrix(
+  p = num_vars,
+  base_rho = base_rho,
+  var_range = var_range,
+  rho_sd = rho_sd,
+  seed = seed
+)
+X_R0.9 <- MASS::mvrnorm(n = num_samples,
+                  mu = rep(0, num_vars),
+                  Sigma = Sigma_R0.9)
+```
+  
+```{r}
+num_vars <- 3  # number of variables
+num_samples <- 100
+base_rho <- 0.5
+var_range <- c(0.5, 2)
+rho_sd <- 0.05
+seed <- 124
+Sigma_R0.5 <- make_cov_matrix(
+  p = num_vars,
+  base_rho = base_rho,
+  var_range = var_range,
+  rho_sd = rho_sd,
+  seed = seed
+)
+X_R0.5 <- MASS::mvrnorm(n = num_samples,
+                  mu = rep(0, num_vars),
+                  Sigma = Sigma_R0.5)
+```
+
+```{r}
+num_vars <- 3  # number of variables
+num_samples <- 100
+base_rho <- 0.0
+var_range <- c(0.5, 2)
+rho_sd <- 0.05
+seed <- 125
+Sigma_R0.0 <- make_cov_matrix(
+  p = num_vars,
+  base_rho = base_rho,
+  var_range = var_range,
+  rho_sd = rho_sd,
+  seed = seed
+)
+X_R0.0 <- MASS::mvrnorm(n = num_samples,
+                  mu = rep(0, num_vars),
+                  Sigma = Sigma_R0.0)
+```
+  
+Now a 3D plot of the simulated data with different correlation structures (please note that these plots are only made in the HTML version of the book, and only there you will be able to interact with them):
+
+```{r}
+suppressMessages(library(plotly))
+p1 <- plotly::plot_ly(x = X_R0.9[,1], y = X_R0.9[,2], z = X_R0.9[,3],
+              type = 'scatter3d', mode = 'markers') %>%
+  layout(title = "High correlation (rho ~ 0.9)",
+         scene = list(xaxis = list(title = "Var 1"),
+                      yaxis = list(title = "Var 2"),
+                      zaxis = list(title = "Var 3")))
+p2 <- plotly::plot_ly(x = X_R0.5[,1], y = X_R0.5[,2], z = X_R0.5[,3],
+              type = 'scatter3d', mode = 'markers') %>%
+  layout(title = "Moderate correlation (rho ~ 0.5)",
+         scene = list(xaxis = list(title = "Var 1"),
+                      yaxis = list(title = "Var 2"),
+                      zaxis = list(title = "Var 3")))
+p3 <- plotly::plot_ly(x = X_R0.0[,1], y = X_R0.0[,2], z = X_R0.0[,3],
+              type = 'scatter3d', mode = 'markers') %>%
+  layout(title = "Low correlation (rho ~ 0.0)",
+         scene = list(xaxis = list(title = "Var 1"),
+                      yaxis = list(title = "Var 2"),
+                      zaxis = list(title = "Var 3")))
+```
+
+
+```{r fig.width=2, fig.height=2}
+p1
+```
+
+
+```{r fig.width=2, fig.height=2}
+p2
+```
+
+
+```{r fig.width=2, fig.height=2}
+p3
+```
+  
+The first plot shows data with high correlation among variables, where the points are clustered along a diagonal line, indicating that the variables are strongly related. The second plot shows moderate correlation, where the points are more spread out but still show some clustering. The third plot shows low correlation, where the points are scattered randomly in space, indicating that the variables are largely independent.
+
+**Think–Pair–Share (#tps-ordination-correlation)** What output of the PCA would you expect to differ among these three datasets? 
+
+We expect that in the high correlation case, the first principal component will capture a large proportion of the variance, while in the low correlation case, the variance will be more evenly distributed across all principal components. Let's check this by performing PCA on each dataset and examining the variance explained by each principal component.
+
+```{r}
+pca_R0.9 <- prcomp(X_R0.9, center = TRUE, scale. = TRUE)
+pca_R0.5 <- prcomp(X_R0.5, center = TRUE, scale. = TRUE)
+pca_R0.0 <- prcomp(X_R0.0, center = TRUE, scale. = TRUE)
+var_explained_R0.9 <- (pca_R0.9$sdev^2) / sum(pca_R0.9$sdev^2)
+var_explained_R0.5 <- (pca_R0.5$sdev^2) / sum(pca_R0.5$sdev^2)
+var_explained_R0.0 <- (pca_R0.0$sdev^2) / sum(pca_R0.0$sdev^2)
+var_explained_R0.9
+var_explained_R0.5
+var_explained_R0.0
+```
+
+It turns out that in the high correlation case, the first principal component captures a large proportion of the variance (`r round(var_explained_R0.9[1] * 100, 1)`%). This is a large amount of variance explained by a single component. It is caused because we made a dataset where the variables are strongly correlated. There is only one axis along which the data vary strongly.
+
+In contrast, in the zero correlation case, the variance is more evenly distributed across all principal components, with each component capturing around `r round(var_explained_R0.0[1] * 100, 1)`%, `r round(var_explained_R0.0[2] * 100, 1)`%, and `r round(var_explained_R0.0[3] * 100, 1)`% of the variance respectively. This indicates that there is no single dominant direction of variance in the data, as the variables are largely independent.
+
+In the intermediate correlation case, the variance explained by each principal component is more balanced, with the first component capturing around `r round(var_explained_R0.5[1] * 100, 1)`% of the variance, and the remaining components capturing significant portions as well. This reflects the moderate correlation structure in the data.
+
+Ordination is most useful when it can reduce the dimensionality of the data while retaining most of the variance. This means that ordination methods like PCA will be more effective in summarizing the data in the high correlation case, as most of the information can be captured in just one or two dimensions. In contrast, in the low correlation case, ordination may not provide much dimensionality reduction, as each variable contributes independently to the overall variance.
+
+What determines if we have variables with high correlation in real datasets? Often, it is biological or physical relationships among the variables. For example, in morphological datasets, measurements of different body parts may be correlated due to overall size or shape factors. In ecological datasets, species abundances may be correlated due to shared environmental preferences or interactions. Understanding the underlying biology can help us anticipate when ordination methods will be most useful.
+
+  
 ## Ordination II: NMDS (Non-metric Multidimensional Scaling)
 
 PCA is powerful, but it is a **linear** method and it relies on Euclidean geometry in the original variable space.
@@ -492,7 +663,7 @@ fit_years <- envfit(nmds ~ thousand.years, data = skull, permutations = 999)
 fit_years
 ```
 
-```{r fig.width=6, fig.height=5}
+```{r}
 plot(nmds, type = "n")
 points(nmds, display = "sites", pch = 16, cex = 0.8)
 plot(fit_years, col = "black")  # vector direction and significance
@@ -500,7 +671,7 @@ plot(fit_years, col = "black")  # vector direction and significance
 
 #### ordisurf: non-linear surface (GAM)
 
-```{r fig.width=6, fig.height=5}
+```{r}
 plot(nmds, type = "n")
 points(nmds, display = "sites", pch = 16, cex = 0.8)
 ordisurf(nmds ~ thousand.years, data = skull, add = TRUE)

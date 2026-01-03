@@ -1,11 +1,9 @@
 ```{r}
-suppressMessages(library(tidyverse))
-suppressMessages(library(here))
-suppressMessages(library(ggfortify))
-suppressMessages(library(AICcmodavg))
-suppressMessages(library(HSAUR3))
-suppressMessages(library(patchwork))
+#| echo: false
+source("_common.R")
 ```
+
+
 
 # Binary data (L9) {.unnumbered}
 

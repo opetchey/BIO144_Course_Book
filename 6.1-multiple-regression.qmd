@@ -141,7 +141,7 @@ Graphically, a linear regression with one explanatory variable is a line. What i
 :::
 
 
-```{r fig.width = 8, fig.height = 8}
+```{r fig.width = 6, fig.height = 6}
 # Define the x and y ranges
 x <- seq(-5, 5, length.out = 50)
 y <- seq(-5, 5, length.out = 50)
@@ -981,7 +981,7 @@ Multiple regression:
 
 Here is the code to make a 3D plot of the blood pressure data. The y-axis is blood pressure, the x-axis is age, and the z-axis is minutes of exercise. Here is a 3d plot that we can interactive with and rotate:
 
-```{r fig.width = 8, fig.height = 8}
+```{r fig.width = 6, fig.height = 6}
 plotly::plot_ly(bp_data, x = ~age, y = ~mins_exercise, z = ~bp, type = "scatter3d", mode = "markers", marker = list(size = 5))
 ```
 

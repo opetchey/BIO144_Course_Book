@@ -1,11 +1,6 @@
-
-
 ```{r}
-suppressMessages(library(tidyverse))
-suppressMessages(library(gtsummary))
-suppressMessages(library(tidyr))
-suppressMessages(library(here))
-suppressMessages(library(kableExtra))
+#| echo: false
+source("_common.R")
 ```
 
 
@@ -449,9 +444,18 @@ ggplot(bp_1cont1cat, aes(x=mins_per_week, y=bp, col=diet)) +
 We also might want some tables summarizing the model results. Here is a table of the coefficients:
 
 ```{r}
-kable(summary(mod2)$coefficients, format="html") %>%
-  kable_styling()
+tab_coef <- summary(mod2)$coefficients
+
+if (knitr::is_latex_output()) {
+  knitr::kable(tab_coef, format = "latex", booktabs = TRUE) |>
+    kableExtra::kable_styling()
+} else {
+  knitr::kable(tab_coef, format = "html") |>
+    kableExtra::kable_styling()
+}
 ```
+
+
 
 We could also report the $R^2$ of the model:
 
@@ -462,9 +466,17 @@ summary(mod2)$r.squared
 And also a table of the variances of the terms in the model:
 
 ```{r}
-kable(anova(mod2), format="html") %>%
-  kable_styling()
+tab_anova <- anova(mod2)
+
+if (knitr::is_latex_output()) {
+  knitr::kable(tab_anova, format = "latex", booktabs = TRUE) |>
+    kableExtra::kable_styling()
+} else {
+  knitr::kable(tab_anova, format = "html") |>
+    kableExtra::kable_styling()
+}
 ```
+
 
 We also might use a sentence like this to report the results: "The effect of minutes of exercise is generally negative, but the effect is stronger for people on a meat heavy diet than for people on a vegetarian diet ($F$-statistics of interaction term = `r round(anova(mod2)[3,4],2)`, degrees of freedom = `r anova(mod2)[3,1]`, degrees of freedom residuals = `r anova(mod2)[4,1]`, $p$-value = `r signif(anova(mod2)[3,5],2)`)."
 
@@ -765,6 +777,13 @@ Interpretation of three-way interactions can be quite complex, as it involves un
 
 ## Extras
 
+### 3d scatter plot
+
+```{r fig.width = 6, fig.height = 6}
+plotly::plot_ly(bp_2cont, x = ~mins_per_week, y = ~age, z = ~bp, type = "scatter3d", mode = "markers", color = age)
+```
+
+
 ### Types of sums of squares
 
 ::: {.callout-important}
@@ -780,11 +799,6 @@ This is related to collinearity between explanatory variables. When explanatory 
 So: when you see an ANOVA table from `anova()`, remember that it is testing terms sequentially, not "all at once".
 :::
 
-### 3d scatter plot
-
-```{r}
-plotly::plot_ly(bp_2cont, x = ~mins_per_week, y = ~age, z = ~bp, type = "scatter3d", mode = "markers", color = age)
-```
 
 ### Box and whisker plot for two cats
 

@@ -73,8 +73,7 @@ ggplot(bp_data_diet, aes(x = diet, y = bp)) +
   geom_jitter(width = 0.1, height = 0, alpha = 0.7) +
   labs(title = "Blood Pressure by Diet Type",
        x = "Diet Type",
-       y = "Blood Pressure (mm Hg)") +
-  theme_minimal()
+       y = "Blood Pressure (mm Hg)") 
 ```
 
 ::: {.callout-tip}
@@ -351,7 +350,7 @@ where:
 * $n_i$ is the number of individuals in group $i$
 * $k$ is the number of groups
 
-**Explained variability (between group variability)**: == SSM = $\sum_{i=1}^k n_i (\overline{y}_{i} - \overline{y})^2$
+**Explained variability (between group variability)**: = SSM = $\sum_{i=1}^k n_i (\overline{y}_{i} - \overline{y})^2$
 
 where:
 
@@ -525,7 +524,6 @@ ggplot(f_density, aes(x = x, y = y)) +
     x = "F Value",
     y = "Density"
   ) +
-  theme_minimal() +
   annotate("text", x = 4.5, y = 0.05, label = "P(x >= 3.89)", color = "red") +
   xlim(0, 6)
 ```
@@ -752,8 +750,7 @@ ggplot(bp_data_diet, aes(x = diet, y = bp)) +
   stat_summary(fun = mean, geom = "point", color = "red", size = 3) +
   labs(title = "Blood Pressure by Diet",
        x = "Diet",
-       y = "Blood Pressure (mmHg)") +
-  theme_minimal()
+       y = "Blood Pressure (mmHg)")
 ```
 
 Some people like to see error bars as well, for example showing the 95% confidence intervals of the means:
@@ -766,8 +763,7 @@ ggplot(bp_data_diet, aes(x = diet, y = bp)) +
   stat_summary(fun.data = mean_cl_normal, geom = "errorbar", width = 0.2, color = "black") +
   labs(title = "Blood Pressure by Diet\nBlack points and error bars show mean ± 95% CI",
        x = "Diet",
-       y = "Blood Pressure (mmHg)") +
-  theme_minimal()
+       y = "Blood Pressure (mmHg)") 
 ```
 
 There are many many plotting styles and preferences. The important thing is to clearly communicate the results, and to not mislead the reader. I find that plotting the individual data points is often a good idea, especially when the sample size is not too large.

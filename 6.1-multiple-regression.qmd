@@ -152,7 +152,7 @@ $\hat{\beta}_0, \hat{\beta}_1, \ldots, \hat{\beta}_p$ are the estimated paramete
 
 **Think-Pair-Share** (#tps-two-shape) Graphically, a linear regression with one explanatory variable is a line. What is a geometric representation of linear regression with two explanatory variables?
 
-
+Here is a graph of the geometric representation of a multiple linear regression model with two explanatory variables (please note that this plot is best viewed in the HTML version of the book; in the PDF version, it will appear as a static image):
 
 ```{r fig.width = 6, fig.height = 6}
 #| echo: false
@@ -172,7 +172,14 @@ fig <- plotly::plot_ly(
   y = ~y,
   z = ~z_matrix,
   type = "surface",
-  colorscale = "Viridis" # Optional: choose a color scheme
+  colorscale = "Viridis", # Optional: choose a color scheme
+  width=500, height=500) |>
+  plotly::layout(
+  title = "Multiple Linear Regression Plane",
+  scene = list(
+    xaxis = list(title = "Explanatory Variable 1 (x1)"),
+    yaxis = list(title = "Explanatory Variable 2 (x2)"),
+    zaxis = list(title = "Response Variable (y)"))
 )
 
 # Show the plot
@@ -755,8 +762,7 @@ p1 <- ggplot(sim_results, aes(x = factor(correlation), y = beta1_hat)) +
   labs(
     x = "Correlation between predictors (r)\n(i.e., collinearity)",
     y = "Slope estimate"
-  ) +
-  theme_minimal()
+  ) 
 
 p2 <- ggplot(var_by_corr, aes(x = correlation, y = var_beta1_hat)) +
   geom_line(color = "red") +
@@ -764,8 +770,7 @@ p2 <- ggplot(var_by_corr, aes(x = correlation, y = var_beta1_hat)) +
   labs(
     x = "Correlation between predictors (r)\n(i.e., collinearity)",
     y = "Variance (i.e., instability)\nof slope estimate"
-  ) +
-  theme_minimal()
+  ) 
 p1 + p2
 
 ```
@@ -1004,10 +1009,15 @@ Multiple regression:
 
 3D plots can help us to visualise multiple linear regression models with two explanatory variables. They are also kind of cool. They can also be difficult to interpret. So use with caution! 
 
-Here is the code to make a 3D plot of the blood pressure data. The y-axis is blood pressure, the x-axis is age, and the z-axis is minutes of exercise. Here is a 3d plot that we can interactive with and rotate:
+Here is the code to make a 3D plot of the blood pressure data. The y-axis is blood pressure, the x-axis is age, and the z-axis is minutes of exercise. Here is a 3d plot that we can interactive with and rotate (please note that this plot is best viewed in the HTML version of the book; in the PDF version, it will appear as a static image):
 
 ```{r fig.width = 6, fig.height = 6}
-plotly::plot_ly(bp_data_multreg, x = ~age, y = ~mins_exercise, z = ~bp, type = "scatter3d", mode = "markers", marker = list(size = 5))
+plotly::plot_ly(bp_data_multreg, x = ~age, y = ~mins_exercise, z = ~bp,
+                type = "scatter3d", mode = "markers", marker = list(size = 5),
+                width=500, height=500) |> 
+  plotly::layout(scene = list(xaxis = list(title = "Age"),
+                             yaxis = list(title = "Minutes of exercise"),
+                             zaxis = list(title = "Blood pressure")))
 ```
 
 ### Publication ready table of results

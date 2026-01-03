@@ -6,7 +6,7 @@ source("_common.R")
 
 # R and RStudio (L2) {.unnumbered}
 
-## Getting R and RStudio {#sec-using-r-and-rstudio}
+## Getting R and RStudio
 
 ***R*** is a programming language and software environment for statistical computing and graphics. RStudio is an integrated development environment (IDE) for R. ***RStudio*** provides a user-friendly interface for working with R, including a console, a script editor, and tools for managing packages and projects.
 
@@ -28,7 +28,7 @@ Whether you use the RStudio application on your computer, or use RStudio on the 
 **Think–Pair–Share** (#a_r_vs_rstudio_roles)  What is one thing that R does, and one thing that RStudio does? Why is it useful that these are separate?
 
 
-## Getting to know the RStudio IDE {#sec-getting-to-know-the-rstudio-ide}
+## Getting to know the RStudio IDE 
 
 When you open RStudio, you will see a window with four main panes:
 
@@ -44,7 +44,7 @@ You can run code from the script by selecting the code and clicking the "Run" bu
 There is so much more to learn about the RStudio IDE, but we will cover that as we go along in the course.
 
 
-## Getting to know R {#sec-getting-to-know-r}
+## Getting to know R 
 
 In our newly opened script file, type the following code:
 
@@ -135,7 +135,7 @@ Above we have numerous examples of functions: `exp()`, `sqrt()`, `c()`, `paste()
 You likely guessed that there is much much more to learn about R, but we will cover that as we go along in the course.
 
 
-## Getting help {#sec-getting-help}
+## Getting help 
 
 R has a built-in help system that you can use to get information about functions, packages, and other topics. To access the help system, you can use the `?` operator followed by the name of the function or topic you want to learn about. For example, to get help on the `mean()` function, you would type:
 
@@ -163,7 +163,7 @@ And of course there is always your course instructors and fellow students to hel
 **Think–Pair–Share** (#a_errors_are_information) When we do something that R does not understand, it often gives us an error message. In red! What will you do when you get an error message?
 
 
-## Add-on packages {#sec-add-on-packages}
+## Add-on packages 
 
 R has a vast ecosystem of add-on packages that extend its functionality. These packages are collections of functions, data, and documentation that can be installed and loaded into your R session. There are thousands of packages available on CRAN (the Comprehensive R Archive Network) and other repositories like Bioconductor and GitHub.
 
@@ -183,7 +183,7 @@ You only need to install a package once. After it is installed, you can load it 
 :::
 
 
-## R Version and add-on package versions {#sec-r-versions}
+## R Version and add-on package versions 
 
 (This section concerns the Desktop version of R and RStudio, and not so much the Cloud version, because version management is handled for you in the Cloud.)
 
@@ -216,7 +216,7 @@ RStudio is also regularly updated, with new version released every several month
 :::
 
 
-## R Projects {#sec-r-projects}
+## R Projects 
 
 I always work within R Projects. R Projects help you to organise your work and keep all files related to a project in one place. They also make importing data a breeze.
 
@@ -235,7 +235,7 @@ If you click on the project name, a dropdown menu will appear. From there, you c
 Now, always open and ensure you're working within the R Project for your project. As mentioned, you can see the project name at the top right of the RStudio window. And if its not the correct project, click on the name to get the drop-down list of available projects from which you can switch to the correct one.
 
 
-## Importing data {#sec-importing-data}
+## Importing data 
 
 First, get some data sets for us to work with. **XYZ** You can download them from the course website or use your own data sets. Save the data files in a folder called `data` within your R Project directory.
 
@@ -257,7 +257,7 @@ This code will read the `data.csv` file from the `data` folder within the curren
 **Easily getting the file path** In RStudio, you can easily get the file path by putting the cursor in the parentheses of the `read_csv()` function, the press the tab key. A drop-down menu will appear with options to navigate to the file. This way, you don't have to type the file path manually.
 :::
 
-## Viewing the data {#sec-viewing-data}
+## Viewing the data
 
 Once you've imported your data, you can view it in several ways:
 
@@ -325,7 +325,7 @@ Common data import problems:
 * Wrong path or file name: Make sure the file path and name are correct. Remember, when you work in an R Project, you can place the cursor in the parentheses of the `read_csv()` function and press the tab key to navigate to the file.
 
 
-## Data wrangling {#sec-data-wrangling}
+## Data wrangling
 
 Now we have our data imported and checked, and we're ready to start working with it. This process is called data wrangling, and it involves cleaning, transforming, and reshaping the data to make it suitable for visualisation and analysis.
 
@@ -510,7 +510,7 @@ my_data2 |>
   )
 ```
 
-### Working with categorical variables [#sec-categorical-variables]
+### Working with categorical variables 
 
 Variables in a data frame in R have a *type*. The most common types of variables are numeric and categorical. Numeric variables are variables that take on numerical values, such as age or score. Categorical variables are variables that take on a limited number of values, often representing categories or groups. In R, categorical variables are typically have *type* `<chr>` which is `character`. Or they can be of type `<fct>` which is `factor`.
 
@@ -586,9 +586,9 @@ ggplot(my_data3, aes(x = education_level, y = age)) +
   geom_point()
 ```
 
-Another use case is when we are making a linear model and want to specify the reference level for a categorical variable. We will look at this when we get to linear models. If you want to skip ahead, you can see how this works in a section at the end of this chapter (Section @sec-ref-level).
+Another use case is when we are making a linear model and want to specify the reference level for a categorical variable. We will look at this when we get to linear models. If you want to skip ahead, you can see how this works in a section at the end of this chapter.
 
-## Visualisation {#sec-visualisation}
+## Visualisation 
 
 There are many many many types of data visualisation. We will not explore them all in this course! In fact, we will use only a few basic types of visualisation, but we will use them well and critically. The three types of visualisation we will focus on are scatter plots, histograms, and box and whisker plots.
 
@@ -679,8 +679,7 @@ plot1 <- ggplot(my_data2, aes(x = age, y = score)) +
     title = "Scatterplot of Age vs Score",
     x = "Age (years)",
     y = "Score"
-  ) +
-  theme_minimal()
+  ) 
 ```
 
 Now we can save the plot to a file using the `ggsave()` function:
@@ -735,8 +734,7 @@ plot1 <- ggplot(my_data2, aes(x = age, y = score)) +
     title = "Scatterplot of Age vs Score",
     x = "Age (years)",
     y = "Score"
-  ) +
-  theme_minimal()
+  ) 
 ```
 
 Now make the second plot and assign it to an object:
@@ -748,8 +746,7 @@ plot2 <- ggplot(my_data2, aes(x = score)) +
     title = "Histogram of Scores",
     x = "Score",
     y = "Count"
-  ) +
-  theme_minimal()
+  ) 
 ```
 
 Now make the third plot and assign it to an object:
@@ -761,8 +758,7 @@ plot3 <- ggplot(my_data2, aes(x = factor(age_group), y = score)) +
     title = "Boxplot of Scores by Age Group",
     x = "Age Group",
     y = "Score"
-  ) +
-  theme_minimal()
+  ) 
 ```  
 
 Now we can combine the three plots into a single layout using the `patchwork` syntax. Here, we arrange `plot1` on the top row, and `plot2` and `plot3` side by side on the bottom row:
@@ -774,7 +770,7 @@ combined_plot
 
 Amazing eh! OK, lets leave it there for now. We'll use ggplot2 throughout the course, and explore more features as we go along.
 
-### Setting a reference level in a linear model {#sec-ref-level}
+### Setting a reference level in a linear model 
 
 Sometimes when fitting linear models with categorical explanatory (independent) variables, it is useful to set a specific reference level for the categorical variable. This can help in interpreting the model coefficients. In R, we can set the reference level using the `relevel()` function or by using the `factor()` function with the `levels` argument.
 
@@ -801,8 +797,7 @@ ggplot(my_data4, aes(x = treatment, y = response)) +
     title = "Response by Treatment",
     x = "Treatment",
     y = "Response"
-  ) +
-  theme_minimal()
+  ) 
 ```
 
 It would be nicer to have the "Control" group as the first level on the left of the x-axis.
@@ -832,8 +827,7 @@ ggplot(my_data4, aes(x = treatment, y = response)) +
     title = "Response by Treatment",
     x = "Treatment",
     y = "Response"
-  ) +
-  theme_minimal()
+  ) 
 ```
 
 Magic! The "Control" group is now the first level on the left of the x-axis.

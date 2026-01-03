@@ -47,7 +47,6 @@ And here is a graph of the relationship between blood pressure and minutes of ex
 p_meat <- ggplot(bp_meatheavy, aes(x=mins_per_week, y=bp)) + 
   geom_point(col = "red") +
   geom_smooth(formula = y ~ x, method="lm", col = "red") +
-  theme_minimal() +
   labs(title="Blood pressure vs exercise for meat heavy diet",
        x="Minutes per week of exercise",
        y="Blood pressure") +
@@ -85,7 +84,6 @@ Here is a graph of the relationship between blood pressure and minutes of exerci
 p_veg <- ggplot(bp_vegetarian, aes(x=mins_per_week, y=bp)) + 
   geom_point(col = "blue") +
   geom_smooth(formula = y ~ x, method="lm", col = "blue") +
-  theme_minimal() +
   labs(title="Blood pressure vs exercise for vegetarian diet",
        x="Minutes per week of exercise",
        y="Blood pressure")+
@@ -101,11 +99,12 @@ This is very clear when we look at the both diets in the same graph:
 
 ```{r}
 #| echo: false
+#| fig-width: 6
+#| fig-height: 4
 bp_1cont1cat <- rbind(bp_meatheavy, bp_vegetarian)
 ggplot(bp_1cont1cat, aes(x=mins_per_week, y=bp, col=diet)) + 
   geom_point() +
   geom_smooth(formula = y ~ x, method="lm") +
-  theme_minimal() +
   labs(title="Blood pressure vs exercise",
        x="Minutes per week of exercise",
        y="Blood pressure",
@@ -191,6 +190,8 @@ And here is the data in a graph, where we show the individual data points as wel
 
 ```{r}
 #| echo: false
+#| fig-width: 6
+#| fig-height: 4
 grouped_data <- group_by(bp_2cat, diet, exercise) %>%
   summarise(mean_bp = mean(bp), sd_bp = sd(bp), .groups = "drop")
 ggplot(bp_2cat, aes(x=exercise, y=bp, col=diet)) + 
@@ -247,6 +248,8 @@ Now we have a little challenge, namely that we have two continuous explanatory v
 
 ```{r}
 #| echo: false
+#| fig-width: 5
+#| fig-height: 4
 ## use dark blue to yellow color scale
 ggplot(bp_2cont, aes(x=mins_per_week, y=bp, col = age)) + 
   geom_point(size = 2) + 
@@ -260,6 +263,8 @@ And we can make the complementary plot of blood pressure against age, with minut
 
 ```{r}
 #| echo: false
+#| fig-width: 5.5
+#| fig-height: 4
 ggplot(bp_2cont, aes(x=age, y=bp, col = mins_per_week)) + 
   geom_point(size = 2) + 
   scale_color_gradient(low = "green", high = "orange") +
@@ -301,6 +306,8 @@ And here is the plot of blood pressure against minutes of exercise, with age cla
 
 ```{r}
 #| echo: false
+#| fig-width: 5
+#| fig-height: 4
 ggplot(bp_2cont, aes(x=mins_per_week, y=bp, col = age_class)) +
   geom_point(size = 2) + 
   geom_smooth(method = "lm", formula = y ~ x) +
@@ -315,6 +322,8 @@ In the complementary graph of blood pressure against age, with minutes of exerci
 
 ```{r}
 #| echo: false
+#| fig-width: 6
+#| fig-height: 4
 ggplot(bp_2cont, aes(x=age, y=bp, col = mins_per_week_class)) +
   geom_point(size = 2) + 
   geom_smooth(method = "lm", formula = y ~ x) +
@@ -353,10 +362,11 @@ Let us return to the example of the effects of number of minutes of exercise and
 
 ```{r}
 #| echo: false
+#| fig-width: 5.5
+#| fig-height: 4
 ggplot(bp_1cont1cat, aes(x=mins_per_week, y=bp, col=diet)) + 
   geom_point() +
   geom_smooth(method="lm", formula = y ~ x) +
-  theme_minimal() +
   labs(title="Blood pressure vs exercise",
        x="Minutes per week of exercise",
        y="Blood pressure",
@@ -487,6 +497,9 @@ Of course a nice graph is always helpful. We already have quite a nice one:
 
 ```{r}
 #| echo: false
+#| fig-width: 5.5
+#| fig-height: 4
+
 ggplot(bp_1cont1cat, aes(x=mins_per_week, y=bp, col=diet)) +
   geom_point() +
   geom_smooth(method="lm", se=FALSE, formula = y ~ x) +
@@ -585,6 +598,8 @@ Here is the graph of the data again:
 
 ```{r}
 #| echo: false
+#| fig-width: 5.5
+#| fig-height: 4
 ggplot(bp_2cat, aes(x=exercise, y=bp, col=diet)) + 
   geom_point(position=position_dodge(width=0.1), alpha = 0.5) + 
   geom_point(data = grouped_data, aes(x=exercise, y=mean_bp, col=diet),
@@ -675,6 +690,8 @@ Here is the graph of the data:
 
 ```{r}
 #| echo: false
+#| fig-width: 5.5
+#| fig-height: 4
 grouped_data_3levels <- group_by(bp_2cat_3levels, diet,
          exercise) %>%
   summarise(mean_bp = mean(bp), sd_bp = sd(bp), .groups = "drop")
@@ -694,6 +711,8 @@ Or plotted differently:
 
 ```{r}
 #| echo: false
+#| fig-width: 5
+#| fig-height: 4
 ggplot(bp_2cat_3levels, aes(x=diet, y=bp, col=exercise)) + 
   geom_point(position=position_dodge(width=0.1), alpha = 0.5) + 
   geom_point(data = grouped_data_3levels, aes(x=diet, y=mean_bp, col=exercise),
@@ -759,6 +778,8 @@ Here is the data in a graph, with age represented by a colour gradient:
 
 ```{r}
 #| echo: false
+#| fig-width: 5
+#| fig-height: 4
 ggplot(bp_2cont, aes(x=mins_per_week, y=bp, col = age)) + 
   geom_point(size = 2) + 
   scale_color_gradient(low = "darkblue", high = "yellow") +
@@ -802,6 +823,8 @@ We can see this in the example:
 
 ```{r}
 #| echo: false
+#| fig-width: 5
+#| fig-height: 4
 ggplot(bp_2cat, aes(x=exercise, y=bp, col=diet)) + 
   geom_point(position=position_dodge(width=0.1), alpha = 0.5) + 
   geom_point(data = grouped_data, aes(x=exercise, y=mean_bp, col=diet),
@@ -821,6 +844,9 @@ It could look otherwise. For example, if we found a (albeit rather unlikely patt
 
 ```{r}
 #| echo: false
+#| fig-width: 5
+#| fig-height: 4
+
 bd_2cat_weird <- data.frame(
   reps = paste0("R", 1:40),
   diet = rep(c("meat heavy", "vegetarian"), each = 20),
@@ -867,9 +893,18 @@ Interpretation of three-way interactions can be quite complex, as it involves un
 
 ### 3d scatter plot
 
-```{r fig.width = 6, fig.height = 6}
-#| echo: false
-plotly::plot_ly(bp_2cont, x = ~mins_per_week, y = ~age, z = ~bp, type = "scatter3d", mode = "markers", color = age)
+Here is a 3D scatter plot of the data with two continuous explanatory variables (age and minutes of exercise) and one continuous response variable (blood pressure). This plot helps to visualise the interaction between age and minutes of exercise on blood pressure.
+
+(Please note that this plot is best viewed in the HTML version of the book; in the PDF version, it will appear as a static image.)
+
+```{r}
+#| echo: true
+plotly::plot_ly(bp_2cont, x = ~mins_per_week, y = ~age, z = ~bp, type = "scatter3d", mode = "markers", color = age, width=500, height=500) %>%
+  plotly::layout(title = "3D Scatter plot of Blood Pressure vs Exercise and Age",
+         scene = list(xaxis = list(title = "Minutes per week of exercise"),
+                      yaxis = list(title = "Age"),
+                      zaxis = list(title = "Blood Pressure"))
+         )
 ```
 
 

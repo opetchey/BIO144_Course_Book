@@ -280,7 +280,6 @@ First we make a plot of the data:
 ggplot(dat, aes(x = week, y = height, group = plant_id, color = temp)) +
   geom_line(alpha = 0.25) +
   geom_point(alpha = 0.5, size = 1) +
-  theme_minimal() +
   labs(x = "Week", y = "Height (cm)", color = "Temp (°C)")
 ```
 
@@ -410,6 +409,8 @@ We can visualise the fitted values from both mixed models:
 
 ```{r}
 #| echo: false
+#| fig-width: 8
+#| fig-height: 5
 dat_aug <- dat |>
   mutate(fit_lmm1 = predict(m_lmm1),
          fit_lmm2 = predict(m_lmm2))
@@ -417,13 +418,11 @@ dat_aug <- dat |>
 p_fit1 <- ggplot(dat_aug, aes(week, height, group = plant_id, color = temp)) +
   geom_point(alpha = 0.35, size = 1) +
   geom_line(aes(y = fit_lmm1), alpha = 0.35) +
-  theme_minimal() +
-  labs(title = "Random intercept m_lmm1el", y = "Height (cm)")
+  labs(title = "Random intercept", y = "Height (cm)")
 
 p_fit2 <- ggplot(dat_aug, aes(week, height, group = plant_id, color = temp)) +
   geom_point(alpha = 0.35, size = 1) +
   geom_line(aes(y = fit_lmm2), alpha = 0.35) +
-  theme_minimal() +
   labs(title = "Random intercept + slope model", y = "Height (cm)")
 
 p_fit1 + p_fit2

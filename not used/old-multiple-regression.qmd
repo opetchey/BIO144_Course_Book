@@ -461,7 +461,6 @@ ggplot(f_density, aes(x = x, y = y)) +
     x = "F Value",
     y = "Density"
   ) +
-  theme_minimal() +
   annotate("text", x = 4.5, y = 0.05, label = "P(x >= 3.89)", color = "red") +
   xlim(0, 6)
 ```

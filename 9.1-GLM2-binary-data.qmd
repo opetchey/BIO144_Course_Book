@@ -180,7 +180,7 @@ binary outcome (Number_killed and Number_tested). The mortality rate is also inc
 
 As always, start with a graph.
 
-```{r fig.width=4, fig.height=3}
+```{r}
 #| echo: false
 ggplot(beetle, aes(x = Dose, y = Mortality_rate)) +
   geom_point() +
@@ -501,7 +501,9 @@ p1 + p2
 
 A more informative plot is a conditional density plot. This shows the proportion of 0s and 1s at each value of the predictor.
 
-```{r fig.width=6, fig.height=4.5}
+```{r}
+#| fig-width: 6
+#| fig-height: 4
 par(mfrow = c(1, 2))
 cdplot(factor(y) ~ fibrinogen, data = plasma, xlab = "Fibrinogen")
 cdplot(factor(y) ~ globulin, data = plasma, xlab = "Globulin")

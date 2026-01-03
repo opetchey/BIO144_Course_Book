@@ -36,12 +36,10 @@ y1_predicted <- predict(m1)
 y2_predicted <- predict(m2)
 p1 <- ggplot() +
   geom_point(aes(x=x,y=y1)) +
-  geom_line(aes(x=x,y=y1_predicted)) +
-  theme_minimal()
+  geom_line(aes(x=x,y=y1_predicted)) 
 p2 <- ggplot() +
   geom_point(aes(x=x,y=y2)) +
-  geom_line(aes(x=x,y=y2_predicted)) +
-  theme_minimal()
+  geom_line(aes(x=x,y=y2_predicted)) 
 p1 + p2
 
 ```
@@ -84,8 +82,7 @@ Graphically, this is the sum of the square of the blue residuals as shown in the
 ggplot() +
   geom_hline(yintercept = mean(y1), linetype = "dashed") +
   geom_segment(aes(x=x, y=y1, xend=x, yend=mean(y1)), col = "blue", linewidth = 2) +
-  geom_point(aes(x=x,y=y1), size = 5) +
-  theme_minimal()
+  geom_point(aes(x=x,y=y1), size = 5) 
 ```
 
 We can calculate this in R as follows:
@@ -109,8 +106,7 @@ ggplot() +
   geom_line(aes(x=x,y=y1_predicted)) +
   ## show the residuals
   geom_segment(aes(x=x, y=y1, xend=x, yend=y1_predicted), col = "red", linewidth = 1.5) +
-    geom_point(aes(x=x,y=y1), size = 5) +
-  theme_minimal()
+    geom_point(aes(x=x,y=y1), size = 5) 
 ```
 
 In this graph, the square of the length of the green lines is the model sum of squares ($SST$). The square of the length of the red lines is the error sum of squares ($SSE$).
@@ -198,13 +194,11 @@ p1 <- ggplot(data.frame(x = x, y1 = y1), aes(x = x, y = y1)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE, formula = y ~ x) +
   annotate("text", x = 0, y = -20, label = paste("R^2 = ", round(summary(m1)$r.squared, 2)), hjust = 0, vjust = 0) +
-  theme_minimal() +
   ylim(ylims)
 p2 <- ggplot(data.frame(x = x, y2 = y2), aes(x = x, y = y2)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE, formula = y ~ x) +
   annotate("text", x = 0, y = -20, label = paste("R^2 = ", round(summary(m2)$r.squared, 2)), hjust = 0, vjust = 0) +
-  theme_minimal() +
   ylim(ylims)
 p3 <- ggplot(data.frame(x = x, y3 = y3), aes(x = x, y = y3)) +
   geom_point() +
@@ -212,13 +206,11 @@ p3 <- ggplot(data.frame(x = x, y3 = y3), aes(x = x, y = y3)) +
   annotate("text", x = 0, y = -20,
                 label = paste("R^2 = ", round(summary(m3)$r.squared, 2)),
             hjust = 0, vjust = 0) +
-  theme_minimal() +
-  ylim(ylims)
+   ylim(ylims)
 p4 <- ggplot(data.frame(x = x, y4 = y4), aes(x = x, y = y4)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE, formula = y ~ x) +
   annotate("text", x = 0, y = -20, label = paste("R^2 = ", round(summary(m4)$r.squared, 2)), hjust = 0, vjust = 0) +
-  theme_minimal() +
   ylim(ylims)
 (p1 + p2) / (p3 + p4)
 ```
@@ -285,16 +277,14 @@ slope_estimate_value <- seq(-1, 1, 0.01)
 standard_error_value <- seq(0.01, 0.5, along = slope_estimate_value)
 ggplot(data.frame(slope_estimate = slope_estimate_value,
                   standard_error = standard_error_value),
-       aes(x = slope_estimate, y = standard_error)) +
-  #geom_line() +
-  theme_minimal()
+       aes(x = slope_estimate, y = standard_error)) 
 ```
 
 
 
 
 
-**Think-Pair-Share** (#tps-chance-area) In what areas of the graph is the slope estimate more likely to have been observed by chance? And what regions is it less likely to have been observed by chance? Think about this before you look at the end of this chapter for an answer (Section @sec-visual-p-values-regress).
+**Think-Pair-Share** (#tps-chance-area) In what areas of the graph is the slope estimate more likely to have been observed by chance? And what regions is it less likely to have been observed by chance? Think about this before you look at the end of this chapter for an answer.
 
 
 
@@ -318,8 +308,7 @@ But what is the $t$-distribution? It is a distribution of the $t$-statistic unde
 ```{r}
 #| echo: false
 ggplot(data.frame(x = seq(-4, 4, 0.01)), aes(x = x)) +
-  stat_function(fun = dt, args = list(df = 98)) +
-  theme_minimal()
+  stat_function(fun = dt, args = list(df = 98)) 
 ```
 
 
@@ -348,8 +337,7 @@ ggplot(df, aes(x = x, y = dt)) +
             fill = "lightblue") +
   geom_area(data = df_95perc_upper,
             mapping = aes(x = x, y = dt),
-            fill = "lightblue") +
-  theme_minimal()
+            fill = "lightblue") 
 ```
 
 And here's a graph of the $t$-distribution with 1000 degrees of freedom (blue line) and the normal distribution (green dashed line):
@@ -361,8 +349,7 @@ ggplot(data.frame(x = seq(-4, 4, 0.01)), aes(x = x)) +
   stat_function(fun = dt, args = list(df = n-2),
                 lwd = 1.5, lty = "solid", col = "blue") +
   stat_function(fun = dnorm, args = list(mean = 0, sd = 1),
-                lwd = 1.3, lty = "solid", col = "darkorange") +
-  theme_minimal()
+                lwd = 1.3, lty = "solid", col = "darkorange") 
 ```
 
 
@@ -506,12 +493,10 @@ y <- rep(0, length(x))
 ggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +
   geom_line(lty = "dotted") +
   geom_errorbarh(aes(y = 0, xmin = -0.1, xmax = 0.5), height = 0.05) +
-  theme_minimal() +
   theme(axis.title.y = element_blank(),
         axis.text.y = element_blank(),
         axis.ticks.y = element_blank()) +
   #geom_vline(xintercept = c(-1, 1), linetype = "dashed") +
-  theme_minimal() +
   ylim(-0.1, 0.1) +
   xlim(-1, 1) +
   ## no y axis
@@ -531,12 +516,10 @@ y <- rep(0, length(x))
 ggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +
   geom_line(lty = "dotted") +
   geom_errorbarh(aes(y = 0, xmin = 0.1, xmax = 0.7), height = 0.05) +
-  theme_minimal() +
   theme(axis.title.y = element_blank(),
         axis.text.y = element_blank(),
         axis.ticks.y = element_blank()) +
   #geom_vline(xintercept = c(-1, 1), linetype = "dashed") +
-  theme_minimal() +
   ylim(-0.1, 0.1) +
   xlim(-1, 1) +
   ## no y axis
@@ -732,8 +715,7 @@ coef(m)[2]
 ```{r}
 ggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +
   geom_point() +
-  geom_smooth(method = "lm", se = FALSE, formula = y ~ x) +
-  theme_minimal()
+  geom_smooth(method = "lm", se = FALSE, formula = y ~ x) 
 ```
 
 Now we'll use randomisation to test the null hypothesis. We can create lots of examples where the relationship is expected to have a slope of zero by shuffling randomly the $y$ values. Here are 20:
@@ -804,8 +786,7 @@ rand_slopes <- replicate(10000, {
 
 ggplot(data.frame(slopes = rand_slopes), aes(x = slopes)) +
   geom_histogram(bins = 50) +
-  geom_vline(xintercept = coef(m)[2], color = "red") +
-  theme_minimal()
+  geom_vline(xintercept = coef(m)[2], color = "red")
 ```
 
 We can now calculate the probability of observing the data we have, given the null hypothesis is true.
@@ -817,7 +798,7 @@ p_value
 
 
 
-### Visualising p-values for regression slopes {#sec-visual-p-values-regress}
+### Visualising p-values for regression slopes
 
 ```{r}
 #| echo: false
@@ -829,7 +810,6 @@ ggplot(data.frame(slope_estimate = slope_estimate_value,
   annotate("text", x = 0, y = 0.4, label = "Likely\nto happen\nby chance", color = "red", size = 6) +
   annotate("text", x = 0.7, y = 0.1, label = "Unlikely\nto happen\nby chance", color = "blue", size = 6) +
   annotate("text", x = -0.7, y = 0.1, label = "Unlikely\nto happen\nby chance", color = "blue", size = 6) +
-  theme_minimal() +
   xlim(-1, 1) +
   ylim(0, 0.5) +
   geom_abline(intercept = 0, slope = 0.5) +

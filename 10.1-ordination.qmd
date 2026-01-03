@@ -207,8 +207,7 @@ And then make the graph:
 ```{r}
 ggplot(scores, aes(x = PC1, y = PC2, color = thousand.years)) +
   geom_point(alpha = 0.8) +
-  labs(color = "Thousand\nyears ago") +
-  theme_minimal()
+  labs(color = "Thousand\nyears ago")
 ```
 
 ::: {.callout-note}
@@ -260,8 +259,7 @@ ggplot(scores, aes(PC1, PC2)) +
     aes(x = PC1, y = PC2, label = variable),
     inherit.aes = FALSE,
     vjust = -0.4
-  ) +
-  theme_minimal() +
+  )  +
   labs(color = "Thousand\nyears ago")
 ```
 
@@ -384,24 +382,27 @@ X_R0.0 <- MASS::mvrnorm(n = num_samples,
                   Sigma = Sigma_R0.0)
 ```
   
-Now a 3D plot of the simulated data with different correlation structures (please note that these plots are only made in the HTML version of the book, and only there you will be able to interact with them):
+Now a 3D plot of the simulated data with different correlation structures (please note that these plots are best viewed in the HTML version of the book; in the PDF version, they will appear as static images):
 
 ```{r}
 #| echo: false
 p1 <- plotly::plot_ly(x = X_R0.9[,1], y = X_R0.9[,2], z = X_R0.9[,3],
-              type = 'scatter3d', mode = 'markers') %>%
+              type = 'scatter3d', mode = 'markers',
+         width=500, height=500) %>%
   layout(title = "High correlation (rho ~ 0.9)",
          scene = list(xaxis = list(title = "Var 1"),
                       yaxis = list(title = "Var 2"),
                       zaxis = list(title = "Var 3")))
 p2 <- plotly::plot_ly(x = X_R0.5[,1], y = X_R0.5[,2], z = X_R0.5[,3],
-              type = 'scatter3d', mode = 'markers') %>%
+              type = 'scatter3d', mode = 'markers',
+         width=500, height=500) %>%
   layout(title = "Moderate correlation (rho ~ 0.5)",
          scene = list(xaxis = list(title = "Var 1"),
                       yaxis = list(title = "Var 2"),
                       zaxis = list(title = "Var 3")))
 p3 <- plotly::plot_ly(x = X_R0.0[,1], y = X_R0.0[,2], z = X_R0.0[,3],
-              type = 'scatter3d', mode = 'markers') %>%
+              type = 'scatter3d', mode = 'markers',
+         width=500, height=500) %>%
   layout(title = "Low correlation (rho ~ 0.0)",
          scene = list(xaxis = list(title = "Var 1"),
                       yaxis = list(title = "Var 2"),
@@ -551,8 +552,7 @@ nmds_scores <- as_tibble(scores(nmds, display = "sites")) |>
   mutate(id = skull$id, thousand.years = skull$thousand.years)
 
 ggplot(nmds_scores, aes(x = NMDS1, y = NMDS2, color = thousand.years)) +
-  geom_point(alpha = 0.8) +
-  theme_minimal() +
+  geom_point(alpha = 0.8)  +
   labs(color = "Thousand\nyears ago")
 ```
 
@@ -593,7 +593,6 @@ ggplot(nmds_scores, aes(x = NMDS1, y = NMDS2)) +
     inherit.aes = FALSE,
     vjust = -0.4
   ) +
-  theme_minimal() +
   labs(color = "Thousand\nyears ago")
 ```
 

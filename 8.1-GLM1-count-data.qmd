@@ -211,8 +211,7 @@ poisson_data$probability <- mapply(function(x, lambda) {
 ggplot(poisson_data, aes(x = x, y = probability, color = factor(lambda))) +
   geom_point() +
   geom_line(alpha = 0.2) + 
-  labs(x = "Count", y = "Probability", color = expression(lambda)) +
-  theme_minimal()
+  labs(x = "Count", y = "Probability", color = expression(lambda)) 
 ```
 
 

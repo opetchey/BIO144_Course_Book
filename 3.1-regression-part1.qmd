@@ -40,7 +40,7 @@ In this chapter / lesson we will not discuss the statistical significance of the
 * Relationships are sometimes close enough to linear.
 * It's easy to interpret.
 * It's easy to use.
-* It's actually quite flexible (e.g. can be used for non-linear relationships, e.g., a quadratic model is still a linear model!!! See @sec-kind-of-magic.).
+* It's actually quite flexible (e.g. can be used for non-linear relationships, e.g., a quadratic model is still a linear model!!!).
 
 ### An example - blood pressure and age
 
@@ -457,8 +457,7 @@ A normal distribution is symmetric and bell-shaped...
 ```{r}
 #| echo: false
 ggplot(data.frame(x = c(-4, 4)), aes(x)) + 
-  stat_function(fun = dnorm, n = 101) + 
-  theme_minimal()
+  stat_function(fun = dnorm, n = 101)
 ```
 
 Lets look at the frequency distribution of the residuals of the linear regression of blood pressure and age:
@@ -467,8 +466,7 @@ Lets look at the frequency distribution of the residuals of the linear regressio
 ```{r}
 #| echo: false
 ggplot(data = bp_age_data, aes(x = Residuals)) +
-  geom_histogram(bins = 10) +
-  theme_minimal()
+  geom_histogram(bins = 10) 
 ```
 
 The normal distribution assumption (a) seems ok as well.
@@ -593,8 +591,7 @@ And now visualise the relationship between the fitted values and the size of the
 ```{r}
 ggplot(bp_age_data, aes(x = fitted, y = sqrt_abs_R_i)) +
   geom_point() +
-  labs(x = "Fitted values", y = expression(sqrt(abs(R[i])))) +
-  theme_minimal()
+  labs(x = "Fitted values", y = expression(sqrt(abs(R[i])))) 
 ```
 
 
@@ -928,12 +925,12 @@ eg_data <- tibble(x = runif(50)) %>%
 
 p1 <- ggplot(eg_data, aes(x = x, y = y)) +
   geom_point() + 
-  theme_bw() + geom_smooth(formula = y ~ x, method = "lm", se = FALSE)
+  geom_smooth(formula = y ~ x, method = "lm", se = FALSE)
 
 m1 <- lm(y ~ x, eg_data)
 
 p2 <- ggplot(mapping = aes(x = fitted(m1), y = residuals(m1))) +
-  geom_point() + theme_bw() +
+  geom_point() +
   geom_hline(yintercept = 0, linetype = "dashed") +
   geom_smooth(formula = y ~ x, method = "loess")
 
@@ -947,10 +944,10 @@ Square root transform of the response variable $Y$:
 ```{r fig.height=7, fig.width=7}
 p3 <- ggplot(eg_data, aes(x = x, y = sqrt_y)) +
   geom_point() + 
-  theme_bw() + geom_smooth(formula = y ~ x, method = "lm", se = FALSE)
+  geom_smooth(formula = y ~ x, method = "lm", se = FALSE)
 m2 <- lm(sqrt_y ~ x, eg_data)
 p4 <- ggplot(mapping = aes(x = fitted(m2), y = residuals(m2))) +
-  geom_point() + theme_bw() +
+  geom_point() + 
   geom_hline(yintercept = 0, linetype = "dashed") +
   geom_smooth(formula = y ~ x, method = "loess")
 
@@ -964,10 +961,10 @@ Log transformation of the response variable $Y$:
 ```{r fig.height=10.5, fig.width=7}
 p5 <- ggplot(eg_data, aes(x = x, y = log_y)) +
   geom_point() + 
-  theme_bw() + geom_smooth(formula = y ~ x, method = "lm", se = FALSE)
+  geom_smooth(formula = y ~ x, method = "lm", se = FALSE)
 m3 <- lm(log_y ~ x, eg_data)
 p6 <- ggplot(mapping = aes(x = fitted(m3), y = residuals(m3))) +
-  geom_point() + theme_bw() +
+  geom_point() + 
   geom_hline(yintercept = 0, linetype = "dashed") +
   geom_smooth(formula = y ~ x, method = "loess")
 
@@ -978,13 +975,13 @@ Nope. Still some evidence of non-linearity.
 
 What about transforming the explanatory variable $X$ as well?
 
-```{r fig.height=4, fig.width=7}
+```{r fig.height=3.5, fig.width=7}
 p7 <- ggplot(eg_data, aes(x = log_x, y = log_y)) +
   geom_point() + 
-  theme_bw() + geom_smooth(formula = y ~ x, method = "lm", se = FALSE)
+  geom_smooth(formula = y ~ x, method = "lm", se = FALSE)
 m4 <- lm(log_y ~ log_x, eg_data)
 p8 <- ggplot(mapping = aes(x = fitted(m4), y = residuals(m4))) +
-  geom_point() + theme_bw() +
+  geom_point() + 
   geom_hline(yintercept = 0, linetype = "dashed") +
   geom_smooth(formula = y ~ x, method = "loess")
 
@@ -1050,7 +1047,7 @@ During the course we'll see many more examples of things going at least a bit wr
 
 
 
-## Its a kind of magic... {#sec-kind-of-magic}
+## Its a kind of magic... 
 
 Above, we learned about linear regression, the equation for it, how to estimate the coefficients, and how to check the assumptions. There was a lot of information, and it might seem a bit overwhelming.
 

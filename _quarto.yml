@@ -42,8 +42,8 @@ book:
 format:
   html:
     theme: cosmo
-    fig-width: 5
-    fig-height: 5
+    fig-width: 4.5
+    fig-height: 4
     fig-align: center
   pdf:
     keep-tex: true

@@ -95,7 +95,6 @@ p_vars <- skull_long |>
   geom_point(alpha = 0.6) +
   facet_wrap(~ dimension, scales = "free_y", ncol = 2) +
   labs(x = "Thousand years ago", y = "Measurement (mm)")
-
 p_vars
 ```
 
@@ -110,6 +109,9 @@ If some change differently, that suggests **shape** change.
 Fitting separate regressions for each measurement has two problems:
 1. **Multiple testing**: testing four times increases the chance of false positives.
 2. **Ignoring covariance**: measurements may be correlated, so analyzing them separately misses joint patterns
+
+
+**Think–Pair–Share (#a_why_ordination)** What information is lost when you analyze multivariate data one variable at a time? Why could this be important?
 
 
 ## Ordination I: PCA (Principal Components Analysis)
@@ -200,6 +202,8 @@ scores <- as_tibble(skull_pca$x) |>
 scores |> select(id, PC1, PC2, thousand.years) |> slice_head(n = 5)
 ```
 
+And then make the graph:
+
 ```{r}
 ggplot(scores, aes(x = PC1, y = PC2, color = thousand.years)) +
   geom_point(alpha = 0.8) +
@@ -239,6 +243,7 @@ round(cor(X, skull_pca$x), 2)
 Below is a lightweight biplot-style plot.   (There are fancy versions in packages like **factoextra**, but we keep it minimal.)
 
 ```{r}
+#| echo: false
 # Scale loadings for visibility (a plotting choice, not statistical)
 L <- loadings |> mutate(PC1 = PC1 * 4, PC2 = PC2 * 4)
 
@@ -266,13 +271,17 @@ In contrast, the arrows for PC2 point in different directions, indicating that P
 
 **Think–Pair–Share** (#tps-biplot-interpretation) Make a sketch of how skull size / shape changes along the two PC axis.
 
+
+**Think–Pair–Share** (#a_size_vs_shape) What pattern would indicate pure size change? What pattern would indicate shape change?
+
 ## When ordination helps
 
 **Think–Pair–Share** (#tps-when-ordination) In what situations would ordination methods like PCA be especially helpful? When would they be less useful? Think about the nature of the data, and, if you like, the biological questions.
 
-We might think that ordination is more useful when we have a greater number of variables, because then the reducing down to two or three dimensions is more helpful. But the key factor is actually the **correlation structure** among the variables. If many variables are correlated, then ordination can capture most of the variance in a few dimensions. If variables are uncorrelated, then ordination may not help much since most of the variance is spread evenly across many dimensions. Let's have a look a this with some simulated data.
+We might think that ordination is more useful when we have a greater number of variables, because then the reducing down to two or three dimensions is more helpful. But the key factor is actually the **correlation structure** among the variables. If many variables are correlated, then ordination can capture most of the variance in a few dimensions. If variables are uncorrelated, then ordination may not help much since most of the variance is spread evenly across many dimensions. Let's have a look a this with some simulated data. We will simulate three datasets with three variables each, but with different correlation structures: high correlation, moderate correlation, and low correlation.
 
 ```{r}
+#| echo: false
 make_cov_matrix <- function(
   p,
   base_rho = 0.7,
@@ -316,6 +325,7 @@ make_cov_matrix <- function(
 
 
 ```{r}
+#| echo: false
 num_vars <- 3  # number of variables
 num_samples <- 100
 base_rho <- 0.9
@@ -335,6 +345,7 @@ X_R0.9 <- MASS::mvrnorm(n = num_samples,
 ```
   
 ```{r}
+#| echo: false
 num_vars <- 3  # number of variables
 num_samples <- 100
 base_rho <- 0.5
@@ -354,6 +365,7 @@ X_R0.5 <- MASS::mvrnorm(n = num_samples,
 ```
 
 ```{r}
+#| echo: false
 num_vars <- 3  # number of variables
 num_samples <- 100
 base_rho <- 0.0
@@ -375,6 +387,7 @@ X_R0.0 <- MASS::mvrnorm(n = num_samples,
 Now a 3D plot of the simulated data with different correlation structures (please note that these plots are only made in the HTML version of the book, and only there you will be able to interact with them):
 
 ```{r}
+#| echo: false
 p1 <- plotly::plot_ly(x = X_R0.9[,1], y = X_R0.9[,2], z = X_R0.9[,3],
               type = 'scatter3d', mode = 'markers') %>%
   layout(title = "High correlation (rho ~ 0.9)",
@@ -397,16 +410,19 @@ p3 <- plotly::plot_ly(x = X_R0.0[,1], y = X_R0.0[,2], z = X_R0.0[,3],
 
 
 ```{r fig.width=2, fig.height=2}
+#| echo: false
 p1
 ```
 
 
 ```{r fig.width=2, fig.height=2}
+#| echo: false
 p2
 ```
 
 
 ```{r fig.width=2, fig.height=2}
+#| echo: false
 p3
 ```
   
@@ -417,6 +433,7 @@ The first plot shows data with high correlation among variables, where the point
 We expect that in the high correlation case, the first principal component will capture a large proportion of the variance, while in the low correlation case, the variance will be more evenly distributed across all principal components. Let's check this by performing PCA on each dataset and examining the variance explained by each principal component.
 
 ```{r}
+#| echo: false
 pca_R0.9 <- prcomp(X_R0.9, center = TRUE, scale. = TRUE)
 pca_R0.5 <- prcomp(X_R0.5, center = TRUE, scale. = TRUE)
 pca_R0.0 <- prcomp(X_R0.0, center = TRUE, scale. = TRUE)
@@ -529,6 +546,7 @@ The stress decreases when we move to three dimensions, indicating a better fit. 
 We can plot the NMDS scores, colored by time:
 
 ```{r}
+#| echo: false
 nmds_scores <- as_tibble(scores(nmds, display = "sites")) |>
   mutate(id = skull$id, thousand.years = skull$thousand.years)
 
@@ -551,7 +569,10 @@ cor_nmds <- round(cor(X, nmds_scores |> select(NMDS1, NMDS2)), 2)
 cor_nmds
 ```
 
+And plot these as arrows:
+
 ```{r}
+#| echo: false
 # Scale correlations for visibility (a plotting choice, not statistical)
 # Here we multiply by 4 to make the arrows longer
 # This is just for visualization purposes
@@ -581,6 +602,8 @@ This NMDS graph looks a lot like the PCA biplot. This is because our data are fa
 :::
 
 
+**Think–Pair–Share (#a_linear_vs_nonlinear_ordination)** When might a linear method like PCA be misleading? What does NMDS relax?
+
 
 ## Hypothesis testing: avoid "four separate regressions"
 
@@ -597,20 +620,19 @@ Here are four common approaches demonstrated but not deeply explained:
 
 ### 1) MANOVA (parametric)
 
+Multivariate ANOVA (MANOVA) tests whether group **centroids** differ in multivariate space, assuming multivariate normality. The response is a matrix of multiple variables, and the predictor can be categorical or continuous.
+
 ```{r}
 man_mod <- manova(cbind(max.breadth, basi.height, basi.length, nasal.height) ~ thousand.years,
                   data = skull)
 summary(man_mod, test = "Pillai")
 ```
 
-If you bin years into categories, MANOVA becomes closer to multivariate ANOVA:
+If we bin years into categories, MANOVA becomes closer to multivariate ANOVA:
 
 ```{r}
 skull <- skull |>
-  mutate(
-    year_class = cut(thousand.years, breaks = 8) |> fct_inorder()
-  )
-
+  mutate(year_class = cut(thousand.years, breaks = 8) |> fct_inorder())
 man_mod_cat <- manova(cbind(max.breadth, basi.height, basi.length, nasal.height) ~ thousand.years,
                       data = skull)
 summary(man_mod_cat, test = "Pillai")
@@ -643,7 +665,7 @@ So it’s good practice to check dispersion when comparing groups.
 
 ```{r}
 bd <- betadisper(D, skull$year_class)
-bd
+#bd
 anova(bd)
 permutest(bd, permutations = 999)
 ```

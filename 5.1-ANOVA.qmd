@@ -46,11 +46,17 @@ bp_data_diet <- tibble(diet = sample(c("meat heavy", "Mediterranean",
 write_csv(bp_data_diet, "datasets/bp_data_diet.csv")
 ```
 
+Reading in the dataset:
 
 ```{r}
-#| echo=TRUE
+bp_data_diet <- read_csv("datasets/bp_data_diet.csv")
+```
+
+
+```{r}
+#| echo: true
 bp_data_diet <- select(bp_data_diet, bp, diet, person_ID)
-bp_data_diet
+head(bp_data_diet)
 ```
 
 There are three variables:
@@ -148,7 +154,7 @@ bp_data_diet <- tibble(diet = sample(c("meat heavy", "Mediterranean",
 #| echo: false
 group_means <- bp_data_diet %>%
   group_by(diet, .groups = "drop") %>%
-  summarise(mean_bp = mean(bp)) |> 
+  summarise(mean_bp = mean(bp), .groups = "drop") |> 
   arrange(diet)
 group_means <- group_means[c(2, 1, 3, 4),]
 ```
@@ -200,10 +206,11 @@ $x_i^{3}$ is a binary variable indicating whether individual $i$ is on the veget
 Graphically, the model now looks like this:
 
 ```{r}
+#| echo: false
 bp_model_diet <- lm(bp ~ diet, data = bp_data_diet)
 group_means <- bp_data_diet %>%
   group_by(diet, .groups = "drop") %>%
-  summarise(mean_bp = mean(bp))
+  summarise(mean_bp = mean(bp), .groups = "drop")
 ggplot(bp_data_diet, aes(x = diet, y = bp)) +
   geom_point() +
   geom_hline(yintercept = coef(bp_model_diet)[1], color = "red") +
@@ -257,6 +264,8 @@ Actually, the $F$-test does not directly test the null hypothesis that all the g
 
 The $F$-test does this by comparing two variance estimates: the variance explained by the group means (between-group variance) and the variance that remains unexplained within each group (within-group variance).
 
+**Think–Pair–Share (#a_what_f_test_answers)** What question does the ANOVA F-test answer? What question does it *not* answer?
+
 ### Interpretation of the $F$ statistic
 
 The $F$-test involves calculating from the observed data the value of the $F$ statistic, and then computing if that value is large enough to reject the null hypothesis.
@@ -266,6 +275,7 @@ The $F$ statistic is a ratio of two variances: the variance **between** groups, 
 Here is an example with very low within group variability, and high between group variability:
 
 ```{r}
+#| echo: false
 set.seed(123)
 n <- 10
 g <- 3
@@ -283,6 +293,7 @@ ggplot(bp_data, aes(x = diet, y = bp)) +
 And here's an example with very high within group variability, and low between group variability:
 
 ```{r}
+#| echo: false
 set.seed(123)
 n <- 10
 g <- 3
@@ -494,6 +505,7 @@ The $F$-distribution has two degrees of freedom values associated with it: the d
 Here is the $F$-distribution with 2 and 99 degrees of freedom:
 
 ```{r}
+#| echo: false
 # Define parameters for the F-distribution
 df1 <- 2   # Degrees of freedom for the numerator
 df2 <- 99  # Degrees of freedom for the denominator
@@ -557,7 +569,7 @@ ggplot(bp_data_diet, aes(x = diet, y = bp)) +
 And here is how we fit a linear model to this data:
 
 ```{r}
-#| echo = FALSE
+#| echo: true
 fit <- lm(bp ~ diet, data = bp_data_diet)
 ```
 
@@ -632,7 +644,7 @@ $$\alpha = \alpha_0 / m \ .$$
 But this still leaves the problem of how to efficiently get all of the possible pairwise comparisons. We can do this using the `pairwise.t.test` function in R:
 
 ```{r}
-#| echo = TRUE
+#| echo: true
 pairwise.t.test(bp_data_diet$bp,
                 bp_data_diet$diet,
                 p.adjust.method = "bonferroni")
@@ -650,7 +662,7 @@ and design a new test.
 In R we can use the `multcomp` package to do Tukey HSD tests:
 
 ```{r}
-#| echo = TRUE
+#| echo: true
 bp_data_diet <- bp_data_diet %>%
   mutate(diet = as.factor(diet))
 fit <- lm(bp ~ diet, data = bp_data_diet)
@@ -683,7 +695,7 @@ head(bp_data_diet)
 Here we defined a new explanatory variable that groups the meat heavy and Mediterranean diet together into a single "meat" group and vegetarian and vegan into a single "no meat" group. We then fit a model with this explanatory variable:
 
 ```{r}
-#| echo = TRUE
+#| echo: true
 fit_mnm <- lm(bp ~ meat_or_no_meat, data = bp_data_diet)
 ```
 
@@ -694,7 +706,7 @@ We now do something a bit more complicated: we compare the variance explained by
 Let's look at the ANOVA table of the model comparison:
 
 ```{r}
-#| echo = TRUE
+#| echo: true
 anova(fit, fit_mnm)
 ```
 
@@ -734,7 +746,7 @@ When communicating the results of an ANOVA, we usually report the $F$-statistic,
 And we would make a nice graph, in this case showing each individual observation since there are not too many to cause overplotting. We can also add the estimated means of each group if we like:
 
 ```{r}
-#| echo = TRUE
+#| echo: true
 ggplot(bp_data_diet, aes(x = diet, y = bp)) +
   geom_jitter(width = 0.1, height = 0) +
   stat_summary(fun = mean, geom = "point", color = "red", size = 3) +
@@ -747,7 +759,7 @@ ggplot(bp_data_diet, aes(x = diet, y = bp)) +
 Some people like to see error bars as well, for example showing the 95% confidence intervals of the means:
 
 ```{r}
-#| echo = TRUE
+#| echo: true
 ggplot(bp_data_diet, aes(x = diet, y = bp)) +
   geom_jitter(width = 0.1, height = 0, col = "grey") +
   stat_summary(fun = mean, geom = "point", color = "black", size = 3) +
@@ -762,13 +774,6 @@ There are many many plotting styles and preferences. The important thing is to c
 
 ## Summary of what you have learned
 
-Please referring to the learning objectives document and the learning objectives for this chapter.
-
-
-
-
-## Summing up
-
 * ANOVA is just another linear model.
 * It is used when we have categorical explanatory variables.
 * We use $F$-tests to test the null hypothesis of no difference among the means of the groups (categories).
@@ -776,4 +781,4 @@ Please referring to the learning objectives document and the learning objectives
 * Two-way ANOVA is used when we have two categorical explanatory variables and can be used to test for interactions between them.
 
 
-
+**Think–Pair–Share** (#a_anova_is_regression) What changes when we move from regression to ANOVA? What stays exactly the same?

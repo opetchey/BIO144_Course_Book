@@ -80,6 +80,7 @@ This means that our data have a **grouping structure**: observations are grouped
 Let's make an example dataset to illustrate:
 
 ```{r}
+#| echo: false
 set.seed(42)
 n_individuals <- 10
 n_obs_per_ind <- 5
@@ -101,6 +102,12 @@ dat_example <- expand_grid(
   ) %>%
   select(individual, temperature = x, growth = y)
 write_csv(dat_example, here("datasets", "mixed_model_example.csv"))
+```
+
+Read in the data:
+
+```{r}
+dat_example <- read_csv("datasets/mixed_model_example.csv")
 ```
 
 Here are the first few rows:
@@ -214,6 +221,7 @@ We will compare:
 ### An example dataset
 
 ```{r}
+#| echo: false
 set.seed(11)
 
 n_plants <- 30
@@ -252,6 +260,13 @@ dat <- expand_grid(plant_tbl, week = weeks) |>
 write_csv(dat, here("datasets", "plant_growth_repeated.csv"))
 ```
 
+Read in the data:
+
+```{r}
+dat_example <- read_csv("datasets/plant_growth_repeated.csv")
+```
+
+
 ```{r}
 head(dat)
 ```
@@ -261,6 +276,7 @@ head(dat)
 First we make a plot of the data:
 
 ```{r}
+#| echo: false
 ggplot(dat, aes(x = week, y = height, group = plant_id, color = temp)) +
   geom_line(alpha = 0.25) +
   geom_point(alpha = 0.5, size = 1) +
@@ -316,6 +332,7 @@ Mixed-model diagnostics can be more involved than `lm()`, but you can still star
 - check random effect estimates for extreme outliers
 
 ```{r}
+#| echo: false
 par(mfrow = c(2,2))
 ``` 
 
@@ -335,6 +352,7 @@ qqnorm(resid(m_lmm1)); qqline(resid(m_lmm1))
 
 
 3) Scale–location (sqrt(|resid|) vs fitted)
+
 ```{r}
 plot(fitted(m_lmm1), sqrt(abs(resid(m_lmm1))),
      xlab = "Fitted values", ylab = "sqrt(|Residuals|)")
@@ -349,6 +367,7 @@ abline(h = 0, lty = 2)
 ```
 
 ```{r}
+#| echo: false
 par(mfrow = c(1,1))
 ```
 
@@ -390,6 +409,7 @@ This likelihood ratio test compares nested models. It is widely used, but has su
 We can visualise the fitted values from both mixed models:
 
 ```{r}
+#| echo: false
 dat_aug <- dat |>
   mutate(fit_lmm1 = predict(m_lmm1),
          fit_lmm2 = predict(m_lmm2))
@@ -429,7 +449,6 @@ anova(m_lmm1)
 * All fixed effects had a p-value < 0.05, calculate using Satterthwaite's method for degrees of freedom (lmerTest package).
 * Including plant as a random effect accounted for non-independence due to repeated measures.
 
-
 ## Summary
 
 - Mixed models are used when observations are **grouped** (non-independent).
@@ -437,3 +456,8 @@ anova(m_lmm1)
 - Random intercepts model different baselines among groups; random slopes allow different responses.
 - Nested and crossed random effects reflect study design.
 - Mixed models let you keep all observations while avoiding pseudoreplication and false confidence.
+
+**Think–Pair–Share** (#a_why_random_effects) What problem do random effects solve that fixed effects alone cannot?
+
+**Think–Pair–Share** (#a_partial_pooling_intuition) How does partial pooling differ from complete pooling or no pooling at all? Hint: pooling is sharing of information.
+

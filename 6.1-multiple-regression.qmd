@@ -35,6 +35,7 @@ When we have multiple explanatory variables, we are often interested in question
 Blood pressure is again the response variable, with age and lifestyle as two explanatory variables. Lifestyle is a continuous variable that is the number of minutes of exercise per week.
 
 ```{r}
+#| echo: false
 bp_data_multreg <- tibble(age = ceiling(runif(100, 20, 80)),
                        mins_exercise = ceiling(runif(100, 0, 300)))
 bp_data_multreg$bp <- ceiling(90 + 0.5 * bp_data_multreg$age - 0.1 * bp_data_multreg$mins_exercise + rnorm(100, 0, 10))
@@ -45,11 +46,16 @@ bp_data_multreg$bp <- ceiling(90 + 0.5 * bp_data_multreg$age - 0.1 * bp_data_mul
 write_csv(bp_data_multreg, "datasets/bp_data_multreg.csv")
 ```
 
+Reading in the dataset:
+```{r}
+bp_data_multreg <- read_csv("datasets/bp_data_multreg.csv")
+```
+
 
 Here is a look at the dataset:
 
 ```{r}
-bp_data_multreg
+head(bp_data_multreg)
 ```
 
 Since there are three variables, we can make three different scatter plots to visualise the relationships:
@@ -57,6 +63,7 @@ Since there are three variables, we can make three different scatter plots to vi
 **1. Age vs blood pressure.** This is the graph of the response variable (blood pressure) against one of the explanatory variables (age). It looks like there is evidence of a positive relationship.
 
 ```{r}
+#| echo: false
 ggplot2::ggplot(bp_data_multreg, aes(x = age, y = bp)) +
   geom_point() +
   labs(x = "Age", y = "Blood pressure")
@@ -67,6 +74,7 @@ Here we see a positive relationship between age and blood pressure. Blood pressu
 **2. Minutes of exercise vs blood pressure.** This is a graph of the response variable (blood pressure) against the other explanatory variable (minutes of exercise). It looks like there is evidence of a negative relationship.
 
 ```{r}
+#| echo: false
 ggplot2::ggplot(bp_data_multreg, aes(x = mins_exercise, y = bp)) +
   geom_point() +
   labs(x = "Minutes of exercise", y = "Blood pressure")
@@ -77,6 +85,7 @@ Here we see a negative relationship between minutes of exercise and blood pressu
 **3. Age vs minutes of exercise.** This is a graph of the two explanatory variables against each other. It looks like there is no relationship.
 
 ```{r}
+#| echo: false
 ggplot2::ggplot(bp_data_multreg, aes(x = age, y = mins_exercise)) +
   geom_point() +
   labs(x = "Age", y = "Minutes of exercise")
@@ -146,6 +155,7 @@ $\hat{\beta}_0, \hat{\beta}_1, \ldots, \hat{\beta}_p$ are the estimated paramete
 
 
 ```{r fig.width = 6, fig.height = 6}
+#| echo: false
 # Define the x and y ranges
 x <- seq(-5, 5, length.out = 50)
 y <- seq(-5, 5, length.out = 50)
@@ -350,6 +360,9 @@ degrees of freedom).
 :::
 
 
+**Think–Pair–Share (#a_partial_effects)** What does "holding other variables constant" mean here? Is this always biologically plausible?
+
+
 ## Question 3: What proportion of variability is explained?
 
 ### Multiple $R^2$
@@ -443,7 +456,8 @@ In this form, we can see that as $p$ increases (as we add explanatory variables)
 
 
 ```{r}
-#| eval = FALSE
+#| eval: false
+#| echo: false
 n <- nrow(bp_data_multreg)
 p <- seq(1, 20, 1)
 R_squared <- summary(m1)$r.squared
@@ -634,6 +648,12 @@ bp_data_perfect <- data.frame(age = age,
 write_csv(bp_data_perfect, "datasets/bp_data_perfect.csv")
 ```
 
+Read in the data:
+
+```{r}
+bp_data_perfect <- read_csv("datasets/bp_data_perfect.csv")
+```
+
 
 Now we fit a multiple linear regression model with only age:
 
@@ -701,6 +721,7 @@ The bottom line is that collinearity between explanatory variables complicates t
 Let's have one more look at this instability that is caused by collinearity. And make this demonstration a bit more general. We'll simulate data with two explanatory variables that are correlated with each other to varying degrees. We'll then fit multiple linear regression models with both explanatory variables included, and see how the stability of the coefficients changes as we change the correlation between the explanatory variables.
 
 ```{r}
+#| echo: false
 simulate_beta_hats <- function(r, n = 100, nsim = 200) {
   
   tibble(sim = seq_len(nsim)) %>%
@@ -729,7 +750,7 @@ var_by_corr <- sim_results %>%
   summarise(var_beta1_hat = var(beta1_hat))
 
 p1 <- ggplot(sim_results, aes(x = factor(correlation), y = beta1_hat)) +
-  geom_point(color = "blue", alpha = 0.3, height = 0) +
+  geom_point(color = "blue", alpha = 0.3) +
   geom_hline(yintercept = 1, linetype = "dashed") +
   labs(
     x = "Correlation between predictors (r)\n(i.e., collinearity)",
@@ -764,7 +785,7 @@ This increase in variance caused by collinearity is known as the **variance infl
 Collinearity also affects the interpretation of the $R^2$ values. Collinearity will cause the collinear explanatory variables to share some of the explained variance. The $R^2$ value of the multiple regression will then be less than the sum of the $R^2$ values of the individual regressions of the response variable on each of the explanatory variables separately.
 
 ```{r}
-#| echo = FALSE
+#| echo: false
 m2_age <- lm(bp ~ age, data = bp_data_multreg)
 m2_mins_exercise <- lm(bp ~ mins_exercise, data = bp_data_multreg)
 m2_both <- lm(bp ~ age + mins_exercise, data = bp_data_multreg)
@@ -773,25 +794,27 @@ m2_both <- lm(bp ~ age + mins_exercise, data = bp_data_multreg)
 $R^2$ of the age only model:
 
 ```{r}
-#| echo = TRUE
+#| echo: true
 summary(m2_age)$r.squared
 ```
 
 $R^2$ of the mins_exercise only model:
 
 ```{r}
-#| echo = TRUE
+#| echo: true
 summary(m2_mins_exercise)$r.squared
 ```
 
 $R^2$ of the model with both age and mins_exercise:
 
 ```{r}
-#| echo = TRUE
+#| echo: true
 summary(m2_both)$r.squared
 ```
 
 In this case the two explanatory variables are strongly correlated and so share a lot of the explained variance. The $R^2$ value of the model with both explanatory variables is much less than the sum of the $R^2$ values of the models with each explanatory variable separately. In fact, either of the models with only one explanatory variable is nearly as good as the model with both explanatory variables. We don't gain much from including another explanatory variable in the model when we already include one explanatory variable that is strongly correlated with the other.
+
+**Think–Pair–Share** (#a_collinearity_intuition) Why can strong correlation among predictors make estimates unstable even if the model fits the data well?
 
 ### Do I have a problem (with collinearity)?
 
@@ -952,6 +975,8 @@ semi_partial_r2
 
 This means that about `r round(semi_partial_r2 * 100, 2)`% of the total variance in the response variable is explained by the focal explanatory variable (i.e., $x_1$), even once all other explanatory variables are already accounted for. This is explanatory power that is unique to the focal explanatory variable.
 
+
+**Think–Pair–Share** (#a_interpreting_coefficients_conditionally) How does the interpretation of a coefficient change when you add another predictor to the model?
 
 
 ## Review

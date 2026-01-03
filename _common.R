@@ -15,4 +15,3 @@ suppressMessages(library(gtsummary))
 suppressMessages(library(plotly))
 suppressMessages(library(lme4))       # mixed models
 suppressMessages(library(lmerTest)) # optional: p-values for fixed effects (advanced)
-#suppressMessages(library(emmeans))   # post-hoc tests for mixed models

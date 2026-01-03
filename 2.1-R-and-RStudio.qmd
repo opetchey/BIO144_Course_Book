@@ -25,6 +25,8 @@ What do we recommend? Try the cloud first. If you like it then continue to use i
 Whether you use the RStudio application on your computer, or use RStudio on the Cloud, you are responsible for the safety and persistence of your files (data, code, etc.). Just because you're using RStudio on the Cloud does not mean your files are automatically saved forever. Make sure to download and back up your important files regularly! 
 :::
 
+**Think–Pair–Share** (#a_r_vs_rstudio_roles)  What is one thing that R does, and one thing that RStudio does? Why is it useful that these are separate?
+
 
 ## Getting to know the RStudio IDE {#sec-getting-to-know-the-rstudio-ide}
 
@@ -68,6 +70,10 @@ a <- 5
 b <- 10
 c <- a + b
 ```
+
+
+**Think–Pair–Share** (#a_objects_not_files) When you type `a <- ...`, where does `x` live?
+
 
 And then print the value of `c`:
 
@@ -123,6 +129,7 @@ write_csv(my_data, "datasets/my_data.csv")
 ```
 
 
+
 Above we have numerous examples of functions: `exp()`, `sqrt()`, `c()`, `paste()`, `toupper()`, and `data.frame()`. Functions are a fundamental part of R programming. They are used to perform specific tasks, such as calculations, data manipulation, and data analysis. All functions have a name and can take arguments (inputs) and return values (outputs). They are called by writing the function name followed by parentheses, with any arguments inside the parentheses.
 
 You likely guessed that there is much much more to learn about R, but we will cover that as we go along in the course.
@@ -153,6 +160,7 @@ AI assistants like ChatGPT can also be useful for getting help with R programmin
 And of course there is always your course instructors and fellow students to help you out when you get stuck.
 
 
+**Think–Pair–Share** (#a_errors_are_information) When we do something that R does not understand, it often gives us an error message. In red! What will you do when you get an error message?
 
 
 ## Add-on packages {#sec-add-on-packages}
@@ -333,6 +341,13 @@ my_data <- my_data |>
 
 The `clean_names()` function from the `janitor` package will convert variable names to a consistent format (lowercase, spaces replaced by underscores, no special characters).
 
+::: {.callout-note}
+When we ran the code `library(janitor)` we got the message: **Attaching package: 'janitor'
+The following objects are masked from 'package:stats': chisq.test, fisher.test**
+This sometimes happens when two packages have functions with the same name. In this case, the `janitor` package has functions called `chisq.test()` and `fisher.test()`, which are also in the base `stats` package. When we load the `janitor` package, it masks (hides) the functions from the `stats` package. This is usually not a problem, but if you want to use the functions from the `stats` package, you can specify the package name when calling the function, like this: `stats::chisq.test()`.
+:::
+
+
 ### Manipulate the data frame
 
 Functions in the `dplyr` package are used to manipulate data frames:
@@ -357,7 +372,6 @@ Note that you will often see another pipe operator `%>%` used in examples. The p
 Lets work through some examples with a sample data frame:
 
 ```{r}
-library(dplyr)
 my_data1 <- tibble(
   name = c("Alice", "Bob", "Charlie", "David", "Eva"),
   age = c(25, 30, 35, 40, 45),
@@ -365,6 +379,7 @@ my_data1 <- tibble(
 ```
 
 ```{r}
+#| eval: false
 #| echo: false
 write_csv(my_data1, "datasets/my_data1.csv")
 ```

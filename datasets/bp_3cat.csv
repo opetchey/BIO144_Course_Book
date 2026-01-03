@@ -1,61 +1,61 @@
-"","diet","exercise","reps","bp"
-"1","meat heavy","high",1,83.7354618925767
-"2","meat heavy","low",1,115.117811684508
-"3","vegan","high",1,59.1897737160822
-"4","vegan","low",1,98.5867955152904
-"5","vegetarian","high",1,68.3547640374641
-"6","vegetarian","low",1,98.9810588036707
-"7","meat heavy","high",2,91.8364332422208
-"8","meat heavy","low",2,103.898432364114
-"9","vegan","high",2,57.8213630073107
-"10","vegan","low",2,83.97212272657
-"11","vegetarian","high",2,67.4663831986349
-"12","vegetarian","low",2,88.8797360674923
-"13","meat heavy","high",3,81.6437138758995
-"14","meat heavy","low",3,93.787594194582
-"15","vegan","high",3,50.7456498336519
-"16","vegan","low",3,88.8767161155937
-"17","vegetarian","high",3,76.9696337540474
-"18","vegetarian","low",3,98.4111969142442
-"19","meat heavy","high",4,105.952808021378
-"20","meat heavy","low",4,77.853001128225
-"21","vegan","high",4,30.1064830413663
-"22","vegan","low",4,84.461949594171
-"23","vegetarian","high",4,75.5666319867366
-"24","vegetarian","low",4,83.7063690391921
-"25","meat heavy","high",5,93.2950777181536
-"26","meat heavy","low",5,111.249309181431
-"27","vegan","high",5,56.1982574789471
-"28","vegan","low",5,71.2294044317139
-"29","vegetarian","high",5,63.1124430545048
-"30","vegetarian","low",5,109.33023701701
-"31","meat heavy","high",6,81.7953161588198
-"32","meat heavy","low",6,99.5506639098477
-"33","vegan","high",6,49.43871260471
-"34","vegan","low",6,80.8500543670032
-"35","vegetarian","high",6,62.9250484303788
-"36","vegetarian","low",6,114.803998985059
-"37","meat heavy","high",7,94.8742905242849
-"38","meat heavy","low",7,99.8380973690105
-"39","vegan","high",7,48.4420449329467
-"40","vegan","low",7,81.0571004628965
-"41","vegetarian","high",7,73.6458196213683
-"42","vegetarian","low",7,91.3277852353349
-"43","meat heavy","high",8,97.3832470512922
-"44","meat heavy","low",8,109.438362106853
-"45","vegan","high",8,35.2924761610073
-"46","vegan","low",8,84.4068660328881
-"47","vegetarian","high",8,77.6853292451542
-"48","vegetarian","low",8,84.5586537368347
-"49","meat heavy","high",9,95.7578135165349
-"50","meat heavy","low",9,108.212211950981
-"51","vegan","high",9,45.2184994489138
-"52","vegan","low",9,96.0002537198388
-"53","vegetarian","high",9,68.8765378784977
-"54","vegetarian","low",9,100.697196274424
-"55","meat heavy","high",10,86.9461161284364
-"56","meat heavy","low",10,105.939013212175
-"57","vegan","high",10,54.179415601997
-"58","vegan","low",10,92.6317574845754
-"59","vegetarian","high",10,78.8110772645421
-"60","vegetarian","low",10,93.6494539611918
+diet,exercise,reps,bp
+meat heavy,high,1,83.73546189257668
+meat heavy,low,1,115.11781168450848
+vegan,high,1,59.189773716082186
+vegan,low,1,98.58679551529045
+vegetarian,high,1,68.35476403746414
+vegetarian,low,1,98.98105880367068
+meat heavy,high,2,91.83643324222082
+meat heavy,low,2,103.89843236411431
+vegan,high,2,57.82136300731067
+vegan,low,2,83.97212272657005
+vegetarian,high,2,67.46638319863493
+vegetarian,low,2,88.87973606749229
+meat heavy,high,3,81.64371387589952
+meat heavy,low,3,93.78759419458196
+vegan,high,3,50.7456498336519
+vegan,low,3,88.8767161155937
+vegetarian,high,3,76.96963375404738
+vegetarian,low,3,98.41119691424424
+meat heavy,high,4,105.95280802137792
+meat heavy,low,4,77.853001128225
+vegan,high,4,30.10648304136627
+vegan,low,4,84.46194959417095
+vegetarian,high,4,75.56663198673657
+vegetarian,low,4,83.70636903919207
+meat heavy,high,5,93.2950777181536
+meat heavy,low,5,111.24930918143109
+vegan,high,5,56.1982574789471
+vegan,low,5,71.22940443171393
+vegetarian,high,5,63.1124430545048
+vegetarian,low,5,109.33023701701038
+meat heavy,high,6,81.79531615881984
+meat heavy,low,6,99.55066390984769
+vegan,high,6,49.43871260470999
+vegan,low,6,80.8500543670032
+vegetarian,high,6,62.9250484303788
+vegetarian,low,6,114.8039989850586
+meat heavy,high,7,94.87429052428486
+meat heavy,low,7,99.83809736901054
+vegan,high,7,48.44204493294671
+vegan,low,7,81.0571004628965
+vegetarian,high,7,73.6458196213683
+vegetarian,low,7,91.32778523533491
+meat heavy,high,8,97.38324705129217
+meat heavy,low,8,109.43836210685299
+vegan,high,8,35.29247616100726
+vegan,low,8,84.40686603288815
+vegetarian,high,8,77.68532924515415
+vegetarian,low,8,84.55865373683469
+meat heavy,high,9,95.75781351653492
+meat heavy,low,9,108.21221195098089
+vegan,high,9,45.218499448913796
+vegan,low,9,96.00025371983884
+vegetarian,high,9,68.87653787849771
+vegetarian,low,9,100.69719627442413
+meat heavy,high,10,86.94611612843644
+meat heavy,low,10,105.93901321217508
+vegan,high,10,54.17941560199702
+vegan,low,10,92.631757484575445
+vegetarian,high,10,78.81107726454215
+vegetarian,low,10,93.64945396119175

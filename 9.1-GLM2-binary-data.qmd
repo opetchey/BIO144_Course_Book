@@ -66,19 +66,28 @@ heart attacks is the same in the two contraception groups.
 
 ### A concrete example dataset
 
-We will reconstruct the classic 2×2 table from some example and store it as a dataset.
+We will reconstruct the classic 2×2 table from some example and store it as a dataset:
 
 ```{r}
+#| echo: false
 heart_attack <- tibble(
   contraception = c("yes", "yes", "no", "no"),
   heart_attack = c("yes", "no", "yes", "no"),
   n = c(23, 34, 35, 132)
 )
 
-write.csv(heart_attack, here("datasets", "heart_attack_2x2.csv"),
-          row.names = FALSE)
+write_csv(heart_attack, here("datasets", "heart_attack_2x2.csv"))
+```
 
-heart_attack
+Read in the heart attack dataset:
+```{r}
+heart_attack <- read_csv("datasets/heart_attack_2x2.csv")
+```
+
+Here are the first few rows of the heart attack dataset:
+
+```{r}
+head(heart_attack)
 ```
 
 We can create the table and run the $\chi^2$ test.
@@ -150,12 +159,17 @@ For each dose level, we know how many beetles were tested and how many
 were killed. This is **binomial (aggregated)** data.
 
 ```{r}
+#| echo: false
 data(beetle)
-write.csv(beetle, here("datasets", "beetle_mortality.csv"),
-          row.names = FALSE)
+write_csv(beetle, here("datasets", "beetle_mortality.csv"))
 ```
 
-Let's take a close look at the data:
+Read in the beetle dataset:
+```{r}
+beetle <- read_csv("datasets/beetle_mortality.csv")
+```
+
+Here are the first few rows of the beetle dataset:
 
 ```{r}
 head(beetle)
@@ -167,6 +181,7 @@ binary outcome (Number_killed and Number_tested). The mortality rate is also inc
 As always, start with a graph.
 
 ```{r fig.width=4, fig.height=3}
+#| echo: false
 ggplot(beetle, aes(x = Dose, y = Mortality_rate)) +
   geom_point() +
   #geom_smooth(method = "lm", se = FALSE) +
@@ -212,16 +227,21 @@ pred_killed <- predict(mod_beetle_pois,
                        type = "response")
 pred_killed
 num_tested_example <- beetle$Number_tested[beetle$Dose == dose_example]
+num_tested_example
 ```
 
 At the highest dose (76.54), the model predicts about 76 deaths, but only 60 beetles were tested! Clearly this is an impossible prediction. We can't go on with the Poisson model either.
 
 ::: {.callout-caution}
-**Poisson vs binomial in one sentence**  
+**Poisson vs binomial, when to use each**  
 Use a Poisson model when counts have *no known upper limit*.  
 Use a binomial model when counts are "$k$ successes out of $n$ trials".
 Use a binomial model when each observation is a 0/1 outcome.
 :::
+
+
+**Think–Pair–Share (#a_probability_not_linear)** Why is it dangerous to model probabilities directly using a linear model?
+
 
 ## The probability model: Bernoulli and binomial
 
@@ -342,6 +362,8 @@ $\pi=0.80$).
 
 **Think–Pair–Share** (#tps-or-vs-probability) Why might a treatment have a "big" odds ratio, but only a "small" change in probability in one situation?
 
+**Think–Pair–Share (#a_odds_vs_probability)** Why might odds be convenient mathematically,  
+even if probabilities feel more intuitive?
 
 
 ## Analysis of deviance (likelihood-based ANOVA)
@@ -357,8 +379,7 @@ As with the Poisson GLM, the model is fit using maximum likelihood estimation, a
 
 ## Plotting the fitted relationship
 
-We will plot $P(Y=1)$ (mortality probability) against dose using model
-predictions.
+We will plot $P(Y=1)$ (mortality probability) against dose using model predictions.
 
 ```{r}
 dose_grid <- tibble(Dose = seq(min(beetle$Dose)-20, max(beetle$Dose)+20, length.out = 400))
@@ -369,7 +390,11 @@ preds <- predict(beetle_glm, newdata = dose_grid, se.fit = TRUE) |>
          p_hat_lower_2se = exp(fit - 2*se.fit) / (1 + exp(fit - 2*se.fit))
        )
 dose_grid <- bind_cols(dose_grid, preds)
+```
 
+And now the plot:
+
+```{r}
 ggplot() +
   geom_point(data = beetle, aes(x = Dose, y = Mortality_rate)) +
   geom_line(data = dose_grid, aes(x = Dose, y = p_hat), color = "blue") +
@@ -435,11 +460,16 @@ In some datasets we observe a single 0/1 outcome per individual, rather than agg
 Individuals with low ESR (ESR is erythrocyte sedimentation rate and is a measure of general inflammation and infection) are generally considered healthy; ESR > 20 mm/hr indicates possible disease. We will model the probability of high ESR using fibrinogen and globulin concentration.
 
 ```{r}
+#| echo: false
 data("plasma", package = "HSAUR3")
 plasma <- plasma |>
   mutate(y = as.integer(ESR) - 1)  # ESR is a factor; convert to 0/1
-write.csv(plasma, here("datasets", "plasma_esr_original_HSAUR3.csv"),
-          row.names = FALSE)
+write_csv(plasma, here("datasets", "plasma_esr_original_HSAUR3.csv"))
+```
+
+Read in the plasma dataset:
+```{r}
+plasma <- read_csv("datasets/plasma_esr_original_HSAUR3.csv")
 ```
 
 Here are the first few rows of the data:
@@ -452,7 +482,10 @@ The ESR outcome is in two variables. `ESR` is a factor with levels "low" and "hi
 
 ### Complication 1: graphical description
 
+Simple scatter plots of 0/1 data are not so informative:
+
 ```{r fig.width=6, fig.height=2.8}
+#| echo: false
 p1 <- ggplot(plasma, aes(x = fibrinogen, y = y)) +
   geom_point() +
   scale_y_continuous(breaks = c(0, 1)) +

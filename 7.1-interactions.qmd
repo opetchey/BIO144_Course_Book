@@ -10,9 +10,10 @@ source("_common.R")
 
 Interactions are some of the most interesting phenomena in science, including biology. We are not talking about interactions between species, like predation, though these are also very interesting. We are talking about effects of one thing, like diet, depending on another thing, like exercise. Let's break that down a bit...
 
-Imagine we make a study of the effect of exercise (minutes per week) on blood pressure for people with a meat heavy diet. We might find the following:
+Imagine we make a study of the effect of exercise (minutes per week) on blood pressure for people with a meat heavy diet. 
 
 ```{r}
+#| echo: false
 set.seed(1)
 n <- 50
 mins_per_week <- runif(n, 0, 200)
@@ -23,15 +24,26 @@ bp_meatheavy <- data.frame(bp, mins_per_week, diet) |>
 ```
 
 ```{r}
-#| echo = FALSE
-write.csv(bp_meatheavy, here("datasets", "bp_meatheavy.csv"), row.names = FALSE)
+#| echo: false
+write_csv(bp_meatheavy, here("datasets", "bp_meatheavy.csv"))
 ```
+
+Read in the dataset:
+
+```{r}
+bp_meatheavy <- read.csv("datasets/bp_meatheavy.csv")
+```
+
+Here are the first few rows of the data:
 
 ```{r}
 head(bp_meatheavy)
 ```
 
+And here is a graph of the relationship between blood pressure and minutes of exercise for people with a meat heavy diet:
+
 ```{r}
+#| echo: false
 p_meat <- ggplot(bp_meatheavy, aes(x=mins_per_week, y=bp)) + 
   geom_point(col = "red") +
   geom_smooth(formula = y ~ x, method="lm", col = "red") +
@@ -43,9 +55,10 @@ p_meat <- ggplot(bp_meatheavy, aes(x=mins_per_week, y=bp)) +
 p_meat
 ```
 
-We see that exercise seems to lower blood pressure. But what if we look at the effect of exercise on blood pressure for people with a vegetarian diet?
+We see that exercise seems to lower blood pressure. But what if we look at the effect of exercise on blood pressure for people with a vegetarian diet? The relationship might look something like this:
 
 ```{r}
+#| echo: false
 n <- 50
 mins_per_week <- runif(n, 0, 200)
 diet <- rep("vegetarian", n)
@@ -55,11 +68,20 @@ head(bp_vegetarian)
 ```
 
 ```{r}
-#| echo = FALSE
-write.csv(bp_vegetarian, here("datasets", "bp_vegetarian.csv"), row.names = FALSE)
+#| echo: false
+write_csv(bp_vegetarian, here("datasets", "bp_vegetarian.csv"))
 ```
 
+Read in the dataset:
+
 ```{r}
+bp_vegetarian <- read.csv("datasets/bp_vegetarian.csv")
+```
+
+Here is a graph of the relationship between blood pressure and minutes of exercise for people with a vegetarian diet:
+
+```{r}
+#| echo: false
 p_veg <- ggplot(bp_vegetarian, aes(x=mins_per_week, y=bp)) + 
   geom_point(col = "blue") +
   geom_smooth(formula = y ~ x, method="lm", col = "blue") +
@@ -78,6 +100,7 @@ To summarise this finding, we can say that the effect of exercise on blood press
 This is very clear when we look at the both diets in the same graph:
 
 ```{r}
+#| echo: false
 bp_1cont1cat <- rbind(bp_meatheavy, bp_vegetarian)
 ggplot(bp_1cont1cat, aes(x=mins_per_week, y=bp, col=diet)) + 
   geom_point() +
@@ -91,10 +114,11 @@ ggplot(bp_1cont1cat, aes(x=mins_per_week, y=bp, col=diet)) +
 ```
 
 ```{r}
-#| echo = FALSE
-write.csv(bp_1cont1cat, here("datasets", "bp_1cont1cat.csv"), row.names = FALSE)
+#| echo: false
+write_csv(bp_1cont1cat, here("datasets", "bp_1cont1cat.csv"))
 ```
 
+(The dataset with both combined is in the file `bp_1cont1cat.csv`.)
 
 **Think-Pair-Share** (#tps-general-diet) Can we say anything general about the effect of diet on blood pressure?
 
@@ -122,13 +146,16 @@ In the example above, the effect of exercise on blood pressure was stronger for 
 
 That was an example of an interaction between a continuous explanatory variable (exercise) and a categorical explanatory variable (diet). Interactions can also occur between two categorical explanatory variables, or between two continuous explanatory variables. Let us look at some more examples.
 
+**Think–Pair–Share** (#a_when_lines_cross) What does it mean biologically when lines cross in an interaction plot? What does it mean when they are parallel?
+
+
 ## Two cats
 
 Two categorical explanatory variables: diet (meat heavy or vegetarian) and exercise (low or high), and one continuous response variable (blood pressure).
 
-Here are the first few rows of the data:
 
 ```{r}
+#| echo: false
 set.seed(1)
 reps <- 1:10
 bp_2cat <- crossing(diet = c("meat heavy", "vegetarian"),
@@ -143,9 +170,18 @@ bp_2cat <- crossing(diet = c("meat heavy", "vegetarian"),
 ```
 
 ```{r}
-#| echo = FALSE
-write.csv(bp_2cat, here("datasets", "bp_2cat.csv"), row.names = FALSE)
+#| echo: false
+write_csv(bp_2cat, here("datasets", "bp_2cat.csv"))
 ```
+
+Read in the dataset:
+
+```{r}
+bp_2cat <- read.csv("datasets/bp_2cat.csv")
+```
+
+
+Here are the first few rows of the data:
 
 ```{r}
 head(bp_2cat)
@@ -154,6 +190,7 @@ head(bp_2cat)
 And here is the data in a graph, where we show the individual data points as well as the group means connected by lines. The lines connecting the means are only to help visualize whether there is an interaction or not. If we see non-parallel lines connecting the means, we have evidence of an interaction.
 
 ```{r}
+#| echo: false
 grouped_data <- group_by(bp_2cat, diet, exercise) %>%
   summarise(mean_bp = mean(bp), sd_bp = sd(bp), .groups = "drop")
 ggplot(bp_2cat, aes(x=exercise, y=bp, col=diet)) + 
@@ -177,27 +214,39 @@ Indeed, the lines connecting the means are not parallel, which is evidence of an
 
 Two continuous explanatory variables (age and exercise minutes) and one continuous response variable (blood pressure).
 
-Here is the first few rows of the data:
+
 
 ```{r}
+#| echo: false
 set.seed(1)
 n <- 100
 age <- runif(n, 20, 80)
 mins_per_week <- runif(n, 0, 200)
 bp <- 100 - 0.5*mins_per_week + 0.1*age + 0.005 * mins_per_week * age + rnorm(n, 0, 0.1)
 bp_2cont <- data.frame(bp, age, mins_per_week)
-head(bp_2cont)
 ```
 
 ```{r}
-#| echo = FALSE
-write.csv(bp_2cont, here("datasets", "bp_2cont.csv"), row.names = FALSE)
+#| echo: false
+write_csv(bp_2cont, here("datasets", "bp_2cont.csv"))
 ```
 
+Read in the dataset:
+```{r}
+bp_2cont <- read.csv("datasets/bp_2cont.csv")
+```
+
+
+Here is the first few rows of the data:
+
+```{r}
+head(bp_2cont)
+```
 
 Now we have a little challenge, namely that we have two continuous explanatory variables. This means that we need to use three dimensions to visualize the data. Here is a standard 2D scatter plot of blood pressure against minutes of exercise, though with age represented by color grading from young (dark blue) to old (yellow):
 
 ```{r}
+#| echo: false
 ## use dark blue to yellow color scale
 ggplot(bp_2cont, aes(x=mins_per_week, y=bp, col = age)) + 
   geom_point(size = 2) + 
@@ -210,6 +259,7 @@ ggplot(bp_2cont, aes(x=mins_per_week, y=bp, col = age)) +
 And we can make the complementary plot of blood pressure against age, with minutes of exercise represented by color grading from low (green) to high (orange):
 
 ```{r}
+#| echo: false
 ggplot(bp_2cont, aes(x=age, y=bp, col = mins_per_week)) + 
   geom_point(size = 2) + 
   scale_color_gradient(low = "green", high = "orange") +
@@ -226,6 +276,7 @@ What do we see? If we look at a set of points of the similar colour (i.e., simil
 Yet another way to visualise this interaction is to create categorical versions of age and minutes of exercise, and then plot the data with these categorical variables:
 
 ```{r}
+#| echo: false
 bp_2cont <- bp_2cont |>
   mutate(age_class = cut(age,
                    breaks = seq(10, 100, 10),
@@ -249,6 +300,7 @@ head(bp_2cont)
 And here is the plot of blood pressure against minutes of exercise, with age class represented by colour. Regression lines have been added, to help visualize any interaction:
 
 ```{r}
+#| echo: false
 ggplot(bp_2cont, aes(x=mins_per_week, y=bp, col = age_class)) +
   geom_point(size = 2) + 
   geom_smooth(method = "lm", formula = y ~ x) +
@@ -262,6 +314,7 @@ It is as we saw in the previous version of the graph. The slope of the relations
 In the complementary graph of blood pressure against age, with minutes of exercise represented by colour, we see the same interaction:
 
 ```{r}
+#| echo: false
 ggplot(bp_2cont, aes(x=age, y=bp, col = mins_per_week_class)) +
   geom_point(size = 2) + 
   geom_smooth(method = "lm", formula = y ~ x) +
@@ -299,6 +352,7 @@ When a doctor is considering giving us a particular medication, we are asked if 
 Let us return to the example of the effects of number of minutes of exercise and diet on blood pressure:
 
 ```{r}
+#| echo: false
 ggplot(bp_1cont1cat, aes(x=mins_per_week, y=bp, col=diet)) + 
   geom_point() +
   geom_smooth(method="lm", formula = y ~ x) +
@@ -381,7 +435,7 @@ If we reject the null hypothesis, we conclude that the effect of minutes of exer
 Let us fit the model with the interaction term in R. There are two methods to do this and they are equivalent:
 
 ```{r}
-#| echo = TRUE
+#| echo: true
 mod1 <- lm(bp ~ mins_per_week + diet + mins_per_week:diet, data=bp_1cont1cat)
 mod2 <- lm(bp ~ mins_per_week * diet, data=bp_1cont1cat)
 ```
@@ -397,6 +451,7 @@ plot(mod2, add.smooth=FALSE)
 
 All of the plots look good.
 Now we can do hypothesis testing of the interaction term using an F-test:
+
 ```{r}
 anova(mod2)
 ```
@@ -423,7 +478,6 @@ The third is `dietvegetarian`, which is the effect of being on a vegetarian diet
 The fourth is the interaction term `mins_per_week:dietvegetarian`, which is the difference in the effect (slope) of minutes of exercise on blood pressure for a person on a vegetarian diet compared to a person on a "meat heavy" diet.
 
 
-
 **Think-Pair-Share** (#tps-two-equations) Write two equations, one for each of the two diets. They would look something like this: $y_i = 0.1 - 0.1 x_{i}^{(1)}$, but will have other numbers.
 
 
@@ -432,6 +486,7 @@ The fourth is the interaction term `mins_per_week:dietvegetarian`, which is the 
 Of course a nice graph is always helpful. We already have quite a nice one:
 
 ```{r}
+#| echo: false
 ggplot(bp_1cont1cat, aes(x=mins_per_week, y=bp, col=diet)) +
   geom_point() +
   geom_smooth(method="lm", se=FALSE, formula = y ~ x) +
@@ -444,6 +499,7 @@ ggplot(bp_1cont1cat, aes(x=mins_per_week, y=bp, col=diet)) +
 We also might want some tables summarizing the model results. Here is a table of the coefficients:
 
 ```{r}
+#| echo: false
 tab_coef <- summary(mod2)$coefficients
 
 if (knitr::is_latex_output()) {
@@ -466,6 +522,7 @@ summary(mod2)$r.squared
 And also a table of the variances of the terms in the model:
 
 ```{r}
+#| echo: false
 tab_anova <- anova(mod2)
 
 if (knitr::is_latex_output()) {
@@ -479,6 +536,9 @@ if (knitr::is_latex_output()) {
 
 
 We also might use a sentence like this to report the results: "The effect of minutes of exercise is generally negative, but the effect is stronger for people on a meat heavy diet than for people on a vegetarian diet ($F$-statistics of interaction term = `r round(anova(mod2)[3,4],2)`, degrees of freedom = `r anova(mod2)[3,1]`, degrees of freedom residuals = `r anova(mod2)[4,1]`, $p$-value = `r signif(anova(mod2)[3,5],2)`)."
+
+
+**Think–Pair–Share (#a_interaction_vs_main_effect)** How does an interaction change the meaning of a "main effect"? Can a main effect be misleading when an interaction is present?
 
 
 ## Multiple regression vs. many single regressions
@@ -514,9 +574,17 @@ An important distinction is that the first use assumes the covariate has the sam
 
 Above we had an example with two categorical explanatory variables (diet [levels: meat heavy or vegetarian] and exercise [levels: low or high]) and one continuous response variable (blood pressure). This is an example of a two-way ANOVA. Two-way ANOVA is used to test for effects of two categorical explanatory variables, as well as their interaction effect on a continuous response variable.
 
-Here is the example data:
+Here are the first few rows of the data again:
 
 ```{r}
+#| echo: false
+head(bp_2cat)
+```
+
+Here is the graph of the data again:
+
+```{r}
+#| echo: false
 ggplot(bp_2cat, aes(x=exercise, y=bp, col=diet)) + 
   geom_point(position=position_dodge(width=0.1), alpha = 0.5) + 
   geom_point(data = grouped_data, aes(x=exercise, y=mean_bp, col=diet),
@@ -569,9 +637,10 @@ In this example, the F-statistic for the interaction term is quite large (`r rou
 
 What if we had a categorical explanatory variable with more than two levels? For example, what if diet had three levels: meat heavy, vegetarian, and vegan?
 
-Here is an example dataset:
+Here is an example dataset.
 
 ```{r}
+#| echo: false
 set.seed(1)
 reps <- 1:10
 bp_2cat_3levels <- crossing(diet = c("meat heavy", "vegetarian",
@@ -587,9 +656,16 @@ bp_2cat_3levels <- crossing(diet = c("meat heavy", "vegetarian",
 ```
 
 ```{r}
-#| echo = FALSE
-write.csv(bp_2cat_3levels, here("datasets", "bp_3cat.csv"))
+#| echo: false
+write_csv(bp_2cat_3levels, here("datasets", "bp_3cat.csv"))
 ```
+
+Read in the dataset:
+```{r}
+bp_2cat_3levels <- read.csv("datasets/bp_3cat.csv")
+```
+
+Here are the first few rows of the data:
 
 ```{r}
 head(bp_2cat_3levels)
@@ -598,6 +674,7 @@ head(bp_2cat_3levels)
 Here is the graph of the data:
 
 ```{r}
+#| echo: false
 grouped_data_3levels <- group_by(bp_2cat_3levels, diet,
          exercise) %>%
   summarise(mean_bp = mean(bp), sd_bp = sd(bp), .groups = "drop")
@@ -616,6 +693,7 @@ ggplot(bp_2cat_3levels, aes(x=exercise, y=bp, col=diet)) +
 Or plotted differently:
 
 ```{r}
+#| echo: false
 ggplot(bp_2cat_3levels, aes(x=diet, y=bp, col=exercise)) + 
   geom_point(position=position_dodge(width=0.1), alpha = 0.5) + 
   geom_point(data = grouped_data_3levels, aes(x=diet, y=mean_bp, col=exercise),
@@ -670,9 +748,17 @@ Don't worry if this is a bit confusing at first. It will become clearer with pra
 
 Above we had the example of two continuous explanatory variables (age and minutes of exercise) and one continuous response variable (blood pressure). We saw evidence of an interaction between age and minutes of exercise on blood pressure.
 
+Here are the first few rows of the data again:
+
+```{r}
+#| echo: false
+head(bp_2cont)
+```
+
 Here is the data in a graph, with age represented by a colour gradient:
 
 ```{r}
+#| echo: false
 ggplot(bp_2cont, aes(x=mins_per_week, y=bp, col = age)) + 
   geom_point(size = 2) + 
   scale_color_gradient(low = "darkblue", high = "yellow") +
@@ -715,6 +801,7 @@ However, if there is an interaction between the two categorical explanatory vari
 We can see this in the example:
 
 ```{r}
+#| echo: false
 ggplot(bp_2cat, aes(x=exercise, y=bp, col=diet)) + 
   geom_point(position=position_dodge(width=0.1), alpha = 0.5) + 
   geom_point(data = grouped_data, aes(x=exercise, y=mean_bp, col=diet),
@@ -733,6 +820,7 @@ There is a main effect of diet on blood pressure, as well as a main effect of ex
 It could look otherwise. For example, if we found a (albeit rather unlikely pattern) of higher blood pressure for vegetarians how exercise little, and lower blood pressure for vegetarians who exercise a lot, we would have a pattern as follows:
 
 ```{r}
+#| echo: false
 bd_2cat_weird <- data.frame(
   reps = paste0("R", 1:40),
   diet = rep(c("meat heavy", "vegetarian"), each = 20),
@@ -780,6 +868,7 @@ Interpretation of three-way interactions can be quite complex, as it involves un
 ### 3d scatter plot
 
 ```{r fig.width = 6, fig.height = 6}
+#| echo: false
 plotly::plot_ly(bp_2cont, x = ~mins_per_week, y = ~age, z = ~bp, type = "scatter3d", mode = "markers", color = age)
 ```
 

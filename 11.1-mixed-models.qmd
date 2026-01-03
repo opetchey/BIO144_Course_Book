@@ -1,10 +1,8 @@
 ```{r}
-suppressMessages(library(tidyverse))
-suppressMessages(library(here))
-suppressMessages(library(lme4))       # mixed models
-suppressMessages(library(lmerTest)) # optional: p-values for fixed effects (advanced)
-suppressMessages(library(patchwork))
+#| echo: false
+source("_common.R")
 ```
+
 
 # Mixed models (L11-1) {.unnumbered}
 
@@ -30,8 +28,7 @@ In these cases, treating all rows as independent often leads to **false confiden
 * **random effects**: variation among groups (individuals, sites, years, …) that induces correlation within groups
 :::
 
-**Think–Pair–Share (#tps-why-mixed)**  
-Name one example in biology where multiple measurements come from the same "unit" (individual, plot, lake, strain, batch…). What goes wrong if we pretend those measurements are independent?
+**Think–Pair–Share** (#tps-why-mixed) Name one example in biology where multiple measurements come from the same "unit" (individual, plot, lake, strain, batch…). What goes wrong if we pretend those measurements are independent?
 
 ## Why not just average?
 

@@ -117,6 +117,12 @@ my_data <- data.frame(
 my_data
 ```
 
+```{r}
+#| echo: false
+write_csv(my_data, "datasets/my_data.csv")
+```
+
+
 Above we have numerous examples of functions: `exp()`, `sqrt()`, `c()`, `paste()`, `toupper()`, and `data.frame()`. Functions are a fundamental part of R programming. They are used to perform specific tasks, such as calculations, data manipulation, and data analysis. All functions have a name and can take arguments (inputs) and return values (outputs). They are called by writing the function name followed by parentheses, with any arguments inside the parentheses.
 
 You likely guessed that there is much much more to learn about R, but we will cover that as we go along in the course.
@@ -227,13 +233,15 @@ First, get some data sets for us to work with. **XYZ** You can download them fro
 
 We will use the `readr` package to import data into R. The `readr` package provides functions to read data from various file formats, including CSV (comma-separated values) files, tab-separated values files, and others.
 
-To read a CSV file, we can use the `read_csv()` function from the `readr` package. For example, to read a CSV file called `data.csv`, we can use the following code:
+To read a CSV file, we can use the `read_csv()` function from the `readr` package. For example, to read a CSV file called `my_data_file.csv`, we can use the following code:
 
 ```{r}
 #| eval: false
 library(readr)
-my_data <- read_csv("data/my_data_file.csv")
+my_data <- read_csv("datasets/my_data_file.csv")
 ```
+
+
 
 This code will read the `data.csv` file from the `data` folder within the current working directory (which should be the R Project directory) and store it in a data frame called `data`.
 
@@ -350,19 +358,30 @@ Lets work through some examples with a sample data frame:
 
 ```{r}
 library(dplyr)
-my_data <- tibble(
+my_data1 <- tibble(
   name = c("Alice", "Bob", "Charlie", "David", "Eva"),
   age = c(25, 30, 35, 40, 45),
   score = c(90, 85, 95, 80, 70))
 ```
 
+```{r}
+#| echo: false
+write_csv(my_data1, "datasets/my_data1.csv")
+```
+
+
 Here is the same dataset with 100 rows:
 
 ```{r}
 set.seed(123)
-my_data <- tibble(name = paste0("Person_", sprintf("%03d", 1:100)),
+my_data2 <- tibble(name = paste0("Person_", sprintf("%03d", 1:100)),
   age = sample(20:50, 100, replace = TRUE),
   score = rnorm(100, mean = 75, sd = 10))
+```
+
+```{r}
+#| echo: false
+write_csv(my_data2, "datasets/my_data2.csv")
 ```
 
 
@@ -372,28 +391,28 @@ my_data <- tibble(name = paste0("Person_", sprintf("%03d", 1:100)),
 We can select columns by name
 
 ```{r}
-my_data |> 
+my_data2 |> 
   select(name, score)
 ```
 
 We can select columns by position
 
 ```{r}
-my_data |> 
+my_data2 |> 
   select(1, 3)
 ```
 
 We can select columns by a condition, for example select only the numeric columns:
 
 ```{r}
-my_data |> 
+my_data2 |> 
   select(where(is.numeric))
 ```
 
 We can select a column by pattern matching, using helper functions, for example select columns that contain the letter "a":
 
 ```{r}
-my_data |> 
+my_data2 |> 
   select(contains("a"))
 ```
 
@@ -406,7 +425,7 @@ Other helpers include `starts_with()`, `ends_with()`, `matches()`, and `everythi
 To get particular rows of data, we can use the `filter()` function. This function takes a *logical condition* as an argument and returns only the rows that meet that condition. For example, to get all rows where the Age is greater than 30:
 
 ```{r}
-my_data |> 
+my_data2 |> 
   filter(age > 30)
 ```
 
@@ -415,7 +434,7 @@ Here, the logical condition is `age > 30`.
 We can combine multiple conditions using the logical operators `&` (and), `|` (or), and `!` (not). For example, to get all rows where the Age is greater than 30 and the Score is less than 90:
 
 ```{r}
-my_data |> 
+my_data2 |> 
   filter(age > 30 & score < 90)
 ```
 
@@ -427,7 +446,7 @@ Other logical operators include `==` (equal to), `!=` (not equal to), `<=` (less
 The `slice()` function allows us to get rows by their position in the data frame. For example, to get the first two rows:
 
 ```{r}
-my_data |> 
+my_data2 |> 
   slice(1:2)
 ```
 
@@ -439,14 +458,14 @@ I very rarely use this function, as I prefer to use `filter()` with logical cond
 The `arrange()` function allows us to reorder the rows of a data frame based on the values in one or more columns. For example, to reorder the rows by Age in ascending order:
 
 ```{r}
-my_data |> 
+my_data2 |> 
   arrange(age)
 ```
 
 I f we want to reorder the rows by Age in descending order, we can use the `desc()` function:
 
 ```{r}
-my_data |> 
+my_data2 |> 
   arrange(desc(age))
 ```
 
@@ -462,14 +481,14 @@ Note that when you view the data in RStudio, it will always be arranged by the r
 The `mutate()` function allows us to add new variables to a data frame. For example, to add a new variable called `Age_in_5_years` that is the Age plus 5:
 
 ```{r}
-my_data |> 
+my_data2 |> 
   mutate(age_in_5_years = age + 5)
 ```
 
 We can add multiple new variables at once:
 
 ```{r}
-my_data |> 
+my_data2 |> 
   mutate(
     age_in_5_years = age + 5,
     percentage_score = score / 100
@@ -483,7 +502,7 @@ Variables in a data frame in R have a *type*. The most common types of variables
 When we import data categorical variable is usually imported as a `character` variable. For example, the variable `name` in our example dataset is a categorical variable of type `character`. Look at the first few rows of the dataset again, and see that below the variable name it says `<chr>` for the `name` variable:
 
 ```{r}
-my_data
+my_data2
 ```
 
 This is all totally fine. There are, however, use cases where we might want to convert a `character` variable to a `factor` variable. Factors are useful when we have a categorical variable with a fixed number of levels, and we want to specify the order of those levels. For example, if we had a variable called `education_level` with the values "High School", "Bachelor's", "Master's", and "PhD", we might want to convert this variable to a factor and specify the order of the levels.
@@ -491,17 +510,23 @@ This is all totally fine. There are, however, use cases where we might want to c
 Let's make a new dataset to illustrate this:
 
 ```{r}
-my_data2 <- tibble(
+my_data3 <- tibble(
   name = c("Alice", "Bob", "Charlie", "David", "Eve"),
   education_level = c("Bachelor's", "Master's", "PhD", "High School", "Bachelor's"),
   age = c(19, 23, 25, 16, 20)
 )
 ```
 
+```{r}
+#| echo: false
+write_csv(my_data3, "datasets/my_data3.csv")
+```
+
+
 Look at the structure of this new dataset:
 
 ```{r}
-my_data2
+my_data3
 ```
 
 We can see that the `education_level` variable is of type `<chr>`, which is `character`.
@@ -509,9 +534,9 @@ We can see that the `education_level` variable is of type `<chr>`, which is `cha
 We can convert the `education_level` variable to a factor:
 
 ```{r}
-my_data2 <- my_data2 |> 
+my_data3 <- my_data3 |> 
   mutate(education_level = factor(education_level))
-my_data2
+my_data3
 ```
 
 Now, the `education_level` variable is of type `<fct>`, which is `factor`.
@@ -519,7 +544,7 @@ Now, the `education_level` variable is of type `<fct>`, which is `factor`.
 Here is a graph of age by education level:
 
 ```{r}
-ggplot(my_data2, aes(x = education_level, y = age)) +
+ggplot(my_data3, aes(x = education_level, y = age)) +
   geom_point()
 ```
 
@@ -534,7 +559,7 @@ It would be much better to have the levels ordered as "High School", "Bachelor's
 We can fix this by specifying the order of the levels when we convert the variable to a factor:
 
 ```{r}
-my_data2 <- my_data2 |> 
+my_data3 <- my_data3 |> 
   mutate(education_level = factor(education_level,
                                   levels = c("High School", "Bachelor's", "Master's", "PhD")))
 ```
@@ -542,7 +567,7 @@ my_data2 <- my_data2 |>
 Now when we plot the data again, the education levels are in the correct order:
 
 ```{r}
-ggplot(my_data2, aes(x = education_level, y = age)) +
+ggplot(my_data3, aes(x = education_level, y = age)) +
   geom_point()
 ```
 
@@ -558,21 +583,21 @@ There are many many many types of data visualisation. We will not explore them a
 
 ```{r}
 library(ggplot2)
-ggplot(my_data, aes(x = age, y = score)) +
+ggplot(my_data2, aes(x = age, y = score)) +
   geom_point()
 ```
 
 *Histograms* are used to visualise the distribution of a single continuous variable. The axiss are different to scatterplots: the x-axis is the variable being measured, and the y-axis is the count (or frequency) of observations in each bin. A bin is a range of values. Here is an esample of a histogram:
 
 ```{r}
-ggplot(my_data, aes(x = score)) +
+ggplot(my_data2, aes(x = score)) +
   geom_histogram(bins = 10)
 ```
 
 *Box and whisker plots* are used to visualise the distribution of a continuous variable across different categories. Here is an example of a box and whisker plot. First we add a new variable that is age group:
 
 ```{r}
-my_data <- my_data |> 
+my_data2 <- my_data2 |> 
   mutate(age_group = case_when(
     age < 30 ~ "20-29",
     age >= 30 & age < 40 ~ "30-39",
@@ -583,7 +608,7 @@ my_data <- my_data |>
 The new variable `age_group` is a categorical variable with three levels: "20-29", "30-39", and "40-49". We make this using the `case_when()` function. This function works by checking each condition (which are given as the arguments to the function) in turn, and assigning the corresponding value when the condition is true. Now we can make the box and whisker plot:
 
 ```{r}
-ggplot(my_data, aes(x = factor(age_group), y = score)) +
+ggplot(my_data2, aes(x = factor(age_group), y = score)) +
   geom_boxplot()
 ```
 
@@ -604,7 +629,7 @@ You will notice that for the scatterplot and the box and whisker plot, we specif
 We can customise many features of the graph using additional arguments to the `ggplot()` function and the `geom_` functions. For example, we can add titles and labels to the axes using the `labs()` function:
 
 ```{r}
-ggplot(my_data, aes(x = age, y = score)) +
+ggplot(my_data2, aes(x = age, y = score)) +
   geom_point() +
   labs(
     title = "Scatterplot of Age vs Score",
@@ -616,7 +641,7 @@ ggplot(my_data, aes(x = age, y = score)) +
 We can also change the theme of the plot using the `theme_` functions. For example, to use a minimal theme, and add it the customisations we already made:
 
 ```{r}
-ggplot(my_data, aes(x = age, y = score)) +
+ggplot(my_data2, aes(x = age, y = score)) +
   geom_point() +
   labs(
     title = "Scatterplot of Age vs Score",
@@ -633,7 +658,7 @@ There are a  million and one ways to customise visualisations in `ggplot2`. We w
 Another feature that is very useful is to save ggplot visualisations to objects and then save to a file (for example a pdf). First, here is how we save a ggplot to an object:
 
 ```{r}
-plot1 <- ggplot(my_data, aes(x = age, y = score)) +
+plot1 <- ggplot(my_data2, aes(x = age, y = score)) +
   geom_point() +
   labs(
     title = "Scatterplot of Age vs Score",
@@ -689,7 +714,7 @@ library(patchwork)
 Next make the first plot and assign it to an object:
 
 ```{r}
-plot1 <- ggplot(my_data, aes(x = age, y = score)) +
+plot1 <- ggplot(my_data2, aes(x = age, y = score)) +
   geom_point() +
   labs(
     title = "Scatterplot of Age vs Score",
@@ -702,7 +727,7 @@ plot1 <- ggplot(my_data, aes(x = age, y = score)) +
 Now make the second plot and assign it to an object:
 
 ```{r}  
-plot2 <- ggplot(my_data, aes(x = score)) +
+plot2 <- ggplot(my_data2, aes(x = score)) +
   geom_histogram(binwidth = 5) +
   labs(
     title = "Histogram of Scores",
@@ -715,7 +740,7 @@ plot2 <- ggplot(my_data, aes(x = score)) +
 Now make the third plot and assign it to an object:
 
 ```{r}
-plot3 <- ggplot(my_data, aes(x = factor(age_group), y = score)) +
+plot3 <- ggplot(my_data2, aes(x = factor(age_group), y = score)) +
   geom_boxplot() +
   labs(
     title = "Boxplot of Scores by Age Group",
@@ -741,16 +766,21 @@ Sometimes when fitting linear models with categorical explanatory (independent) 
 First, let's create a simple dataset:
 
 ```{r}
-my_data <- tibble(
+my_data4 <- tibble(
   treatment = factor(c("Control", "Aspirin", "Ibuprofen", "Control", "Aspirin", "Ibuprofen")),
   response = c(5, 7, 6, 4, 8, 7)
 )
 ```
 
+```{r}
+#| echo: false
+write_csv(my_data4, "datasets/my_data4.csv")
+```
+
 By default, R will set the first level of the factor (in alphabetical order) as the reference level. In this case, "Aspirin" would be the reference level. Therefore when we visualise the data:
 
 ```{r}
-ggplot(my_data, aes(x = treatment, y = response)) +
+ggplot(my_data4, aes(x = treatment, y = response)) +
   geom_point() +
   labs(
     title = "Response by Treatment",
@@ -765,7 +795,7 @@ It would be nicer to have the "Control" group as the first level on the left of 
 Likewise, when we make a linear model:
 
 ```{r}
-model1 <- lm(response ~ treatment, data = my_data)
+model1 <- lm(response ~ treatment, data = my_data4)
 summary(model1)
 ```
 
@@ -774,14 +804,14 @@ The (Intercept) term corresponds to the "Aspirin" group, and the coefficients fo
 If we want to set "Control" as the reference level, we can do so using `relevel()`:
 
 ```{r}
-my_data <- my_data %>%
+my_data4 <- my_data4 %>%
   mutate(treatment = relevel(treatment, ref = "Control"))
 ```
 
 Now when we visualise the data again:
 
 ```{r}
-ggplot(my_data, aes(x = treatment, y = response)) +
+ggplot(my_data4, aes(x = treatment, y = response)) +
   geom_point() +
   labs(
     title = "Response by Treatment",
@@ -796,7 +826,7 @@ Magic! The "Control" group is now the first level on the left of the x-axis.
 And when we fit the linear model again:
 
 ```{r}
-model2 <- lm(response ~ treatment, data = my_data)
+model2 <- lm(response ~ treatment, data = my_data4)
 summary(model2)
 ```
 

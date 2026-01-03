@@ -35,15 +35,21 @@ When we have multiple explanatory variables, we are often interested in question
 Blood pressure is again the response variable, with age and lifestyle as two explanatory variables. Lifestyle is a continuous variable that is the number of minutes of exercise per week.
 
 ```{r}
-bp_data <- tibble(age = ceiling(runif(100, 20, 80)),
+bp_data_multreg <- tibble(age = ceiling(runif(100, 20, 80)),
                        mins_exercise = ceiling(runif(100, 0, 300)))
-bp_data$bp <- ceiling(90 + 0.5 * bp_data$age - 0.1 * bp_data$mins_exercise + rnorm(100, 0, 10))
+bp_data_multreg$bp <- ceiling(90 + 0.5 * bp_data_multreg$age - 0.1 * bp_data_multreg$mins_exercise + rnorm(100, 0, 10))
 ```
+
+```{r}
+#| echo: false
+write_csv(bp_data_multreg, "datasets/bp_data_multreg.csv")
+```
+
 
 Here is a look at the dataset:
 
 ```{r}
-bp_data
+bp_data_multreg
 ```
 
 Since there are three variables, we can make three different scatter plots to visualise the relationships:
@@ -51,7 +57,7 @@ Since there are three variables, we can make three different scatter plots to vi
 **1. Age vs blood pressure.** This is the graph of the response variable (blood pressure) against one of the explanatory variables (age). It looks like there is evidence of a positive relationship.
 
 ```{r}
-ggplot2::ggplot(bp_data, aes(x = age, y = bp)) +
+ggplot2::ggplot(bp_data_multreg, aes(x = age, y = bp)) +
   geom_point() +
   labs(x = "Age", y = "Blood pressure")
 ```
@@ -61,7 +67,7 @@ Here we see a positive relationship between age and blood pressure. Blood pressu
 **2. Minutes of exercise vs blood pressure.** This is a graph of the response variable (blood pressure) against the other explanatory variable (minutes of exercise). It looks like there is evidence of a negative relationship.
 
 ```{r}
-ggplot2::ggplot(bp_data, aes(x = mins_exercise, y = bp)) +
+ggplot2::ggplot(bp_data_multreg, aes(x = mins_exercise, y = bp)) +
   geom_point() +
   labs(x = "Minutes of exercise", y = "Blood pressure")
 ```
@@ -71,7 +77,7 @@ Here we see a negative relationship between minutes of exercise and blood pressu
 **3. Age vs minutes of exercise.** This is a graph of the two explanatory variables against each other. It looks like there is no relationship.
 
 ```{r}
-ggplot2::ggplot(bp_data, aes(x = age, y = mins_exercise)) +
+ggplot2::ggplot(bp_data_multreg, aes(x = age, y = mins_exercise)) +
   geom_point() +
   labs(x = "Age", y = "Minutes of exercise")
 ```
@@ -134,11 +140,9 @@ where:
 
 $\hat{\beta}_0, \hat{\beta}_1, \ldots, \hat{\beta}_p$ are the estimated parameters.
 
-::: {.callout-tip}
-**Think, Pair, Share (#two-shape)**
 
-Graphically, a linear regression with one explanatory variable is a line. What is a geometric representation of linear regression with two explanatory variables?
-:::
+**Think, Pair, Share (#two-shape)** Graphically, a linear regression with one explanatory variable is a line. What is a geometric representation of linear regression with two explanatory variables?
+
 
 
 ```{r fig.width = 6, fig.height = 6}
@@ -208,7 +212,7 @@ We know how to estimate the parameters $\beta_0, \beta_1, \ldots, \beta_p$ using
 In R, we can fit a multiple linear regression model using the `lm()` function in a very similar way to the simple linear regression model. Here is the code for the blood pressure example. To fit two explanatory variables, we simply add the second variable to the formula using the `+` sign:
 
 ```{r eval=T,echo=T}
-m1 <- lm(bp ~ age + mins_exercise, data = bp_data)
+m1 <- lm(bp ~ age + mins_exercise, data = bp_data_multreg)
 ```
 
 
@@ -223,12 +227,8 @@ c) Independence of residuals.
 d) Linearity.
 e) No outliers.
 
-::: {.callout-tip}
-**Think, Pair, Share (#assump-match)**
 
-Review how we can check these assumptions in the simple linear regression model:
-
-Match the following to the assumptions above:
+**Think, Pair, Share (#assump-match)** Review how we can check these assumptions in the simple linear regression model. Match the following to the assumptions above:
 
 1) Graph of size of residuals vs. fitted values.
 2) QQ-plot.
@@ -237,7 +237,7 @@ Match the following to the assumptions above:
 
 And what is missing?
 
-:::
+
 
 
 
@@ -387,7 +387,7 @@ $$\hat{y}_i = \hat\beta_0 + \hat\beta_1 x^{(1)} + \ldots + \hat\beta_m x^{(m)}$$
 In R:
 
 ```{r echo = TRUE}
-r_squared <- cor(m1$fitted.values, bp_data$bp)^2
+r_squared <- cor(m1$fitted.values, bp_data_multreg$bp)^2
 r_squared
 ```
 
@@ -411,15 +411,15 @@ However, we have a little problem to address. The $R^2$ value increases as we ad
 Here is an example of this problem. First, here's the explanatory power of the model with only age and minutes of exercise as the explanatory variables:
 
 ```{r}
-m1 <- lm(bp ~ age + mins_exercise, data = bp_data)
+m1 <- lm(bp ~ age + mins_exercise, data = bp_data_multreg)
 summary(m1)$r.squared
 ```
 
 Now, we can add a new explanatory variable to the blood pressure model that is not associated with the response:
 
 ```{r echo = TRUE}
-bp_data$random_variable <- rnorm(nrow(bp_data))
-m2 <- lm(bp ~ age + mins_exercise + random_variable, data = bp_data)
+bp_data_multreg$random_variable <- rnorm(nrow(bp_data_multreg))
+m2 <- lm(bp ~ age + mins_exercise + random_variable, data = bp_data_multreg)
 summary(m2)$r.squared
 ```
 
@@ -444,7 +444,7 @@ In this form, we can see that as $p$ increases (as we add explanatory variables)
 
 ```{r}
 #| eval = FALSE
-n <- nrow(bp_data)
+n <- nrow(bp_data_multreg)
 p <- seq(1, 20, 1)
 R_squared <- summary(m1)$r.squared
 R_squared_adj <- 1 - (1 - R_squared) * (n - 1) / (n - p - 1)
@@ -469,11 +469,9 @@ Take home: when we want to compare the explanatory power of models that differ i
 
 How important are the explanatory variables and how important are they relative to each other?
 
-::: {.callout-tip}
-**Think, Pair, Share (#variable-importance)**
 
-How might we assess how important is each of the explanatory variables, and how important they are relative to each other?
-:::
+**Think, Pair, Share** (#variable-importance) How might we assess how important is each of the explanatory variables, and how important they are relative to each other?
+
 
 
 The importance of an explanatory variable can be assessed by looking at the size of the coefficient for that variable. The larger the coefficient, the more important the variable is in explaining the response variable.
@@ -490,11 +488,9 @@ However, the coefficients are then not in the original units of the explanatory 
 
 One way to relate the coefficients in this case is to realise that to compensate for the blood pressure increase associated with one year of age, one would need to exercise for a certain number of minutes more.
 
-::: {.callout-tip}
-*Think, Pair, Share (#exercise-age)*
 
-How many minutes of exercise per week would we need to add to our fitness schedule to compensate for the blood pressure increase associated with one year of age?
-:::
+**Think, Pair, Share** (#exercise-age) How many minutes of exercise per week would we need to add to our fitness schedule to compensate for the blood pressure increase associated with one year of age?
+
 
 
 ```{r}
@@ -592,7 +588,7 @@ ggplot(data = new_data_effects_3, aes(x = age, y = prediction,
 
 In the blood pressure example data used previously in this chapter there is no evidence of correlation between the two explanatory variables. However, in practice, it is common for explanatory variables to be correlated with each other. This is known as collinearity. It can be quite problematic for us!
 
-**Think-pair-share (#collinearity1)** Imagine if there was perfect correlation between age and minutes of exercise. This would mean that a graph of age vs minutes of exercise would show a perfect line. What would be the implications for the multiple linear regression model? For example, what would be the $R^2$ value for a model with one explanatory variable compared to a model with both explanatory variables?
+**Think, pair, share (#collinearity1)** Imagine if there was perfect correlation between age and minutes of exercise. This would mean that a graph of age vs minutes of exercise would show a perfect line. What would be the implications for the multiple linear regression model? For example, what would be the $R^2$ value for a model with one explanatory variable compared to a model with both explanatory variables?
 
 Collinearity, specifically *harmful* collinearity, is extremely common in real dataset that result from observational studies. This is because in observational studies there are often numerous explanatory variables, and they are often correlated with each other. This is a situation that is ripe for collinearity problems. (Collinearity can also happen in data resulting from designed manipulative experiments, but is hopefully relatively rare there because a well-designed experiment will try to avoid collinearity by ensuring that the explanatory variables are independent.)
 
@@ -632,6 +628,12 @@ bp_data_perfect <- data.frame(age = age,
                               mins_exercise = mins_exercise,
                               bp = bp)
 ```
+
+```{r}
+#| echo: false
+write_csv(bp_data_perfect, "datasets/bp_data_perfect.csv")
+```
+
 
 Now we fit a multiple linear regression model with only age:
 
@@ -763,9 +765,9 @@ Collinearity also affects the interpretation of the $R^2$ values. Collinearity w
 
 ```{r}
 #| echo = FALSE
-m2_age <- lm(bp ~ age, data = bp_data)
-m2_mins_exercise <- lm(bp ~ mins_exercise, data = bp_data)
-m2_both <- lm(bp ~ age + mins_exercise, data = bp_data)
+m2_age <- lm(bp ~ age, data = bp_data_multreg)
+m2_mins_exercise <- lm(bp ~ mins_exercise, data = bp_data_multreg)
+m2_both <- lm(bp ~ age + mins_exercise, data = bp_data_multreg)
 ```
 
 $R^2$ of the age only model:
@@ -814,9 +816,7 @@ The VIF measures how much the variance of the estimated regression coefficients 
 In R, we can calculate the VIF using the `vif()` function from the `car` package. Here is the code to calculate the VIF for the blood pressure model:
 
 ```{r echo = TRUE}
-library(car)
 vif(m1)
-
 ```
 
 We see that the VIF values for both explanatory variables are close to 1, indicating that there is no collinearity between the explanatory variables.
@@ -982,7 +982,7 @@ Multiple regression:
 Here is the code to make a 3D plot of the blood pressure data. The y-axis is blood pressure, the x-axis is age, and the z-axis is minutes of exercise. Here is a 3d plot that we can interactive with and rotate:
 
 ```{r fig.width = 6, fig.height = 6}
-plotly::plot_ly(bp_data, x = ~age, y = ~mins_exercise, z = ~bp, type = "scatter3d", mode = "markers", marker = list(size = 5))
+plotly::plot_ly(bp_data_multreg, x = ~age, y = ~mins_exercise, z = ~bp, type = "scatter3d", mode = "markers", marker = list(size = 5))
 ```
 
 ### Publication ready table of results
@@ -990,8 +990,6 @@ plotly::plot_ly(bp_data, x = ~age, y = ~mins_exercise, z = ~bp, type = "scatter3
 Sometimes we need to put a table of coefficients and confidence intervals into a report or publication. One option is to make a table in Word, and to manually enter the coefficients and confidence intervals. This is tedious and error prone. A much better option is to use R to make the table for us. One way to do this is to use the `broom` package to tidy up the model output into a data frame, and then use the `knitr` package to make a table from the data frame.
 
 ```{r echo = TRUE, as.is = TRUE}
-library(broom)
-library(knitr)
 tidy_m1 <- tidy(m1, conf.int = TRUE)
 kable(tidy_m1, digits = 3, caption = "Multiple linear regression results
 for blood pressure data")
@@ -1000,7 +998,6 @@ for blood pressure data")
 Another approach is to use `tbl_regression` function within the `gtsummary` package to get a publication ready table of the coefficients and confidence intervals:
 
 ```{r echo = TRUE, as.is = TRUE}
-library(gtsummary)
 tbl_regression(m1)
 ```
 

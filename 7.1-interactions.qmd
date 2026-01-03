@@ -96,12 +96,12 @@ write.csv(bp_1cont1cat, here("datasets", "bp_1cont1cat.csv"), row.names = FALSE)
 ```
 
 
-**Think-Pair-Share (#general-diet)** Can we say anything general about the effect of diet on blood pressure?
+**Think-Pair-Share** (#general-diet) Can we say anything general about the effect of diet on blood pressure?
 
 No, we can't. We cannot, for example, state that a vegetarian diet lowers blood pressure. We can say, however, that a vegetarian diet lowers blood pressure of people that do little exercise.
 
 
-**Think-Pair-Share (#general-exercise)** Can we say anything general about the effect of exercise on blood pressure?
+**Think-Pair-Share** (#general-exercise) Can we say anything general about the effect of exercise on blood pressure?
 
 Well, we can say that exercise lowers blood pressure, but we have to be careful. We have to say that exercise lowers blood pressure of people with a meat heavy diet more than it lowers blood pressure of people with a vegetarian diet.
 
@@ -313,7 +313,7 @@ We have one continuous explanatory variable (minutes of exercise) and one binary
 
 
 
-**Think-Pair-Share (#without-interaction)** What would a linear model without an interaction term be?
+**Think-Pair-Share** (#without-interaction) What would a linear model without an interaction term be?
 
 
 
@@ -333,7 +333,7 @@ This model is a multiple regression model in which one of the explanatory variab
 
 
 
-**Think-Pair-Share (#with-interaction)** What might the model look like if we wanted to include an interaction between diet and exercise?
+**Think-Pair-Share** (#with-interaction) What might the model look like if we wanted to include an interaction between diet and exercise?
 
 
 
@@ -358,7 +358,7 @@ This is again a multiple regression model, but now with three explanatory variab
 
 
 
-**Think-Pair-Share (#sketch-interaction)** Make sketches of the possible relationships between diet, exercise and blood pressure. Make a sketch compatible with $\beta_3 = 0$. Make a sketch compatible with $\beta_3 \neq 0$.
+**Think-Pair-Share** (#sketch-interaction) Make sketches of the possible relationships between diet, exercise and blood pressure. Make a sketch compatible with $\beta_3 = 0$. Make a sketch compatible with $\beta_3 \neq 0$.
 
 
 
@@ -368,7 +368,7 @@ This is again a multiple regression model, but now with three explanatory variab
 If we want to test whether the effect of minutes of exercise on blood pressure is different for people with different diets, we need a null hypothesis to test.
 
 
-**Think-Pair-Share (#interaction-null)** What is the null hypothesis in this case, verbally, and in terms of the coefficients of the model?
+**Think-Pair-Share** (#interaction-null) What is the null hypothesis in this case, verbally, and in terms of the coefficients of the model?
 
 
 The null hypothesis is that the effect of minutes of exercise on blood pressure is the same for people with different diets. This is a null hypothesis of no interaction between diet and exercise. In terms of the coefficients of the model, the null hypothesis is that $\beta_3 = 0$.
@@ -424,7 +424,7 @@ The fourth is the interaction term `mins_per_week:dietvegetarian`, which is the 
 
 
 
-**Think-Pair-Share (#two-equations)** Write two equations, one for each of the two diets. They would look something like this: $y_i = 0.1 - 0.1 x_{i}^{(1)}$, but will have other numbers.
+**Think-Pair-Share** (#two-equations) Write two equations, one for each of the two diets. They would look something like this: $y_i = 0.1 - 0.1 x_{i}^{(1)}$, but will have other numbers.
 
 
 ## Reporting our findings
@@ -559,7 +559,7 @@ In the ANOVA table we see four rows. The first row is for the main effect of die
 
 In this example, the F-statistic for the interaction term is quite large (`r round(anova(mod_2cat)[3, "F value"],2)` and the corresponding p-value is quite small (`r signif(anova(mod_2cat)[3, "Pr(>F)"],2)`. Hence, we conclude that there is a strong evidence of an interaction between diet and exercise on blood pressure. The effect of exercise on blood pressure depends on diet.
 
-**Think-Pair-Share (#two-way-report)** Write a sentence reporting the results of the two-way ANOVA. Focus on the biological interpretation of the results, rather than the statistical details. Include statistics in parentheses, in support of your statements.
+**Think-Pair-Share** (#two-way-report) Write a sentence reporting the results of the two-way ANOVA. Focus on the biological interpretation of the results, rather than the statistical details. Include statistics in parentheses, in support of your statements.
 
 ::: {.callout-important}
 **Reporting two-way ANOVA results** When reporting the results of a two-way ANOVA, it is important to focus on the biological interpretation of the results, rather than the statistical details. Include statistics in parentheses, in support of your statements. For example, you might say something like: "The effect of exercise was different for people on different diets, with a stronger effect for those on a vegetarian diet compared to those on a meat heavy diet (F(1, 36) = 13.77, p < 0.001)."

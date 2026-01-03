@@ -29,7 +29,7 @@ This means that each observation belongs to one of a limited number of categorie
 Here are the first several rows of a dataset that contains blood pressure measurements for individuals following different diet types:
 
 ```{r}
-#| echo=FALSE
+#| echo: false
 set.seed(1)
 bp_data_diet <- tibble(diet = sample(c("meat heavy", "Mediterranean",
                                        "vegetarian", "vegan"),
@@ -40,6 +40,12 @@ bp_data_diet <- tibble(diet = sample(c("meat heavy", "Mediterranean",
                    sd = 10)),
          person_ID = paste0("person_", 1:50))
 ```
+
+```{r}
+#| echo: false
+write_csv(bp_data_diet, "datasets/bp_data_diet.csv")
+```
+
 
 ```{r}
 #| echo=TRUE
@@ -126,7 +132,7 @@ where:
 Graphically, with the blood pressure and diet data, this looks like:
 
 ```{r}
-#| echo=FALSE
+#| echo: false
 set.seed(1)
 bp_data_diet <- tibble(diet = sample(c("meat heavy", "Mediterranean",
                                        "vegetarian", "vegan"),
@@ -139,7 +145,7 @@ bp_data_diet <- tibble(diet = sample(c("meat heavy", "Mediterranean",
 ```
 
 ```{r}
-#| echo=FALSE
+#| echo: false
 group_means <- bp_data_diet %>%
   group_by(diet, .groups = "drop") %>%
   summarise(mean_bp = mean(bp)) |> 
@@ -148,7 +154,7 @@ group_means <- group_means[c(2, 1, 3, 4),]
 ```
 
 ```{r}
-#| echo=FALSE
+#| echo: false
 ggplot(bp_data_diet, aes(x = diet, y = bp)) +
   geom_point() +
   geom_point(data = group_means, aes(x = diet, y = mean_bp), color = "red", size = 3) +
@@ -648,7 +654,7 @@ In R we can use the `multcomp` package to do Tukey HSD tests:
 bp_data_diet <- bp_data_diet %>%
   mutate(diet = as.factor(diet))
 fit <- lm(bp ~ diet, data = bp_data_diet)
-library(multcomp)
+suppressMessages(library(multcomp))
 tukey_test <- glht(fit, linfct = mcp(diet = "Tukey"))
 summary(tukey_test)
 ```

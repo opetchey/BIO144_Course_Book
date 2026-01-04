@@ -6,14 +6,6 @@ source("_common.R")
 
 # Analysis of variance (L5) {.unnumbered}
 
-
--   One-way ANOVA
--   Post-hoc tests and contrasts
--   Two-way ANOVA
-
-ANOVA = ANalysis Of VAriance (Varianzanalyse)
-
-
 ## Introduction
 
 The previous two chapters were about linear regression. *Linear regression* is a type of *linear model* -- recall that in *R* we used the function `lm()` to make the regression model.  In this chapter we will look at a different type of linear model: analysis of variance (ANOVA).
@@ -768,13 +760,14 @@ ggplot(bp_data_diet, aes(x = diet, y = bp)) +
 
 There are many many plotting styles and preferences. The important thing is to clearly communicate the results, and to not mislead the reader. I find that plotting the individual data points is often a good idea, especially when the sample size is not too large.
 
-## Summary of what you have learned
+## Review
+
+Here are the key points from this chapter:
 
 * ANOVA is just another linear model.
 * It is used when we have categorical explanatory variables.
 * We use $F$-tests to test the null hypothesis of no difference among the means of the groups (categories).
 * We can use contrasts and post-hoc tests to test specific hypotheses about the means of the groups.
-* Two-way ANOVA is used when we have two categorical explanatory variables and can be used to test for interactions between them.
 
 
 **Think–Pair–Share** (#a_anova_is_regression) What changes when we move from regression to ANOVA? What stays exactly the same?

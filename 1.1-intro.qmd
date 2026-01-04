@@ -56,6 +56,23 @@ Throughout the course, we will use the following notation:
 * $p$ is the p-value.
 
 
+## Data analysis workflow
+
+A general workflow for data analysis is as follows:
+
+1. **Define the question**: What are you trying to find out?
+2. **Define the study**: How will you answer the question? What subjects, what observations, what measurements? What experimental design? What treatments? What graphics and analyses will you use?
+3. **Collect the data**: Gather the necessary data to answer the question.
+4. **Explore the data**: Use summary statistics and graphics to understand the data.
+5. **Prepare the data**: Clean and format the data for analysis.
+6. **Visualise the data**: Create plots to visualise patterns and relationships.
+7. **Analyse the data**: Use appropriate statistical methods to analyse the data, including checking model assumptions.
+8. **Interpret the results**: Draw conclusions from the analysis in the context of the original question.
+9. **Be critical**: Consider limitations, alternative explanations, and the robustness of your conclusions.
+10. **Communicate the results**: Present the findings in a clear and concise manner, using tables, figures, and written summaries.
+
+
+
 ## Using Generative AI in R and Data Analysis: Guidance and Good Practice
 
 ::: {.callout-important}
@@ -436,7 +453,7 @@ model.matrix(model)
 
 ---
 
-#### Summary
+#### GenAI Summary
 
 GenAI can:
 
@@ -463,17 +480,3 @@ Always check:
 
 In statistics, clarity of reasoning matters more than code that merely *runs*.
 
-## Data analysis workflow
-
-A general workflow for data analysis is as follows:
-
-1. **Define the question**: What are you trying to find out?
-2. **Define the study**: How will you answer the question? What subjects, what observations, what measurements? What experimental design? What treatments? What graphics and analyses will you use?
-3. **Collect the data**: Gather the necessary data to answer the question.
-4. **Explore the data**: Use summary statistics and graphics to understand the data.
-5. **Prepare the data**: Clean and format the data for analysis.
-6. **Visualise the data**: Create plots to visualise patterns and relationships.
-7. **Analyse the data**: Use appropriate statistical methods to analyse the data, including checking model assumptions.
-8. **Interpret the results**: Draw conclusions from the analysis in the context of the original question.
-9. **Be critical**: Consider limitations, alternative explanations, and the robustness of your conclusions.
-10. **Communicate the results**: Present the findings in a clear and concise manner, using tables, figures, and written summaries.

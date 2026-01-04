@@ -3,10 +3,6 @@
 source("_common.R")
 ```
 
-**How Owen will structure the lecture time**
-
-**The chapter content below is the reference for what students are expected to know.** During the lecture time Owen will talk through and explain hopefully most of the content of this chapter. He will write on a tablet, show figures and other content of this chapter, and may live-code in RStudio. He will also present questions and ask students to *Think, Pair, Share*. The *Share* part will sometime be via clicker, sometimes by telling the class. The same will happen in lecture 3-6.
-
 
 # Regression Part 1 (L3) {.unnumbered}
 
@@ -1092,8 +1088,18 @@ $$y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \epsilon$$
 
 This is clearly a linear model.
 
-## Summary
+## Review
 
+In this chapter we learned about first steps of regression analysis. Specifically, we learned about to:
+
+* Motivation for regression analysis.
+* The simple linear regression model.
+* Estimation of the coefficients (intercept and slope) using the least squares method.
+* How to model the errors (residuals) and the assumptions of linear regression.
+* How to check the assumptions of linear regression using diagnostic plots.
+* What can go wrong during the modeling process, and how to deal with it.
+
+With all that in place, we can be sure that when we use a linear regression model, we can trust the results it gives us. In the next chapter, we will start to use linear regression models to answer questions! This involves things such as hypothesis testing, confidence intervals, and prediction. Exciting times ahead!
 
 
 

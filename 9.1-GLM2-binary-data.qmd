@@ -561,7 +561,7 @@ probabilities are often easier to interpret. In practice, you may report
 odds ratios **and** translate to probabilities at meaningful predictor
 values.
 
-## Summary
+## Review
 
 There is a lot more to logistic regression and binary data. We can of course make models to analyse more complex data and questions, including multiple predictors, different types of predictor (continuous and categorical), interactions, and so on. But the key ideas are all above. To summarize the main points:
 

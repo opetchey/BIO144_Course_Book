@@ -448,7 +448,7 @@ anova(m_lmm1)
 * All fixed effects had a p-value < 0.05, calculate using Satterthwaite's method for degrees of freedom (lmerTest package).
 * Including plant as a random effect accounted for non-independence due to repeated measures.
 
-## Summary
+## Review
 
 - Mixed models are used when observations are **grouped** (non-independent).
 - They combine **fixed effects** (average relationships) with **random effects** (group-to-group variation).

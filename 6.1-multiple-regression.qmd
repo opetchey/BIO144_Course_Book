@@ -483,17 +483,11 @@ Take home: when we want to compare the explanatory power of models that differ i
 
 ## Question 4: Are some explanatory variables more important than others?
 
-**Third**, we know how to test the significance of the parameters using the $t$-test.
-
-**Fourth**, we know how to calculate the confidence intervals for the parameters, and to make a confidence band.
-
+We know how to test the significance of the parameters using the $t$-test. We also know how to calculate the confidence intervals for the parameters, and to make a confidence band.
 
 How important are the explanatory variables and how important are they relative to each other?
 
-
 **Think-Pair-Share** (#tps-variable-importance) How might we assess how important is each of the explanatory variables, and how important they are relative to each other?
-
-
 
 The importance of an explanatory variable can be assessed by looking at the size of the coefficient for that variable. The larger the coefficient, the more important the variable is in explaining the response variable.
 
@@ -519,7 +513,7 @@ extra_mins_exercise <- coef(m1)["age"] / -coef(m1)["mins_exercise"]
 #extra_mins_exercise
 ```
 
-## Question 5: how do we make predictions?
+## Question 5: How do we make predictions?
 
 We already made predictions from a simple linear regression model?
 
@@ -998,9 +992,12 @@ Multiple regression:
 
 * Multiple linear regression $x_1$, $x_2$, \ldots, $x_m$
 * Checking assumptions.
-* $R^2$ in multiple linear regression
-* $t$-tests, $F$-tests and $p$-values
-
+* Question 1: As an ensemble, do the explanatory variables explain variation in the response variable? This is done with an overall $F$-test.
+* Question 2: Which of the explanatory variables are important in explaining variation in the response variable? This is done by looking at the coefficients, t-tests, and confidence intervals for each explanatory variable.
+* Question 3: How well does the model describe the data? This is done with $R^2$ and adjusted $R^2$.
+* Question 4: Are some explanatory variables more important than others in explaining variation in the response variable? This is done by looking at the sizes of the coefficients, and comparing those for different explanatory variables. But caution is required.
+* Question 5: How do we make predictions from the model? This is done with the `predict()` function, and often requires fixing the values of some explanatory variables to specific values.
+* Collinearity between explanatory variables can make the coefficients unstable and difficult to interpret. This can be assessed with the Variance Inflation Factor (VIF). Remedies include combining predictors, removing redundant predictors, or using regularization if prediction is the goal. The importance of an explanatory variable in the presence of collinearity can be assessed by comparing models with and without that variable, using an F-test.
 
 
 ## Extras

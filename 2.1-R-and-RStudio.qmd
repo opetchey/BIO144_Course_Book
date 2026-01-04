@@ -697,6 +697,10 @@ dir.create("plots")  # Create the folder if it doesn't exist
 ggsave("plots/scatterplot_age_vs_score.pdf", plot = plot1, width = 8, height = 6)
 ```
 
+## Review
+
+In this chapter we learned about using R and RStudio for data analysis. We covered the basics of R programming, including data types, variables, functions, and control structures. We also learned about importing data into R, cleaning and wrangling data using the `dplyr` package, and visualising data using the `ggplot2` package. A great starting point for your journey into data analysis with R!
+
 
 
 ## Extras

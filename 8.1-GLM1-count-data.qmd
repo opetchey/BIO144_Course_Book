@@ -555,7 +555,7 @@ We see that both body size and parasite load significantly affect fitness. Body 
 **Think–Pair–Share** (#tps-how-vis-poisson) How would you visualise (make a graph) of the data and the modelled relationships? Make a sketch of what you could do.
 
 
-## Summary
+## Review
 
 In this chapter we have introduced Generalized Linear Models (GLMs) for count data, focusing on Poisson regression. Key points include:
 

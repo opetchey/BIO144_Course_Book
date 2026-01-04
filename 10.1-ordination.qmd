@@ -707,7 +707,7 @@ The steps for this would be:
 
 The "win" here is that the principal components are uncorrelated, which simplifies the regression analysis and interpretation. The "lose" is that the principal components may not have a straightforward biological interpretation, so care is needed when explaining the results.
 
-## Summary
+## Review
 
 Ordination is useful when we have multivariate data and when variables within that data are correlated. The correlation structure means that we can represent the data in a lower-dimensional space without losing too much information. If there is a lot of correlation among variables, then ordination becomes very useful. If there is little correlation, then ordination may not help much since most of the variance is spread evenly across many dimensions.
 

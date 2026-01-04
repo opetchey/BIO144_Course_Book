@@ -879,7 +879,7 @@ All the examples above had two explanatory variables. What if we have more than 
 
 Interpretation of three-way interactions can be quite complex, as it involves understanding how the effect of one variable on the response variable depends on the levels of the other two categorical variables. Very careful consideration and visualization of the data are often necessary to fully understand and communicate the results.
 
-## Recap
+## Review
 
 * Interactions are some of the most interesting effects in biology and medicine. They occur when the effect of one explanatory variable on the response variable depends on the level of another explanatory variable.
 * Interactions can occur between continuous and categorical explanatory variables, or between two categorical explanatory variables, or between two continuous explanatory variables.

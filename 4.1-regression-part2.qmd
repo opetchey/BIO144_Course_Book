@@ -679,7 +679,11 @@ Another way to think of the 95% confidence band is that it is where we would exp
 **Think–Pair–Share** (#a_prediction_vs_estimation) Which interval answers: "What is the mean response?" Which answers: "What might a new observation look like?"
 
 
-## That is regression done (at least for our current purposes)
+## Review
+
+That is regression done (at least for our current purposes). Here is a summary of what we have covered:
+
+Previous chapter:
 
 * Why use (linear) regression?
 * Fitting the line (= parameter estimation)
@@ -687,7 +691,14 @@ Another way to think of the 95% confidence band is that it is where we would exp
 * What to do when things go wrong?
 * Transformation of variables/the response.
 * Handling of outliers.
-* Goodness of the model: Correlation and $R^2$
+
+This chapter:
+
+* Sums of squares: $SST$, $SSM$, $SSE$
+* $R^2$ as a measure of goodness of fit
+* Hypothesis testing in regression
+* Null and alternative hypotheses
+* t-statistic and p-values
 * Tests and confidence intervals
 * Confidence and prediction bands
 

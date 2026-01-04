@@ -6,6 +6,16 @@ source("_common.R")
 
 # Interactions (L7) {.unnumbered}
 
+Thought for the week:
+
+"*You should arrive at answers on your own, and not rely upon what you get from someone else. Answers from others are nothing more than stopgap measures, they're of no value.*"
+
+- Ichiro Kishimi & Fumitake Koga, The Courage to Be Disliked
+
+They instead encourage answers gained from curiosity, observation, and dialogue. Answers you develop for yourself are more likely to stick with you, and to be meaningful.
+
+When we mentor, ask questions that encourage others to think for themselves, rather than simply giving answers. This is hard, but worthwhile.
+
 ## Introduction
 
 Interactions are some of the most interesting phenomena in science, including biology. We are not talking about interactions between species, like predation, though these are also very interesting. We are talking about effects of one thing, like diet, depending on another thing, like exercise. Let's break that down a bit...

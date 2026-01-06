@@ -1,0 +1,1469 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Binary data (L9) – BIO144 Course Book (version 2026)</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./10.1-ordination.html" rel="next">
+<link href="./8.1-GLM1-count-data.html" rel="prev">
+<link href="./cover.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-485d01fc63b59abcd3ee1bf1e8e2748d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./9.1-GLM2-binary-data.html">Binary data (L9)</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">BIO144 Course Book (version 2026)</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/opetchey/BIO144_Course_Book/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./1.1-intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction (L1)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./2.1-R-and-RStudio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">R and RStudio (L2)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./3.1-regression-part1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Regression Part 1 (L3)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./4.1-regression-part2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Regression Part 2 (L4)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./5.1-anova.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Analysis of variance (L5)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./6.1-multiple-regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Multiple regression (L6)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./7.1-interactions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Interactions (L7)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./8.1-GLM1-count-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Count data (L8)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./9.1-GLM2-binary-data.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Binary data (L9)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10.1-ordination.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ordination (L10)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11.1-mixed-models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Mixed models (L11-1)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11.2-what-next.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">What next (L11-2)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12.1-review.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Review (L12)</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#overview" id="toc-overview" class="nav-link" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#a-warm-up-the-chi-square-test-for-a-22-table" id="toc-a-warm-up-the-chi-square-test-for-a-22-table" class="nav-link" data-scroll-target="#a-warm-up-the-chi-square-test-for-a-22-table">A warm-up: the Chi-square test for a 2×2 table</a>
+  <ul class="collapse">
+  <li><a href="#a-concrete-example-dataset" id="toc-a-concrete-example-dataset" class="nav-link" data-scroll-target="#a-concrete-example-dataset">A concrete example dataset</a></li>
+  </ul></li>
+  <li><a href="#quantifying-an-association-risk-and-odds" id="toc-quantifying-an-association-risk-and-odds" class="nav-link" data-scroll-target="#quantifying-an-association-risk-and-odds">Quantifying an association: risk and odds</a></li>
+  <li><a href="#from-tables-to-regression-models" id="toc-from-tables-to-regression-models" class="nav-link" data-scroll-target="#from-tables-to-regression-models">From tables to regression models</a></li>
+  <li><a href="#working-example-beetle-mortality-and-insecticide-dose-aggregated-data" id="toc-working-example-beetle-mortality-and-insecticide-dose-aggregated-data" class="nav-link" data-scroll-target="#working-example-beetle-mortality-and-insecticide-dose-aggregated-data">Working example: beetle mortality and insecticide dose (aggregated data)</a></li>
+  <li><a href="#two-tempting-but-wrong-analyses" id="toc-two-tempting-but-wrong-analyses" class="nav-link" data-scroll-target="#two-tempting-but-wrong-analyses">Two tempting but wrong analyses</a>
+  <ul class="collapse">
+  <li><a href="#wrong-analysis-1-linear-regression-on-mortality-rate" id="toc-wrong-analysis-1-linear-regression-on-mortality-rate" class="nav-link" data-scroll-target="#wrong-analysis-1-linear-regression-on-mortality-rate">Wrong analysis 1: linear regression on mortality rate</a></li>
+  <li><a href="#wrong-analysis-2-poisson-regression-on-counts-killed" id="toc-wrong-analysis-2-poisson-regression-on-counts-killed" class="nav-link" data-scroll-target="#wrong-analysis-2-poisson-regression-on-counts-killed">Wrong analysis 2: Poisson regression on counts killed</a></li>
+  </ul></li>
+  <li><a href="#the-probability-model-bernoulli-and-binomial" id="toc-the-probability-model-bernoulli-and-binomial" class="nav-link" data-scroll-target="#the-probability-model-bernoulli-and-binomial">The probability model: Bernoulli and binomial</a>
+  <ul class="collapse">
+  <li><a href="#bernoulli-binary-data" id="toc-bernoulli-binary-data" class="nav-link" data-scroll-target="#bernoulli-binary-data">Bernoulli (binary) data</a></li>
+  <li><a href="#binomial-aggregated-data" id="toc-binomial-aggregated-data" class="nav-link" data-scroll-target="#binomial-aggregated-data">Binomial (aggregated) data</a></li>
+  </ul></li>
+  <li><a href="#logistic-regression-the-binomial-glm" id="toc-logistic-regression-the-binomial-glm" class="nav-link" data-scroll-target="#logistic-regression-the-binomial-glm">Logistic regression: the binomial GLM</a></li>
+  <li><a href="#fitting-logistic-regression-in-r-aggregated-binomial-data" id="toc-fitting-logistic-regression-in-r-aggregated-binomial-data" class="nav-link" data-scroll-target="#fitting-logistic-regression-in-r-aggregated-binomial-data">Fitting logistic regression in R (aggregated binomial data)</a></li>
+  <li><a href="#interpreting-coefficients-log-odds-odds-ratios-and-probabilities" id="toc-interpreting-coefficients-log-odds-odds-ratios-and-probabilities" class="nav-link" data-scroll-target="#interpreting-coefficients-log-odds-odds-ratios-and-probabilities">Interpreting coefficients: log-odds, odds ratios, and probabilities**</a></li>
+  <li><a href="#analysis-of-deviance-likelihood-based-anova" id="toc-analysis-of-deviance-likelihood-based-anova" class="nav-link" data-scroll-target="#analysis-of-deviance-likelihood-based-anova">Analysis of deviance (likelihood-based ANOVA)</a></li>
+  <li><a href="#plotting-the-fitted-relationship" id="toc-plotting-the-fitted-relationship" class="nav-link" data-scroll-target="#plotting-the-fitted-relationship">Plotting the fitted relationship</a>
+  <ul class="collapse">
+  <li><a href="#reporting" id="toc-reporting" class="nav-link" data-scroll-target="#reporting">Reporting</a></li>
+  </ul></li>
+  <li><a href="#overdispersion-in-aggregated-binomial-data" id="toc-overdispersion-in-aggregated-binomial-data" class="nav-link" data-scroll-target="#overdispersion-in-aggregated-binomial-data">Overdispersion in aggregated binomial data</a>
+  <ul class="collapse">
+  <li><a href="#quasibinomial-as-a-pragmatic-fix" id="toc-quasibinomial-as-a-pragmatic-fix" class="nav-link" data-scroll-target="#quasibinomial-as-a-pragmatic-fix">Quasibinomial as a pragmatic fix</a></li>
+  </ul></li>
+  <li><a href="#individual-level-binary-data-non-aggregated" id="toc-individual-level-binary-data-non-aggregated" class="nav-link" data-scroll-target="#individual-level-binary-data-non-aggregated">Individual-level binary data (non-aggregated)</a>
+  <ul class="collapse">
+  <li><a href="#example-blood-screening-esr" id="toc-example-blood-screening-esr" class="nav-link" data-scroll-target="#example-blood-screening-esr">Example: blood screening (ESR)</a></li>
+  <li><a href="#complication-1-graphical-description" id="toc-complication-1-graphical-description" class="nav-link" data-scroll-target="#complication-1-graphical-description">Complication 1: graphical description</a></li>
+  <li><a href="#fit-the-logistic-regression-model" id="toc-fit-the-logistic-regression-model" class="nav-link" data-scroll-target="#fit-the-logistic-regression-model">Fit the logistic regression model</a></li>
+  <li><a href="#complication-2-model-checking-and-dispersion" id="toc-complication-2-model-checking-and-dispersion" class="nav-link" data-scroll-target="#complication-2-model-checking-and-dispersion">Complication 2: model checking and dispersion</a></li>
+  </ul></li>
+  <li><a href="#two-common-practical-issues" id="toc-two-common-practical-issues" class="nav-link" data-scroll-target="#two-common-practical-issues">Two common practical issues</a>
+  <ul class="collapse">
+  <li><a href="#separation" id="toc-separation" class="nav-link" data-scroll-target="#separation">1. Separation</a></li>
+  <li><a href="#probability-vs-odds-ratio-in-reporting" id="toc-probability-vs-odds-ratio-in-reporting" class="nav-link" data-scroll-target="#probability-vs-odds-ratio-in-reporting">2. Probability vs odds ratio in reporting</a></li>
+  </ul></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/opetchey/BIO144_Course_Book/edit/main/9.1-GLM2-binary-data.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/opetchey/BIO144_Course_Book/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Binary data (L9)</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>So far in BIO144, we have focused on <strong>linear models</strong> fitted using <code>lm()</code>. These models assume:</p>
+<ul>
+<li>A <strong>continuous</strong> response variable</li>
+<li>Normally distributed residuals</li>
+<li>Constant variance (homoscedasticity)</li>
+</ul>
+<p>But many biological outcomes are not continuous. In the previous chapter we handled <strong>counts</strong> with a Poisson GLM. In this chapter we move to an even more common special case: <strong>binary outcomes</strong>.</p>
+<p>Binary outcomes take only two values, often coded as 0 and 1:</p>
+<ul>
+<li>1 = yes / success / present / dead</li>
+<li>0 = no / failure / absent / alive</li>
+</ul>
+<p>The central question becomes:</p>
+<p><strong>Which explanatory variables influence the probability</strong> <span class="math inline">\(\pi_i = P(y_i = 1)\)</span> <strong>of the outcome?</strong></p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Bridge from LM to GLM</strong><br>
+A GLM keeps the familiar <em>linear predictor</em> from linear models, but: 1) uses a distribution (family) that matches the response type, and<br>
+2) uses a link function so predictions respect the natural constraints.</p>
+<ul>
+<li>Count data: Poisson family + log link<br>
+</li>
+<li>Binary data: binomial family + logit link</li>
+</ul>
+</div>
+</div>
+<p><strong>Think–Pair–Share</strong> (#tps-binary-examples) Name three outcomes in biology, ecology, or medicine that are naturally binary (0/1). Why would a linear model be risky for each?</p>
+</section>
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">Overview</h2>
+<p>In this chapter we will cover:</p>
+<ul>
+<li>Contingency tables and the <span class="math inline">\(\chi^2\)</span> test (a familiar starting point)</li>
+<li>Odds, odds ratios, and log-odds</li>
+<li>Logistic regression as a binomial GLM</li>
+<li>Interpreting coefficients (odds ratios and probabilities)</li>
+<li>Diagnostics, deviances, and (some) model checking</li>
+<li>Overdispersion in <em>aggregated</em> binomial data and the quasibinomial fix</li>
+<li>Practical complications for individual-level (non-aggregated) 0/1 data</li>
+</ul>
+</section>
+<section id="a-warm-up-the-chi-square-test-for-a-22-table" class="level2">
+<h2 class="anchored" data-anchor-id="a-warm-up-the-chi-square-test-for-a-22-table">A warm-up: the Chi-square test for a 2×2 table</h2>
+<p>Binary outcomes often first appear in a <strong>contingency table</strong>. For example:</p>
+<ul>
+<li>Predictor <span class="math inline">\(x\)</span>: hormonal contraception (yes/no)</li>
+<li>Outcome <span class="math inline">\(y\)</span>: heart attack (yes/no)</li>
+</ul>
+<p>The <span class="math inline">\(\chi^2\)</span> (chi-squared) test asks whether the <strong>proportion</strong> (or frequency) of heart attacks is the same in the two contraception groups.</p>
+<section id="a-concrete-example-dataset" class="level3">
+<h3 class="anchored" data-anchor-id="a-concrete-example-dataset">A concrete example dataset</h3>
+<p>We will reconstruct the classic 2×2 table from some example and store it as a dataset:</p>
+<p>Read in the heart attack dataset:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>heart_attack <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"datasets/heart_attack_2x2.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 4 Columns: 3
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (2): contraception, heart_attack
+dbl (1): n
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
+<p>Here are the first few rows of the heart attack dataset:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(heart_attack)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 3
+  contraception heart_attack     n
+  &lt;chr&gt;         &lt;chr&gt;        &lt;dbl&gt;
+1 yes           yes             23
+2 yes           no              34
+3 no            yes             35
+4 no            no             132</code></pre>
+</div>
+</div>
+<p>We can create the table and run the <span class="math inline">\(\chi^2\)</span> test.</p>
+<p>Here is the data ready for analysis:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>tab <span class="ot">&lt;-</span> <span class="fu">xtabs</span>(n <span class="sc">~</span> contraception <span class="sc">+</span> heart_attack, <span class="at">data =</span> heart_attack)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>tab</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>             heart_attack
+contraception  no yes
+          no  132  35
+          yes  34  23</code></pre>
+</div>
+</div>
+<p>And here is the <span class="math inline">\(\chi^2\)</span> test:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(tab, <span class="at">correct =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Pearson's Chi-squared test
+
+data:  tab
+X-squared = 8.3288, df = 1, p-value = 0.003902</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Continuity correction</strong><br>
+<code>chisq.test()</code> defaults to Yates’ continuity correction for 2×2 tables. Here we set <code>correct = FALSE</code> to match the classic “hand-calculation” style example.</p>
+</div>
+</div>
+<p><strong>Think–Pair–Share</strong> (#tps-chisq-meaning) What is the null hypothesis of this <span class="math inline">\(\chi^2\)</span> test, in words?</p>
+</section>
+</section>
+<section id="quantifying-an-association-risk-and-odds" class="level2">
+<h2 class="anchored" data-anchor-id="quantifying-an-association-risk-and-odds">Quantifying an association: risk and odds</h2>
+<p>If <span class="math inline">\(\pi\)</span> is the probability of “yes” (e.g.&nbsp;heart attack), then:</p>
+<ul>
+<li><strong>Risk (probability)</strong> is <span class="math inline">\(\pi\)</span></li>
+<li><strong>Odds</strong> is <span class="math inline">\(\pi/(1-\pi)\)</span></li>
+</ul>
+<p>The <strong>odds ratio (OR)</strong> compares the odds in two groups:</p>
+<p>Odds Ratio = OR = <span class="math inline">\(\frac{\text{odds in group 1}}{\text{odds in group 2}}\)</span>.</p>
+<p>The <strong>log odds ratio</strong> is <span class="math inline">\(\log(OR)\)</span>. It is 0 when <span class="math inline">\(OR=1\)</span>.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Odds are not probabilities</strong><br>
+An odds of 3 means “3 to 1”, which corresponds to a probability of <span class="math inline">\(3/(3+1)=0.75\)</span>. Odds and probabilities are linked mathematically, but they are not the same thing.</p>
+</div>
+</div>
+<p><strong>Think–Pair–Share</strong> (#tps-odds-intuition) Why might odds ratios be a convenient effect size in a regression model? (This is a difficult question—think carefully, and Pair!)</p>
+</section>
+<section id="from-tables-to-regression-models" class="level2">
+<h2 class="anchored" data-anchor-id="from-tables-to-regression-models">From tables to regression models</h2>
+<p>Contingency tables are a good start, but they are limited:</p>
+<ul>
+<li>they typically compare <strong>groups</strong> (few categorical predictors),</li>
+<li>they don’t easily handle <strong>continuous predictors</strong> (e.g.&nbsp;dose),</li>
+<li>they don’t naturally generalise to multiple predictors.</li>
+</ul>
+<p>When <span class="math inline">\(y\)</span> is binary or binomial, the standard regression approach is <strong>logistic regression</strong>, a <strong>binomial GLM</strong>.</p>
+</section>
+<section id="working-example-beetle-mortality-and-insecticide-dose-aggregated-data" class="level2">
+<h2 class="anchored" data-anchor-id="working-example-beetle-mortality-and-insecticide-dose-aggregated-data">Working example: beetle mortality and insecticide dose (aggregated data)</h2>
+<p>Eight groups of beetles were exposed to an insecticide dose for 5 hours. For each dose level, we know how many beetles were tested and how many were killed. This is <strong>binomial (aggregated)</strong> data.</p>
+<p>Read in the beetle dataset:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>beetle <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"datasets/beetle_mortality.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 8 Columns: 4
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+dbl (4): Dose, Number_tested, Number_killed, Mortality_rate
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
+<p>Here are the first few rows of the beetle dataset:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(beetle)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 4
+   Dose Number_tested Number_killed Mortality_rate
+  &lt;dbl&gt;         &lt;dbl&gt;         &lt;dbl&gt;          &lt;dbl&gt;
+1  49.1            49             6          0.122
+2  53.0            60            13          0.217
+3  56.9            62            18          0.290
+4  60.8            56            28          0.5  
+5  64.8            63            52          0.825
+6  68.7            59            53          0.898</code></pre>
+</div>
+</div>
+<p>It contains one predictor (Dose) and two pieces of information about the binary outcome (Number_killed and Number_tested). The mortality rate is also included, and is the proportion killed at each dose (Number_killed / Number_tested).</p>
+<p>As always, start with a graph.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="9.1-GLM2-binary-data_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="432"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Think–Pair–Share</strong> (#tps-why-lm-wrong) What goes wrong if we fit a linear regression to a probability (mortality rate)? Name at least two problems.</p>
+</section>
+<section id="two-tempting-but-wrong-analyses" class="level2">
+<h2 class="anchored" data-anchor-id="two-tempting-but-wrong-analyses">Two tempting but wrong analyses</h2>
+<section id="wrong-analysis-1-linear-regression-on-mortality-rate" class="level3">
+<h3 class="anchored" data-anchor-id="wrong-analysis-1-linear-regression-on-mortality-rate">Wrong analysis 1: linear regression on mortality rate</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>mod_beetle_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(Mortality_rate <span class="sc">~</span> Dose, <span class="at">data =</span> beetle)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This can predict probabilities below 0 or above 1 and does not respect the mean–variance structure of binomial data.</p>
+<p>Check out the model diagnostics:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_beetle_lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="9.1-GLM2-binary-data_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="432"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We don’t have so many data points here, but the residuals vs fitted indicating non-linearity and the Q-Q plot indicating non-normality are both concerning. Also the scale-location plot suggests non-constant variance.</p>
+</section>
+<section id="wrong-analysis-2-poisson-regression-on-counts-killed" class="level3">
+<h3 class="anchored" data-anchor-id="wrong-analysis-2-poisson-regression-on-counts-killed">Wrong analysis 2: Poisson regression on counts killed</h3>
+<p>A Poisson model ignores the fact that deaths are bounded by the number tested at each dose.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>mod_beetle_pois <span class="ot">&lt;-</span> <span class="fu">glm</span>(Number_killed <span class="sc">~</span> Dose, <span class="at">data =</span> beetle, <span class="at">family =</span> poisson)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_beetle_pois)<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>               Estimate  Std. Error   z value     Pr(&gt;|z|)
+(Intercept) -0.77418056 0.494639994 -1.565139 1.175502e-01
+Dose         0.06678281 0.007240113  9.224002 2.862145e-20</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example of the "impossible" issue:</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>dose_example <span class="ot">&lt;-</span> <span class="fl">76.54</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>pred_killed <span class="ot">&lt;-</span> <span class="fu">predict</span>(mod_beetle_pois,</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>                       <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">Dose =</span> dose_example),</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>                       <span class="at">type =</span> <span class="st">"response"</span>)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>pred_killed</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       1 
+76.50652 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>num_tested_example <span class="ot">&lt;-</span> beetle<span class="sc">$</span>Number_tested[beetle<span class="sc">$</span>Dose <span class="sc">==</span> dose_example]</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>num_tested_example</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 60</code></pre>
+</div>
+</div>
+<p>At the highest dose (76.54), the model predicts about 76 deaths, but only 60 beetles were tested! Clearly this is an impossible prediction. We can’t go on with the Poisson model either.</p>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Caution
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Poisson vs binomial, when to use each</strong><br>
+Use a Poisson model when counts have <em>no known upper limit</em>.<br>
+Use a binomial model when counts are “<span class="math inline">\(k\)</span> successes out of <span class="math inline">\(n\)</span> trials”. Use a binomial model when each observation is a 0/1 outcome.</p>
+</div>
+</div>
+<p><strong>Think–Pair–Share (#a_probability_not_linear)</strong> Why is it dangerous to model probabilities directly using a linear model?</p>
+</section>
+</section>
+<section id="the-probability-model-bernoulli-and-binomial" class="level2">
+<h2 class="anchored" data-anchor-id="the-probability-model-bernoulli-and-binomial">The probability model: Bernoulli and binomial</h2>
+<section id="bernoulli-binary-data" class="level3">
+<h3 class="anchored" data-anchor-id="bernoulli-binary-data">Bernoulli (binary) data</h3>
+<p>For a single 0/1 outcome:</p>
+<p><span class="math inline">\(Y \sim \text{Bernoulli}(\pi),\quad P(Y=1)=\pi,\quad P(Y=0)=1-\pi\)</span></p>
+<p>In words, this means that the probability of success (Y=1) is <span class="math inline">\(\pi\)</span>, and the probability of failure (Y=0) is <span class="math inline">\(1-\pi\)</span>. And that this probability is Bernoulli distributed. Bernoulli is a special case of the binomial distribution with <span class="math inline">\(n=1\)</span>.</p>
+<p>Mean and variance are:</p>
+<p><span class="math inline">\(E(Y)=\pi,\quad Var(Y)=\pi(1-\pi)\)</span></p>
+</section>
+<section id="binomial-aggregated-data" class="level3">
+<h3 class="anchored" data-anchor-id="binomial-aggregated-data">Binomial (aggregated) data</h3>
+<p>For <span class="math inline">\(k\)</span> successes out of <span class="math inline">\(n\)</span> trials:</p>
+<p><span class="math inline">\(Y \sim \text{Binomial}(n,\pi)\)</span></p>
+<p>This means that the number of successes <span class="math inline">\(Y\)</span> in <span class="math inline">\(n\)</span> independent Bernoulli trials, each with success probability <span class="math inline">\(\pi\)</span>, follows a binomial distribution.</p>
+<p>Mean and variance are:</p>
+<p><span class="math inline">\(E(Y)=n\pi,\quad Var(Y)=n\pi(1-\pi)\)</span></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Key pattern</strong><br>
+For Bernoulli/binomial data, the variance is <em>determined by the mean</em>. This is one reason “constant variance” fails for linear models.</p>
+</div>
+</div>
+<p><strong>Think–Pair–Share</strong> (#tps-binom-variance) For fixed <span class="math inline">\(n\)</span>, at what value of <span class="math inline">\(\pi\)</span> is <span class="math inline">\(Var(Y)=n\pi(1-\pi)\)</span> largest? At what values of <span class="math inline">\(\pi\)</span> is it smallest?</p>
+</section>
+</section>
+<section id="logistic-regression-the-binomial-glm" class="level2">
+<h2 class="anchored" data-anchor-id="logistic-regression-the-binomial-glm">Logistic regression: the binomial GLM</h2>
+<p>We use the usual GLM structure:</p>
+<ol type="1">
+<li><strong>Linear predictor</strong></li>
+</ol>
+<p><span class="math inline">\(\eta_i = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}\)</span></p>
+<ol start="2" type="1">
+<li><p><strong>Family</strong>: binomial (Bernoulli is the special case <span class="math inline">\(n=1\)</span>)</p></li>
+<li><p><strong>Link</strong>: logit</p></li>
+</ol>
+<p><span class="math inline">\(\eta_i = \log\left(\frac{\pi_i}{1-\pi_i}\right)\)</span></p>
+<p>The inverse link (back-transformation) is the <strong>logistic function</strong>:</p>
+<p><span class="math inline">\(\pi_i = \frac{\exp(\eta_i)}{1+\exp(\eta_i)}\)</span></p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Why the logit link?</strong><br>
+It maps probabilities <span class="math inline">\((0,1)\)</span> to the whole real line <span class="math inline">\((-\infty,\infty)\)</span>, so the linear predictor can take any value while <span class="math inline">\(\pi_i\)</span> stays valid, i.e., [0,1].</p>
+</div>
+</div>
+<p><strong>Think–Pair–Share</strong> (#tps-identity-link-binary) What would go wrong if we used the identity link <span class="math inline">\(E(y_i)=\eta_i\)</span> for a binary outcome? And which link function is this, by the way?</p>
+</section>
+<section id="fitting-logistic-regression-in-r-aggregated-binomial-data" class="level2">
+<h2 class="anchored" data-anchor-id="fitting-logistic-regression-in-r-aggregated-binomial-data">Fitting logistic regression in R (aggregated binomial data)</h2>
+<p>For aggregated binomial data, we provide <strong>successes and failures</strong>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>beetle <span class="ot">&lt;-</span> beetle <span class="sc">|&gt;</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Number_survived =</span> Number_tested <span class="sc">-</span> Number_killed)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(beetle)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 5
+   Dose Number_tested Number_killed Mortality_rate Number_survived
+  &lt;dbl&gt;         &lt;dbl&gt;         &lt;dbl&gt;          &lt;dbl&gt;           &lt;dbl&gt;
+1  49.1            49             6          0.122              43
+2  53.0            60            13          0.217              47
+3  56.9            62            18          0.290              44
+4  60.8            56            28          0.5                28
+5  64.8            63            52          0.825              11
+6  68.7            59            53          0.898               6</code></pre>
+</div>
+</div>
+<p>Now we can fit the logistic regression model, being careful to specify <code>family = binomial</code> and to use <code>cbind(successes, failures)</code> for the response. Because we specify the response this way, R knows we are working with aggregated binomial data. And because we specify <code>family = binomial</code>, R knows to use the logit link (the default).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>beetle_glm <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(Number_killed, Number_survived) <span class="sc">~</span> Dose,</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">data =</span> beetle, <span class="at">family =</span> binomial)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>And as usual we can check the model diagnostics:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(beetle_glm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="9.1-GLM2-binary-data_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="432"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Not great, but again we have only 8 dose levels. Let us continue in any case and look at the ANOVA table and the coefficients.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>The response in aggregated binomial data</strong><br>
+Use <code>cbind(successes, failures)</code> in <code>glm(..., family = binomial)</code>.</p>
+<ul>
+<li>successes: number of 1s<br>
+</li>
+<li>failures: number of 0s</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="interpreting-coefficients-log-odds-odds-ratios-and-probabilities" class="level2">
+<h2 class="anchored" data-anchor-id="interpreting-coefficients-log-odds-odds-ratios-and-probabilities">Interpreting coefficients: log-odds, odds ratios, and probabilities**</h2>
+<p>In logistic regression:</p>
+<ul>
+<li><span class="math inline">\(\beta_1\)</span> is a <strong>log odds ratio</strong> for a one-unit change in the linear predictor</li>
+<li><span class="math inline">\(\exp(\beta_1)\)</span> is the <strong>odds ratio</strong> (multiplicative change in odds)</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>beta1 <span class="ot">&lt;-</span> <span class="fu">coef</span>(beetle_glm)[[<span class="st">"Dose"</span>]]</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(beta1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.278311</code></pre>
+</div>
+</div>
+<p>Interpretation: increasing dose by 1 unit multiplies the odds of death by <span class="math inline">\(\exp(\beta_1)\)</span>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Odds vs probability</strong><br>
+A constant odds ratio does <em>not</em> mean a constant change in probability. The probability change depends on where you start (e.g.&nbsp;<span class="math inline">\(\pi=0.05\)</span> vs <span class="math inline">\(\pi=0.80\)</span>).</p>
+</div>
+</div>
+<p><strong>Think–Pair–Share</strong> (#tps-or-vs-probability) Why might a treatment have a “big” odds ratio, but only a “small” change in probability in one situation?</p>
+<p><strong>Think–Pair–Share (#a_odds_vs_probability)</strong> Why might odds be convenient mathematically,<br>
+even if probabilities feel more intuitive?</p>
+</section>
+<section id="analysis-of-deviance-likelihood-based-anova" class="level2">
+<h2 class="anchored" data-anchor-id="analysis-of-deviance-likelihood-based-anova">Analysis of deviance (likelihood-based ANOVA)</h2>
+<p>As for count-data GLMs, we use likelihood and deviance. Nested models can be compared with a <span class="math inline">\(\chi^2\)</span> test.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(beetle_glm, <span class="at">test =</span> <span class="st">"Chisq"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Deviance Table
+
+Model: binomial, link: logit
+
+Response: cbind(Number_killed, Number_survived)
+
+Terms added sequentially (first to last)
+
+     Df Deviance Resid. Df Resid. Dev  Pr(&gt;Chi)    
+NULL                     7    267.662              
+Dose  1   259.23         6      8.438 &lt; 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>As with the Poisson GLM, the model is fit using maximum likelihood estimation, and the deviance is used to assess goodness-of-fit. So we see a table quite similar to that for the Poisson GLM. In this case the Dose row shows a huge amount of the deviance is explained by dose, and so the <span class="math inline">\(p\)</span>-value is very small.</p>
+</section>
+<section id="plotting-the-fitted-relationship" class="level2">
+<h2 class="anchored" data-anchor-id="plotting-the-fitted-relationship">Plotting the fitted relationship</h2>
+<p>We will plot <span class="math inline">\(P(Y=1)\)</span> (mortality probability) against dose using model predictions.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>dose_grid <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">Dose =</span> <span class="fu">seq</span>(<span class="fu">min</span>(beetle<span class="sc">$</span>Dose)<span class="sc">-</span><span class="dv">20</span>, <span class="fu">max</span>(beetle<span class="sc">$</span>Dose)<span class="sc">+</span><span class="dv">20</span>, <span class="at">length.out =</span> <span class="dv">400</span>))</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>preds <span class="ot">&lt;-</span> <span class="fu">predict</span>(beetle_glm, <span class="at">newdata =</span> dose_grid, <span class="at">se.fit =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">|&gt;</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>         <span class="fu">mutate</span>(<span class="at">p_hat =</span> <span class="fu">exp</span>(fit) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(fit)),</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">p_hat_upper_2se =</span> <span class="fu">exp</span>(fit <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>se.fit) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(fit <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>se.fit)),</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">p_hat_lower_2se =</span> <span class="fu">exp</span>(fit <span class="sc">-</span> <span class="dv">2</span><span class="sc">*</span>se.fit) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(fit <span class="sc">-</span> <span class="dv">2</span><span class="sc">*</span>se.fit))</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>       )</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>dose_grid <span class="ot">&lt;-</span> <span class="fu">bind_cols</span>(dose_grid, preds)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>And now the plot:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> beetle, <span class="fu">aes</span>(<span class="at">x =</span> Dose, <span class="at">y =</span> Mortality_rate)) <span class="sc">+</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> dose_grid, <span class="fu">aes</span>(<span class="at">x =</span> Dose, <span class="at">y =</span> p_hat), <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="at">data =</span> dose_grid,</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>              <span class="fu">aes</span>(<span class="at">x =</span> Dose, <span class="at">ymin =</span> p_hat_lower_2se, <span class="at">ymax =</span> p_hat_upper_2se),</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">alpha =</span> <span class="fl">0.2</span>, <span class="at">fill =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Dose"</span>, <span class="at">y =</span> <span class="st">"Predicted mortality probability"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="9.1-GLM2-binary-data_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="432"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The plot is intentionally made to show what happens at very low and very high dose. At very low dose, the predicted mortality probability approaches 0, and at very high dose it approaches 1. This is a key feature of logistic regression: the predicted probabilities are always between 0 and 1. We also see that the standard errors are larger at intermediate doses, where the slope of the curve is steepest. And the standard errors are smaller at very low and very high doses, where the curve flattens out.</p>
+<section id="reporting" class="level3">
+<h3 class="anchored" data-anchor-id="reporting">Reporting</h3>
+<p>When reporting results from a logistic regression, you might say something like:</p>
+<p>“A logistic regression was used to model the probability of beetle mortality as a function of insecticide dose. The odds of mortality increased by a factor of 1.28 (95% CI: 1.23, 1.34 per unit increase in dose. This indicates that higher doses are associated with higher odds of mortality. The model predicts that at a dose of 50, the probability of mortality is approximately 0.09 (95% CI: -2.34, -2.26 transformed to probability scale). The model explained a significant amount of deviance (Deviance = 8.4, df = 6, <span class="math inline">\(\chi^2\)</span> p &lt; 0.001).”</p>
+</section>
+</section>
+<section id="overdispersion-in-aggregated-binomial-data" class="level2">
+<h2 class="anchored" data-anchor-id="overdispersion-in-aggregated-binomial-data">Overdispersion in aggregated binomial data</h2>
+<p>Overdispersion means the variability is larger than the binomial model expects. A quick (rough) check for aggregated binomial data is:</p>
+<p><span class="math inline">\(\text{Residual deviance} \approx \text{df}\)</span></p>
+<p>Values much larger than 1 for the ratio <span class="math inline">\(\frac{\text{Residual deviance}}{\text{df}}\)</span> suggest overdispersion. In practice we look for values above about 1.5 or 2.</p>
+<p>In the beetle mortality example:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">deviance</span>(beetle_glm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 8.437898</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">df.residual</span>(beetle_glm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 6</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">deviance</span>(beetle_glm) <span class="sc">/</span> <span class="fu">df.residual</span>(beetle_glm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.406316</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Caution
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Type I error inflation (binomial overdispersion)</strong><br>
+If there is overdispersion and we ignore it, standard errors are usually too small and <span class="math inline">\(p\)</span>-values can be too small (anti-conservative). That increases false positives (Type I errors).</p>
+</div>
+</div>
+<section id="quasibinomial-as-a-pragmatic-fix" class="level3">
+<h3 class="anchored" data-anchor-id="quasibinomial-as-a-pragmatic-fix">Quasibinomial as a pragmatic fix</h3>
+<p>If we had found overdispersion, a simple fix is to use the <code>quasibinomial</code> family. This estimates an extra dispersion parameter from the data. For example:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>beetle_glm_q <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(Number_killed, Number_survived) <span class="sc">~</span> Dose,</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">data =</span> beetle, <span class="at">family =</span> quasibinomial)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>quasibinomial</code> estimates an extra dispersion parameter from the data. It is often a good “first fix” when aggregated binomial data look overdispersed.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="individual-level-binary-data-non-aggregated" class="level2">
+<h2 class="anchored" data-anchor-id="individual-level-binary-data-non-aggregated">Individual-level binary data (non-aggregated)</h2>
+<p>In some datasets we observe a single 0/1 outcome per individual, rather than aggregated counts. The same logistic regression model is used, but:</p>
+<ul>
+<li>simple plots of <span class="math inline">\(y\)</span> against predictors look uninformative (two bands)</li>
+<li>some diagnostics and dispersion checks need extra care</li>
+</ul>
+<section id="example-blood-screening-esr" class="level3">
+<h3 class="anchored" data-anchor-id="example-blood-screening-esr">Example: blood screening (ESR)</h3>
+<p>Individuals with low ESR (ESR is erythrocyte sedimentation rate and is a measure of general inflammation and infection) are generally considered healthy; ESR &gt; 20 mm/hr indicates possible disease. We will model the probability of high ESR using fibrinogen and globulin concentration.</p>
+<p>Read in the plasma dataset:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>plasma <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"datasets/plasma_esr_original_HSAUR3.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 32 Columns: 4
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (1): ESR
+dbl (3): fibrinogen, globulin, y
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
+<p>Here are the first few rows of the data:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(plasma)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 4
+  fibrinogen globulin ESR          y
+       &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt;
+1       2.52       38 ESR &lt; 20     0
+2       2.56       31 ESR &lt; 20     0
+3       2.19       33 ESR &lt; 20     0
+4       2.18       31 ESR &lt; 20     0
+5       3.41       37 ESR &lt; 20     0
+6       2.46       36 ESR &lt; 20     0</code></pre>
+</div>
+</div>
+<p>The ESR outcome is in two variables. <code>ESR</code> is a factor with levels “low” and “high”. It is also present as a numeric variable <code>y</code>, coded 0 (low) and 1 (high). The predictors are <code>fibrinogen</code> and <code>globulin</code>, both continuous.</p>
+</section>
+<section id="complication-1-graphical-description" class="level3">
+<h3 class="anchored" data-anchor-id="complication-1-graphical-description">Complication 1: graphical description</h3>
+<p>Simple scatter plots of 0/1 data are not so informative:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="9.1-GLM2-binary-data_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>A more informative plot is a conditional density plot. This shows the proportion of 0s and 1s at each value of the predictor.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cdplot</span>(<span class="fu">factor</span>(y) <span class="sc">~</span> fibrinogen, <span class="at">data =</span> plasma, <span class="at">xlab =</span> <span class="st">"Fibrinogen"</span>)</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cdplot</span>(<span class="fu">factor</span>(y) <span class="sc">~</span> globulin, <span class="at">data =</span> plasma, <span class="at">xlab =</span> <span class="st">"Globulin"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="9.1-GLM2-binary-data_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>It looks like higher fibrinogen and higher globulin are associated with higher probability of high ESR. The pattern appears stronger for fibrinogen.</p>
+</section>
+<section id="fit-the-logistic-regression-model" class="level3">
+<h3 class="anchored" data-anchor-id="fit-the-logistic-regression-model">Fit the logistic regression model</h3>
+<p>In the case of non-aggregated individual-level 0/1 data, we simply use <code>y</code> as the response variable. We have to remember to specify <code>family = binomial</code> in <code>glm()</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>plasma_glm <span class="ot">&lt;-</span> <span class="fu">glm</span>(y <span class="sc">~</span> fibrinogen <span class="sc">+</span> globulin, <span class="at">data =</span> plasma, <span class="at">family =</span> binomial)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="complication-2-model-checking-and-dispersion" class="level3">
+<h3 class="anchored" data-anchor-id="complication-2-model-checking-and-dispersion">Complication 2: model checking and dispersion</h3>
+<p>Residual plots exist, but can be hard to interpret for 0/1 data:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(plasma_glm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="9.1-GLM2-binary-data_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="432"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Dispersion checks need caution for individual 0/1 data</strong><br>
+The simple “residual deviance <span class="math inline">\(\approx\)</span> residual df” rule-of-thumb is most useful for <em>aggregated</em> binomial data. With individual-level 0/1 data, detecting overdispersion is more subtle and often requires additional structure (e.g.&nbsp;grouping, random effects).</p>
+</div>
+</div>
+</section>
+</section>
+<section id="two-common-practical-issues" class="level2">
+<h2 class="anchored" data-anchor-id="two-common-practical-issues">Two common practical issues</h2>
+<section id="separation" class="level3">
+<h3 class="anchored" data-anchor-id="separation">1. Separation</h3>
+<p>Sometimes a predictor (or combination of predictors) perfectly predicts the outcome (all 0s on one side, all 1s on the other). This is called <strong>(complete) separation</strong> and can cause extremely large coefficient estimates and warnings.</p>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Caution
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Separation warning</strong><br>
+If your logistic regression produces enormous standard errors or warnings about fitted probabilities being 0 or 1, check for separation. Remedies include more data, simpler models, or penalized methods (advanced topic).</p>
+</div>
+</div>
+</section>
+<section id="probability-vs-odds-ratio-in-reporting" class="level3">
+<h3 class="anchored" data-anchor-id="probability-vs-odds-ratio-in-reporting">2. Probability vs odds ratio in reporting</h3>
+<p>Odds ratios are the default “native” scale of logistic regression, but probabilities are often easier to interpret. In practice, you may report odds ratios <strong>and</strong> translate to probabilities at meaningful predictor values.</p>
+</section>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p>There is a lot more to logistic regression and binary data. We can of course make models to analyse more complex data and questions, including multiple predictors, different types of predictor (continuous and categorical), interactions, and so on. But the key ideas are all above. To summarize the main points:</p>
+<ul>
+<li>Data can be either aggregated binomial (successes out of trials) or individual-level 0/1.</li>
+<li>The key questions are about how predictors influence the probability of “yes”.</li>
+<li>The distribution family is binomial (Bernoulli for individual-level data).</li>
+<li>The link function is the logit (log-odds).</li>
+<li>If we find overdispersion in aggregated binomial data, <code>quasibinomial</code> is a pragmatic fix.</li>
+<li>With non-aggregated individual-level 0/1 data, plotting and diagnostics require more care.</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/opetchey\.github\.io\/BIO144_Course_Book\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./8.1-GLM1-count-data.html" class="pagination-link" aria-label="Count data (L8)">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Count data (L8)</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./10.1-ordination.html" class="pagination-link" aria-label="Ordination (L10)">
+        <span class="nav-page-text">Ordination (L10)</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>BIO144 Data Analysis for Biologists, Course Book written by Owen Petchey</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/opetchey/BIO144_Course_Book/edit/main/9.1-GLM2-binary-data.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/opetchey/BIO144_Course_Book/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>This book was built with <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

@@ -1,0 +1,1504 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Analysis of variance (L5) – BIO144 Course Book (version 2026)</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./6.1-multiple-regression.html" rel="next">
+<link href="./4.1-regression-part2.html" rel="prev">
+<link href="./cover.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-485d01fc63b59abcd3ee1bf1e8e2748d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./5.1-anova.html">Analysis of variance (L5)</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">BIO144 Course Book (version 2026)</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/opetchey/BIO144_Course_Book/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./1.1-intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction (L1)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./2.1-R-and-RStudio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">R and RStudio (L2)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./3.1-regression-part1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Regression Part 1 (L3)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./4.1-regression-part2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Regression Part 2 (L4)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./5.1-anova.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Analysis of variance (L5)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./6.1-multiple-regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Multiple regression (L6)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./7.1-interactions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Interactions (L7)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./8.1-GLM1-count-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Count data (L8)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./9.1-GLM2-binary-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Binary data (L9)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10.1-ordination.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ordination (L10)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11.1-mixed-models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Mixed models (L11-1)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11.2-what-next.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">What next (L11-2)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12.1-review.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Review (L12)</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#how-does-it-look-like-in-r" id="toc-how-does-it-look-like-in-r" class="nav-link" data-scroll-target="#how-does-it-look-like-in-r">How does it look like in R?</a></li>
+  <li><a href="#what-is-anova" id="toc-what-is-anova" class="nav-link" data-scroll-target="#what-is-anova">What is ANOVA?</a></li>
+  <li><a href="#anova-as-a-linear-model" id="toc-anova-as-a-linear-model" class="nav-link" data-scroll-target="#anova-as-a-linear-model">ANOVA as a linear model</a>
+  <ul class="collapse">
+  <li><a href="#rewrite-the-model" id="toc-rewrite-the-model" class="nav-link" data-scroll-target="#rewrite-the-model">Rewrite the model</a></li>
+  <li><a href="#the-anova-test-the-f-test" id="toc-the-anova-test-the-f-test" class="nav-link" data-scroll-target="#the-anova-test-the-f-test">The ANOVA test: The <span class="math inline">\(F\)</span>-test</a></li>
+  <li><a href="#interpretation-of-the-f-statistic" id="toc-interpretation-of-the-f-statistic" class="nav-link" data-scroll-target="#interpretation-of-the-f-statistic">Interpretation of the <span class="math inline">\(F\)</span> statistic</a></li>
+  <li><a href="#calculating-the-f-statistic" id="toc-calculating-the-f-statistic" class="nav-link" data-scroll-target="#calculating-the-f-statistic">Calculating the <span class="math inline">\(F\)</span> statistic</a></li>
+  <li><a href="#calculating-the-sums-of-squares" id="toc-calculating-the-sums-of-squares" class="nav-link" data-scroll-target="#calculating-the-sums-of-squares">Calculating the sums of squares</a></li>
+  <li><a href="#calculating-the-degrees-of-freedom" id="toc-calculating-the-degrees-of-freedom" class="nav-link" data-scroll-target="#calculating-the-degrees-of-freedom">Calculating the degrees of freedom</a></li>
+  <li><a href="#calculating-the-mean-square-and-f-statistic" id="toc-calculating-the-mean-square-and-f-statistic" class="nav-link" data-scroll-target="#calculating-the-mean-square-and-f-statistic">Calculating the mean square and <span class="math inline">\(F\)</span> statistic</a></li>
+  <li><a href="#sst-ssm-sse-and-degrees-of-freedom" id="toc-sst-ssm-sse-and-degrees-of-freedom" class="nav-link" data-scroll-target="#sst-ssm-sse-and-degrees-of-freedom"><span class="math inline">\(SST\)</span>, <span class="math inline">\(SSM\)</span>, <span class="math inline">\(SSE\)</span>, and degrees of freedom</a></li>
+  <li><a href="#source-of-variance-table" id="toc-source-of-variance-table" class="nav-link" data-scroll-target="#source-of-variance-table">Source of variance table</a></li>
+  <li><a href="#is-my-f-statistic-large-or-small" id="toc-is-my-f-statistic-large-or-small" class="nav-link" data-scroll-target="#is-my-f-statistic-large-or-small">Is my <span class="math inline">\(F\)</span>-statistic large or small?</a></li>
+  </ul></li>
+  <li><a href="#doing-anova-in-r" id="toc-doing-anova-in-r" class="nav-link" data-scroll-target="#doing-anova-in-r">Doing ANOVA in R</a></li>
+  <li><a href="#difference-between-pairs-of-groups" id="toc-difference-between-pairs-of-groups" class="nav-link" data-scroll-target="#difference-between-pairs-of-groups">Difference between pairs of groups</a>
+  <ul class="collapse">
+  <li><a href="#bonferroni-correction" id="toc-bonferroni-correction" class="nav-link" data-scroll-target="#bonferroni-correction">Bonferroni correction</a></li>
+  <li><a href="#tukey-hsd-approach" id="toc-tukey-hsd-approach" class="nav-link" data-scroll-target="#tukey-hsd-approach">Tukey HSD approach</a></li>
+  <li><a href="#fishers-lsd-approach" id="toc-fishers-lsd-approach" class="nav-link" data-scroll-target="#fishers-lsd-approach">Fisher’s LSD approach</a></li>
+  <li><a href="#other-contrasts" id="toc-other-contrasts" class="nav-link" data-scroll-target="#other-contrasts">Other contrasts</a></li>
+  <li><a href="#choosing-the-reference-category" id="toc-choosing-the-reference-category" class="nav-link" data-scroll-target="#choosing-the-reference-category">Choosing the reference category</a></li>
+  </ul></li>
+  <li><a href="#communicating-the-results-of-anova" id="toc-communicating-the-results-of-anova" class="nav-link" data-scroll-target="#communicating-the-results-of-anova">Communicating the results of ANOVA</a></li>
+  <li><a href="#summary-of-what-you-have-learned" id="toc-summary-of-what-you-have-learned" class="nav-link" data-scroll-target="#summary-of-what-you-have-learned">Summary of what you have learned</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/opetchey/BIO144_Course_Book/edit/main/5.1-anova.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/opetchey/BIO144_Course_Book/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Analysis of variance (L5)</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<ul>
+<li>One-way ANOVA</li>
+<li>Post-hoc tests and contrasts</li>
+<li>Two-way ANOVA</li>
+</ul>
+<p>ANOVA = ANalysis Of VAriance (Varianzanalyse)</p>
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>The previous two chapters were about linear regression. <em>Linear regression</em> is a type of <em>linear model</em> – recall that in <em>R</em> we used the function <code>lm()</code> to make the regression model. In this chapter we will look at a different type of linear model: analysis of variance (ANOVA).</p>
+<p>Recall that linear regression is a linear model with one continuous explanatory (independent) variable. A continuous explanatory variable is a variable in which values can take any value within a range (e.g., height, weight, temperature).</p>
+<p>In contrast, analysis of variance (ANOVA) is a linear model with one or more categorical explanatory variables. We will first look at a one-way ANOVA, which has one categorical explanatory variable. Later (in a following chapter) we will look at two-way ANOVA, which has two categorical explanatory variables.</p>
+<p>What is a categorical variable? A categorical explanatory variable is a variable that contains values that fall into distinct groups or categories. For example, habitat type (e.g., forest, grassland, wetland), treatment group (e.g., control, low dose, high dose), or diet type (e.g., vegetarian, vegan, omnivore).</p>
+<p>This means that each observation belongs to one of a limited number of categories or groups. For example, in a study of how blood pressure varies with diet type, diet type is a categorical variable with several levels (e.g., vegetarian, vegan, omnivore). A person can only belong to one diet type category.</p>
+<p>Here are the first several rows of a dataset that contains blood pressure measurements for individuals following different diet types:</p>
+<p>Reading in the dataset:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>bp_data_diet <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"datasets/bp_data_diet.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 50 Columns: 3
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (2): diet, person_ID
+dbl (1): bp
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>bp_data_diet <span class="ot">&lt;-</span> <span class="fu">select</span>(bp_data_diet, bp, diet, person_ID)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(bp_data_diet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 3
+     bp diet          person_ID
+  &lt;dbl&gt; &lt;chr&gt;         &lt;chr&gt;    
+1   120 meat heavy    person_1 
+2    89 vegan         person_2 
+3    86 vegetarian    person_3 
+4   116 meat heavy    person_4 
+5   115 Mediterranean person_5 
+6   134 meat heavy    person_6 </code></pre>
+</div>
+</div>
+<p>There are three variables: - <code>bp</code>: blood pressure (continuous response variable) - <code>diet</code>: diet type (categorical explanatory variable) - <code>person_ID</code>: unique identifier for each individual (not used in the analysis)</p>
+<p>Note that the <code>diet</code> variable is of type <code>&lt;chr&gt;</code> which is short for <code>character</code>. In <em>R</em>, categorical variables are often represented as factors.</p>
+<p>As usual, its a really good idea to visualise the data in as close to “raw” form as possible before doing any analysis. We’ll make a scatterplot of blood pressure versus diet type.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(bp_data_diet, <span class="fu">aes</span>(<span class="at">x =</span> diet, <span class="at">y =</span> bp)) <span class="sc">+</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.1</span>, <span class="at">height =</span> <span class="dv">0</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Blood Pressure by Diet Type"</span>,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Diet Type"</span>,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Blood Pressure (mm Hg)"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="5.1-anova_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="432"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>We just used <code>geom_jitter()</code> instead of <code>geom_point()</code> to make a scatterplot. This is because <code>geom_jitter()</code> adds a small amount of random noise to the points, which helps to prevent overplotting when multiple points have the same value (which is common when the x-axis is categorical).</p>
+<p>When we use <code>geom_jitter()</code>, we can specify the amount of noise to add in the x and y directions using the <code>width</code> and <code>height</code> arguments, respectively. We must be very careful to not add noise to the y direction if we care about the actual y values (e.g., blood pressure). In this case, we only added noise in the x direction by setting <code>height = 0</code> to separate the points just enough, but not so much that we could get confused about which of the diets they belong to.</p>
+</div>
+</div>
+<p>Looking at this graph it certainly looks like diet type has an effect on blood pressure. But is this effect statistically significant? In other words, are the differences in mean blood pressure between diet types larger than we would expect due to random variation alone?</p>
+<p>Analysis of variance (ANOVA) is a statistical method that can help us answer this question, and also others.</p>
+</section>
+<section id="how-does-it-look-like-in-r" class="level2">
+<h2 class="anchored" data-anchor-id="how-does-it-look-like-in-r">How does it look like in R?</h2>
+<p>We can fit a one-way ANOVA model in <em>R</em> using the same <code>lm()</code> function that we used for linear regression. The only difference is that the explanatory variable is categorical.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>anova_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(bp <span class="sc">~</span> diet, <span class="at">data =</span> bp_data_diet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Then instead of using <code>summary()</code> to look at the results, we use the <code>anova()</code> function.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(anova_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Response: bp
+          Df Sum Sq Mean Sq F value    Pr(&gt;F)    
+diet       3 5274.2 1758.08  20.728 1.214e-08 ***
+Residuals 46 3901.5   84.82                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>This is an ANOVA table. It shows us the sources of variation in the data, along with their associated degrees of freedom (Df), sum of squares (Sum Sq), mean square (Mean Sq), F value, and p-value (Pr(&gt;F)) associate with a getting a F value the same as or greater than the observed F value if the null hypothesis were true.</p>
+<p>The challenge now is to understand what all of these values mean! Let’s take it step by step.</p>
+</section>
+<section id="what-is-anova" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-anova">What is ANOVA?</h2>
+<p>Analysis of variance is a method to compare whether the observations (e.g., of blood pressure) differ according to some grouping (e.g., diet) that the subjects (e.g., people) belong to.</p>
+<p>We already know a lot about analysing variance: we compared the total sum of squares (SST), model sum of squares (SSM) and the residual sum of squares (SSE) in the context of linear regression. We used these to calculated the <span class="math inline">\(R^2\)</span> value. The <span class="math inline">\(R^2\)</span> value tells us how much of the total variance in the response variable (e.g., blood pressure) is explained by the explanatory variable (e.g., diet).</p>
+<p>The same applies to analysis of variance (ANOVA) (as well as regression) because ANOVA is a special case of a linear model, just like regression is also a special case of a linear model.</p>
+<p>The defining characteristic of ANOVA is that we are comparing the means of groups by analysing variances. Put another way, we will have a single categorical explanatory variable with two or more levels. We will test whether the means of the response variable are the same across all levels of the explanatory variable, and we test this by analysing the variances.</p>
+<p>When we have only one categorical explanatory variable, we use a <em>one-way</em> ANOVA. When we have two categorical explanatory variables, we will use a <em>two-way</em> ANOVA (we’ll look at this in a subsequent chapter).</p>
+</section>
+<section id="anova-as-a-linear-model" class="level2">
+<h2 class="anchored" data-anchor-id="anova-as-a-linear-model">ANOVA as a linear model</h2>
+<p>Just like linear regression, ANOVA can be expressed as a linear model. The key difference is that in ANOVA, the explanatory variable is categorical rather than continuous.We formulate the linear model as follows:</p>
+<p><span class="math display">\[y_{ij} = \mu_j + \epsilon_{i}\]</span></p>
+<p>where:</p>
+<ul>
+<li><span class="math inline">\(y_{ij}\)</span> = Blood pressure of individual <span class="math inline">\(i\)</span> with diet <span class="math inline">\(j\)</span></li>
+<li><span class="math inline">\(\mu_i\)</span> = Mean blood pressure of an individual with diet <span class="math inline">\(j\)</span></li>
+<li><span class="math inline">\(\epsilon_{i}\sim N(0,\sigma^2)\)</span> is an independent error term.</li>
+</ul>
+<p>Graphically, with the blood pressure and diet data, this looks like:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="5.1-anova_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="432"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>There is lots of hidden code used to create the data used in the graph above, and to make the graph itself. You can see the code by going to the <a href="https://github.com/opetchey/BIO144_Course_Book">Github repository for this book</a>.</p>
+</div>
+</div>
+<section id="rewrite-the-model" class="level3">
+<h3 class="anchored" data-anchor-id="rewrite-the-model">Rewrite the model</h3>
+<p>We usually use a different formulation of the linear model for ANOVA. This is because we usually prefer to express the estimated parameters in terms of <em>differences between means</em> (rather than the means themselves). The reason for this is that then the null hypothesis can be that the differences are zero.</p>
+<p>To proceed with this formulation, we define one of the groups as the reference group, and make the mean of that equal to the intercept of the model. For example, if we choose the “meat heavy” diet as the reference group, we can write:</p>
+<p><span class="math display">\[\mu_{meat} = \beta_0\]</span></p>
+<p>And then to express the other group means as deviations from the reference group mean:</p>
+<p><span class="math display">\[\mu_{Med} = \beta_0 + \beta_1\]</span> <span class="math display">\[\mu_{vegan} = \beta_0 + \beta_2\]</span> <span class="math display">\[\mu_{veggi} = \beta_0 + \beta_3\]</span></p>
+<p>When we write out the entire model, we get:</p>
+<p><span class="math display">\[y_i = \beta_0 + \beta_1 x_i^{1} + \beta_2 x_i^{2} + \beta_3 x_i^{3} + \epsilon_i\]</span> where: <span class="math inline">\(y_i\)</span> is the blood pressure of individual <span class="math inline">\(i\)</span>. <span class="math inline">\(x_i^{1}\)</span> is a binary variable indicating whether individual <span class="math inline">\(i\)</span> is on the Mediterranean diet. <span class="math inline">\(x_i^{2}\)</span> is a binary variable indicating whether individual <span class="math inline">\(i\)</span> is on the vegan diet. <span class="math inline">\(x_i^{3}\)</span> is a binary variable indicating whether individual <span class="math inline">\(i\)</span> is on the vegetarian diet.</p>
+<p>Graphically, the model now looks like this:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="5.1-anova_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="432"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout-hint">
+<p>Here is something to warp you mind… we described one-way ANOVA as a linear model with one categorical explanatory variable. But as you can see above, we can also describe it as a linear model with multiple binary explanatory variables (one for each group except the reference group). And when we make a linear model in R it really does create multiple binary explanatory variables behind the scenes. So one-way ANOVA and multiple linear regression with multiple binary explanatory variables are really the same thing! And, even more mind-warping, one-way ANOVA and multiple regression (regression with multiple continuous explanatory variables) are also the same thing! So when we look at multiple regression later in the course, you can think of it as just an extension of one-way ANOVA.</p>
+</div>
+</section>
+<section id="the-anova-test-the-f-test" class="level3">
+<h3 class="anchored" data-anchor-id="the-anova-test-the-f-test">The ANOVA test: The <span class="math inline">\(F\)</span>-test</h3>
+<p><strong>Aim of ANOVA</strong>: to test <em>globally</em> if the groups differ. That is we want to test the null hypothesis that all of the group means are equal:</p>
+<p><span class="math display">\[H_0: \mu_1=\mu_2=\ldots = \mu_g\]</span> This is equivalent to testing if all <span class="math inline">\(\beta\)</span>s that belong to a categorical variable are = 0.</p>
+<p><span class="math display">\[H_0: \beta_1 = \ldots = \beta_{g-1} = 0\]</span> The alternate hypothesis is that <span class="math inline">\({H_1}\)</span>: The group means are not all the same.</p>
+<p>A key point is that we are testing a null hypothesis that concerns all the groups. We are not testing if one group is different from another group (which we could do with a <span class="math inline">\(t\)</span>-test on one of the non-intercept <span class="math inline">\(\beta\)</span>s).</p>
+<p>Because we are testing a null hypothesis that concerns all the groups, we need to use an <span class="math inline">\(F\)</span>-test. It asks if the model with the group means is better than a model with just the overall mean.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The <span class="math inline">\(F\)</span>-test is called the “<span class="math inline">\(F\)</span>-test” because it is based on the <span class="math inline">\(F\)</span>-distribution, which was named after the statistician <a href="https://en.wikipedia.org/wiki/Ronald_Fisher">Sir Ronald A. Fisher</a>. Fisher developed this statistical method as part of his pioneering work in analysis of variance (ANOVA) and other fields of experimental design and statistical inference.</p>
+</div>
+</div>
+<p>Actually, the <span class="math inline">\(F\)</span>-test does not directly test the null hypothesis that all the group means are equal. Instead, it tests whether the model that includes the <em>group means</em> explains significantly more variance in the data than a model that only includes the overall mean (i.e., without considering group differences).</p>
+<p>The <span class="math inline">\(F\)</span>-test does this by comparing two variance estimates: the variance explained by the group means (between-group variance) and the variance that remains unexplained within each group (within-group variance).</p>
+<p><strong>Think–Pair–Share (#a_what_f_test_answers)</strong> What question does the ANOVA F-test answer? What question does it <em>not</em> answer?</p>
+</section>
+<section id="interpretation-of-the-f-statistic" class="level3">
+<h3 class="anchored" data-anchor-id="interpretation-of-the-f-statistic">Interpretation of the <span class="math inline">\(F\)</span> statistic</h3>
+<p>The <span class="math inline">\(F\)</span>-test involves calculating from the observed data the value of the <span class="math inline">\(F\)</span> statistic, and then computing if that value is large enough to reject the null hypothesis.</p>
+<p>The <span class="math inline">\(F\)</span> statistic is a ratio of two variances: the variance <strong>between</strong> groups, and the variance <strong>within</strong> groups.</p>
+<p>Here is an example with very low within group variability, and high between group variability:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="5.1-anova_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="432"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>And here’s an example with very high within group variability, and low between group variability:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="5.1-anova_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="432"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>So, when the ratio of between group variance to within group variance is large, the group means are very different compared to the variability within groups. This suggests that the groups are different.</p>
+<p>When the ratio is small, the group means are similar compared to the variability within groups. This suggests that the groups are not different.</p>
+<ul>
+<li><strong><span class="math inline">\(F\)</span> increases</strong>
+<ul>
+<li>when the group means become more different, or</li>
+<li>when the variability within groups decreases.</li>
+</ul></li>
+<li><strong><span class="math inline">\(F\)</span> decreases</strong>
+<ul>
+<li>when the group means become more similar, or</li>
+<li>when the variability within groups increases.</li>
+</ul></li>
+</ul>
+<p><span class="math inline">\(\rightarrow\)</span> The larger <span class="math inline">\(F\)</span>, the less likely are the data seen under <span class="math inline">\(H_0\)</span>.</p>
+</section>
+<section id="calculating-the-f-statistic" class="level3">
+<h3 class="anchored" data-anchor-id="calculating-the-f-statistic">Calculating the <span class="math inline">\(F\)</span> statistic</h3>
+<p>Recall that the <span class="math inline">\(F\)</span> statistic is a ratio of two variances. Specifically, it is the ratio of two mean squares (MS):</p>
+<ul>
+<li><span class="math inline">\(MS_{model}\)</span>: the variability <strong>between</strong> groups.</li>
+<li><span class="math inline">\(MS_{residual}\)</span>: the variability <strong>within</strong> groups.</li>
+</ul>
+<p><span class="math inline">\(MS\)</span> stands for Mean Square, and is a variance estimate.</p>
+<p>The <span class="math inline">\(F\)</span> statistic is calculated as:</p>
+<p><span class="math display">\[F = \frac{MS_{model}}{MS_{residual}}\]</span></p>
+<p>To find the mean squares, we need to calculate the within and the between group sums of squares, and the corresponding degrees of freedom. Let’s go though this step by step.</p>
+</section>
+<section id="calculating-the-sums-of-squares" class="level3">
+<h3 class="anchored" data-anchor-id="calculating-the-sums-of-squares">Calculating the sums of squares</h3>
+<p>First we get the total sum of squares (SST), which quantifies the total variability in the data. This is then split into the explained variability (SSM), and the residual variability (SSE).</p>
+<p><strong>Total variability:</strong> SST = <span class="math inline">\(\sum_{i=1}^k \sum_{j=1}^{n_i} (y_{ij}-\overline{y})^2\)</span></p>
+<p>where:</p>
+<ul>
+<li><span class="math inline">\(y_{ij}\)</span> is the blood pressure of individual <span class="math inline">\(j\)</span> in group <span class="math inline">\(i\)</span></li>
+<li><span class="math inline">\(\overline{y}\)</span> is the overall mean blood pressure</li>
+<li><span class="math inline">\(n_i\)</span> is the number of individuals in group <span class="math inline">\(i\)</span></li>
+<li><span class="math inline">\(k\)</span> is the number of groups</li>
+</ul>
+<p><strong>Explained variability (between group variability)</strong>: = SSM = <span class="math inline">\(\sum_{i=1}^k n_i (\overline{y}_{i} - \overline{y})^2\)</span></p>
+<p>where:</p>
+<ul>
+<li><span class="math inline">\(\overline{y}_{i}\)</span> is the mean blood pressure of group <span class="math inline">\(i\)</span></li>
+</ul>
+<p><strong>Residual variability (within group variability)</strong>: = SSE = <span class="math inline">\(\sum_{i=1}^k \sum_{j=1}^{n_i}  (y_{ij} - \overline{y}_{i} )^2\)</span></p>
+</section>
+<section id="calculating-the-degrees-of-freedom" class="level3">
+<h3 class="anchored" data-anchor-id="calculating-the-degrees-of-freedom">Calculating the degrees of freedom</h3>
+<p>And now we need the degrees of freedom for each sum of squares:</p>
+<p><strong>SST degrees of freedom</strong>: <span class="math inline">\(n - 1\)</span> (total degrees of freedom is number of observations <span class="math inline">\(n\)</span> minus 1)</p>
+<p><strong>SSM degrees of freedom</strong>: <span class="math inline">\(k - 1\)</span> (model degrees of freedom is number of groups <span class="math inline">\(k\)</span> minus 1)</p>
+<p><strong>SSE degrees of freedom</strong>: <span class="math inline">\(n - k\)</span> (residual degrees of freedom is total degrees of freedom <span class="math inline">\(n - 1\)</span> minus model degrees of freedom <span class="math inline">\(k - 1\)</span>)</p>
+<section id="total-degrees-of-freedom" class="level4">
+<h4 class="anchored" data-anchor-id="total-degrees-of-freedom">Total degrees of freedom</h4>
+<p>The total degrees of freedom are the degrees of freedom associated with the total sum of squares (<span class="math inline">\(SST\)</span>).</p>
+<p>In order to calculate the <span class="math inline">\(SST\)</span>, we need to calculate the mean of the response variable. This implies that we estimate one parameter (the mean of the response variable). As a consequence, we lose one degree of freedom and so there remain <span class="math inline">\(n-1\)</span> degrees of freedom associated with the total sum of squares (where <span class="math inline">\(n\)</span> is the number of observations).</p>
+<p>What do we mean by “lose one degree of freedom”? Imagine we have ten observations. We can calculate the mean of these ten observations. But if we know the mean and nine of the observations, we can calculate the tenth observation. So, in a sense, once we calculate the mean, the value of one of the ten observations is fixed. This is what we mean by “losing one degree of freedom”. When we calculate and use the mean, one of the observations “loses its freedom”.</p>
+<p>For example, take the numbers 1, 3, 5, 7, 9. The mean is 5. The sum of the squared differences between the observations and the mean is <span class="math inline">\((1-5)^2 + (3-5)^2 + (5-5)^2 + (7-5)^2 + (9-5)^2 = 20\)</span>. This is the total sum of squares. The degrees of freedom are <span class="math inline">\(5-1 = 4\)</span>.</p>
+<p>The total degrees of freedom are the total number of observations minus one. That is, the total sum of squares is associated with <span class="math inline">\(n-1\)</span> degrees of freedom.</p>
+<p>Another perspective in which to think about the total sum of squares and total degrees of freedom is to consider the intercept only model. The intercept only model is a model that only includes the intercept term. The equation of this model would be:</p>
+<p><span class="math display">\[y_i = \beta_0 + \epsilon_i\]</span> The sum of the square of the residuals for this model is minimised when the predicted value of the response variable is the mean of the response variable. That is, the least squares estimate of <span class="math inline">\(\beta_0\)</span> is the mean of the response variable:</p>
+<p><span class="math display">\[\hat{\beta}_0 = \bar{y}\]</span></p>
+<p>Hence, the predicted value of the response variable is the mean of the response variable. The equation is:</p>
+<p><span class="math display">\[\hat{y}_i = \bar{y} + \epsilon_i\]</span></p>
+<p>The error term is therefore:</p>
+<p><span class="math display">\[\epsilon_i = y_i - \bar{y}\]</span> And the total sum of squares is:</p>
+<p><span class="math display">\[SST = \sum_{i=1}^n (y_i - \bar{y})^2\]</span></p>
+<p>where <span class="math inline">\(\hat{y}_i\)</span> is the predicted value of the response variable for the <span class="math inline">\(i\)</span>th observation, <span class="math inline">\(\bar{y}\)</span> is the mean of the response variable, and <span class="math inline">\(\epsilon_i\)</span> is the residual for the <span class="math inline">\(i\)</span>th observation.</p>
+<p>The intercept only model involves estimating only one parameter, so the total degrees of freedom are the total number of observations minus one <span class="math inline">\(n - 1\)</span>.</p>
+<p>Therefore, the total degrees of freedom are the total number of observations minus one.</p>
+<p>Bottom line: <span class="math inline">\(SST\)</span> is the residual sum of squares when we fit the intercept only model. The total degrees of freedom are the total number of observations minus one.</p>
+</section>
+<section id="model-degrees-of-freedom" class="level4">
+<h4 class="anchored" data-anchor-id="model-degrees-of-freedom">Model degrees of freedom</h4>
+<p>The model degrees of freedom are the degrees of freedom associated with the model sum of squares (<span class="math inline">\(SSM\)</span>).</p>
+<p>In the case of the intercept only model, we estimated one parameter, the mean of the response variable.</p>
+<p>In the case of a categorical variable with <span class="math inline">\(k\)</span> groups, we need <span class="math inline">\(k-1\)</span> parameters (non intercept <span class="math inline">\(\beta\)</span> parameters), so we lose <span class="math inline">\(k-1\)</span> degrees of freedom. Put another way, when we fit a model with a categorical explanatory variable with <span class="math inline">\(k\)</span> groups, we estimate <span class="math inline">\(k-1\)</span> parameters in addition to the intercept. That is, we estimate the difference between each group and the reference group.</p>
+<p>Each time we estimate a new parameter, we lose a degree of freedom.</p>
+</section>
+<section id="residual-degrees-of-freedom" class="level4">
+<h4 class="anchored" data-anchor-id="residual-degrees-of-freedom">Residual degrees of freedom</h4>
+<p>The residual degrees of freedom are the total degrees of freedom (<span class="math inline">\(n-1\)</span>) minus the model degrees of freedom (<span class="math inline">\(k-1\)</span>).</p>
+<p>Therefore, the residual degrees of freedom are the degrees of freedom remaining after we estimate the intercept and the other <span class="math inline">\(\beta\)</span> parameters. There is one intercept and <span class="math inline">\(k-1\)</span> other <span class="math inline">\(\beta\)</span> parameters, so the residual degrees of freedom are <span class="math inline">\(n-1- ( k-1) = n - k\)</span>.</p>
+</section>
+</section>
+<section id="calculating-the-mean-square-and-f-statistic" class="level3">
+<h3 class="anchored" data-anchor-id="calculating-the-mean-square-and-f-statistic">Calculating the mean square and <span class="math inline">\(F\)</span> statistic</h3>
+<p>From these sums of squares and degrees of freedom we can calculate the mean squares and <span class="math inline">\(F\)</span>-statistic:</p>
+<p><span class="math display">\[MS_{model} = \frac{SS_{\text{between}}}{k-1} = \frac{SSM}{k-1}\]</span></p>
+<p><span class="math display">\[MS_{residual} = \frac{SS_{\text{within}}}{n-k} = \frac{SSE}{n-k}\]</span></p>
+<p><span class="math display">\[F = \frac{MS_{model}}{MS_{residual}}\]</span></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Why divide by the degrees of freedom?</strong> The more observations we have, the greater will be the total sum of squares. The more observations we have, the greater will be the residual sum of squares. So it is not very informative to compare totals. Rather, we need to compare the mean of the sums of squares. Except we don’t calculate the mean by dividing by the number of observations. Rather we divide by the degrees of freedom. The total mean square is an estimate of the variance of the response variable. And the residual mean square is an estimate of the variance of the residuals.</p>
+</div>
+</div>
+</section>
+<section id="sst-ssm-sse-and-degrees-of-freedom" class="level3">
+<h3 class="anchored" data-anchor-id="sst-ssm-sse-and-degrees-of-freedom"><span class="math inline">\(SST\)</span>, <span class="math inline">\(SSM\)</span>, <span class="math inline">\(SSE\)</span>, and degrees of freedom</h3>
+<p>Just a reminder and a summary of some of the material above:</p>
+<ul>
+<li><span class="math inline">\(SST\)</span>: degrees of freedom = <span class="math inline">\(n-1\)</span></li>
+<li><span class="math inline">\(SSM\)</span>: degrees of freedom = <span class="math inline">\(k-1\)</span></li>
+<li><span class="math inline">\(SSE\)</span>: degrees of freedom = <span class="math inline">\(n-k\)</span></li>
+</ul>
+<p>The sum of squares add up:</p>
+<p><span class="math display">\[SST = SSM + SSE\]</span></p>
+<p>and the degrees of freedom add up</p>
+<p><span class="math display">\[(n-1) = (k-1) + (n - k)\]</span></p>
+</section>
+<section id="source-of-variance-table" class="level3">
+<h3 class="anchored" data-anchor-id="source-of-variance-table">Source of variance table</h3>
+<p>Now we have nearly everything we need. We often express all of this (and a few more quantities) in a convenient table called the <strong>sources of variance table</strong> (or ANOVA table).</p>
+<p>The <strong>sources of variance table</strong> is a table that conveniently and clearly gives all of the quantities mentioned above. It breaks down the total sum of squares into the sum of squares explained by the model and the sum of squares due to error. The source of variance table is used to calculate the <span class="math inline">\(F\)</span>-statistic.</p>
+<table class="caption-top table">
+<caption>Sources of variance table</caption>
+<colgroup>
+<col style="width: 7%">
+<col style="width: 14%">
+<col style="width: 17%">
+<col style="width: 30%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Source</th>
+<th>Sum of squares</th>
+<th>Degrees of freedom</th>
+<th>Mean square</th>
+<th>F-statistic</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Model</td>
+<td><span class="math inline">\(SSM\)</span></td>
+<td><span class="math inline">\(k-1\)</span></td>
+<td><span class="math inline">\(MSE_{model} = SSM / k-1\)</span></td>
+<td><span class="math inline">\(\frac{MSE_{model}}{MSE_{error}}\)</span></td>
+</tr>
+<tr class="even">
+<td>Error</td>
+<td><span class="math inline">\(SSE\)</span></td>
+<td><span class="math inline">\(n - 1 - (k-1)\)</span></td>
+<td><span class="math inline">\(MSE_{error} = SSE / (n - 1 - (k-1))\)</span></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>Total</td>
+<td><span class="math inline">\(SST\)</span></td>
+<td><span class="math inline">\(n - 1\)</span></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="is-my-f-statistic-large-or-small" class="level3">
+<h3 class="anchored" data-anchor-id="is-my-f-statistic-large-or-small">Is my <span class="math inline">\(F\)</span>-statistic large or small?</h3>
+<p>OK, so we have calculated the <span class="math inline">\(F\)</span> statistic. But how do we use it to test our hypothesis?</p>
+<p>We can use the <span class="math inline">\(F\)</span> statistic to calculate a <span class="math inline">\(p\)</span>-value, which tells us how likely our data is under the null hypothesis.</p>
+<p>Some key points:</p>
+<ol type="1">
+<li><span class="math inline">\(F\)</span>-Distribution: The test statistic of the <span class="math inline">\(F\)</span>-test (that is, the <span class="math inline">\(F\)</span>-statistic) follows the <span class="math inline">\(F\)</span>-distribution under the null hypothesis. This distribution arises when comparing the ratio of two independent sample variances (or mean squares).</li>
+<li>Ronald Fisher’s Contribution: Fisher introduced the <span class="math inline">\(F\)</span>-distribution in the early 20th century as a way to test hypotheses about the equality of variances and to analyze variance in regression and experimental designs. The “<span class="math inline">\(F\)</span>” in <span class="math inline">\(F\)</span>-distribution honours him.</li>
+<li>Variance Ratio: The test statistic for the <span class="math inline">\(F\)</span>-test is the ratio of two variances (termed mean squares in this case), making the <span class="math inline">\(F\)</span>-distribution the natural choice for modeling this ratio when the null hypothesis is true.</li>
+</ol>
+<p>The <span class="math inline">\(F\)</span>-test is widely used, including when comparing variances, assessing the significance of multiple regression models (see later chapter), conducting ANOVA to test for differences among group means, and for comparing different models.</p>
+<p>Recall that “The <span class="math inline">\(F\)</span>-statistic is calculated as the ratio of the mean square error of the model to the mean square error of the residuals.” And that a large <span class="math inline">\(F\)</span>-statistic is evidence against the null hypothesis that the slopes of the explanatory variables are zero. And that a small <span class="math inline">\(F\)</span>-statistic is evidence to not reject the null hypothesis that the slopes of the explanatory variables are zero.</p>
+<p>But how big does the F-statistic need to be in order to confidently reject the null hypothesis?</p>
+<p>The null hypothesis that the explained variance of the model is no greater than would be expected by chance. Here, “by chance” means that the slopes of the explanatory variables are zero.</p>
+<p><span class="math display">\[H_0: \beta_1 = \beta_2 = \ldots = \beta_p = 0\]</span></p>
+<p>The alternative hypothesis is that the explained variance of the model is greater than would be expected by chance. This would occur if the slopes of some or all of the explanatory variables are not zero.</p>
+<p><span class="math display">\[H_1: \beta_1 \neq 0 \text{ or } \beta_2 \neq 0 \text{ or } \ldots \text{ or } \beta_p \neq 0\]</span></p>
+<p>To test this hypothesis we are going to, as usual, calculate a <span class="math inline">\(p\)</span>-value. The <span class="math inline">\(p\)</span>-value is the probability of observing a test statistic as or more extreme as the one we observed, assuming the null hypothesis is true. To do this, we need to know the distribution of the test statistic under the null hypothesis. The distribution of the test statistic under the null hypothesis is known as the <span class="math inline">\(F\)</span>-distribution.</p>
+<p>The <span class="math inline">\(F\)</span>-distribution has two degrees of freedom values associated with it: the degrees of freedom of the model and the degrees of freedom of the residuals. The degrees of freedom of the model are the number of parameters estimated by the model corresponding to the null hypothesis. The degrees of freedom of the residuals are the total degrees of freedom minus the degrees of freedom of the model.</p>
+<p>Here is the <span class="math inline">\(F\)</span>-distribution with 2 and 99 degrees of freedom:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="5.1-anova_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="432"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The F-distribution is skewed to the right and has a long tail. The area to the right of 3.89 is shaded in red. This area represents the probability of observing an F-statistic as or more extreme as 3.89, assuming the null hypothesis is true. This probability is the <span class="math inline">\(p\)</span>-value of the hypothesis test.</p>
+<p>The <span class="math inline">\(F\)</span>-statistic and <span class="math inline">\(F\)</span>-test is briefly recaptured in 3.1.f) of the Stahel script, but see also Mat183 chapter 6.2.5. It uses the fact that</p>
+<p><span class="math display">\[\frac{MSE_{model}}{MSE_{residual}} =  \frac{SSM/p}{SSE/(n-1-p)} \sim F_{p,n-1-p}\]</span></p>
+<p>follows an <span class="math inline">\(F\)</span>-distribution with <span class="math inline">\(p\)</span> and <span class="math inline">\((n-1-p)\)</span> degrees of freedom, where <span class="math inline">\(p\)</span> are the number of continuous variables, <span class="math inline">\(n\)</span> the number of data points.</p>
+<ul>
+<li><span class="math inline">\(SSE=\sum_{i=1} ^n(y_i-\hat{y}_i)^2\)</span> is the residual sum of squares</li>
+<li><span class="math inline">\(SSM = SST - SSE\)</span> is the sum of squares of the model</li>
+<li><span class="math inline">\(SST=\sum_{i=1}^n(y_i-\overline{y})^2\)</span> is the total sum of squares</li>
+<li><span class="math inline">\(n\)</span> is the number of data points</li>
+<li><span class="math inline">\(p\)</span> is the number of explanatory variables in the regression model</li>
+</ul>
+<p>Well, that is ANOVA conceptually. But how does it actually look like in R?</p>
+</section>
+</section>
+<section id="doing-anova-in-r" class="level2">
+<h2 class="anchored" data-anchor-id="doing-anova-in-r">Doing ANOVA in R</h2>
+<p>Let’s go back again the question of how diet effects blood pressure. Here is the data:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>bp_data_diet <span class="ot">&lt;-</span> <span class="fu">select</span>(bp_data_diet, bp, diet, person_ID)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(bp_data_diet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 3
+     bp diet          person_ID
+  &lt;dbl&gt; &lt;chr&gt;         &lt;chr&gt;    
+1   120 meat heavy    person_1 
+2    89 vegan         person_2 
+3    86 vegetarian    person_3 
+4   116 meat heavy    person_4 
+5   115 Mediterranean person_5 
+6   134 meat heavy    person_6 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(bp_data_diet, <span class="fu">aes</span>(<span class="at">x =</span> diet, <span class="at">y =</span> bp)) <span class="sc">+</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Blood pressure by diet"</span>,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Diet"</span>,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Blood pressure"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="5.1-anova_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="432"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>And here is how we fit a linear model to this data:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(bp <span class="sc">~</span> diet, <span class="at">data =</span> bp_data_diet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>IMPORTANT</strong>: Since ANOVA is a linear model, it is important to check the assumptions of linear models before interpreting the results. These are some of the same assumptions we checked for simple linear regression, including: independence of errors, normality of residuals, and homoscedasticity (constant variance of residuals).</p>
+<p>As with linear regression, we check the assumptions are not too badly broken by looking at diagnostic plots:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fit, <span class="at">add.smooth =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="5.1-anova_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="432"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Nothing looks too bad.</p>
+<p>** Think-pair-share**: Which of the four plots above would you use to check each of the three assumptions listed above?</p>
+<p>** Think-pair-share**: Before we look at the ANOVA table, lets figure out the total degrees of freedom, the degrees of freedom for the model, and the degrees of freedom for the residuals. Have a think-pair-share about each of these. Write you ideas down. Chat with you neighbour. Then share with the class.</p>
+<p>Now we can look at the ANOVA table:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Response: bp
+          Df Sum Sq Mean Sq F value    Pr(&gt;F)    
+diet       3 5274.2 1758.08  20.728 1.214e-08 ***
+Residuals 46 3901.5   84.82                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>The ANOVA table shows the sum of squares, degrees of freedom, mean square, F value, and p-value for the model and residuals. As we know, the <span class="math inline">\(F\)</span> value (<span class="math inline">\(F\)</span> statistics) is calculated as the mean square of the model divided by the mean square of the residuals. The p-value is calculated based on the F-distribution with the appropriate degrees of freedom.</p>
+<p>A suitable sentence to report our findings would be: “Diet has a significant effect on blood pressure (<span class="math inline">\(F(2, 27) = 20.7, p &lt; 0.0001\)</span>)”. This means that the probability of observing such a large <span class="math inline">\(F\)</span> value under the null hypothesis is less than 0.01%.</p>
+<p><em>Think-pair-share</em>: You know that the <span class="math inline">\(R^2\)</span> value is a measure of how much variance in the response variable is explained by the model. How would you calculate the <span class="math inline">\(R^2\)</span> value from the ANOVA table above?</p>
+</section>
+<section id="difference-between-pairs-of-groups" class="level2">
+<h2 class="anchored" data-anchor-id="difference-between-pairs-of-groups">Difference between pairs of groups</h2>
+<p>Recall that the <span class="math inline">\(F\)</span> test is a global test. It tests the null hypothesis that all group means are equal. It does not tell us which groups are different from each other. It just tells us that at least one group mean is different. Sometimes researchers are interested in more specific questions such as:</p>
+<ol type="1">
+<li>finding the actual group(s) that deviate(s) from the others.</li>
+<li>in estimates of the pairwise differences.</li>
+</ol>
+<p>The summary table in R provides some of these comparison, specifically it contains the estimates for <span class="math inline">\(\beta_1\)</span>, <span class="math inline">\(\beta_2\)</span>, <span class="math inline">\(\beta_3\)</span> (while the reference was set to <span class="math inline">\(\beta_0 = 0\)</span>).</p>
+<p>For example, here is the summary table for our diet data:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = bp ~ diet, data = bp_data_diet)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-17.9375  -5.9174  -0.4286   5.2969  22.3750 
+
+Coefficients:
+                  Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)        122.625      2.302  53.260  &lt; 2e-16 ***
+dietMediterranean  -12.688      3.256  -3.897 0.000314 ***
+dietvegan          -26.768      4.173  -6.414 6.92e-08 ***
+dietvegetarian     -23.625      3.607  -6.549 4.33e-08 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 9.21 on 46 degrees of freedom
+Multiple R-squared:  0.5748,    Adjusted R-squared:  0.5471 
+F-statistic: 20.73 on 3 and 46 DF,  p-value: 1.214e-08</code></pre>
+</div>
+</div>
+<p>In this table we have the intercept (<span class="math inline">\(\beta_0\)</span>) and the three <span class="math inline">\(\beta\)</span> values for the diet groups: “dietMeat”, “dietVegetarian”, and “dietVegan”. The Estimate column shows the estimated coefficients for each group. The intercept (<span class="math inline">\(\beta_0\)</span>) represents the mean blood pressure for the reference group (in this case, the “meat” diet group). The other three coefficients represent <em>the difference</em> in mean blood pressure between each diet group and the reference group.</p>
+<p>All well and good up to a point. But there are two issues with using the results from this table:</p>
+<ol type="1">
+<li>The greater the number of individual tests, the more likely one will be significant just by chance. This is called the problem of multiple comparisons. Many test can result in a type-I error: rejecting the null hypothesis when it is actually true. The more tests one does, the more likely one is to make a type-I error.</li>
+</ol>
+<p>** Think-pair-share**: Imagine that when our threshold p-value each individual test is 0.05 (5%) so that if it is less than 0.05 we call it “significant” and if it is greater than 0.05 we call it “not significant” (this is the standard practice in many fields). When we make 20 hypothesis tests, how many would we expect to be “significant” just by chance (i.e., when we assume that all null hypotheses is true.)</p>
+<ol start="2" type="1">
+<li>The summary table does not provide all the possible pairwise comparisons. It does not, for example, provide the comparison between the “vegan” and the “vegetarian” group.</li>
+</ol>
+<p>Several methods to circumvent the problem of too many “significant” test results (type-I error) have been proposed. The most prominent ones are:</p>
+<ul>
+<li>Bonferroni correction</li>
+<li>Tukey <strong>H</strong>onest <strong>S</strong>ignificant <strong>D</strong>ifferences (HSD) approach</li>
+<li>Fisher <strong>L</strong>east <strong>S</strong>ignificant <strong>D</strong>ifferences (LSD) approach</li>
+</ul>
+<p>The second two when implemented in R also provide all possible pairwise comparisons.</p>
+<section id="bonferroni-correction" class="level3">
+<h3 class="anchored" data-anchor-id="bonferroni-correction">Bonferroni correction</h3>
+<p><strong>Idea:</strong> If a total of <span class="math inline">\(m\)</span> tests are carried out, simply divide the type-I error level <span class="math inline">\(\alpha_0\)</span> (often 5%) such that</p>
+<p><span class="math display">\[\alpha = \alpha_0 / m \ .\]</span></p>
+<p>But this still leaves the problem of how to efficiently get all of the possible pairwise comparisons. We can do this using the <code>pairwise.t.test</code> function in R:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairwise.t.test</span>(bp_data_diet<span class="sc">$</span>bp,</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>                bp_data_diet<span class="sc">$</span>diet,</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">p.adjust.method =</span> <span class="st">"bonferroni"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Pairwise comparisons using t tests with pooled SD 
+
+data:  bp_data_diet$bp and bp_data_diet$diet 
+
+              meat heavy Mediterranean vegan 
+Mediterranean 0.0019     -             -     
+vegan         4.2e-07    0.0091        -     
+vegetarian    2.6e-07    0.0239        1.0000
+
+P value adjustment method: bonferroni </code></pre>
+</div>
+</div>
+<p>Here we can see that all pairwise comparisons have a p-value less than 0.05, except for the comparison of vegan versus vegetarian, which has a p-value that rounds to 1.0000.</p>
+<p>We also see in the output the note that “P value adjustment method: bonferroni”, indicating that the Bonferroni correction has been applied to the p-values.</p>
+</section>
+<section id="tukey-hsd-approach" class="level3">
+<h3 class="anchored" data-anchor-id="tukey-hsd-approach">Tukey HSD approach</h3>
+<p><strong>Idea:</strong> Take into account the distribution of (max-min) and design a new test.</p>
+<p>In R we can use the <code>multcomp</code> package to do Tukey HSD tests:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>bp_data_diet <span class="ot">&lt;-</span> bp_data_diet <span class="sc">%&gt;%</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">diet =</span> <span class="fu">as.factor</span>(diet))</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(bp <span class="sc">~</span> diet, <span class="at">data =</span> bp_data_diet)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressMessages</span>(<span class="fu">library</span>(multcomp))</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>tukey_test <span class="ot">&lt;-</span> <span class="fu">glht</span>(fit, <span class="at">linfct =</span> <span class="fu">mcp</span>(<span class="at">diet =</span> <span class="st">"Tukey"</span>))</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(tukey_test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+     Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: lm(formula = bp ~ diet, data = bp_data_diet)
+
+Linear Hypotheses:
+                                Estimate Std. Error t value Pr(&gt;|t|)    
+Mediterranean - meat heavy == 0  -12.688      3.256  -3.897  0.00168 ** 
+vegan - meat heavy == 0          -26.768      4.173  -6.414  &lt; 0.001 ***
+vegetarian - meat heavy == 0     -23.625      3.607  -6.549  &lt; 0.001 ***
+vegan - Mediterranean == 0       -14.080      4.173  -3.374  0.00759 ** 
+vegetarian - Mediterranean == 0  -10.938      3.607  -3.032  0.01951 *  
+vegetarian - vegan == 0            3.143      4.453   0.706  0.89305    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+(Adjusted p values reported -- single-step method)</code></pre>
+</div>
+</div>
+<p>We get all the pairwise comparisons, along with their estimates, standard errors, t-values, and p-values. We also get a note <code>Adjusted p values reported -- single-step method</code>, indicating that the Tukey HSD adjustment has been applied to the p-values.</p>
+<p>Again, all pairwise comparisons have a p-value less than 0.05, except for the comparison of vegan versus vegetarian, which has a p-value of 0.89305.</p>
+</section>
+<section id="fishers-lsd-approach" class="level3">
+<h3 class="anchored" data-anchor-id="fishers-lsd-approach">Fisher’s LSD approach</h3>
+<p><strong>Idea:</strong> Adjust the idea of a two-sample test, but use a larger variance (namely the pooled variance of all groups).</p>
+</section>
+<section id="other-contrasts" class="level3">
+<h3 class="anchored" data-anchor-id="other-contrasts">Other contrasts</h3>
+<p>A contrast is a specific comparison between groups. So far we have only considered pairwise contrasts (i.e., comparing two groups at a time). But we can also design more complex contrasts. For example: are diets that contain meat different from diets that do not contain meat?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>bp_data_diet <span class="ot">&lt;-</span> <span class="fu">mutate</span>(bp_data_diet,</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">meat_or_no_meat =</span> <span class="fu">ifelse</span>(diet <span class="sc">==</span> <span class="st">"meat"</span> <span class="sc">|</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>                                                diet <span class="sc">==</span> <span class="st">"Mediterranean"</span>,</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>                                                <span class="st">"meat"</span>, <span class="st">"no meat"</span>))</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(bp_data_diet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 4
+     bp diet          person_ID meat_or_no_meat
+  &lt;dbl&gt; &lt;fct&gt;         &lt;chr&gt;     &lt;chr&gt;          
+1   120 meat heavy    person_1  no meat        
+2    89 vegan         person_2  no meat        
+3    86 vegetarian    person_3  no meat        
+4   116 meat heavy    person_4  no meat        
+5   115 Mediterranean person_5  meat           
+6   134 meat heavy    person_6  no meat        </code></pre>
+</div>
+</div>
+<p>Here we defined a new explanatory variable that groups the meat heavy and Mediterranean diet together into a single “meat” group and vegetarian and vegan into a single “no meat” group. We then fit a model with this explanatory variable:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>fit_mnm <span class="ot">&lt;-</span> <span class="fu">lm</span>(bp <span class="sc">~</span> meat_or_no_meat, <span class="at">data =</span> bp_data_diet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>(We should not look at model diagnostics here, before using the model. But let us continue as if the assumptions are sufficiently met.)</p>
+<p>We now do something a bit more complicated: we compare the variance explained by the model with four diets to the model with two diets. This is done by comparing the two models using an <span class="math inline">\(F\)</span>-test. We are testing the null hypothesis that the two models are equally good at explaining the data, in which case the two diet model will explain as much variance as the four diet model.</p>
+<p>Let’s look at the ANOVA table of the model comparison:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(fit, fit_mnm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Model 1: bp ~ diet
+Model 2: bp ~ meat_or_no_meat
+  Res.Df    RSS Df Sum of Sq      F    Pr(&gt;F)    
+1     46 3901.5                                  
+2     48 9173.4 -2   -5271.9 31.078 2.886e-09 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>We see the residual sum of squares of the model with meat or no meat is over 9’000, while that of the four diet model is less than 4’000. That is, the four diet model explains much more variance in the data than the two diet model. The <span class="math inline">\(F\)</span>-test is highly significant, so we reject the null hypothesis that the two models are equally good at explaining the data. And we conclude that its not just whether people eat meat or not, but rather what kind of diet they eat that affects their blood pressure.</p>
+<p>Ideally we do not make a lot of contrasts after we have collected and looked at our data. Rather, we would specify the contrasts we are interested in before we collect the data. This is called a priori contrasts. But sometimes we do exploratory data analysis and then we can make post hoc contrasts. In this case we should be careful to adjust for multiple comparisons.</p>
+</section>
+<section id="choosing-the-reference-category" class="level3">
+<h3 class="anchored" data-anchor-id="choosing-the-reference-category">Choosing the reference category</h3>
+<p><strong>Question</strong>: Why was the “heavy meat” diet chosen as the reference (intercept) category?</p>
+<p><strong>Answer</strong>: Because R orders the categories alphabetically and takes the first level alphabetically as reference category.</p>
+<p>Sometimes we may want to override this, for example if we have a treatment that is experimentally the control, then it will usually be useful to set this as the reference / intercept level.</p>
+<p>In R we can set the reference level using the <code>relevel</code> function:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>bp_data_diet<span class="sc">$</span>diet <span class="ot">&lt;-</span> <span class="fu">relevel</span>(<span class="fu">factor</span>(bp_data_diet<span class="sc">$</span>diet), <span class="at">ref =</span> <span class="st">"vegan"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>And now make the model and look at the estimated coefficients:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>fit_vegan_ref <span class="ot">&lt;-</span> <span class="fu">lm</span>(bp <span class="sc">~</span> diet, <span class="at">data =</span> bp_data_diet)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_vegan_ref)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = bp ~ diet, data = bp_data_diet)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-17.9375  -5.9174  -0.4286   5.2969  22.3750 
+
+Coefficients:
+                  Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)         95.857      3.481  27.538  &lt; 2e-16 ***
+dietmeat heavy      26.768      4.173   6.414 6.92e-08 ***
+dietMediterranean   14.080      4.173   3.374  0.00151 ** 
+dietvegetarian       3.143      4.453   0.706  0.48386    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 9.21 on 46 degrees of freedom
+Multiple R-squared:  0.5748,    Adjusted R-squared:  0.5471 
+F-statistic: 20.73 on 3 and 46 DF,  p-value: 1.214e-08</code></pre>
+</div>
+</div>
+<p>Now we see the estimated coefficients for all diets except the vegan diet. The intercept is the mean individuals with vegan diet.</p>
+</section>
+</section>
+<section id="communicating-the-results-of-anova" class="level2">
+<h2 class="anchored" data-anchor-id="communicating-the-results-of-anova">Communicating the results of ANOVA</h2>
+<p>When communicating the results of an ANOVA, we usually report the <span class="math inline">\(F\)</span>-statistic, the degrees of freedom of the numerator and denominator, and the p-value. For example, we could say:</p>
+<blockquote class="blockquote">
+<p>Blood pressure differed significantly between groups, with the mean of a meat heavy diet being 123 mmHg, while the mean blood pressure of the vegan group was 27 mmHg lower (One-way ANOVA, <span class="math inline">\(F(3, 46) = 20.7\)</span>, <span class="math inline">\(p &lt; 0.0001\)</span>.</p>
+</blockquote>
+<p>And we would make a nice graph, in this case showing each individual observation since there are not too many to cause overplotting. We can also add the estimated means of each group if we like:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(bp_data_diet, <span class="fu">aes</span>(<span class="at">x =</span> diet, <span class="at">y =</span> bp)) <span class="sc">+</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.1</span>, <span class="at">height =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"point"</span>, <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Blood Pressure by Diet"</span>,</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Diet"</span>,</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Blood Pressure (mmHg)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="5.1-anova_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="432"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Some people like to see error bars as well, for example showing the 95% confidence intervals of the means:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(bp_data_diet, <span class="fu">aes</span>(<span class="at">x =</span> diet, <span class="at">y =</span> bp)) <span class="sc">+</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.1</span>, <span class="at">height =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">"grey"</span>) <span class="sc">+</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"point"</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun.data =</span> mean_cl_normal, <span class="at">geom =</span> <span class="st">"errorbar"</span>, <span class="at">width =</span> <span class="fl">0.2</span>, <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Blood Pressure by Diet</span><span class="sc">\n</span><span class="st">Black points and error bars show mean ± 95% CI"</span>,</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Diet"</span>,</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Blood Pressure (mmHg)"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="5.1-anova_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="432"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>There are many many plotting styles and preferences. The important thing is to clearly communicate the results, and to not mislead the reader. I find that plotting the individual data points is often a good idea, especially when the sample size is not too large.</p>
+</section>
+<section id="summary-of-what-you-have-learned" class="level2">
+<h2 class="anchored" data-anchor-id="summary-of-what-you-have-learned">Summary of what you have learned</h2>
+<ul>
+<li>ANOVA is just another linear model.</li>
+<li>It is used when we have categorical explanatory variables.</li>
+<li>We use <span class="math inline">\(F\)</span>-tests to test the null hypothesis of no difference among the means of the groups (categories).</li>
+<li>We can use contrasts and post-hoc tests to test specific hypotheses about the means of the groups.</li>
+<li>Two-way ANOVA is used when we have two categorical explanatory variables and can be used to test for interactions between them.</li>
+</ul>
+<p><strong>Think–Pair–Share</strong> (#a_anova_is_regression) What changes when we move from regression to ANOVA? What stays exactly the same?</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/opetchey\.github\.io\/BIO144_Course_Book\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./4.1-regression-part2.html" class="pagination-link" aria-label="Regression Part 2 (L4)">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Regression Part 2 (L4)</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./6.1-multiple-regression.html" class="pagination-link" aria-label="Multiple regression (L6)">
+        <span class="nav-page-text">Multiple regression (L6)</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>BIO144 Data Analysis for Biologists, Course Book written by Owen Petchey</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/opetchey/BIO144_Course_Book/edit/main/5.1-anova.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/opetchey/BIO144_Course_Book/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>This book was built with <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

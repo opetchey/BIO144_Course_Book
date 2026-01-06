@@ -1,0 +1,1481 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Ordination (L10) – BIO144 Course Book (version 2026)</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./11.1-mixed-models.html" rel="next">
+<link href="./9.1-GLM2-binary-data.html" rel="prev">
+<link href="./cover.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-485d01fc63b59abcd3ee1bf1e8e2748d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<script src="site_libs/plotly-binding-4.10.4/plotly.js"></script>
+<script src="site_libs/typedarray-0.1/typedarray.min.js"></script>
+<script src="site_libs/jquery-3.5.1/jquery.min.js"></script>
+<link href="site_libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet">
+<script src="site_libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+<link href="site_libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet">
+<script src="site_libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
+
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./10.1-ordination.html">Ordination (L10)</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">BIO144 Course Book (version 2026)</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/opetchey/BIO144_Course_Book/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./1.1-intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction (L1)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./2.1-R-and-RStudio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">R and RStudio (L2)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./3.1-regression-part1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Regression Part 1 (L3)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./4.1-regression-part2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Regression Part 2 (L4)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./5.1-anova.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Analysis of variance (L5)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./6.1-multiple-regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Multiple regression (L6)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./7.1-interactions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Interactions (L7)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./8.1-GLM1-count-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Count data (L8)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./9.1-GLM2-binary-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Binary data (L9)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10.1-ordination.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Ordination (L10)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11.1-mixed-models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Mixed models (L11-1)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11.2-what-next.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">What next (L11-2)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12.1-review.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Review (L12)</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a>
+  <ul class="collapse">
+  <li><a href="#working-example-skull-shape-through-time" id="toc-working-example-skull-shape-through-time" class="nav-link" data-scroll-target="#working-example-skull-shape-through-time">Working example: skull shape through time</a></li>
+  <li><a href="#wide-vs-long-format-and-why-you-should-care" id="toc-wide-vs-long-format-and-why-you-should-care" class="nav-link" data-scroll-target="#wide-vs-long-format-and-why-you-should-care">Wide vs long format (and why you should care)</a></li>
+  <li><a href="#explore-first-univariate-views-of-a-multivariate-problem" id="toc-explore-first-univariate-views-of-a-multivariate-problem" class="nav-link" data-scroll-target="#explore-first-univariate-views-of-a-multivariate-problem">Explore first: univariate views of a multivariate problem</a></li>
+  <li><a href="#four-scatterplots-measurement-vs-time" id="toc-four-scatterplots-measurement-vs-time" class="nav-link" data-scroll-target="#four-scatterplots-measurement-vs-time">Four scatterplots (measurement vs time)</a></li>
+  <li><a href="#why-not-four-separate-regressions" id="toc-why-not-four-separate-regressions" class="nav-link" data-scroll-target="#why-not-four-separate-regressions">Why not four separate regressions?</a></li>
+  </ul></li>
+  <li><a href="#ordination-i-pca-principal-components-analysis" id="toc-ordination-i-pca-principal-components-analysis" class="nav-link" data-scroll-target="#ordination-i-pca-principal-components-analysis">Ordination I: PCA (Principal Components Analysis)</a>
+  <ul class="collapse">
+  <li><a href="#intuitive-picture-of-pca" id="toc-intuitive-picture-of-pca" class="nav-link" data-scroll-target="#intuitive-picture-of-pca">Intuitive picture of PCA</a></li>
+  <li><a href="#centering-and-scaling" id="toc-centering-and-scaling" class="nav-link" data-scroll-target="#centering-and-scaling">Centering and scaling</a></li>
+  <li><a href="#variance-represented" id="toc-variance-represented" class="nav-link" data-scroll-target="#variance-represented">Variance represented</a></li>
+  <li><a href="#pca-scores-plot-pc1-vs-pc2" id="toc-pca-scores-plot-pc1-vs-pc2" class="nav-link" data-scroll-target="#pca-scores-plot-pc1-vs-pc2">PCA scores plot (PC1 vs PC2)</a></li>
+  <li><a href="#what-do-the-axes-mean" id="toc-what-do-the-axes-mean" class="nav-link" data-scroll-target="#what-do-the-axes-mean">What do the axes mean?</a></li>
+  <li><a href="#a-simple-biplot-scores-loadings" id="toc-a-simple-biplot-scores-loadings" class="nav-link" data-scroll-target="#a-simple-biplot-scores-loadings">A simple biplot (scores + loadings)</a></li>
+  </ul></li>
+  <li><a href="#when-ordination-helps" id="toc-when-ordination-helps" class="nav-link" data-scroll-target="#when-ordination-helps">When ordination helps</a></li>
+  <li><a href="#ordination-ii-nmds-non-metric-multidimensional-scaling" id="toc-ordination-ii-nmds-non-metric-multidimensional-scaling" class="nav-link" data-scroll-target="#ordination-ii-nmds-non-metric-multidimensional-scaling">Ordination II: NMDS (Non-metric Multidimensional Scaling)</a>
+  <ul class="collapse">
+  <li><a href="#step-1-choose-a-distance-measure" id="toc-step-1-choose-a-distance-measure" class="nav-link" data-scroll-target="#step-1-choose-a-distance-measure">Step 1: Choose a distance measure</a></li>
+  <li><a href="#step-2-fit-nmds-with-multiple-random-starts" id="toc-step-2-fit-nmds-with-multiple-random-starts" class="nav-link" data-scroll-target="#step-2-fit-nmds-with-multiple-random-starts">Step 2: Fit NMDS with multiple random starts</a></li>
+  <li><a href="#step-3-assess-nmds-fit-with-stress" id="toc-step-3-assess-nmds-fit-with-stress" class="nav-link" data-scroll-target="#step-3-assess-nmds-fit-with-stress">Step 3: Assess NMDS fit with stress</a></li>
+  </ul></li>
+  <li><a href="#hypothesis-testing-avoid-four-separate-regressions" id="toc-hypothesis-testing-avoid-four-separate-regressions" class="nav-link" data-scroll-target="#hypothesis-testing-avoid-four-separate-regressions">Hypothesis testing: avoid “four separate regressions”</a>
+  <ul class="collapse">
+  <li><a href="#manova-parametric" id="toc-manova-parametric" class="nav-link" data-scroll-target="#manova-parametric">1) MANOVA (parametric)</a></li>
+  <li><a href="#permanova-distance-based" id="toc-permanova-distance-based" class="nav-link" data-scroll-target="#permanova-distance-based">2) PERMANOVA (distance-based)</a></li>
+  <li><a href="#permdisp-betadisper-are-groups-equally-variable" id="toc-permdisp-betadisper-are-groups-equally-variable" class="nav-link" data-scroll-target="#permdisp-betadisper-are-groups-equally-variable">3) PERMDISP / betadisper: are groups equally variable?</a></li>
+  <li><a href="#fitting-time-onto-an-ordination-envfit-and-ordisurf" id="toc-fitting-time-onto-an-ordination-envfit-and-ordisurf" class="nav-link" data-scroll-target="#fitting-time-onto-an-ordination-envfit-and-ordisurf">4) Fitting time onto an ordination: envfit and ordisurf</a></li>
+  </ul></li>
+  <li><a href="#pca-in-multiple-regression" id="toc-pca-in-multiple-regression" class="nav-link" data-scroll-target="#pca-in-multiple-regression">PCA in multiple regression</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/opetchey/BIO144_Course_Book/edit/main/10.1-ordination.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/opetchey/BIO144_Course_Book/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Ordination (L10)</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>“Seeing structure in multivariate data.”</p>
+<p>In earlier chapters, we mostly worked with <strong>one response variable at a time</strong>. But many biological questions are intrinsically <strong>multivariate</strong>:</p>
+<ul>
+<li>morphology: multiple measurements describe <em>shape</em> (not just size)</li>
+<li>communities: abundance of many species describes <em>composition</em></li>
+<li>physiology / omics: many traits or genes change together</li>
+</ul>
+<p>When we have <strong>many response variables</strong>, two practical problems appear:</p>
+<ol type="1">
+<li>How do we <strong>visualize</strong> patterns across many variables?</li>
+<li>How do we <strong>summarize</strong> the dominant patterns without losing the biology?</li>
+</ol>
+<p><strong>Ordination</strong> is a family of methods that helps with both.</p>
+<p>It can also help in cases where we have many predictor variables (e.g.&nbsp;environmental gradients). This can be especially useful when predictors are collinear.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Core idea</strong><br>
+Ordination finds a low-dimensional representation (often 2D) of <em>multivariate</em> data, so that points that are “similar” in the original multivariate space end up close together in the ordination plot.</p>
+</div>
+</div>
+<p><strong>Think–Pair–Share</strong> (#tps-ordination-why) Name one dataset you work with (or could imagine working with) that has many response variables. What would you like to learn from it that a single-response analysis might miss?</p>
+<section id="working-example-skull-shape-through-time" class="level3">
+<h3 class="anchored" data-anchor-id="working-example-skull-shape-through-time">Working example: skull shape through time</h3>
+<p>We will use a classic dataset of <strong>human skull dimensions</strong> measured in millimeters. The biological question is:</p>
+<blockquote class="blockquote">
+<p>Has skull <strong>shape</strong> changed through time?</p>
+</blockquote>
+<p>Four measurements of skull were made:</p>
+<p><img src="assets/skull_figure.png" class="img-fluid" style="width:60.0%" alt="Four skull measurements used in the ordination example."></p>
+<p>We will treat the four skull measurements as multivariate responses, and time as an explanatory variable.</p>
+<p>First read the dataset from the csv file:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>skull <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">here</span>(<span class="st">"datasets"</span>, <span class="st">"skull_shape_time.csv"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 150 Columns: 6
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (1): id
+dbl (5): max.breadth, basi.height, basi.length, nasal.height, thousand.years
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
+</section>
+<section id="wide-vs-long-format-and-why-you-should-care" class="level3">
+<h3 class="anchored" data-anchor-id="wide-vs-long-format-and-why-you-should-care">Wide vs long format (and why you should care)</h3>
+<p>Multivariate data often come in <strong>wide format</strong>:</p>
+<ul>
+<li>one row per object (skull)</li>
+<li>one column per variable (measurement)</li>
+</ul>
+<p>That’s great for many ordination functions.</p>
+<p>But long format is often easier for: - grouped summaries - plotting multiple variables with a single ggplot call</p>
+<p>We can easily make a long format version with <code>pivot_longer()</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>skull_long <span class="ot">&lt;-</span> skull <span class="sc">|&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">c</span>(max.breadth, basi.height, basi.length, nasal.height),</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"dimension"</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"value"</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This will make some of the following exploration easier.</p>
+</section>
+<section id="explore-first-univariate-views-of-a-multivariate-problem" class="level3">
+<h3 class="anchored" data-anchor-id="explore-first-univariate-views-of-a-multivariate-problem">Explore first: univariate views of a multivariate problem</h3>
+<p>A good habit:</p>
+<ol type="1">
+<li>visualize each variable,<br>
+</li>
+<li>look for patterns and surprises,<br>
+</li>
+<li>then use ordination to <em>summarize</em>.</li>
+</ol>
+</section>
+<section id="four-scatterplots-measurement-vs-time" class="level3">
+<h3 class="anchored" data-anchor-id="four-scatterplots-measurement-vs-time">Four scatterplots (measurement vs time)</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>p_vars <span class="ot">&lt;-</span> skull_long <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> thousand.years, <span class="at">y =</span> value)) <span class="sc">+</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> dimension, <span class="at">scales =</span> <span class="st">"free_y"</span>, <span class="at">ncol =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Thousand years ago"</span>, <span class="at">y =</span> <span class="st">"Measurement (mm)"</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>p_vars</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="10.1-ordination_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="432"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Interpretation (qualitative):</strong><br>
+If all dimensions change similarly through time, that’s mostly a <strong>size</strong> change. If some change differently, that suggests <strong>shape</strong> change.</p>
+<p><strong>Think–Pair–Share</strong> (#tps-size-shape) How would you distinguish “size change” from “shape change” using these plots?</p>
+</section>
+<section id="why-not-four-separate-regressions" class="level3">
+<h3 class="anchored" data-anchor-id="why-not-four-separate-regressions">Why not four separate regressions?</h3>
+<p>Fitting separate regressions for each measurement has two problems: 1. <strong>Multiple testing</strong>: testing four times increases the chance of false positives. 2. <strong>Ignoring covariance</strong>: measurements may be correlated, so analyzing them separately misses joint patterns</p>
+<p><strong>Think–Pair–Share (#a_why_ordination)</strong> What information is lost when you analyze multivariate data one variable at a time? Why could this be important?</p>
+</section>
+</section>
+<section id="ordination-i-pca-principal-components-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="ordination-i-pca-principal-components-analysis">Ordination I: PCA (Principal Components Analysis)</h2>
+<p>PCA is the most common entry point.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>What PCA does</strong><br>
+PCA finds new axes (PC1, PC2, …) that are: - linear combinations of the original variables - orthogonal (uncorrelated) - ordered so that PC1 captures the most variance, PC2 the next most, etc.</p>
+</div>
+</div>
+<section id="intuitive-picture-of-pca" class="level3">
+<h3 class="anchored" data-anchor-id="intuitive-picture-of-pca">Intuitive picture of PCA</h3>
+<p>Imagine that each skull is a point in a space with one axis per measurement (four dimensions here). Together, the skulls form a cloud of points.</p>
+<p>PCA asks from which direction does this cloud show the greatest spread?</p>
+<p>To answer this, PCA rotates the coordinate system so that:</p>
+<ul>
+<li>PC1 points in the direction of greatest variation,</li>
+<li>PC2 points in the next greatest direction, orthogonal to PC1,</li>
+<li>and so on.</li>
+</ul>
+<p>You can think of PCA as turning the data cloud until you find the view where the points are most spread out. That view becomes PC1. Then PCA finds the best second view at right angles to it (PC2).</p>
+<p>The key idea is that PCA does not invent new information: it simply re-expresses the same data using new axes that make dominant patterns easier to see.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Under the hood, PCA is based on the covariance (or correlation) matrix of the variables. The principal components are eigenvectors of this matrix, and the amount of variance they capture is given by the corresponding eigenvalues. You do not need to compute these by hand, but this explains why PCA is fundamentally about variance and correlation.</p>
+</div>
+</div>
+</section>
+<section id="centering-and-scaling" class="level3">
+<h3 class="anchored" data-anchor-id="centering-and-scaling">Centering and scaling</h3>
+<p>Before PCA, we usually <strong>center</strong> and <strong>scale</strong> the data, or at least think carefully if we should.</p>
+<ul>
+<li><strong>Centering</strong> subtracts the mean of each variable (so mean = 0).</li>
+<li><strong>Scaling</strong> divides by the SD of each variable (so SD = 1).</li>
+</ul>
+<p>Scaling matters if variables are on different scales or if you care about <em>relative</em> variation.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Note that above it is written that PCA does not change the relative positions of the points. However, if we scale the data before performing PCA, this can affect the relative positions of the points in the PCA space. Scaling ensures that all variables contribute equally to the analysis, which can be important when variables are measured on different scales. If we do not scale the data, variables with larger variances can dominate the PCA results, potentially distorting the relative positions of the points in the PCA space.</p>
+</div>
+</div>
+<p>We can make these transformed variables ourself, or use the built-in options in <code>prcomp()</code>.</p>
+<p>So, let us do our first PCA. We must be sure to only do the PCA on the four skull measurement variables. To do this we will select only those columns from the original data frame, and pipe these into the <code>prcomp()</code> function:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>skull_pca <span class="ot">&lt;-</span> skull <span class="sc">|&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(max.breadth, basi.height, basi.length, nasal.height) <span class="sc">|&gt;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">prcomp</span>(<span class="at">center =</span> <span class="cn">TRUE</span>, <span class="at">scale. =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>What is this new dataset? Part of it is the new coordinates of each skull in the PC space:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(skull_pca<span class="sc">$</span>x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>           PC1         PC2        PC3        PC4
+[1,] -3.621758  0.87923353  0.2413718 -0.2421541
+[2,] -3.201426 -0.38205353  0.3833647 -0.3500371
+[3,] -3.004179 -1.00242513  1.5640064 -0.2348435
+[4,] -2.683398  0.08615036  1.6069216 -1.0534579
+[5,] -3.001132 -0.46314398 -0.2188543 -0.7276811
+[6,] -2.774762  0.09654899  0.2109694 -0.8941411</code></pre>
+</div>
+</div>
+</section>
+<section id="variance-represented" class="level3">
+<h3 class="anchored" data-anchor-id="variance-represented">Variance represented</h3>
+<p>Each of the new PC axes captures some of the variance in the original data. We can summarize this with:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(skull_pca)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Importance of components:
+                          PC1    PC2    PC3     PC4
+Standard deviation     1.4916 0.8981 0.7643 0.62007
+Proportion of Variance 0.5562 0.2016 0.1460 0.09612
+Cumulative Proportion  0.5562 0.7578 0.9039 1.00000</code></pre>
+</div>
+</div>
+<p>This shows the standard deviation of each PC axis, the proportion of variance explained by each PC, and the cumulative proportion of variance explained.</p>
+<p>The first PC axis captures 55.6% of the variance in the original data. The first two PC axes together capture 75.8% of the variance.</p>
+<p>This is quite a lot, so we can visualize the data well with two PC axes. When we do so, we ignore the remaining axes, which capture less variance (24.2%).</p>
+</section>
+<section id="pca-scores-plot-pc1-vs-pc2" class="level3">
+<h3 class="anchored" data-anchor-id="pca-scores-plot-pc1-vs-pc2">PCA scores plot (PC1 vs PC2)</h3>
+<p>The <strong>scores</strong> are the coordinates of each skull in the new PC space. We do a bit of data wrangling to combine these with the original data (id and time):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>scores <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(skull_pca<span class="sc">$</span>x) <span class="sc">|&gt;</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">id =</span> skull<span class="sc">$</span>id, <span class="at">thousand.years =</span> skull<span class="sc">$</span>thousand.years)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>scores <span class="sc">|&gt;</span> <span class="fu">select</span>(id, PC1, PC2, thousand.years) <span class="sc">|&gt;</span> <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 4
+  id      PC1     PC2 thousand.years
+  &lt;chr&gt; &lt;dbl&gt;   &lt;dbl&gt;          &lt;dbl&gt;
+1 S1    -3.62  0.879             888
+2 S2    -3.20 -0.382             112
+3 S3    -3.00 -1.00              854
+4 S4    -2.68  0.0862            171
+5 S5    -3.00 -0.463             544</code></pre>
+</div>
+</div>
+<p>And then make the graph:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(scores, <span class="fu">aes</span>(<span class="at">x =</span> PC1, <span class="at">y =</span> PC2, <span class="at">color =</span> thousand.years)) <span class="sc">+</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">color =</span> <span class="st">"Thousand</span><span class="sc">\n</span><span class="st">years ago"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="10.1-ordination_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="432"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Interpretation tip</strong><br>
+If points separate along PC1 as time increases, that suggests the dominant multivariate trend is associated with time.</p>
+</div>
+</div>
+</section>
+<section id="what-do-the-axes-mean" class="level3">
+<h3 class="anchored" data-anchor-id="what-do-the-axes-mean">What do the axes mean?</h3>
+<p>The <strong>loadings</strong> tell us how each original variable contributes to each PC. In fact, each PC is a linear combination of the original variables, weighted by the loadings.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>loadings <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(skull_pca<span class="sc">$</span>rotation, <span class="at">rownames =</span> <span class="st">"variable"</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>loadings</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 5
+  variable       PC1     PC2    PC3    PC4
+  &lt;chr&gt;        &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1 max.breadth  0.436  0.689  -0.568  0.107
+2 basi.height  0.536  0.108   0.643  0.537
+3 basi.length  0.440 -0.712  -0.474  0.272
+4 nasal.height 0.573 -0.0783  0.196 -0.792</code></pre>
+</div>
+</div>
+<p>These can help us interpret the PCs. For example, we see a strong positive loading of all four skull measurements on PC1. This suggests that PC1 represents overall size, as all measurements increase together. On the second PC axis, we see a mix of positive and negative loadings, indicating that PC2 captures shape differences where some measurements increase while others decrease. The positive PC2 loadings for head breadth and nasal height, combined with negative loadings for basi height and basi length, suggest that PC2 reflects a shape change where skulls become wider and taller in the nasal region while becoming shorter in the base dimensions.</p>
+<p>Another way to interpret PCs is to look at the correlations between the original variables and the PCs. This can provide insights into how each original variable relates to the new PC axes. We can calculate these correlations as follows:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> skull <span class="sc">|&gt;</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(max.breadth, basi.height, basi.length, nasal.height)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">cor</span>(X, skull_pca<span class="sc">$</span>x), <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>              PC1   PC2   PC3   PC4
+max.breadth  0.65  0.62 -0.43  0.07
+basi.height  0.80  0.10  0.49  0.33
+basi.length  0.66 -0.64 -0.36  0.17
+nasal.height 0.86 -0.07  0.15 -0.49</code></pre>
+</div>
+</div>
+<p><strong>Think–Pair–Share</strong> (#tps-pc-meaning) If PC1 is positively correlated with all four skull measurements, what biological interpretation is most natural?</p>
+</section>
+<section id="a-simple-biplot-scores-loadings" class="level3">
+<h3 class="anchored" data-anchor-id="a-simple-biplot-scores-loadings">A simple biplot (scores + loadings)</h3>
+<p>Below is a lightweight biplot-style plot. (There are fancy versions in packages like <strong>factoextra</strong>, but we keep it minimal.)</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="10.1-ordination_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="432"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>In this graph we see all arrow point in the same horizontal direction, indicating that PC1 represents overall size. An increase in any of the four measurements will increase PC1.</p>
+<p>In contrast, the arrows for PC2 point in different directions, indicating that PC2 represents shape differences where some measurements increase while others decrease. The two longest arrows are for basi.length and max.breadth, suggesting that these measurements contribute most strongly to shape variation captured by PC2.</p>
+<p><strong>Think–Pair–Share</strong> (#tps-biplot-interpretation) Make a sketch of how skull size / shape changes along the two PC axis.</p>
+<p><strong>Think–Pair–Share</strong> (#a_size_vs_shape) What pattern would indicate pure size change? What pattern would indicate shape change?</p>
+</section>
+</section>
+<section id="when-ordination-helps" class="level2">
+<h2 class="anchored" data-anchor-id="when-ordination-helps">When ordination helps</h2>
+<p><strong>Think–Pair–Share</strong> (#tps-when-ordination) In what situations would ordination methods like PCA be especially helpful? When would they be less useful? Think about the nature of the data, and, if you like, the biological questions.</p>
+<p>We might think that ordination is more useful when we have a greater number of variables, because then the reducing down to two or three dimensions is more helpful. But the key factor is actually the <strong>correlation structure</strong> among the variables. If many variables are correlated, then ordination can capture most of the variance in a few dimensions. If variables are uncorrelated, then ordination may not help much since most of the variance is spread evenly across many dimensions. Let’s have a look a this with some simulated data. We will simulate three datasets with three variables each, but with different correlation structures: high correlation, moderate correlation, and low correlation.</p>
+<p>Now a 3D plot of the simulated data with different correlation structures (please note that these plots are best viewed in the HTML version of the book; in the PDF version, they will appear as static images):</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="htmlwidget-2c13724aee2b99f06c11" style="width:100%;height:650px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-2c13724aee2b99f06c11">{"x":{"visdat":{"372d44951f6e":["function () ","plotlyVisDat"]},"cur_data":"372d44951f6e","attrs":{"372d44951f6e":{"x":[-0.26095271552670779,-0.14949596427676057,-0.018254220492034522,-1.1472985008064212,1.7596808738407346,-1.2281800231801776,0.14767753947004519,-2.5008760928507132,-0.6947022450813668,-0.19064010340853091,1.6423036023699882,-1.4545609728768996,-1.5345650190699014,-0.046888857925080359,1.2141131018893672,1.13160658379635,0.39124020937252635,0.50476417351097591,1.3839993086713154,0.83943874857325662,-0.91287433728370448,-0.13924868777449764,1.023786395934025,1.1648426849256179,-0.83540087653276585,0.79604783507710764,1.8658542499143245,1.2988839346616368,0.22262650025215183,-1.1072425523757425,0.1514029819906858,-1.3424877807990472,3.0507738702126588,1.0717426532769292,-0.29012877270385434,1.4440849262401965,-0.90498755553343979,-1.1568614293706163,0.089089742722183077,-1.6277167899544813,1.155352742925114,-0.89878236200698924,0.022566019684995744,1.2632908387064434,0.93760146976165271,0.28551361567277872,-0.4535432388851055,-1.5432670496244374,-1.3159456116219646,-1.2342604692122767,1.1177316366412868,0.5414276838959029,-2.3529705408439257,1.4892565385909751,-2.0892079992320789,0.66237446761411145,0.29465906849690937,1.0608269127556975,-3.0170075268948477,0.74221081178973092,0.016011124952294196,-1.5448600383703524,-0.31012676665543354,-0.45633814761006081,-0.71883109947654533,0.95909858947612103,-0.19755476872015562,0.674125945232803,0.62813323537025922,1.3968049957838069,-0.5334856675576114,0.74119304381475493,0.32928458979927383,1.1548468894320045,0.75395007115670754,1.2445201996672881,0.038579936634576928,0.15682122834992138,0.21164240683337449,-0.016310161073756428,0.63371858254201952,0.78340762054982171,-0.74955372818785226,0.3753175726067971,-0.36656880965290572,0.52459907497843283,0.78630715856322198,0.96331318756092776,0.60005990922699604,-0.4055217012953436,-1.6971601822047162,0.30780642449095502,0.0012738141888551412,-0.20479596503010219,-0.93125633491544735,0.76148592034332019,-2.3333950455461667,0.042080896870628111,-1.3169055380404835,0.038648963016274906],"y":[0.29262698089138162,0.19117056540585819,-0.33877845265190093,-1.7251455470559816,2.4051023896219008,-2.3410313805803149,-1.0833616648280799,-3.4270793472611514,-0.71253566466140694,-0.31882235036303813,0.99202016693649264,-1.7083359405249772,-1.0692192370115323,0.097780948177616872,0.84889041855210312,0.90827861572628599,0.17712687933085505,0.48207086314972464,1.2642893489612388,-0.16412944725234169,-1.6050927177158496,0.39716316405585556,1.8580855705076031,0.79277683206038208,-0.9365847481803673,0.31863687472623448,1.5198804978204858,0.56128193122421344,0.1990152106559176,-1.1560970382491,0.10449893494536368,-0.017488709422483973,4.4383082542690557,0.91374061755932545,-0.0029065656747854049,1.4904487066498928,-0.44822252754649822,-0.96326520088292023,0.40511055957019299,-1.5520951434950034,1.0487621545104213,-0.096490565042839635,-0.84388600699015914,0.72566292757450335,2.2061153544683583,-0.30134566857090805,1.1072760679878999,-2.2308235351453454,-1.5291033334116559,0.13407896418781137,1.4492914718811458,0.86585153254639047,-1.8033102411963233,1.353464613475468,-2.1819520994296542,0.00074194210211459401,0.77552630521229138,1.1143839477095123,-2.5373766605954735,2.3756218921373149,-0.89378941202344642,-1.5825456146087209,-1.1493034685819941,-0.6162164566794609,-1.2396346977839927,-0.15325498904515356,0.69841877481729531,1.425979951173707,0.85397395520937092,1.8503225520446718,-0.86086288825799029,-0.28891909652171804,0.98866646645666822,-0.11210961040647432,1.0798211119520227,1.0693940085968143,0.52170271925592548,0.62326216009319946,-0.32105345025914522,1.3704409325834312,0.71320894126712986,1.1437861388753883,-0.84138757971540279,-0.83841223995449954,0.29857676207830947,-0.67189017412962859,0.40679137205718718,0.72074194466085562,-0.11138812133245519,-0.14324622537519427,-1.5793048201130979,0.90053953897225014,-0.44566347994905314,0.13179339253016767,-0.23425286718865268,-0.54137186241829116,-2.198412077256414,-0.039111327049567067,-1.6365191084113371,0.93598271276395328],"z":[0.30513371056648958,0.35034906123144655,-0.26356366547840865,-1.6432602570751222,1.9255851111646438,-2.3622671801914739,-0.73358462762315702,-2.9986871057216331,-0.54626324681076222,-0.32953090412768005,1.1810265199029215,-1.4272553948115438,-0.36363599736531171,0.13556760043013352,0.77065026253816493,0.58976316447492805,0.22482771314765007,0.20136105758854675,1.2401262911636297,-0.27854931558491153,-1.2261515567498178,0.20313802715714982,1.1767783414521775,1.009316624168576,-0.65453782904220636,0.064835575150975835,1.3246523648674235,0.3440157072459582,0.036947804902227863,-0.88952476778117429,0.29629678794918418,0.058301803630010085,3.885618911217867,0.78145397491039958,-0.78633872566651053,1.4177846917594195,-0.2347505739705453,-0.74859999385522003,0.048183473037787534,-1.2560666822406876,1.1470382725917383,-0.50230073522733987,-0.52609325645369376,1.247479371650005,1.417463480935681,-0.020978635395578097,0.72690794688013249,-2.1947940969857016,-1.5218725421412711,-0.022011287729928615,1.1366602171338724,0.40544278377703324,-1.6897686463427004,0.97865688276056906,-1.7249771140561243,0.2732074006443253,0.54794146120670317,0.56044499523169067,-2.1565778882280466,1.4589218569428035,-0.80320982102753902,-1.2649309753417133,-0.71029837249620664,-0.37506711332711629,-0.81073167311127559,-0.1553533881968126,0.21354422332872558,1.0311904397433382,1.131770353575057,1.8073783865824802,-0.78352466584726177,-0.33341212406408199,1.0712887480588213,0.083018297963079066,0.9252323411081681,0.46317150714789812,0.74023606463237634,0.30460844223672429,-0.13494252975918944,1.2540625896311404,0.88742299720429119,1.260339321638124,-0.76832104065980311,-0.48055933051261784,-0.28404972026050967,-0.46819901264896446,0.59633877249726308,0.57676736065059508,-0.25852442606014214,-0.053855978455148112,-1.3419780315365779,0.37156192394183951,-0.60995731722940327,0.348741919948518,-0.37174979965477167,-0.75972727855459055,-1.8206011228120504,-0.13323323736937573,-1.2014375577572265,0.93461445451042047],"mode":"markers","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter3d"}},"layout":{"width":500,"height":500,"margin":{"b":40,"l":60,"t":25,"r":10},"title":"High correlation (rho ~ 0.9)","scene":{"xaxis":{"title":"Var 1"},"yaxis":{"title":"Var 2"},"zaxis":{"title":"Var 3"}},"hovermode":"closest","showlegend":false},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[-0.26095271552670779,-0.14949596427676057,-0.018254220492034522,-1.1472985008064212,1.7596808738407346,-1.2281800231801776,0.14767753947004519,-2.5008760928507132,-0.6947022450813668,-0.19064010340853091,1.6423036023699882,-1.4545609728768996,-1.5345650190699014,-0.046888857925080359,1.2141131018893672,1.13160658379635,0.39124020937252635,0.50476417351097591,1.3839993086713154,0.83943874857325662,-0.91287433728370448,-0.13924868777449764,1.023786395934025,1.1648426849256179,-0.83540087653276585,0.79604783507710764,1.8658542499143245,1.2988839346616368,0.22262650025215183,-1.1072425523757425,0.1514029819906858,-1.3424877807990472,3.0507738702126588,1.0717426532769292,-0.29012877270385434,1.4440849262401965,-0.90498755553343979,-1.1568614293706163,0.089089742722183077,-1.6277167899544813,1.155352742925114,-0.89878236200698924,0.022566019684995744,1.2632908387064434,0.93760146976165271,0.28551361567277872,-0.4535432388851055,-1.5432670496244374,-1.3159456116219646,-1.2342604692122767,1.1177316366412868,0.5414276838959029,-2.3529705408439257,1.4892565385909751,-2.0892079992320789,0.66237446761411145,0.29465906849690937,1.0608269127556975,-3.0170075268948477,0.74221081178973092,0.016011124952294196,-1.5448600383703524,-0.31012676665543354,-0.45633814761006081,-0.71883109947654533,0.95909858947612103,-0.19755476872015562,0.674125945232803,0.62813323537025922,1.3968049957838069,-0.5334856675576114,0.74119304381475493,0.32928458979927383,1.1548468894320045,0.75395007115670754,1.2445201996672881,0.038579936634576928,0.15682122834992138,0.21164240683337449,-0.016310161073756428,0.63371858254201952,0.78340762054982171,-0.74955372818785226,0.3753175726067971,-0.36656880965290572,0.52459907497843283,0.78630715856322198,0.96331318756092776,0.60005990922699604,-0.4055217012953436,-1.6971601822047162,0.30780642449095502,0.0012738141888551412,-0.20479596503010219,-0.93125633491544735,0.76148592034332019,-2.3333950455461667,0.042080896870628111,-1.3169055380404835,0.038648963016274906],"y":[0.29262698089138162,0.19117056540585819,-0.33877845265190093,-1.7251455470559816,2.4051023896219008,-2.3410313805803149,-1.0833616648280799,-3.4270793472611514,-0.71253566466140694,-0.31882235036303813,0.99202016693649264,-1.7083359405249772,-1.0692192370115323,0.097780948177616872,0.84889041855210312,0.90827861572628599,0.17712687933085505,0.48207086314972464,1.2642893489612388,-0.16412944725234169,-1.6050927177158496,0.39716316405585556,1.8580855705076031,0.79277683206038208,-0.9365847481803673,0.31863687472623448,1.5198804978204858,0.56128193122421344,0.1990152106559176,-1.1560970382491,0.10449893494536368,-0.017488709422483973,4.4383082542690557,0.91374061755932545,-0.0029065656747854049,1.4904487066498928,-0.44822252754649822,-0.96326520088292023,0.40511055957019299,-1.5520951434950034,1.0487621545104213,-0.096490565042839635,-0.84388600699015914,0.72566292757450335,2.2061153544683583,-0.30134566857090805,1.1072760679878999,-2.2308235351453454,-1.5291033334116559,0.13407896418781137,1.4492914718811458,0.86585153254639047,-1.8033102411963233,1.353464613475468,-2.1819520994296542,0.00074194210211459401,0.77552630521229138,1.1143839477095123,-2.5373766605954735,2.3756218921373149,-0.89378941202344642,-1.5825456146087209,-1.1493034685819941,-0.6162164566794609,-1.2396346977839927,-0.15325498904515356,0.69841877481729531,1.425979951173707,0.85397395520937092,1.8503225520446718,-0.86086288825799029,-0.28891909652171804,0.98866646645666822,-0.11210961040647432,1.0798211119520227,1.0693940085968143,0.52170271925592548,0.62326216009319946,-0.32105345025914522,1.3704409325834312,0.71320894126712986,1.1437861388753883,-0.84138757971540279,-0.83841223995449954,0.29857676207830947,-0.67189017412962859,0.40679137205718718,0.72074194466085562,-0.11138812133245519,-0.14324622537519427,-1.5793048201130979,0.90053953897225014,-0.44566347994905314,0.13179339253016767,-0.23425286718865268,-0.54137186241829116,-2.198412077256414,-0.039111327049567067,-1.6365191084113371,0.93598271276395328],"z":[0.30513371056648958,0.35034906123144655,-0.26356366547840865,-1.6432602570751222,1.9255851111646438,-2.3622671801914739,-0.73358462762315702,-2.9986871057216331,-0.54626324681076222,-0.32953090412768005,1.1810265199029215,-1.4272553948115438,-0.36363599736531171,0.13556760043013352,0.77065026253816493,0.58976316447492805,0.22482771314765007,0.20136105758854675,1.2401262911636297,-0.27854931558491153,-1.2261515567498178,0.20313802715714982,1.1767783414521775,1.009316624168576,-0.65453782904220636,0.064835575150975835,1.3246523648674235,0.3440157072459582,0.036947804902227863,-0.88952476778117429,0.29629678794918418,0.058301803630010085,3.885618911217867,0.78145397491039958,-0.78633872566651053,1.4177846917594195,-0.2347505739705453,-0.74859999385522003,0.048183473037787534,-1.2560666822406876,1.1470382725917383,-0.50230073522733987,-0.52609325645369376,1.247479371650005,1.417463480935681,-0.020978635395578097,0.72690794688013249,-2.1947940969857016,-1.5218725421412711,-0.022011287729928615,1.1366602171338724,0.40544278377703324,-1.6897686463427004,0.97865688276056906,-1.7249771140561243,0.2732074006443253,0.54794146120670317,0.56044499523169067,-2.1565778882280466,1.4589218569428035,-0.80320982102753902,-1.2649309753417133,-0.71029837249620664,-0.37506711332711629,-0.81073167311127559,-0.1553533881968126,0.21354422332872558,1.0311904397433382,1.131770353575057,1.8073783865824802,-0.78352466584726177,-0.33341212406408199,1.0712887480588213,0.083018297963079066,0.9252323411081681,0.46317150714789812,0.74023606463237634,0.30460844223672429,-0.13494252975918944,1.2540625896311404,0.88742299720429119,1.260339321638124,-0.76832104065980311,-0.48055933051261784,-0.28404972026050967,-0.46819901264896446,0.59633877249726308,0.57676736065059508,-0.25852442606014214,-0.053855978455148112,-1.3419780315365779,0.37156192394183951,-0.60995731722940327,0.348741919948518,-0.37174979965477167,-0.75972727855459055,-1.8206011228120504,-0.13323323736937573,-1.2014375577572265,0.93461445451042047],"mode":"markers","type":"scatter3d","marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(31,119,180,1)"}},"error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"line":{"color":"rgba(31,119,180,1)"},"frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="htmlwidget-7a4c71f6b681704c8696" style="width:100%;height:650px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-7a4c71f6b681704c8696">{"x":{"visdat":{"372d1a4291ef":["function () ","plotlyVisDat"]},"cur_data":"372d1a4291ef","attrs":{"372d1a4291ef":{"x":[-0.31125593619892916,-0.28891731945853877,-0.81088865658702269,0.71409564766450295,-1.0317375576136998,0.93372333105279637,-0.57465848428686794,0.41521505193620017,1.1469363924437084,0.96997835705921487,-0.62146167614178671,-0.12472574349697675,-0.72683562028450321,-1.079012647120829,-1.5916348865685637,-0.0211978620239444,-1.3818458129557782,-0.0024066088549525252,0.35636381194659977,1.485385937705713,1.0816056895045842,-0.36738554134191187,2.0384027728371912,-1.1060507204000347,-1.9986821588975663,-0.35764298400068395,1.4584284276840309,1.0408859643125228,1.9844776428028179,0.4721236288385281,1.2449181720029125,-0.56862645512418297,-1.9352953941165558,-0.49692979179320873,-1.722878376089094,1.4032160518277721,1.1733047496253206,-1.0070786313146476,-1.2704716162860414,0.9810724002915554,1.2284677286794667,0.11667614952176177,-0.12443833842622797,0.59686367084241709,-0.31956101317246782,-0.62471468648000239,-1.2145410730566442,0.89098366134104212,0.3179509360613858,-1.9351600347291782,-0.74147072414890181,1.268601382209906,-1.2274238124627248,0.89387827377097107,0.18751106891864988,-1.3964061114046571,0.13699387851689823,-2.9359551737196483,-1.4799322872235554,-2.8674223630170825,0.41401748548333434,0.62050564318772927,-0.69629612570855393,1.2209438022205261,-3.3602631810461245,1.0731033590262533,0.76744616767805651,0.46742490834606076,2.075297342062723,-0.64492832298096103,-0.86547541320305443,-0.62253552215546004,0.44032406423971537,-2.6796999852511902,0.11452341352358786,-0.095531800258924146,0.57631705491340768,-0.88580928192405572,0.68557341306691355,-0.34352117945400906,-0.26402472656885179,-0.62726534609998963,-1.6450584959917627,0.30100156491377733,-1.2407950405499242,1.331384821908832,1.2964468587652542,-1.0195378891560487,-1.0870691017822478,0.74914273933505937,-0.1715218242828018,0.018236427542904814,0.51519391325969488,0.65512442728928755,-0.98696086115722848,0.11784415633272764,-0.99019935912965151,-1.4633329026772217,-0.13892116664603074,0.24115692783852904],"y":[0.50344093074233676,-1.2812106537146213,-0.44489405667096921,1.1078248025593744,-1.9681116079020331,0.73859930746621616,0.40003815562348805,-1.3930897834534859,-0.87579690121394316,-0.62796868537582062,0.88386746934183547,0.80754586003857731,-0.74633709411400107,-2.2241327020761075,-1.577285448069103,1.108832084801409,0.52399623894788705,0.55528189428079677,-0.22295040891342499,0.54433416258459089,0.47292223369096764,-0.21789214733162282,0.53946055095487322,0.5164724746429834,1.5166778013569842,0.45422419830725169,0.028512426450734183,0.30057751033498181,2.8648101930624943,-0.45892087760733002,0.98430673154808201,-1.8813858258951701,-1.5474050757689695,0.72429425633129152,-0.21735487523663824,-0.023343886096804319,0.46418844150280664,1.1504243057575627,-0.9271622906859518,1.9363420801022608,1.4672877740228321,0.5738680676092629,1.7653280138855694,0.094036034155969922,-1.439708905397773,-0.52509848338256326,0.81431269076409396,0.18791076725141426,-1.2415260349358332,0.12628644132831607,1.3577882647071242,1.3624835313746269,-1.0689743268863128,-0.064706065578786651,1.1948814922552327,-1.0830883207525515,-0.28947307059844335,-0.03063394080654859,-0.53262367536531374,-2.1016018968716192,-1.1076195371107158,0.071892723949339363,0.90732755107557184,1.9697724085307846,-0.90547342249085216,0.55056626563778255,0.70482064174005021,-0.49552361905843112,0.33122155230051881,-0.057236575077727801,-1.9787819351844258,-1.7829648665162918,1.8138206461524216,-1.3921795394510239,-0.56249059277757885,-0.60500455899264649,-1.3587130854972755,-0.44313758262124453,0.097728583773646543,1.7936716709468321,0.99821245822728932,0.33148084246482951,-0.70587078772993395,-2.002683825296812,-1.3174410160676806,1.3193974354342719,2.2606266498059568,-0.51197967163257496,1.1953493964947621,1.9297702050071786,0.0065159137307908063,0.64588577950597093,0.061147412717698836,1.0512713989556188,-0.1697244886747809,0.55269010376258809,-0.37139602772049951,-2.0739838195013069,2.2717933025955475,-0.89437479334689263],"z":[1.3157716837143343,-1.5267174940318671,-1.6161562332656318,2.6109780598917958,0.46564818354099718,3.3462842823350036,-0.46897147782330456,1.1309930750623924,1.7372236259322942,1.2005451347756328,0.59489165539026256,0.78037121425877698,-1.6440267940131588,-2.2899801324374334,-1.5307251975541398,0.43819179510179601,-1.5767578077527333,1.3296777794648604,0.96051583165207521,0.17961116618792031,1.3954701041975404,-1.9534196872284582,0.011038212772708925,1.317300073480465,-1.0948533617449969,-0.41459106682976188,-0.77022804301228698,0.25075233942388631,4.6793120465963272,-0.4498365306669701,0.56504579800973964,-1.2633058068783258,-0.39424229970890851,0.82563483050618158,-2.5012892436959246,1.2829310323031875,1.0209079855186167,-1.7689339367894568,-1.6791253894815537,0.21107322123774852,-0.012688727524541971,1.3287805612105477,-0.073313849070813147,0.74603145563292628,1.2676362830306096,-0.26369678042893813,0.76449670297429861,1.6349787844945833,-1.4937578304169474,-2.0022837311360546,1.8188220154869532,0.76677279497389406,-1.1084149566339436,1.1960308618587785,1.0496256920853577,-1.4000295094462909,-0.14127926322212447,-1.404748986940725,-0.37008749374004801,-1.3932199322523877,0.35697427702191104,0.68013933523886883,0.74466515192568905,2.8294829069480065,-1.6307326865135412,-1.994374193467213,-0.26469379714754915,-0.62988672528202361,1.2867323304425611,-0.45080220619601508,-1.2320603291590742,-0.81896810433275702,-0.02756454704988354,-3.385342196619638,1.013811034590673,0.51152402434307864,-0.63651732781786807,-3.7260357292312549,0.77269573574709383,2.0305000792798742,2.1208806060013439,-0.31364471094433294,-1.2241547315945998,-1.4046941680374201,-0.20134081626562789,1.123277197307001,-0.27144883364719752,0.99962261183627565,-0.29454830083204692,0.85614578584829604,0.8961312739519911,-0.35746111678901427,1.001079370256982,-0.66588792687527421,0.81205127274614153,1.9640545259143047,-1.6794846861911519,-1.2920617520395732,-0.14119933946599264,0.11152866230427227],"mode":"markers","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter3d"}},"layout":{"width":500,"height":500,"margin":{"b":40,"l":60,"t":25,"r":10},"title":"Moderate correlation (rho ~ 0.5)","scene":{"xaxis":{"title":"Var 1"},"yaxis":{"title":"Var 2"},"zaxis":{"title":"Var 3"}},"hovermode":"closest","showlegend":false},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[-0.31125593619892916,-0.28891731945853877,-0.81088865658702269,0.71409564766450295,-1.0317375576136998,0.93372333105279637,-0.57465848428686794,0.41521505193620017,1.1469363924437084,0.96997835705921487,-0.62146167614178671,-0.12472574349697675,-0.72683562028450321,-1.079012647120829,-1.5916348865685637,-0.0211978620239444,-1.3818458129557782,-0.0024066088549525252,0.35636381194659977,1.485385937705713,1.0816056895045842,-0.36738554134191187,2.0384027728371912,-1.1060507204000347,-1.9986821588975663,-0.35764298400068395,1.4584284276840309,1.0408859643125228,1.9844776428028179,0.4721236288385281,1.2449181720029125,-0.56862645512418297,-1.9352953941165558,-0.49692979179320873,-1.722878376089094,1.4032160518277721,1.1733047496253206,-1.0070786313146476,-1.2704716162860414,0.9810724002915554,1.2284677286794667,0.11667614952176177,-0.12443833842622797,0.59686367084241709,-0.31956101317246782,-0.62471468648000239,-1.2145410730566442,0.89098366134104212,0.3179509360613858,-1.9351600347291782,-0.74147072414890181,1.268601382209906,-1.2274238124627248,0.89387827377097107,0.18751106891864988,-1.3964061114046571,0.13699387851689823,-2.9359551737196483,-1.4799322872235554,-2.8674223630170825,0.41401748548333434,0.62050564318772927,-0.69629612570855393,1.2209438022205261,-3.3602631810461245,1.0731033590262533,0.76744616767805651,0.46742490834606076,2.075297342062723,-0.64492832298096103,-0.86547541320305443,-0.62253552215546004,0.44032406423971537,-2.6796999852511902,0.11452341352358786,-0.095531800258924146,0.57631705491340768,-0.88580928192405572,0.68557341306691355,-0.34352117945400906,-0.26402472656885179,-0.62726534609998963,-1.6450584959917627,0.30100156491377733,-1.2407950405499242,1.331384821908832,1.2964468587652542,-1.0195378891560487,-1.0870691017822478,0.74914273933505937,-0.1715218242828018,0.018236427542904814,0.51519391325969488,0.65512442728928755,-0.98696086115722848,0.11784415633272764,-0.99019935912965151,-1.4633329026772217,-0.13892116664603074,0.24115692783852904],"y":[0.50344093074233676,-1.2812106537146213,-0.44489405667096921,1.1078248025593744,-1.9681116079020331,0.73859930746621616,0.40003815562348805,-1.3930897834534859,-0.87579690121394316,-0.62796868537582062,0.88386746934183547,0.80754586003857731,-0.74633709411400107,-2.2241327020761075,-1.577285448069103,1.108832084801409,0.52399623894788705,0.55528189428079677,-0.22295040891342499,0.54433416258459089,0.47292223369096764,-0.21789214733162282,0.53946055095487322,0.5164724746429834,1.5166778013569842,0.45422419830725169,0.028512426450734183,0.30057751033498181,2.8648101930624943,-0.45892087760733002,0.98430673154808201,-1.8813858258951701,-1.5474050757689695,0.72429425633129152,-0.21735487523663824,-0.023343886096804319,0.46418844150280664,1.1504243057575627,-0.9271622906859518,1.9363420801022608,1.4672877740228321,0.5738680676092629,1.7653280138855694,0.094036034155969922,-1.439708905397773,-0.52509848338256326,0.81431269076409396,0.18791076725141426,-1.2415260349358332,0.12628644132831607,1.3577882647071242,1.3624835313746269,-1.0689743268863128,-0.064706065578786651,1.1948814922552327,-1.0830883207525515,-0.28947307059844335,-0.03063394080654859,-0.53262367536531374,-2.1016018968716192,-1.1076195371107158,0.071892723949339363,0.90732755107557184,1.9697724085307846,-0.90547342249085216,0.55056626563778255,0.70482064174005021,-0.49552361905843112,0.33122155230051881,-0.057236575077727801,-1.9787819351844258,-1.7829648665162918,1.8138206461524216,-1.3921795394510239,-0.56249059277757885,-0.60500455899264649,-1.3587130854972755,-0.44313758262124453,0.097728583773646543,1.7936716709468321,0.99821245822728932,0.33148084246482951,-0.70587078772993395,-2.002683825296812,-1.3174410160676806,1.3193974354342719,2.2606266498059568,-0.51197967163257496,1.1953493964947621,1.9297702050071786,0.0065159137307908063,0.64588577950597093,0.061147412717698836,1.0512713989556188,-0.1697244886747809,0.55269010376258809,-0.37139602772049951,-2.0739838195013069,2.2717933025955475,-0.89437479334689263],"z":[1.3157716837143343,-1.5267174940318671,-1.6161562332656318,2.6109780598917958,0.46564818354099718,3.3462842823350036,-0.46897147782330456,1.1309930750623924,1.7372236259322942,1.2005451347756328,0.59489165539026256,0.78037121425877698,-1.6440267940131588,-2.2899801324374334,-1.5307251975541398,0.43819179510179601,-1.5767578077527333,1.3296777794648604,0.96051583165207521,0.17961116618792031,1.3954701041975404,-1.9534196872284582,0.011038212772708925,1.317300073480465,-1.0948533617449969,-0.41459106682976188,-0.77022804301228698,0.25075233942388631,4.6793120465963272,-0.4498365306669701,0.56504579800973964,-1.2633058068783258,-0.39424229970890851,0.82563483050618158,-2.5012892436959246,1.2829310323031875,1.0209079855186167,-1.7689339367894568,-1.6791253894815537,0.21107322123774852,-0.012688727524541971,1.3287805612105477,-0.073313849070813147,0.74603145563292628,1.2676362830306096,-0.26369678042893813,0.76449670297429861,1.6349787844945833,-1.4937578304169474,-2.0022837311360546,1.8188220154869532,0.76677279497389406,-1.1084149566339436,1.1960308618587785,1.0496256920853577,-1.4000295094462909,-0.14127926322212447,-1.404748986940725,-0.37008749374004801,-1.3932199322523877,0.35697427702191104,0.68013933523886883,0.74466515192568905,2.8294829069480065,-1.6307326865135412,-1.994374193467213,-0.26469379714754915,-0.62988672528202361,1.2867323304425611,-0.45080220619601508,-1.2320603291590742,-0.81896810433275702,-0.02756454704988354,-3.385342196619638,1.013811034590673,0.51152402434307864,-0.63651732781786807,-3.7260357292312549,0.77269573574709383,2.0305000792798742,2.1208806060013439,-0.31364471094433294,-1.2241547315945998,-1.4046941680374201,-0.20134081626562789,1.123277197307001,-0.27144883364719752,0.99962261183627565,-0.29454830083204692,0.85614578584829604,0.8961312739519911,-0.35746111678901427,1.001079370256982,-0.66588792687527421,0.81205127274614153,1.9640545259143047,-1.6794846861911519,-1.2920617520395732,-0.14119933946599264,0.11152866230427227],"mode":"markers","type":"scatter3d","marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(31,119,180,1)"}},"error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"line":{"color":"rgba(31,119,180,1)"},"frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="htmlwidget-59471fa7d168bfaaa9b5" style="width:100%;height:650px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-59471fa7d168bfaaa9b5">{"x":{"visdat":{"372d87aef61":["function () ","plotlyVisDat"]},"cur_data":"372d87aef61","attrs":{"372d87aef61":{"x":[-0.90374462284676171,-0.43967540876727179,1.7878203299597597,0.18586015392446345,0.42956372101981977,-1.4590843820849395,-1.1749125252735801,0.77788838758354728,0.73158698450062298,0.48812437566102512,0.29992455262137313,-1.2976699323093386,1.6020944807274702,-0.66222323422430818,1.327409264395975,-0.38569872918918569,-1.7096118585448541,0.24408211183153619,1.2470807980540712,-0.15596856615004218,0.95135124744820276,-0.14328001533860885,1.0228030092505078,-1.1300462809660918,0.88803891372849331,2.0388065530291128,1.2184435843797048,1.1864525160491486,-0.3906479017451554,0.27513068920376771,1.2499220903506139,0.84256012394279778,-0.63530469485473462,1.524146739154526,-0.84514018469691865,0.04267909877654974,0.68389876239451264,0.2835501370843399,1.7784060074940398,-0.57280608991115101,-0.76030211204720122,-3.4965082981444295,-0.34225755717857964,0.66278614732592933,-0.79840050234445803,-0.37495969087993741,1.1247051932028855,0.73286250108857487,0.93197751980674204,0.58586017703583237,-0.9414437502210885,0.70830309722253204,2.9865334311796432,-0.23659611744027748,1.7805886713748247,1.3918565263247671,-0.13495097180683083,-0.17190313328802856,-0.47275621974032545,1.0508809898202287,1.1575359641665626,0.53951810937201927,1.9397752407241839,-1.3536455725878718,1.320347216806343,-2.4433159265619646,0.29401709074865146,-0.72344335441755703,-0.43939727178520738,2.4301248762744492,0.53424276786258862,-0.95516647521908515,2.6901466444977564,0.82534680392880622,0.40872026479319901,0.72960798498464008,1.1704062053854611,-0.98869473997033475,-0.71863585149695308,0.27843615200511024,-0.21594707455952111,-0.72341073792016064,0.081868630238892695,0.036452311807546524,1.3924591406109041,-0.058966599826939262,0.093794409450868185,1.6522749300651736,1.2807916978124079,0.14503759864637486,0.3343682307622855,0.20215771735039167,-0.96180482475872076,-0.75772422710716336,0.75097432200093794,-1.7284437276308879,0.65802792988213299,0.47070129967580787,-0.5328526047241201,0.86732677894763133],"y":[-0.18111843191502058,-1.9751811980892673,0.42545710538794135,1.2231231799353328,0.73944848398522989,-0.70145045000417716,0.24399909306434425,1.3067971513434431,-1.4443893588360395,1.0213203823302068,-1.1757523922308928,0.49475528730861001,1.5460761738744295,0.14503463019938043,-0.60540953501832517,0.14411426455402815,-0.25303432828527911,0.93600926252643091,-0.21986545944864599,-2.292533816175109,0.96002034179369511,-1.2913751522138026,0.78631217205610715,0.091826712392917745,-1.5488665627337068,-1.0298107931706106,-0.52885287214432319,0.26981131085431953,-0.9193690892988482,0.89189005413480027,0.19509456828522886,0.4401794159836509,-0.73142023314946003,1.3568537449149429,-2.1157942243151928,0.79987693997656462,1.5996485938486409,0.44312316176304839,-0.93471581652006341,0.91634650724593247,0.82240497339116825,-0.35674399947711183,-0.034079722127900995,0.24282966591806851,0.76972167351509058,-0.97437751498732728,1.642944293398912,1.2408391554321847,0.0081015429986279353,1.1453936094870534,-1.040406928968487,-0.23854485683374699,0.9601667858053945,0.30174600011467712,0.055213527785825792,-0.61226702584106518,-2.2341973400706356,0.28127154219191025,-0.068872205957025007,0.6667899311602159,0.82814537934894528,3.2067978582059391,-0.35539470649950311,-1.3221737517346688,0.825972776029543,-0.84704408762560568,-1.009937398687246,-0.10988939621424726,0.8751650778512593,-0.20350041139043279,-0.49939260004347802,0.68498752118571782,0.12783469945013892,0.56501322114018737,0.63055978870319307,-1.3641895397643526,-2.1390262602192918,-1.0177398233941697,0.71243782653879617,-1.8204417023957975,-0.95152260727993143,0.26209070612242352,0.63949873442371497,0.57530499784806444,0.22420973060534052,0.064001733972366276,0.7887394833949134,0.57544212435185793,-0.17333717625971548,-0.032571024736368942,1.3160164063004303,0.66901512344724046,-0.61473383520427582,-0.14268870371487199,-0.82890711386578142,1.1115366787528307,-0.52001170544406139,-1.227649188038493,0.2398012033160313,0.5747649520911563],"z":[0.29326647091971803,1.253435155821669,-1.4746128455388456,-0.46746074930474379,1.7976102741431474,0.84956497119021124,0.57297680058709743,-0.84939106239842788,-1.532635093743532,-1.6125314574980576,-2.8651916146020828,-2.2739088329396995,-0.23197094550277328,0.21479532795564579,-1.426461406690297,-0.30455339459940139,-0.86884525706877669,-0.92463974654478553,0.44407898707677879,0.62826417908862453,-0.020091116620579108,0.86028184357696724,-0.10759559996460256,-0.61511412930826415,-2.307127327805476,0.12145291462654501,1.4508528119882205,0.43745788234693217,-1.4487287307903498,1.5174446673094812,-0.32463388481954242,1.8059796179657754,1.8943037106003946,0.67794028217631186,-0.72672923776836706,-0.1065299068797065,1.9904997614105246,0.019894887079668112,1.6563774950865517,1.7483044687158895,1.087865165837872,-0.013989994425626097,0.55306011479918615,-0.68600673156133785,1.3651029125878029,-0.85868058239650003,0.49362095993753929,-0.57740241391643454,-1.0384354606176895,-1.0056587645813915,-0.36941009998904184,0.065669837137523418,-0.12789239883548495,1.2831025498259236,-2.0516532113505446,1.811506675841482,0.31741224390039907,1.708389350968649,1.5770345657427141,-0.63733691262100445,-0.57416880073793408,-1.2852876319548181,0.78066244369544446,1.0816181793048278,-0.30428628003898389,-1.8879479420594034,-0.80051481413777048,0.65498880371031454,3.1139179490546183,1.1558354044095742,-0.86404996120442612,-0.22795149297668793,-0.71914702603062974,0.017868167043966172,-1.9140722640938244,0.75630146530550413,-2.1062565021099586,-0.55717872317736405,-0.95349687405507921,-0.35968087042177793,-0.45529664864763431,0.080396147323191447,0.87971528647160757,-0.21907307541860527,-0.17488085529203629,1.2723416060424408,0.33480640631266567,-0.18677882233885504,0.56167519792522225,-1.2504875367821615,-0.9101008474067519,-0.18022789570446973,-1.5536318334236388,2.1581812658086204,-1.7281992401452644,1.729359784627625,-0.49252859961167117,-2.4611707698108973,-1.3711194128426698,-1.1760590584410815],"mode":"markers","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter3d"}},"layout":{"width":500,"height":500,"margin":{"b":40,"l":60,"t":25,"r":10},"title":"Low correlation (rho ~ 0.0)","scene":{"xaxis":{"title":"Var 1"},"yaxis":{"title":"Var 2"},"zaxis":{"title":"Var 3"}},"hovermode":"closest","showlegend":false},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[-0.90374462284676171,-0.43967540876727179,1.7878203299597597,0.18586015392446345,0.42956372101981977,-1.4590843820849395,-1.1749125252735801,0.77788838758354728,0.73158698450062298,0.48812437566102512,0.29992455262137313,-1.2976699323093386,1.6020944807274702,-0.66222323422430818,1.327409264395975,-0.38569872918918569,-1.7096118585448541,0.24408211183153619,1.2470807980540712,-0.15596856615004218,0.95135124744820276,-0.14328001533860885,1.0228030092505078,-1.1300462809660918,0.88803891372849331,2.0388065530291128,1.2184435843797048,1.1864525160491486,-0.3906479017451554,0.27513068920376771,1.2499220903506139,0.84256012394279778,-0.63530469485473462,1.524146739154526,-0.84514018469691865,0.04267909877654974,0.68389876239451264,0.2835501370843399,1.7784060074940398,-0.57280608991115101,-0.76030211204720122,-3.4965082981444295,-0.34225755717857964,0.66278614732592933,-0.79840050234445803,-0.37495969087993741,1.1247051932028855,0.73286250108857487,0.93197751980674204,0.58586017703583237,-0.9414437502210885,0.70830309722253204,2.9865334311796432,-0.23659611744027748,1.7805886713748247,1.3918565263247671,-0.13495097180683083,-0.17190313328802856,-0.47275621974032545,1.0508809898202287,1.1575359641665626,0.53951810937201927,1.9397752407241839,-1.3536455725878718,1.320347216806343,-2.4433159265619646,0.29401709074865146,-0.72344335441755703,-0.43939727178520738,2.4301248762744492,0.53424276786258862,-0.95516647521908515,2.6901466444977564,0.82534680392880622,0.40872026479319901,0.72960798498464008,1.1704062053854611,-0.98869473997033475,-0.71863585149695308,0.27843615200511024,-0.21594707455952111,-0.72341073792016064,0.081868630238892695,0.036452311807546524,1.3924591406109041,-0.058966599826939262,0.093794409450868185,1.6522749300651736,1.2807916978124079,0.14503759864637486,0.3343682307622855,0.20215771735039167,-0.96180482475872076,-0.75772422710716336,0.75097432200093794,-1.7284437276308879,0.65802792988213299,0.47070129967580787,-0.5328526047241201,0.86732677894763133],"y":[-0.18111843191502058,-1.9751811980892673,0.42545710538794135,1.2231231799353328,0.73944848398522989,-0.70145045000417716,0.24399909306434425,1.3067971513434431,-1.4443893588360395,1.0213203823302068,-1.1757523922308928,0.49475528730861001,1.5460761738744295,0.14503463019938043,-0.60540953501832517,0.14411426455402815,-0.25303432828527911,0.93600926252643091,-0.21986545944864599,-2.292533816175109,0.96002034179369511,-1.2913751522138026,0.78631217205610715,0.091826712392917745,-1.5488665627337068,-1.0298107931706106,-0.52885287214432319,0.26981131085431953,-0.9193690892988482,0.89189005413480027,0.19509456828522886,0.4401794159836509,-0.73142023314946003,1.3568537449149429,-2.1157942243151928,0.79987693997656462,1.5996485938486409,0.44312316176304839,-0.93471581652006341,0.91634650724593247,0.82240497339116825,-0.35674399947711183,-0.034079722127900995,0.24282966591806851,0.76972167351509058,-0.97437751498732728,1.642944293398912,1.2408391554321847,0.0081015429986279353,1.1453936094870534,-1.040406928968487,-0.23854485683374699,0.9601667858053945,0.30174600011467712,0.055213527785825792,-0.61226702584106518,-2.2341973400706356,0.28127154219191025,-0.068872205957025007,0.6667899311602159,0.82814537934894528,3.2067978582059391,-0.35539470649950311,-1.3221737517346688,0.825972776029543,-0.84704408762560568,-1.009937398687246,-0.10988939621424726,0.8751650778512593,-0.20350041139043279,-0.49939260004347802,0.68498752118571782,0.12783469945013892,0.56501322114018737,0.63055978870319307,-1.3641895397643526,-2.1390262602192918,-1.0177398233941697,0.71243782653879617,-1.8204417023957975,-0.95152260727993143,0.26209070612242352,0.63949873442371497,0.57530499784806444,0.22420973060534052,0.064001733972366276,0.7887394833949134,0.57544212435185793,-0.17333717625971548,-0.032571024736368942,1.3160164063004303,0.66901512344724046,-0.61473383520427582,-0.14268870371487199,-0.82890711386578142,1.1115366787528307,-0.52001170544406139,-1.227649188038493,0.2398012033160313,0.5747649520911563],"z":[0.29326647091971803,1.253435155821669,-1.4746128455388456,-0.46746074930474379,1.7976102741431474,0.84956497119021124,0.57297680058709743,-0.84939106239842788,-1.532635093743532,-1.6125314574980576,-2.8651916146020828,-2.2739088329396995,-0.23197094550277328,0.21479532795564579,-1.426461406690297,-0.30455339459940139,-0.86884525706877669,-0.92463974654478553,0.44407898707677879,0.62826417908862453,-0.020091116620579108,0.86028184357696724,-0.10759559996460256,-0.61511412930826415,-2.307127327805476,0.12145291462654501,1.4508528119882205,0.43745788234693217,-1.4487287307903498,1.5174446673094812,-0.32463388481954242,1.8059796179657754,1.8943037106003946,0.67794028217631186,-0.72672923776836706,-0.1065299068797065,1.9904997614105246,0.019894887079668112,1.6563774950865517,1.7483044687158895,1.087865165837872,-0.013989994425626097,0.55306011479918615,-0.68600673156133785,1.3651029125878029,-0.85868058239650003,0.49362095993753929,-0.57740241391643454,-1.0384354606176895,-1.0056587645813915,-0.36941009998904184,0.065669837137523418,-0.12789239883548495,1.2831025498259236,-2.0516532113505446,1.811506675841482,0.31741224390039907,1.708389350968649,1.5770345657427141,-0.63733691262100445,-0.57416880073793408,-1.2852876319548181,0.78066244369544446,1.0816181793048278,-0.30428628003898389,-1.8879479420594034,-0.80051481413777048,0.65498880371031454,3.1139179490546183,1.1558354044095742,-0.86404996120442612,-0.22795149297668793,-0.71914702603062974,0.017868167043966172,-1.9140722640938244,0.75630146530550413,-2.1062565021099586,-0.55717872317736405,-0.95349687405507921,-0.35968087042177793,-0.45529664864763431,0.080396147323191447,0.87971528647160757,-0.21907307541860527,-0.17488085529203629,1.2723416060424408,0.33480640631266567,-0.18677882233885504,0.56167519792522225,-1.2504875367821615,-0.9101008474067519,-0.18022789570446973,-1.5536318334236388,2.1581812658086204,-1.7281992401452644,1.729359784627625,-0.49252859961167117,-2.4611707698108973,-1.3711194128426698,-1.1760590584410815],"mode":"markers","type":"scatter3d","marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(31,119,180,1)"}},"error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"line":{"color":"rgba(31,119,180,1)"},"frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>The first plot shows data with high correlation among variables, where the points are clustered along a diagonal line, indicating that the variables are strongly related. The second plot shows moderate correlation, where the points are more spread out but still show some clustering. The third plot shows low correlation, where the points are scattered randomly in space, indicating that the variables are largely independent.</p>
+<p><strong>Think–Pair–Share</strong> (#tps-ordination-correlation) What output of the PCA would you expect to differ among these three datasets?</p>
+<p>We expect that in the high correlation case, the first principal component will capture a large proportion of the variance, while in the low correlation case, the variance will be more evenly distributed across all principal components. Let’s check this by performing PCA on each dataset and examining the variance explained by each principal component.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.925377783 0.065681354 0.008940863</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.6571611 0.1978438 0.1449951</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.3874361 0.3586825 0.2538815</code></pre>
+</div>
+</div>
+<p>It turns out that in the high correlation case, the first principal component captures a large proportion of the variance (92.5%). This is a large amount of variance explained by a single component. It is caused because we made a dataset where the variables are strongly correlated. There is only one axis along which the data vary strongly.</p>
+<p>In contrast, in the zero correlation case, the variance is more evenly distributed across all principal components, with each component capturing around 38.7%, 35.9%, and 25.4% of the variance respectively. This indicates that there is no single dominant direction of variance in the data, as the variables are largely independent.</p>
+<p>In the intermediate correlation case, the variance explained by each principal component is more balanced, with the first component capturing around 65.7% of the variance, and the remaining components capturing significant portions as well. This reflects the moderate correlation structure in the data.</p>
+<p>Ordination is most useful when it can reduce the dimensionality of the data while retaining most of the variance. This means that ordination methods like PCA will be more effective in summarizing the data in the high correlation case, as most of the information can be captured in just one or two dimensions. In contrast, in the low correlation case, ordination may not provide much dimensionality reduction, as each variable contributes independently to the overall variance.</p>
+<p>What determines if we have variables with high correlation in real datasets? Often, it is biological or physical relationships among the variables. For example, in morphological datasets, measurements of different body parts may be correlated due to overall size or shape factors. In ecological datasets, species abundances may be correlated due to shared environmental preferences or interactions. Understanding the underlying biology can help us anticipate when ordination methods will be most useful.</p>
+</section>
+<section id="ordination-ii-nmds-non-metric-multidimensional-scaling" class="level2">
+<h2 class="anchored" data-anchor-id="ordination-ii-nmds-non-metric-multidimensional-scaling">Ordination II: NMDS (Non-metric Multidimensional Scaling)</h2>
+<p>PCA is powerful, but it is a <strong>linear</strong> method and it relies on Euclidean geometry in the original variable space.</p>
+<p>NMDS is often used when:</p>
+<ul>
+<li>you want ordination based on <strong>distances/dissimilarities</strong></li>
+<li>the relationships are not well represented by a linear method</li>
+<li>you want flexibility in the choice of distance (e.g.&nbsp;Bray–Curtis, Gower, …)</li>
+</ul>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>What NMDS does (conceptually)</strong><br>
+1) compute pairwise distances among objects<br>
+2) place points in a low-dimensional space (usually 2D)<br>
+3) try to preserve the <strong>rank order</strong> of distances (non-metric)<br>
+4) report <strong>stress</strong>: lower is better (roughly: mismatch between original dissimilarities and ones in the lower-dimensional space)</p>
+</div>
+</div>
+<section id="step-1-choose-a-distance-measure" class="level3">
+<h3 class="anchored" data-anchor-id="step-1-choose-a-distance-measure">Step 1: Choose a distance measure</h3>
+<p>Here our variables are numeric, so Euclidean distance is a reasonable default.</p>
+<p>We will scale first (so variables contribute comparably), then compute distances:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>X_scaled <span class="ot">&lt;-</span> <span class="fu">scale</span>(X)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>D <span class="ot">&lt;-</span> <span class="fu">dist</span>(X_scaled, <span class="at">method =</span> <span class="st">"euclidean"</span>)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co">#D</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="step-2-fit-nmds-with-multiple-random-starts" class="level3">
+<h3 class="anchored" data-anchor-id="step-2-fit-nmds-with-multiple-random-starts">Step 2: Fit NMDS with multiple random starts</h3>
+<p>In NMDS, we need to choose some random starting configuration of points. And we want to make sure that we choose a good solution, not just a local optimum. Hence, we try multiple random starts and pick the best one.</p>
+<p>In practice, use <code>metaMDS()</code> (from <strong>vegan</strong>) rather than calling the low-level optimizer directly. It tries multiple starting configurations and does useful housekeeping.</p>
+<p>When calling <code>metaMDS()</code>, we specify the following:</p>
+<ul>
+<li><code>k = 2</code> for a 2D solution.</li>
+<li><code>trymax = 50</code> to try up to 50 random starts.</li>
+<li><code>autotransform = FALSE</code> because we already scaled the data ourselves.</li>
+<li><code>trace = FALSE</code> to suppress output during fitting.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>nmds <span class="ot">&lt;-</span> <span class="fu">metaMDS</span>(D, <span class="at">k =</span> <span class="dv">2</span>, <span class="at">trymax =</span> <span class="dv">50</span>, <span class="at">autotransform =</span> <span class="cn">FALSE</span>, <span class="at">trace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>nmds</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+metaMDS(comm = D, k = 2, trymax = 50, autotransform = FALSE,      trace = FALSE) 
+
+global Multidimensional Scaling using monoMDS
+
+Data:     D 
+Distance: euclidean 
+
+Dimensions: 2 
+Stress:     0.1467223 
+Stress type 1, weak ties
+Best solution was repeated 1 time in 20 tries
+The best solution was from try 16 (random start)
+Scaling: centring, PC rotation 
+Species: scores missing</code></pre>
+</div>
+</div>
+<p>Lots of information here, for example we have:</p>
+<ul>
+<li>the call used</li>
+<li>the type of distance</li>
+<li>the number of dimensions</li>
+<li>the number of random starts tried</li>
+<li>the final stress value</li>
+<li>the scaling of the data</li>
+</ul>
+</section>
+<section id="step-3-assess-nmds-fit-with-stress" class="level3">
+<h3 class="anchored" data-anchor-id="step-3-assess-nmds-fit-with-stress">Step 3: Assess NMDS fit with stress</h3>
+<p>The stress of an NMDS solution quantifies how well the low-dimensional configuration preserves the rank order of the original dissimilarities. That is, it is a measure of mismatch between the distances in the original high-dimensional space and the distances in the reduced low-dimensional space. Here is the stress plot for our NMDS solution:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">stressplot</span>(nmds)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="10.1-ordination_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" width="432"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We see a fairly good match between the original distances and the NMDS distances. The correlations are reasonably high, indicating that the NMDS solution captures the rank order of dissimilarities well.</p>
+<p>The stress value is another measure of fit. Lower stress values indicate a better fit. A common rule of thumb is that stress &lt; 0.1 is a good fit, stress between 0.1 and 0.2 is acceptable, and stress &gt; 0.2 indicates a poor fit. A poor fit suggests that the data may not be well represented in two dimensions, and a higher-dimensional solution may be needed.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>nmds<span class="sc">$</span>stress</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.1467223</code></pre>
+</div>
+</div>
+<p>We are in the range of okay fit in two dimensions.</p>
+<p>What improvement in stress do we get if we go to three dimensions?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>nmds_3d <span class="ot">&lt;-</span> <span class="fu">metaMDS</span>(D, <span class="at">k =</span> <span class="dv">3</span>, <span class="at">trymax =</span> <span class="dv">50</span>, <span class="at">autotransform =</span> <span class="cn">FALSE</span>, <span class="at">trace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>nmds_3d<span class="sc">$</span>stress</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.07009879</code></pre>
+</div>
+</div>
+<p>The stress decreases when we move to three dimensions, indicating a better fit. However, the improvement may not be substantial enough to justify the added complexity of a three-dimensional solution. In practice, we often prefer two-dimensional solutions for ease of visualization and interpretation, unless the stress reduction is very large.</p>
+<p>We can plot the NMDS scores, colored by time:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="10.1-ordination_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid figure-img" width="432"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Axis directions are arbitrary</strong><br>
+Flipping or rotating an NMDS solution (or a PCA) does not change its meaning. Only relative distances among points matter.</p>
+</div>
+</div>
+<p>If we wanted to know the biological interpretation of the NMDS axes, we would need to look at correlations between the original variables and the NMDS axes. This is just the same as we did for PCA. We could then plot the correlations as arrows on the NMDS plot to help interpret the axes.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>cor_nmds <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">cor</span>(X, nmds_scores <span class="sc">|&gt;</span> <span class="fu">select</span>(NMDS1, NMDS2)), <span class="dv">2</span>)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>cor_nmds</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>             NMDS1 NMDS2
+max.breadth   0.65  0.64
+basi.height   0.80  0.03
+basi.length   0.64 -0.57
+nasal.height  0.86 -0.09</code></pre>
+</div>
+</div>
+<p>And plot these as arrows:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="10.1-ordination_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="432"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This NMDS graph looks a lot like the PCA biplot. This is because our data are fairly linear and Euclidean distances are appropriate. In more complex datasets, NMDS can reveal patterns that PCA might miss.</p>
+</div>
+</div>
+<p><strong>Think–Pair–Share (#a_linear_vs_nonlinear_ordination)</strong> When might a linear method like PCA be misleading? What does NMDS relax?</p>
+</section>
+</section>
+<section id="hypothesis-testing-avoid-four-separate-regressions" class="level2">
+<h2 class="anchored" data-anchor-id="hypothesis-testing-avoid-four-separate-regressions">Hypothesis testing: avoid “four separate regressions”</h2>
+<p>If you test time against each skull measurement separately, you face a <strong>multiple testing</strong> problem.</p>
+<p>A better match to the question (“do skulls change through time in multivariate space?”) is a <strong>multivariate test</strong>.</p>
+<p>Here are four common approaches demonstrated but not deeply explained:</p>
+<ol type="1">
+<li>MANOVA (parametric, multivariate normality assumptions)<br>
+</li>
+<li>PERMANOVA (distance-based, permutation test)<br>
+</li>
+<li>Dispersion checks (are groups equally variable?)</li>
+<li>Fitting time onto an ordination (envfit, ordisurf)</li>
+</ol>
+<section id="manova-parametric" class="level3">
+<h3 class="anchored" data-anchor-id="manova-parametric">1) MANOVA (parametric)</h3>
+<p>Multivariate ANOVA (MANOVA) tests whether group <strong>centroids</strong> differ in multivariate space, assuming multivariate normality. The response is a matrix of multiple variables, and the predictor can be categorical or continuous.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>man_mod <span class="ot">&lt;-</span> <span class="fu">manova</span>(<span class="fu">cbind</span>(max.breadth, basi.height, basi.length, nasal.height) <span class="sc">~</span> thousand.years,</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">data =</span> skull)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(man_mod, <span class="at">test =</span> <span class="st">"Pillai"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                Df  Pillai approx F num Df den Df    Pr(&gt;F)    
+thousand.years   1 0.36751   21.064      4    145 1.042e-13 ***
+Residuals      148                                             
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>If we bin years into categories, MANOVA becomes closer to multivariate ANOVA:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>skull <span class="ot">&lt;-</span> skull <span class="sc">|&gt;</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year_class =</span> <span class="fu">cut</span>(thousand.years, <span class="at">breaks =</span> <span class="dv">8</span>) <span class="sc">|&gt;</span> <span class="fu">fct_inorder</span>())</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>man_mod_cat <span class="ot">&lt;-</span> <span class="fu">manova</span>(<span class="fu">cbind</span>(max.breadth, basi.height, basi.length, nasal.height) <span class="sc">~</span> thousand.years,</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">data =</span> skull)</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(man_mod_cat, <span class="at">test =</span> <span class="st">"Pillai"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                Df  Pillai approx F num Df den Df    Pr(&gt;F)    
+thousand.years   1 0.36751   21.064      4    145 1.042e-13 ***
+Residuals      148                                             
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Caution
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>MANOVA assumptions matter</strong><br>
+MANOVA relies on multivariate normality and homogeneity of covariance matrices. In many biological datasets, these are imperfect—so distance-based alternatives are common.</p>
+</div>
+</div>
+</section>
+<section id="permanova-distance-based" class="level3">
+<h3 class="anchored" data-anchor-id="permanova-distance-based">2) PERMANOVA (distance-based)</h3>
+<p>PERMANOVA tests whether group <strong>centroids</strong> differ in multivariate space, using permutations. In vegan, use <code>adonis2()</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use the same distance matrix D we used for NMDS</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">adonis2</span>(D <span class="sc">~</span> year_class, <span class="at">data =</span> skull, <span class="at">permutations =</span> <span class="dv">999</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Permutation test for adonis under reduced model
+Permutation: free
+Number of permutations: 999
+
+adonis2(formula = D ~ year_class, data = skull, permutations = 999)
+          Df SumOfSqs      R2      F Pr(&gt;F)    
+Model      7   138.47 0.23234 6.1396  0.001 ***
+Residual 142   457.53 0.76766                  
+Total    149   596.00 1.00000                  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+</section>
+<section id="permdisp-betadisper-are-groups-equally-variable" class="level3">
+<h3 class="anchored" data-anchor-id="permdisp-betadisper-are-groups-equally-variable">3) PERMDISP / betadisper: are groups equally variable?</h3>
+<p>A common pitfall:</p>
+<ul>
+<li>PERMANOVA can be significant either because <strong>centroids differ</strong></li>
+<li>or because <strong>dispersion differs</strong> (groups have different spread)</li>
+</ul>
+<p>So it’s good practice to check dispersion when comparing groups.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>bd <span class="ot">&lt;-</span> <span class="fu">betadisper</span>(D, skull<span class="sc">$</span>year_class)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="co">#bd</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(bd)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Response: Distances
+           Df Sum Sq Mean Sq F value Pr(&gt;F)
+Groups      7  0.929 0.13274  0.2284  0.978
+Residuals 142 82.529 0.58119               </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">permutest</span>(bd, <span class="at">permutations =</span> <span class="dv">999</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Permutation test for homogeneity of multivariate dispersions
+Permutation: free
+Number of permutations: 999
+
+Response: Distances
+           Df Sum Sq Mean Sq      F N.Perm Pr(&gt;F)
+Groups      7  0.929 0.13274 0.2284    999   0.98
+Residuals 142 82.529 0.58119                     </code></pre>
+</div>
+</div>
+</section>
+<section id="fitting-time-onto-an-ordination-envfit-and-ordisurf" class="level3">
+<h3 class="anchored" data-anchor-id="fitting-time-onto-an-ordination-envfit-and-ordisurf">4) Fitting time onto an ordination: envfit and ordisurf</h3>
+<p>Even when you use an unconstrained ordination (PCA/NMDS), you may want to show how an explanatory variable aligns with it.</p>
+<section id="envfit-linear-fit-permutation-test" class="level4">
+<h4 class="anchored" data-anchor-id="envfit-linear-fit-permutation-test">envfit: linear fit + permutation test</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>fit_years <span class="ot">&lt;-</span> <span class="fu">envfit</span>(nmds <span class="sc">~</span> thousand.years, <span class="at">data =</span> skull, <span class="at">permutations =</span> <span class="dv">999</span>)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>fit_years</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+***VECTORS
+
+                   NMDS1     NMDS2     r2 Pr(&gt;r)    
+thousand.years  0.996500 -0.083553 0.3643  0.001 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Permutation: free
+Number of permutations: 999</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(nmds, <span class="at">type =</span> <span class="st">"n"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>species scores not available</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(nmds, <span class="at">display =</span> <span class="st">"sites"</span>, <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">cex =</span> <span class="fl">0.8</span>)</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fit_years, <span class="at">col =</span> <span class="st">"black"</span>)  <span class="co"># vector direction and significance</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="10.1-ordination_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid figure-img" width="432"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="ordisurf-non-linear-surface-gam" class="level4">
+<h4 class="anchored" data-anchor-id="ordisurf-non-linear-surface-gam">ordisurf: non-linear surface (GAM)</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(nmds, <span class="at">type =</span> <span class="st">"n"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>species scores not available</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(nmds, <span class="at">display =</span> <span class="st">"sites"</span>, <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">cex =</span> <span class="fl">0.8</span>)</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ordisurf</span>(nmds <span class="sc">~</span> thousand.years, <span class="at">data =</span> skull, <span class="at">add =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="10.1-ordination_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid figure-img" width="432"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Family: gaussian 
+Link function: identity 
+
+Formula:
+y ~ s(x1, x2, k = 10, bs = "tp", fx = FALSE)
+
+Estimated degrees of freedom:
+2.98  total = 3.98 
+
+REML score: 1092.962     </code></pre>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="pca-in-multiple-regression" class="level2">
+<h2 class="anchored" data-anchor-id="pca-in-multiple-regression">PCA in multiple regression</h2>
+<p>PCA can also be used to reduce multivariate predictors into a few uncorrelated components, which can then be used in multiple regression models. This is particularly useful when the predictors are highly correlated, as it helps to avoid multicollinearity issues.</p>
+<p>The steps for this would be:</p>
+<ol type="1">
+<li>Perform PCA on the predictor variables to obtain principal components.</li>
+<li>Make a linear regression model using the selected principal components as predictors.</li>
+<li>Interpret the results in terms of the original variables, if needed.</li>
+</ol>
+<p>The “win” here is that the principal components are uncorrelated, which simplifies the regression analysis and interpretation. The “lose” is that the principal components may not have a straightforward biological interpretation, so care is needed when explaining the results.</p>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p>Ordination is useful when we have multivariate data and when variables within that data are correlated. The correlation structure means that we can represent the data in a lower-dimensional space without losing too much information. If there is a lot of correlation among variables, then ordination becomes very useful. If there is little correlation, then ordination may not help much since most of the variance is spread evenly across many dimensions.</p>
+<p>Summary:</p>
+<ul>
+<li>PCA is a linear ordination method that finds orthogonal axes capturing the most variance.</li>
+<li>NMDS is a flexible, distance-based ordination method that preserves rank order of dissimilarities.</li>
+<li>Both methods help visualize and summarize multivariate data.</li>
+<li>Multivariate hypothesis tests (MANOVA, PERMANOVA) assess group differences in multivariate space.</li>
+<li>Checking dispersion (PERMDISP) is important to interpret PERMANOVA results.</li>
+<li>Fitting explanatory variables onto ordinations (envfit, ordisurf) helps interpret patterns.</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/opetchey\.github\.io\/BIO144_Course_Book\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./9.1-GLM2-binary-data.html" class="pagination-link" aria-label="Binary data (L9)">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Binary data (L9)</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./11.1-mixed-models.html" class="pagination-link" aria-label="Mixed models (L11-1)">
+        <span class="nav-page-text">Mixed models (L11-1)</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>BIO144 Data Analysis for Biologists, Course Book written by Owen Petchey</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/opetchey/BIO144_Course_Book/edit/main/10.1-ordination.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/opetchey/BIO144_Course_Book/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>This book was built with <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

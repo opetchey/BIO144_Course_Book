@@ -190,6 +190,12 @@ abline(c(4,-2),lwd=2)
 polygon(from_x,from_y,to_x,to_y,col=2,lwd=2)
 ```
 
+
+::: {.callout-note}
+Residuals are model-based quantities, not properties of the raw data.
+:::
+
+
 ### Least squares estimates
 
 With a linear model, we can calculate the least squares estimates of the parameters $\beta_0$ and $\beta_1$ directly using the following formulas.
@@ -430,6 +436,12 @@ This assumption implies that:
 (b) $\epsilon_i$ has constant variance: $Var(\epsilon_i)=\sigma^2$.
 (c) The $\epsilon_i$ are independent of each other.
 
+
+::: {.callout-note}
+These assumptions are about the residuals, not the observed data!!!
+:::
+
+
 Furthermore:
 
 (d) we assumed a linear relationship.
@@ -595,7 +607,7 @@ This graph is known as the scale-location plot. It is particularly suited to che
 
 ::: {.callout-tip}
 
-We can also use the built-in plot function for linear models to create this plot. It is the third plot in the set of diagnostic plots.
+We can also use the built-in plot function for linear models to create this plot. It is the third plot in the set of model checking plots.
 
 ```{r}
 #| evaluate: false
@@ -987,7 +999,7 @@ p7 + p8
 
 
 
-Let's look at the four diagnostic plots for the log-log-transformed data:
+Let's look at the four model checking plots for the log-log-transformed data:
 
 ```{r out.width="14cm", fig.align='center', echo=FALSE, message=FALSE, warning=FALSE}
 par(mfrow=c(2,2))
@@ -996,7 +1008,7 @@ plot(m4)
 
 All looks pretty good except for the scale-location plot, which shows a bit of a pattern. But overall, this looks much better than our original model.
 
-But... how to know which transformation to use...? It's a bit of trial and error. But we can use the diagnostic plots to help us.
+But... how to know which transformation to use...? It's a bit of trial and error. But we can use the model checking plots to help us.
 
 **Very very important** is that we do this trial and error before we start using the model. E.g., we don't want to jump from the aeroplane and then find out that our parachute is not working properly! And then try to fix the parachute while we are falling....
 
@@ -1096,7 +1108,7 @@ In this chapter we learned about first steps of regression analysis. Specificall
 * The simple linear regression model.
 * Estimation of the coefficients (intercept and slope) using the least squares method.
 * How to model the errors (residuals) and the assumptions of linear regression.
-* How to check the assumptions of linear regression using diagnostic plots.
+* How to check the assumptions of linear regression using model checking plots.
 * What can go wrong during the modeling process, and how to deal with it.
 
 With all that in place, we can be sure that when we use a linear regression model, we can trust the results it gives us. In the next chapter, we will start to use linear regression models to answer questions! This involves things such as hypothesis testing, confidence intervals, and prediction. Exciting times ahead!

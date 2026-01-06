@@ -6,6 +6,8 @@ source("_common.R")
 
 # Regression Part 2 (L4) {.unnumbered}
 
+This chapter builds on the previous chapter on simple linear regression. There we learned how to fit a regression model to data, and how to check if the assumptions of the regression model are met. In this chapter we will learn how to interpret the results of a regression model, and how to use the model to make inferences about the relationship between the dependent and independent variables.
+
 ## Introduction
 
 Now that we have a satisfactory model, we can start to use it. In the following material, you will learn:

@@ -6,9 +6,9 @@ source("_common.R")
 
 # Analysis of variance (L5) {.unnumbered}
 
-## Introduction
-
 The previous two chapters were about linear regression. *Linear regression* is a type of *linear model* -- recall that in *R* we used the function `lm()` to make the regression model.  In this chapter we will look at a different type of linear model: analysis of variance (ANOVA).
+
+## Introduction
 
 Recall that linear regression is a linear model with one continuous explanatory (independent) variable. A continuous explanatory variable is a variable in which values can take any value within a range (e.g., height, weight, temperature).
 
@@ -565,7 +565,7 @@ fit <- lm(bp ~ diet, data = bp_data_diet)
 
 **IMPORTANT**: Since ANOVA is a linear model, it is important to check the assumptions of linear models before interpreting the results. These are some of the same assumptions we checked for simple linear regression, including: independence of errors, normality of residuals, and homoscedasticity (constant variance of residuals).
 
-As with linear regression, we check the assumptions are not too badly broken by looking at diagnostic plots:
+As with linear regression, we check the assumptions are not too badly broken by looking at model checking plots:
 
 ```{r}
 par(mfrow = c(2, 2))
@@ -592,6 +592,8 @@ A suitable sentence to report our findings would be: "Diet has a significant eff
 
 
 ## Difference between pairs of groups
+
+"*ANOVA does not tell you which groups differ."*
 
 Recall that the $F$ test is a global test. It tests the null hypothesis that all group means are equal. It does not tell us which groups are different from each other. It just tells us that at least one group mean is different. Sometimes researchers are interested in more specific questions such as:
 
@@ -689,7 +691,7 @@ Here we defined a new explanatory variable that groups the meat heavy and Medite
 fit_mnm <- lm(bp ~ meat_or_no_meat, data = bp_data_diet)
 ```
 
-(We should not look at model diagnostics here, before using the model. But let us continue as if the assumptions are sufficiently met.)
+(We should not look at model checking plots here, before using the model. But let us continue as if the assumptions are sufficiently met.)
 
 We now do something a bit more complicated: we compare the variance explained by the model with four diets to the model with two diets. This is done by comparing the two models using an $F$-test. We are testing the null hypothesis that the two models are equally good at explaining the data, in which case the two diet model will explain as much variance as the four diet model.
 

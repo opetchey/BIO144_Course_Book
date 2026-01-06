@@ -6,7 +6,7 @@ source("_common.R")
 
 # Interactions (L7) {.unnumbered}
 
-Thought for the week:
+### Thought for the week:
 
 "*You should arrive at answers on your own, and not rely upon what you get from someone else. Answers from others are nothing more than stopgap measures, they're of no value.*"
 
@@ -17,6 +17,8 @@ They instead encourage answers gained from curiosity, observation, and dialogue.
 When we mentor, ask questions that encourage others to think for themselves, rather than simply giving answers. This is hard, but worthwhile.
 
 ## Introduction
+
+In the previous chapters we have looked at models with a special type of simplicity: the effect of each explanatory variable on the response variable is independent of the other explanatory variables. This is special because it means that we can understand the effect of each explanatory variable on the response variable separately, without considering the other explanatory variables. Nevertheless, this is often not the case in real life. The effect of one explanatory variable on the response variable may depend on the value of another explanatory variable. This is called an interaction effect, or simply an interaction.
 
 Interactions are some of the most interesting phenomena in science, including biology. We are not talking about interactions between species, like predation, though these are also very interesting. We are talking about effects of one thing, like diet, depending on another thing, like exercise. Let's break that down a bit...
 
@@ -462,7 +464,7 @@ mod2 <- lm(bp ~ mins_per_week * diet, data=bp_1cont1cat)
 
 The second is a shorthand for the first. The `*` operator includes the main effects (main effects are terms in the model that don't include interactions) and the interaction term. The `:` operator includes only the interaction term.
 
-Of course, we check the model diagnostics before we interpret the results:
+Of course, we check the model assumptions before we interpret the results:
 
 ```{r}
 par(mfrow=c(2,2))
@@ -635,7 +637,7 @@ Recall that this fits a model with main effects of diet and exercise, as well as
 mod_2cat <- lm(bp ~ diet + exercise + diet:exercise, data=bp_2cat)
 ```
 
-We can check the model diagnostics:
+We can check the model assumptions:
 ```{r}
 par(mfrow=c(2,2))
 plot(mod_2cat, add.smooth=FALSE)
@@ -741,7 +743,7 @@ The hypothesis testing is the same as before. We fit the model with interaction 
 mod_2cat_3levels <- lm(bp ~ diet * exercise, data=bp_2cat_3levels)
 ```
 
-We check the model diagnostics:
+We check the model assumptions:
 ```{r}
 par(mfrow=c(2,2))
 plot(mod_2cat_3levels, add.smooth=FALSE)
@@ -804,7 +806,7 @@ We can fit a multiple regression model with an interaction term in R as follows:
 mod_2cont <- lm(bp ~ mins_per_week * age, data=bp_2cont)
 ```
 
-We check the model diagnostics:
+We check the model assumptions:
 ```{r}
 par(mfrow=c(2,2))
 plot(mod_2cont, add.smooth=FALSE)

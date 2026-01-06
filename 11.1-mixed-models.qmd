@@ -10,8 +10,10 @@ source("_common.R")
 
 So far in BIO144 we mostly used models where **each observation is assumed independent**:
 
-- linear models (`lm()`)
-- generalized linear models (`glm()`), e.g. Poisson and binomial
+* linear models (`lm()`)
+* generalized linear models (`glm()`), e.g. Poisson and binomial.
+
+By independent we mean that the value of one observation does not give us any information about the value of another observation.
 
 But many biological datasets violate independence because observations come in **groups**:
 
@@ -136,7 +138,7 @@ $$y_{ij} = \beta_0 + \beta_1 x_{ij} + b_{0j} + \varepsilon_{ij}$$
 where:
 
 - $\beta_0, \beta_1$ are **fixed effects**
-- $x_{ij}$ is the predictor variable for observation $i$ in group $j$. Also called a **fixed effect**.
+- $x_{ij}$ is the explanatory variable for observation $i$ in group $j$. Also called a **fixed effect**.
 - $b_{0j}$ is a **random intercept** for group $j$, typically $b_{0j} \sim \text{Normal}(0,\sigma_b^2)$
 - $\varepsilon_{ij}$ is residual error, $\varepsilon_{ij} \sim \text{Normal}(0,\sigma^2)$
 
@@ -159,7 +161,7 @@ Read it as: "a model for `y` with fixed effect `x` and a random intercept by `gr
 
 ## Random slope models
 
-Sometimes groups differ not only in baseline level, but also in how they respond to a predictor.
+Sometimes groups differ not only in baseline level, but also in how they respond to an explanatory variable.
 
 A random-slope model:
 
@@ -324,7 +326,7 @@ Interpretation:
 
 ### model checking
 
-Mixed-model diagnostics can be more involved than `lm()`, but you can still start with:
+Mixed-model diagnostics (i.e., model checking) can be more involved than `lm()`, but you can still start with:
 
 - residual vs fitted plot (nonlinearity / heteroscedasticity)
 - normal Q–Q of residuals (approximate)
@@ -358,7 +360,7 @@ plot(fitted(m_lmm1), sqrt(abs(resid(m_lmm1))),
 ```
 
 
-4) Residuals vs predictor (helpful for nonlinearity with a continuous predictor)
+4) Residuals vs explanatory variable (helpful for nonlinearity with a continuous explanatory variable)
 
 ```{r}
 plot(dat$temp, resid(m_lmm1), xlab = "x", ylab = "Residuals")

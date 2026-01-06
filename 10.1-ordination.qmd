@@ -8,9 +8,7 @@ source("_common.R")
 
 ## Introduction
 
-"Seeing structure in multivariate data."
-
-In earlier chapters, we mostly worked with **one response variable at a time**. But many biological questions are intrinsically **multivariate**:
+In earlier chapters, we have analysed variability in **one response variable at a time**. But many biological questions are intrinsically **multivariate**:
 
 - morphology: multiple measurements describe *shape* (not just size)
 - communities: abundance of many species describes *composition*
@@ -23,7 +21,7 @@ When we have **many response variables**, two practical problems appear:
 
 **Ordination** is a family of methods that helps with both.
 
-It can also help in cases where we have many predictor variables (e.g. environmental gradients). This can be especially useful when predictors are collinear.
+It can also help in cases where we have many explanatory variables (e.g. environmental gradients). This can be especially useful when predictors are collinear.
 
 ::: {.callout-important}
 **Core idea**  
@@ -619,7 +617,7 @@ Here are four common approaches demonstrated but not deeply explained:
 
 ### 1) MANOVA (parametric)
 
-Multivariate ANOVA (MANOVA) tests whether group **centroids** differ in multivariate space, assuming multivariate normality. The response is a matrix of multiple variables, and the predictor can be categorical or continuous.
+Multivariate ANOVA (MANOVA) tests whether group **centroids** differ in multivariate space, assuming multivariate normality. The response is a matrix of multiple variables, and the explanatory variables can be categorical or continuous.
 
 ```{r}
 man_mod <- manova(cbind(max.breadth, basi.height, basi.length, nasal.height) ~ thousand.years,
@@ -697,12 +695,12 @@ ordisurf(nmds ~ thousand.years, data = skull, add = TRUE)
 
 ## PCA in multiple regression
 
-PCA can also be used to reduce multivariate predictors into a few uncorrelated components, which can then be used in multiple regression models. This is particularly useful when the predictors are highly correlated, as it helps to avoid multicollinearity issues.
+PCA can also be used to reduce multiple explanatory variable into a few uncorrelated components, which can then be used in multiple regression models. This is particularly useful when the predictors are highly correlated, as it helps to avoid multicollinearity issues.
 
 The steps for this would be:
 
-1. Perform PCA on the predictor variables to obtain principal components.
-2. Make a linear regression model using the selected principal components as predictors.
+1. Perform PCA on the explanatory variables to obtain principal components.
+2. Make a linear regression model using the selected principal components as explanatory variables.
 3. Interpret the results in terms of the original variables, if needed.
 
 The "win" here is that the principal components are uncorrelated, which simplifies the regression analysis and interpretation. The "lose" is that the principal components may not have a straightforward biological interpretation, so care is needed when explaining the results.

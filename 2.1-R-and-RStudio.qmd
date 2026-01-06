@@ -71,9 +71,9 @@ b <- 10
 c <- a + b
 ```
 
-
-**Think–Pair–Share** (#a_objects_not_files) When you type `a <- ...`, where does `x` live?
-
+::: {.callout-note}
+In fact, just about everything in R is an object! These objects live in your R session (i.e., in the memory of your computer), and you can see them in the Environment pane. You can create objects to store data, functions, and other information. Your data files are something different. They are just like other files on your computer, such as documents, images, and music files. They live on your hard drive (or in the cloud), and you can import them into R when you need to work with them.
+:::
 
 And then print the value of `c`:
 
@@ -133,6 +133,9 @@ write_csv(my_data, "datasets/my_data.csv")
 Above we have numerous examples of functions: `exp()`, `sqrt()`, `c()`, `paste()`, `toupper()`, and `data.frame()`. Functions are a fundamental part of R programming. They are used to perform specific tasks, such as calculations, data manipulation, and data analysis. All functions have a name and can take arguments (inputs) and return values (outputs). They are called by writing the function name followed by parentheses, with any arguments inside the parentheses.
 
 You likely guessed that there is much much more to learn about R, but we will cover that as we go along in the course.
+
+**Think–Pair–Share** (#tps_a_objects_not_files) When you type `a <- ...`, where does `x` live?
+
 
 
 ## Getting help 
@@ -401,7 +404,7 @@ write_csv(my_data2, "datasets/my_data2.csv")
 
 
 
-### Select columns [#select-columns]
+### Select columns
 
 We can select columns by name
 
@@ -468,7 +471,7 @@ my_data2 |>
 I very rarely use this function, as I prefer to use `filter()` with logical conditions. I can't think of a good use case for this function right now! Perhaps you can?
 
 
-### Arrange: Reordering rows [#arrange-rows]
+### Arrange: Reordering rows
 
 The `arrange()` function allows us to reorder the rows of a data frame based on the values in one or more columns. For example, to reorder the rows by Age in ascending order:
 

@@ -6,6 +6,8 @@ source("_common.R")
 
 # Count data (L8) {.unnumbered}
 
+In all the previous chapters, we have focused on **linear models** for continuous response variables. However, many biological response variables are counts (e.g., number of offspring, number of parasites). In this chapter, we introduce **Generalized Linear Models (GLMs)** for analysing count data, focusing on the Poisson distribution.
+
 ## Introduction
 
 So far in BIO144, we have focused on **linear models** fitted using `lm()`. These models assume:
@@ -27,7 +29,7 @@ By the end of this chapter, you should be able to:
 - Fit and interpret Poisson regression models
 - Diagnose common problems such as overdispersion and zero inflation
 
-**Think–Pair–Share** (#tps-non-neg-kinds) What kinds of biological outcomes can you think of that *cannot* be negative or continuous?
+**Think–Pair–Share** (#tps-non-neg-kinds) What kinds of biological outcomes (response variables) can you think of that *cannot* be negative or continuous?
 
 
 ### From LM to GLM
@@ -46,7 +48,7 @@ This works well when the response variable is continuous and approximately norma
 However, many biological response variables are:
 
 - **Counts** (e.g. offspring, parasites, species)
-- **Binary outcomes** (e.g. alive/dead)
+- **Binary responses** (e.g. alive/dead)
 - **Proportions**
 
 In these cases, forcing the data into a linear model often leads to invalid predictions and misleading inference.
@@ -131,7 +133,7 @@ A common mistake is to analyse count data using linear regression, treating coun
 mod_soay_lm <- lm(fitness ~ body.size, data = soay)
 ```
 
-The diagnostic plots show clear violations of linear regression assumptions:
+The model checking plots show clear violations of linear regression assumptions:
 
 ```{r}
 par(mfrow = c(2, 2))
@@ -248,7 +250,7 @@ The linear predictor is the same as in linear regression:
 
 $\eta_i = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}$
 
-It is just the linear combination of predictors and coefficients. Nothing new here.
+It is just the linear combination of explanatory variables and coefficients. Nothing new here.
 
 
 #### The link function
@@ -257,7 +259,7 @@ In the linear models we already used (e.g., for linear regression) the link func
 
 $E(y_i) = \eta_i$
 
-Here, $E(y_i)$ refers to the expected value (mean) of many hypothetical observations with the same predictors, not the single observed value $y_i$.
+Here, $E(y_i)$ refers to the expected value (mean) of many hypothetical observations, not the single observed value $y_i$.
 
 *Identity link*: the expected value of the response $E(y_i)$ equals the linear predictor $\eta_i$.
 
@@ -275,7 +277,7 @@ which implies:
 
 $E(y_i) = \exp(\eta_i) > 0$
 
-The log link ensures that the expected count is always positive, regardless of the values of the predictors. Whatever the value of the linear predictor $\eta_i$, the exponential of it $\exp(\eta_i)$ is always positive.
+The log link ensures that the expected count is always positive, regardless of the values of the explanatory variables. Whatever the value of the linear predictor $\eta_i$, the exponential of it $\exp(\eta_i)$ is always positive.
 
 ::: {.callout-hint}
 A good link function enforces the natural constraints of the data.
@@ -313,7 +315,9 @@ soay_glm <- glm(fitness ~ body.size, data = soay, family = poisson)
 
 Specifying `family = poisson` tells R to use the Poisson distribution with a log link function by default. We could specify the link explicitly as `family = poisson(link = "log")`, but this is unnecessary since the log link is the default for the Poisson family.
 
-As always, we should check model diagnostics:
+### Checking model assumptions
+
+As always, we should check model assumptions:
 
 ```{r}
 par(mfrow = c(2, 2))
@@ -337,7 +341,7 @@ summary(soay_glm)
 Coefficients are estimated on the **log scale**.
 
 ::: {.callout-important}
-A one-unit increase in a predictor multiplies the expected count by $\exp(\beta)$.
+A one-unit increase in an explanatory variable multiplies the expected count by $\exp(\beta)$.
 :::
 
 **Think–Pair–Share** (#tps-what-change-beta) If $\beta=0.05$ what change in the expected count would be caused by an increase in body mass of 1 kg? As well as a numeric value, specify whether it is used additively or multiplicatively.
@@ -373,7 +377,7 @@ There is something technically different that we have glossed over until now: ho
 anova(soay_glm, test = "Chisq")
 ```
 
-In the output we see the deviance for the null model and the fitted model, as well as the change in deviance when adding predictors. We can use a chi-squared test to assess whether adding predictors significantly improves model fit.
+In the output we see the deviance for the null model and the fitted model, as well as the change in deviance when adding explanatory variables. We can use a chi-squared test to assess whether adding explanatory variables significantly improves model fit.
 
 We use a chi-squared test here because, under certain regularity conditions, the change in deviance between nested models follows a chi-squared distribution with degrees of freedom equal to the difference in the number of parameters. If you are interested in what this means, you can read more about it in more advanced statistics textbooks.
 
@@ -434,11 +438,11 @@ In a Poisson model, mean and variance are assumed equal. In practice, variance o
 
 Common causes include:
 
-- Unmeasured explanatory variables. This means important predictors are missing from the model, leading to extra variability.
-- Individual heterogeneity. This can arise when individuals differ in ways not captured by measured predictors, leading to extra variability in counts.
+- Unmeasured explanatory variables. This means important explanatory variables are missing from the model, leading to extra variability.
+- Individual heterogeneity. This can arise when individuals differ in ways not captured by measured explanatory variables, leading to extra variability in counts.
 - Correlated observations. This can occur when observations are not independent, such as repeated measures on the same individual.
 
-A simple diagnostic for overdispersion is to compare the residual deviance to the residual degrees of freedom:
+A simple check for overdispersion is to compare the residual deviance to the residual degrees of freedom:
 
 $\text{Dispersion} = \frac{\text{Residual Deviance}}{\text{Residual DF}}$
 
@@ -458,7 +462,7 @@ Ignoring overdispersion leads to **anti-conservative p-values** (too small). Thi
 :::
 
 
-**Think–Pair–Share** (#tps-why-ind-diff) Why might individuals differ even after accounting for measured predictors?
+**Think–Pair–Share** (#tps-why-ind-diff) Why might individuals differ even after accounting for measured explanatory variables?
 
 
 
@@ -532,25 +536,25 @@ ggplot(soay, aes(x = parasite.load, y = fitness)) +
 
 It looks like higher parasite loads are associated with lower fitness.
 
-We can fit a Poisson GLM with both body size and parasite load as predictors:
+We can fit a Poisson GLM with both body size and parasite load as explanatory variables:
 
 ```{r}
 soay_glm2 <- glm(fitness ~ body.size + parasite.load, data = soay, family = poisson)
 ```
 
-As always we check model diagnostics:
+As always we check model assumptions:
 ```{r}
 par(mfrow = c(2, 2))
 plot(soay_glm2, which = 1:4, add.smooth = TRUE)
 ```
 
-The diagnostics look good. We can summarise the model:
+The model checking plots look good. We can summarise the model:
 
 ```{r}
 anova(soay_glm2, test = "Chisq")
 ```
 
-We see that both body size and parasite load significantly affect fitness. Body size has a positive effect, while parasite load has a negative effect. These effects are interpreted conditional on the other predictor being held constant, just as in multiple linear regression.
+We see that both body size and parasite load significantly affect fitness. Body size has a positive effect, while parasite load has a negative effect. These effects are interpreted conditional on the other explanatory variable being held constant, just as in multiple linear regression.
 
 **Think–Pair–Share** (#tps-how-vis-poisson) How would you visualise (make a graph) of the data and the modelled relationships? Make a sketch of what you could do.
 

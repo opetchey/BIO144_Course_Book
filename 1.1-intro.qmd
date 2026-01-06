@@ -240,7 +240,7 @@ lm(y ~ x1 + x2 * x3 * x1)
 AI code labelled as a bootstrap but is actually a permutation test.
 
 **C. Misleading interpretation**  
-Claims that coefficients assume predictor independence.
+Claims that coefficients assume explanatory variable independence.
 
 **D. Presenting AI-generated plots without understanding**  
 
@@ -274,7 +274,7 @@ Good use of GenAI *supports* learning. Problematic use *replaces* it.
 
 Generative AI tools can be helpful for writing R code, exploring ideas, and learning syntax.  
 However, they sometimes produce *plausible but incorrect* code or explanations.  
-This section provides real examples of typical GenAI mistakes, with correct solutions and teaching points.
+This section provides real examples of typical GenAI mistakes, with correct solutions and learning points.
 
 **Why this matters:** GenAI is a **pattern-matching system**, not a statistical reasoning engine.   It does not understand assumptions, inference, or modelling logic.Therefore, students should **never accept code or explanations without checking them**.
 
@@ -296,7 +296,7 @@ This includes an unintended **three-way interaction** and extra terms.
 lm(y ~ x1 + x2 * x3, data = df)
 ```
 
-**Teaching point:** Always check model formulas carefully. AI often adds or removes interactions.
+**Learning point:** Always check model formulas carefully. AI often adds or removes interactions.
 
 
 
@@ -320,17 +320,17 @@ t_stats <- replicate(1000, {
 })
 ```
 
-**Teaching point:** The logic of inference matters. Code that runs is not necessarily correct.
+**Learning point:** The logic of inference matters. Code that runs is not necessarily correct.
 
 ---
 
 #### Incorrect explanation of linear-model coefficients
 
-**Incorrect claim:** *“Coefficients assume independence among predictors.”*
+**Incorrect claim:** *“Coefficients assume independence among explanatory variable.”*
 
 This is false. Linear model coefficients describe **conditional effects within the model**, regardless of collinearity.
 
-**Teaching point:** Interpretations come from the model structure, not from simplistic assumptions GenAI sometimes invents.
+**Learning point:** Interpretations come from the model structure, not from simplistic assumptions GenAI sometimes invents.
 
 ---
 
@@ -348,7 +348,7 @@ lmer(y ~ x + (slope(x) | group), data = df)
 lmer(y ~ x + (x | group), data = df)
 ```
 
-**Teaching point:** Always verify syntax in package documentation.
+**Learning point:** Always verify syntax in package documentation.
 
 ---
 
@@ -366,7 +366,7 @@ lm(Height ~ Age, data = df)
 lm(height ~ age, data = df)
 ```
 
-**Teaching point:** GenAI often guesses variable names. Check against your data.
+**Learning point:** GenAI often guesses variable names. Check against your data.
 
 ---
 
@@ -382,7 +382,7 @@ lm(y ~ x, data = df)
 glm(y ~ x, data = df, family = binomial)
 ```
 
-**Teaching point:** For binary response variables, specify the model family explicitly.
+**Learning point:** For binary response variables, specify the model family explicitly.
 
 ---
 
@@ -393,7 +393,7 @@ glm(y ~ x, data = df, family = binomial)
 
 Incorrect — they **model** correlation, not eliminate it.
 
-**Teaching point:** Random effects structure determines the implied correlation. AI explanations are often vague or wrong here.
+**Learning point:** Random effects structure determines the implied correlation. AI explanations are often vague or wrong here.
 
 ---
 
@@ -411,7 +411,7 @@ aov(y ~ factor1 + factor2, data = df)
 aov(y ~ factor1 * factor2, data = df)
 ```
 
-**Teaching point:** Confirm that the model matches the experimental design.
+**Learning point:** Confirm that the model matches the experimental design.
 
 ---
 
@@ -431,14 +431,14 @@ This gives **in-sample fitted values**, not predictions for new data.
 predict(model, newdata = data.frame(x = c(1, 2, 3)))
 ```
 
-**Teaching point:** Always specify `newdata` for predictions.
+**Learning point:** Always specify `newdata` for predictions.
 
 ---
 
 #### Poor explanations of multicollinearity
 
 **Incorrect GenAI claim:**  
-*“Multicollinearity is indicated when the model p-value is low but the individual predictor p-values are high.”*
+*"Multicollinearity is indicated when the model p-value is low but the individual explanatory variable p-values are high."*
 
 This is an unreliable and incomplete diagnostic.
 
@@ -449,7 +449,7 @@ cor(df)
 model.matrix(model)
 ```
 
-**Teaching point:** AI often repeats common internet tropes rather than robust statistical principles.
+**Learning point:** AI often repeats common internet tropes rather than robust statistical principles.
 
 ---
 

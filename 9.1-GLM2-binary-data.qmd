@@ -9,25 +9,16 @@ source("_common.R")
 
 ## Introduction
 
-So far in BIO144, we have focused on **linear models** fitted using
-`lm()`. These models assume:
+In the previous chapter we moved from linear models and normal errors to generalized linear models (GLMs) to handle **count responses** with a Poisson GLM. In this chapter we move to another common case: **binary responses**.
 
-- A **continuous** response variable
-- Normally distributed residuals
-- Constant variance (homoscedasticity)
-
-But many biological outcomes are not continuous. In the previous chapter
-we handled **counts** with a Poisson GLM. In this chapter we move to an
-even more common special case: **binary outcomes**.
-
-Binary outcomes take only two values, often coded as 0 and 1:
+Binary response variables take only two values, often coded as 0 and 1:
 
 - 1 = yes / success / present / dead
 - 0 = no / failure / absent / alive
 
 The central question becomes:
 
-**Which explanatory variables influence the probability** $\pi_i = P(y_i = 1)$ **of the outcome?** 
+**Which explanatory variables influence the probability** $\pi_i = P(y_i = 1)$ **of the response variable?** 
 
 ::: {.callout-important}
 **Bridge from LM to GLM**  
@@ -39,7 +30,7 @@ A GLM keeps the familiar *linear predictor* from linear models, but:
 - Binary data: binomial family + logit link
 :::
 
-**Think–Pair–Share** (#tps-binary-examples) Name three outcomes in biology, ecology, or medicine that are naturally binary (0/1). Why would a linear model be risky for each?
+**Think–Pair–Share** (#tps-binary-examples) Name three response variables in biology, ecology, or medicine that are naturally binary (0/1). Why would a linear model be risky for each?
 
 ## Overview
 
@@ -49,17 +40,17 @@ In this chapter we will cover:
 - Odds, odds ratios, and log-odds
 - Logistic regression as a binomial GLM
 - Interpreting coefficients (odds ratios and probabilities)
-- Diagnostics, deviances, and (some) model checking
+- Model assumptions, deviances, and (some) model checking
 - Overdispersion in *aggregated* binomial data and the quasibinomial fix
 - Practical complications for individual-level (non-aggregated) 0/1 data
 
 ## A warm-up: the Chi-square test for a 2×2 table
 
-Binary outcomes often first appear in a **contingency table**. For
+Binary responses often first appear in a **contingency table**. For
 example:
 
-- Predictor $x$: hormonal contraception (yes/no)
-- Outcome $y$: heart attack (yes/no)
+- Explanatory variable $x$: hormonal contraception (yes/no)
+- Response variable $y$: heart attack (yes/no)
 
 The $\chi^2$ (chi-squared) test asks whether the **proportion** (or frequency) of
 heart attacks is the same in the two contraception groups.
@@ -143,9 +134,9 @@ the same thing.
 
 Contingency tables are a good start, but they are limited:
 
-- they typically compare **groups** (few categorical predictors),
-- they don't easily handle **continuous predictors** (e.g. dose),
-- they don't naturally generalise to multiple predictors.
+- they typically compare **groups** (few categorical explanatory variable),
+- they don't easily handle **continuous explanatory variables** (e.g. dose),
+- they don't naturally generalise to multiple explanatory variables.
 
 When $y$ is binary or binomial, the standard regression approach is
 **logistic regression**, a **binomial GLM**.
@@ -175,8 +166,8 @@ Here are the first few rows of the beetle dataset:
 head(beetle)
 ```
 
-It contains one predictor (Dose) and two pieces of information about the
-binary outcome (Number_killed and Number_tested). The mortality rate is also included, and is the proportion killed at each dose (Number_killed / Number_tested).
+It contains one explanatory variable (Dose) and two pieces of information about the
+binary response variable (Number_killed and Number_tested). The mortality rate is also included, and is the proportion killed at each dose (Number_killed / Number_tested).
 
 As always, start with a graph.
 
@@ -202,7 +193,7 @@ mod_beetle_lm <- lm(Mortality_rate ~ Dose, data = beetle)
 This can predict probabilities below 0 or above 1 and does not respect
 the mean–variance structure of binomial data.
 
-Check out the model diagnostics:
+Check out the model assumptions:
 
 ```{r}
 par(mfrow = c(2, 2))
@@ -236,7 +227,7 @@ At the highest dose (76.54), the model predicts about 76 deaths, but only 60 bee
 **Poisson vs binomial, when to use each**  
 Use a Poisson model when counts have *no known upper limit*.  
 Use a binomial model when counts are "$k$ successes out of $n$ trials".
-Use a binomial model when each observation is a 0/1 outcome.
+Use a binomial model when each observation is a 0/1 response.
 :::
 
 
@@ -247,7 +238,7 @@ Use a binomial model when each observation is a 0/1 outcome.
 
 ### Bernoulli (binary) data
 
-For a single 0/1 outcome:
+For a single 0/1 observation:
 
 $Y \sim \text{Bernoulli}(\pi),\quad P(Y=1)=\pi,\quad P(Y=0)=1-\pi$
 
@@ -302,7 +293,7 @@ It maps probabilities $(0,1)$ to the whole real line $(-\infty,\infty)$,
 so the linear predictor can take any value while $\pi_i$ stays valid, i.e., [0,1].
 :::
 
-**Think–Pair–Share** (#tps-identity-link-binary) What would go wrong if we used the identity link $E(y_i)=\eta_i$ for a binary outcome? And which link function is this, by the way?
+**Think–Pair–Share** (#tps-identity-link-binary) What would go wrong if we used the identity link $E(y_i)=\eta_i$ for a binary response variable? And which link function is this, by the way?
 
 ## Fitting logistic regression in R (aggregated binomial data)
 
@@ -321,7 +312,7 @@ beetle_glm <- glm(cbind(Number_killed, Number_survived) ~ Dose,
                   data = beetle, family = binomial)
 ```
 
-And as usual we can check the model diagnostics:
+And as usual we can check the model assumptions:
 
 ```{r}
 par(mfrow = c(2, 2))
@@ -450,10 +441,10 @@ beetle_glm_q <- glm(cbind(Number_killed, Number_survived) ~ Dose,
 
 ## Individual-level binary data (non-aggregated)
 
-In some datasets we observe a single 0/1 outcome per individual, rather than aggregated counts. The same logistic regression model is used, but:
+In some datasets we record a single 0/1 observation per individual, rather than aggregated counts for many individuals. The same logistic regression model is used, but:
 
-- simple plots of $y$ against predictors look uninformative (two bands)
-- some diagnostics and dispersion checks need extra care
+- simple plots of $y$ against explanatory variables look uninformative (two bands)
+- some assumption and dispersion checks need extra care
 
 ### Example: blood screening (ESR)
 
@@ -478,7 +469,7 @@ Here are the first few rows of the data:
 head(plasma)
 ```
 
-The ESR outcome is in two variables. `ESR` is a factor with levels "low" and "high". It is also present as a numeric variable `y`, coded 0 (low) and 1 (high). The predictors are `fibrinogen` and `globulin`, both continuous.
+The ESR response variable is in two variables. `ESR` is a factor with levels "low" and "high". It is also present as a numeric variable `y`, coded 0 (low) and 1 (high). The explanatory variables are `fibrinogen` and `globulin`, both continuous.
 
 ### Complication 1: graphical description
 
@@ -499,7 +490,7 @@ p2 <- ggplot(plasma, aes(x = globulin, y = y)) +
 p1 + p2
 ```
 
-A more informative plot is a conditional density plot. This shows the proportion of 0s and 1s at each value of the predictor.
+A more informative plot is a conditional density plot. This shows the proportion of 0s and 1s at each value of the explanatory variable.
 
 ```{r}
 #| fig-width: 6
@@ -542,10 +533,7 @@ structure (e.g. grouping, random effects).
 
 ### 1. Separation
 
-Sometimes a predictor (or combination of predictors) perfectly predicts
-the outcome (all 0s on one side, all 1s on the other). This is called
-**(complete) separation** and can cause extremely large coefficient
-estimates and warnings.
+Sometimes a explanatory variable (or combination of explanatory variables) perfectly predicts the response variable (all 0s on one side, all 1s on the other). This is called **(complete) separation** and can cause extremely large coefficient estimates and warnings.
 
 ::: {.callout-caution}
 **Separation warning**  
@@ -558,18 +546,17 @@ include more data, simpler models, or penalized methods (advanced topic).
 
 Odds ratios are the default "native" scale of logistic regression, but
 probabilities are often easier to interpret. In practice, you may report
-odds ratios **and** translate to probabilities at meaningful predictor
-values.
+odds ratios **and** translate to probabilities at meaningful explanatory variable values.
 
 ## Review
 
-There is a lot more to logistic regression and binary data. We can of course make models to analyse more complex data and questions, including multiple predictors, different types of predictor (continuous and categorical), interactions, and so on. But the key ideas are all above. To summarize the main points:
+There is a lot more to logistic regression and binary data. We can of course make models to analyse more complex data and questions, including multiple explanatory variables, different types of explanatory variable (continuous and categorical), interactions, and so on. But the key ideas are all above. To summarize the main points:
 
 * Data can be either aggregated binomial (successes out of trials) or individual-level 0/1.
-* The key questions are about how predictors influence the probability of "yes".
+* The key questions are about how explanatory variables influence the probability of "yes".
 * The distribution family is binomial (Bernoulli for individual-level data).
 * The link function is the logit (log-odds).
 * If we find overdispersion in aggregated binomial data, `quasibinomial` is a pragmatic fix.
-* With non-aggregated individual-level 0/1 data, plotting and diagnostics require more care.
+* With non-aggregated individual-level 0/1 data, plotting and checking model assumptions require more care.
 
 

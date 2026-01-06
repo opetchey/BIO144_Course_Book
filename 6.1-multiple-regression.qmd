@@ -754,7 +754,7 @@ p1 <- ggplot(sim_results, aes(x = factor(correlation), y = beta1_hat)) +
   geom_point(color = "blue", alpha = 0.3) +
   geom_hline(yintercept = 1, linetype = "dashed") +
   labs(
-    x = "Correlation between predictors (r)\n(i.e., collinearity)",
+    x = "Correlation between explanatory variables (r)\n(i.e., collinearity)",
     y = "Slope estimate"
   ) 
 
@@ -762,7 +762,7 @@ p2 <- ggplot(var_by_corr, aes(x = correlation, y = var_beta1_hat)) +
   geom_line(color = "red") +
   geom_point() +
   labs(
-    x = "Correlation between predictors (r)\n(i.e., collinearity)",
+    x = "Correlation between explanatory variables (r)\n(i.e., collinearity)",
     y = "Variance (i.e., instability)\nof slope estimate"
   ) 
 p1 + p2
@@ -813,7 +813,7 @@ summary(m2_both)$r.squared
 
 In this case the two explanatory variables are strongly correlated and so share a lot of the explained variance. The $R^2$ value of the model with both explanatory variables is much less than the sum of the $R^2$ values of the models with each explanatory variable separately. In fact, either of the models with only one explanatory variable is nearly as good as the model with both explanatory variables. We don't gain much from including another explanatory variable in the model when we already include one explanatory variable that is strongly correlated with the other.
 
-**Think–Pair–Share** (#a_collinearity_intuition) Why can strong correlation among predictors make estimates unstable even if the model fits the data well?
+**Think–Pair–Share** (#a_collinearity_intuition) Why can strong correlation among explanatory variables make estimates unstable even if the model fits the data well?
 
 ### Do I have a problem (with collinearity)?
 
@@ -876,13 +876,13 @@ Imagine we see high VIFs, we can conclud that there is collinearity between expl
 
 The answer is we should *think*!
 
-*	Are predictors measuring the same concept?
+*	Are explanatory variables measuring the same concept?
 *	Is this collinearity expected from the study design?
 *	Do I care about interpretation, or am I only interested in prediction?
 
 And then consider some possible remedies:
 
-* Combine predictors (index, PCA, biologically meaningful composite) (covered later in the course).
+* Combine explanatory variables (index, PCA, biologically meaningful composite) (covered later in the course).
 * Look at the explanatory power of a variable once all other variables are accounted for (see below).
 *	Remove one of a set of redundant explanatory variables (not covered in this course).
 *	Use regularization if prediction is the goal (not covered in this course).
@@ -975,7 +975,7 @@ semi_partial_r2
 This means that about `r round(semi_partial_r2 * 100, 2)`% of the total variance in the response variable is explained by the focal explanatory variable (i.e., $x_1$), even once all other explanatory variables are already accounted for. This is explanatory power that is unique to the focal explanatory variable.
 
 
-**Think–Pair–Share** (#a_interpreting_coefficients_conditionally) How does the interpretation of a coefficient change when you add another predictor to the model?
+**Think–Pair–Share** (#a_interpreting_coefficients_conditionally) How does the interpretation of a coefficient change when you add another explanatory variable to the model?
 
 
 ## Review
@@ -997,7 +997,7 @@ Multiple regression:
 * Question 3: How well does the model describe the data? This is done with $R^2$ and adjusted $R^2$.
 * Question 4: Are some explanatory variables more important than others in explaining variation in the response variable? This is done by looking at the sizes of the coefficients, and comparing those for different explanatory variables. But caution is required.
 * Question 5: How do we make predictions from the model? This is done with the `predict()` function, and often requires fixing the values of some explanatory variables to specific values.
-* Collinearity between explanatory variables can make the coefficients unstable and difficult to interpret. This can be assessed with the Variance Inflation Factor (VIF). Remedies include combining predictors, removing redundant predictors, or using regularization if prediction is the goal. The importance of an explanatory variable in the presence of collinearity can be assessed by comparing models with and without that variable, using an F-test.
+* Collinearity between explanatory variables can make the coefficients unstable and difficult to interpret. This can be assessed with the Variance Inflation Factor (VIF). Remedies include combining explanatory variables, removing redundant predictors, or using regularization if prediction is the goal. The importance of an explanatory variable in the presence of collinearity can be assessed by comparing models with and without that variable, using an F-test.
 
 
 ## Extras

@@ -300,7 +300,7 @@ window.Quarto = {
   <li><a href="#choosing-the-reference-category" id="toc-choosing-the-reference-category" class="nav-link" data-scroll-target="#choosing-the-reference-category">Choosing the reference category</a></li>
   </ul></li>
   <li><a href="#communicating-the-results-of-anova" id="toc-communicating-the-results-of-anova" class="nav-link" data-scroll-target="#communicating-the-results-of-anova">Communicating the results of ANOVA</a></li>
-  <li><a href="#summary-of-what-you-have-learned" id="toc-summary-of-what-you-have-learned" class="nav-link" data-scroll-target="#summary-of-what-you-have-learned">Summary of what you have learned</a></li>
+  <li><a href="#review" id="toc-review" class="nav-link" data-scroll-target="#review">Review</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/opetchey/BIO144_Course_Book/edit/main/5.1-anova.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/opetchey/BIO144_Course_Book/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -326,15 +326,9 @@ window.Quarto = {
 </header>
 
 
-<ul>
-<li>One-way ANOVA</li>
-<li>Post-hoc tests and contrasts</li>
-<li>Two-way ANOVA</li>
-</ul>
-<p>ANOVA = ANalysis Of VAriance (Varianzanalyse)</p>
+<p>The previous two chapters were about linear regression. <em>Linear regression</em> is a type of <em>linear model</em> – recall that in <em>R</em> we used the function <code>lm()</code> to make the regression model. In this chapter we will look at a different type of linear model: analysis of variance (ANOVA).</p>
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>The previous two chapters were about linear regression. <em>Linear regression</em> is a type of <em>linear model</em> – recall that in <em>R</em> we used the function <code>lm()</code> to make the regression model. In this chapter we will look at a different type of linear model: analysis of variance (ANOVA).</p>
 <p>Recall that linear regression is a linear model with one continuous explanatory (independent) variable. A continuous explanatory variable is a variable in which values can take any value within a range (e.g., height, weight, temperature).</p>
 <p>In contrast, analysis of variance (ANOVA) is a linear model with one or more categorical explanatory variables. We will first look at a one-way ANOVA, which has one categorical explanatory variable. Later (in a following chapter) we will look at two-way ANOVA, which has two categorical explanatory variables.</p>
 <p>What is a categorical variable? A categorical explanatory variable is a variable that contains values that fall into distinct groups or categories. For example, habitat type (e.g., forest, grassland, wetland), treatment group (e.g., control, low dose, high dose), or diet type (e.g., vegetarian, vegan, omnivore).</p>
@@ -783,7 +777,7 @@ Note
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(bp <span class="sc">~</span> diet, <span class="at">data =</span> bp_data_diet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><strong>IMPORTANT</strong>: Since ANOVA is a linear model, it is important to check the assumptions of linear models before interpreting the results. These are some of the same assumptions we checked for simple linear regression, including: independence of errors, normality of residuals, and homoscedasticity (constant variance of residuals).</p>
-<p>As with linear regression, we check the assumptions are not too badly broken by looking at diagnostic plots:</p>
+<p>As with linear regression, we check the assumptions are not too badly broken by looking at model checking plots:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fit, <span class="at">add.smooth =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -818,6 +812,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </section>
 <section id="difference-between-pairs-of-groups" class="level2">
 <h2 class="anchored" data-anchor-id="difference-between-pairs-of-groups">Difference between pairs of groups</h2>
+<p>“<em>ANOVA does not tell you which groups differ.”</em></p>
 <p>Recall that the <span class="math inline">\(F\)</span> test is a global test. It tests the null hypothesis that all group means are equal. It does not tell us which groups are different from each other. It just tells us that at least one group mean is different. Sometimes researchers are interested in more specific questions such as:</p>
 <ol type="1">
 <li>finding the actual group(s) that deviate(s) from the others.</li>
@@ -957,7 +952,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 <div class="cell">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>fit_mnm <span class="ot">&lt;-</span> <span class="fu">lm</span>(bp <span class="sc">~</span> meat_or_no_meat, <span class="at">data =</span> bp_data_diet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>(We should not look at model diagnostics here, before using the model. But let us continue as if the assumptions are sufficiently met.)</p>
+<p>(We should not look at model checking plots here, before using the model. But let us continue as if the assumptions are sufficiently met.)</p>
 <p>We now do something a bit more complicated: we compare the variance explained by the model with four diets to the model with two diets. This is done by comparing the two models using an <span class="math inline">\(F\)</span>-test. We are testing the null hypothesis that the two models are equally good at explaining the data, in which case the two diet model will explain as much variance as the four diet model.</p>
 <p>Let’s look at the ANOVA table of the model comparison:</p>
 <div class="cell">
@@ -1057,14 +1052,14 @@ F-statistic: 20.73 on 3 and 46 DF,  p-value: 1.214e-08</code></pre>
 </div>
 <p>There are many many plotting styles and preferences. The important thing is to clearly communicate the results, and to not mislead the reader. I find that plotting the individual data points is often a good idea, especially when the sample size is not too large.</p>
 </section>
-<section id="summary-of-what-you-have-learned" class="level2">
-<h2 class="anchored" data-anchor-id="summary-of-what-you-have-learned">Summary of what you have learned</h2>
+<section id="review" class="level2">
+<h2 class="anchored" data-anchor-id="review">Review</h2>
+<p>Here are the key points from this chapter:</p>
 <ul>
 <li>ANOVA is just another linear model.</li>
 <li>It is used when we have categorical explanatory variables.</li>
 <li>We use <span class="math inline">\(F\)</span>-tests to test the null hypothesis of no difference among the means of the groups (categories).</li>
 <li>We can use contrasts and post-hoc tests to test specific hypotheses about the means of the groups.</li>
-<li>Two-way ANOVA is used when we have two categorical explanatory variables and can be used to test for interactions between them.</li>
 </ul>
 <p><strong>Think–Pair–Share</strong> (#a_anova_is_regression) What changes when we move from regression to ANOVA? What stays exactly the same?</p>
 

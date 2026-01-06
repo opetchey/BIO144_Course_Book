@@ -275,6 +275,7 @@ window.Quarto = {
    
   <ul>
   <li><a href="#notation-and-some-definitions" id="toc-notation-and-some-definitions" class="nav-link active" data-scroll-target="#notation-and-some-definitions">Notation and some definitions</a></li>
+  <li><a href="#data-analysis-workflow" id="toc-data-analysis-workflow" class="nav-link" data-scroll-target="#data-analysis-workflow">Data analysis workflow</a></li>
   <li><a href="#using-generative-ai-in-r-and-data-analysis-guidance-and-good-practice" id="toc-using-generative-ai-in-r-and-data-analysis-guidance-and-good-practice" class="nav-link" data-scroll-target="#using-generative-ai-in-r-and-data-analysis-guidance-and-good-practice">Using Generative AI in R and Data Analysis: Guidance and Good Practice</a>
   <ul class="collapse">
   <li><a href="#guidelines-for-good-use-of-generative-ai" id="toc-guidelines-for-good-use-of-generative-ai" class="nav-link" data-scroll-target="#guidelines-for-good-use-of-generative-ai">Guidelines for Good Use of Generative AI</a></li>
@@ -282,7 +283,6 @@ window.Quarto = {
   <li><a href="#examples-of-good-and-problematic-use" id="toc-examples-of-good-and-problematic-use" class="nav-link" data-scroll-target="#examples-of-good-and-problematic-use">Examples of Good and Problematic Use</a></li>
   <li><a href="#common-genai-errors-in-r-and-statistical-modelling" id="toc-common-genai-errors-in-r-and-statistical-modelling" class="nav-link" data-scroll-target="#common-genai-errors-in-r-and-statistical-modelling">Common GenAI Errors in R and Statistical Modelling</a></li>
   </ul></li>
-  <li><a href="#data-analysis-workflow" id="toc-data-analysis-workflow" class="nav-link" data-scroll-target="#data-analysis-workflow">Data analysis workflow</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/opetchey/BIO144_Course_Book/edit/main/1.1-intro.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/opetchey/BIO144_Course_Book/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -354,6 +354,22 @@ window.Quarto = {
 <li><em>df</em> is the degrees of freedom.</li>
 <li><span class="math inline">\(p\)</span> is the p-value.</li>
 </ul>
+</section>
+<section id="data-analysis-workflow" class="level2">
+<h2 class="anchored" data-anchor-id="data-analysis-workflow">Data analysis workflow</h2>
+<p>A general workflow for data analysis is as follows:</p>
+<ol type="1">
+<li><strong>Define the question</strong>: What are you trying to find out?</li>
+<li><strong>Define the study</strong>: How will you answer the question? What subjects, what observations, what measurements? What experimental design? What treatments? What graphics and analyses will you use?</li>
+<li><strong>Collect the data</strong>: Gather the necessary data to answer the question.</li>
+<li><strong>Explore the data</strong>: Use summary statistics and graphics to understand the data.</li>
+<li><strong>Prepare the data</strong>: Clean and format the data for analysis.</li>
+<li><strong>Visualise the data</strong>: Create plots to visualise patterns and relationships.</li>
+<li><strong>Analyse the data</strong>: Use appropriate statistical methods to analyse the data, including checking model assumptions.</li>
+<li><strong>Interpret the results</strong>: Draw conclusions from the analysis in the context of the original question.</li>
+<li><strong>Be critical</strong>: Consider limitations, alternative explanations, and the robustness of your conclusions.</li>
+<li><strong>Communicate the results</strong>: Present the findings in a clear and concise manner, using tables, figures, and written summaries.</li>
+</ol>
 </section>
 <section id="using-generative-ai-in-r-and-data-analysis-guidance-and-good-practice" class="level2">
 <h2 class="anchored" data-anchor-id="using-generative-ai-in-r-and-data-analysis-guidance-and-good-practice">Using Generative AI in R and Data Analysis: Guidance and Good Practice</h2>
@@ -560,7 +576,7 @@ Important
 <p><strong>B. Incorrect statistical logic</strong><br>
 AI code labelled as a bootstrap but is actually a permutation test.</p>
 <p><strong>C. Misleading interpretation</strong><br>
-Claims that coefficients assume predictor independence.</p>
+Claims that coefficients assume explanatory variable independence.</p>
 <p><strong>D. Presenting AI-generated plots without understanding</strong></p>
 <p><strong>E. Outsourcing entire workflow</strong><br>
 <em>“Write a script that loads data, cleans it, runs models, interprets, and writes the report.”</em></p>
@@ -593,7 +609,7 @@ Good use of GenAI <em>supports</em> learning. Problematic use <em>replaces</em> 
 <h3 class="anchored" data-anchor-id="common-genai-errors-in-r-and-statistical-modelling">Common GenAI Errors in R and Statistical Modelling</h3>
 <p>Generative AI tools can be helpful for writing R code, exploring ideas, and learning syntax.<br>
 However, they sometimes produce <em>plausible but incorrect</em> code or explanations.<br>
-This section provides real examples of typical GenAI mistakes, with correct solutions and teaching points.</p>
+This section provides real examples of typical GenAI mistakes, with correct solutions and learning points.</p>
 <p><strong>Why this matters:</strong> GenAI is a <strong>pattern-matching system</strong>, not a statistical reasoning engine. It does not understand assumptions, inference, or modelling logic.Therefore, students should <strong>never accept code or explanations without checking them</strong>.</p>
 <hr>
 <section id="incorrect-formula-structure-in-lm" class="level4">
@@ -604,7 +620,7 @@ This section provides real examples of typical GenAI mistakes, with correct solu
 <p>This includes an unintended <strong>three-way interaction</strong> and extra terms.</p>
 <p><strong>Correct:</strong></p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(y <span class="sc">~</span> x1 <span class="sc">+</span> x2 <span class="sc">*</span> x3, <span class="at">data =</span> df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><strong>Teaching point:</strong> Always check model formulas carefully. AI often adds or removes interactions.</p>
+<p><strong>Learning point:</strong> Always check model formulas carefully. AI often adds or removes interactions.</p>
 </section>
 <section id="confusing-bootstrap-and-permutation-tests" class="level4">
 <h4 class="anchored" data-anchor-id="confusing-bootstrap-and-permutation-tests">Confusing bootstrap and permutation tests</h4>
@@ -619,14 +635,14 @@ This section provides real examples of typical GenAI mistakes, with correct solu
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  sample_df <span class="ot">&lt;-</span> df[<span class="fu">sample</span>(<span class="fu">nrow</span>(df), <span class="at">replace =</span> <span class="cn">TRUE</span>), ]</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">t.test</span>(value <span class="sc">~</span> group, <span class="at">data =</span> sample_df)<span class="sc">$</span>statistic</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><strong>Teaching point:</strong> The logic of inference matters. Code that runs is not necessarily correct.</p>
+<p><strong>Learning point:</strong> The logic of inference matters. Code that runs is not necessarily correct.</p>
 <hr>
 </section>
 <section id="incorrect-explanation-of-linear-model-coefficients" class="level4">
 <h4 class="anchored" data-anchor-id="incorrect-explanation-of-linear-model-coefficients">Incorrect explanation of linear-model coefficients</h4>
-<p><strong>Incorrect claim:</strong> <em>“Coefficients assume independence among predictors.”</em></p>
+<p><strong>Incorrect claim:</strong> <em>“Coefficients assume independence among explanatory variable.”</em></p>
 <p>This is false. Linear model coefficients describe <strong>conditional effects within the model</strong>, regardless of collinearity.</p>
-<p><strong>Teaching point:</strong> Interpretations come from the model structure, not from simplistic assumptions GenAI sometimes invents.</p>
+<p><strong>Learning point:</strong> Interpretations come from the model structure, not from simplistic assumptions GenAI sometimes invents.</p>
 <hr>
 </section>
 <section id="hallucinated-functions-in-mixed-models" class="level4">
@@ -636,7 +652,7 @@ This section provides real examples of typical GenAI mistakes, with correct solu
 <p><code>slope()</code> does not exist.</p>
 <p><strong>Correct random-slope specification:</strong></p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lmer</span>(y <span class="sc">~</span> x <span class="sc">+</span> (x <span class="sc">|</span> group), <span class="at">data =</span> df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><strong>Teaching point:</strong> Always verify syntax in package documentation.</p>
+<p><strong>Learning point:</strong> Always verify syntax in package documentation.</p>
 <hr>
 </section>
 <section id="wrong-variable-names" class="level4">
@@ -646,7 +662,7 @@ This section provides real examples of typical GenAI mistakes, with correct solu
 <div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(Height <span class="sc">~</span> Age, <span class="at">data =</span> df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><strong>Correct:</strong></p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(height <span class="sc">~</span> age, <span class="at">data =</span> df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><strong>Teaching point:</strong> GenAI often guesses variable names. Check against your data.</p>
+<p><strong>Learning point:</strong> GenAI often guesses variable names. Check against your data.</p>
 <hr>
 </section>
 <section id="wrong-model-family-for-binary-data" class="level4">
@@ -655,7 +671,7 @@ This section provides real examples of typical GenAI mistakes, with correct solu
 <div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(y <span class="sc">~</span> x, <span class="at">data =</span> df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><strong>Correct logistic regression:</strong></p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glm</span>(y <span class="sc">~</span> x, <span class="at">data =</span> df, <span class="at">family =</span> binomial)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><strong>Teaching point:</strong> For binary response variables, specify the model family explicitly.</p>
+<p><strong>Learning point:</strong> For binary response variables, specify the model family explicitly.</p>
 <hr>
 </section>
 <section id="incorrect-explanation-of-random-intercepts" class="level4">
@@ -663,7 +679,7 @@ This section provides real examples of typical GenAI mistakes, with correct solu
 <p><strong>Incorrect claim:</strong><br>
 <em>“Random intercepts eliminate correlation among repeated measures.”</em></p>
 <p>Incorrect — they <strong>model</strong> correlation, not eliminate it.</p>
-<p><strong>Teaching point:</strong> Random effects structure determines the implied correlation. AI explanations are often vague or wrong here.</p>
+<p><strong>Learning point:</strong> Random effects structure determines the implied correlation. AI explanations are often vague or wrong here.</p>
 <hr>
 </section>
 <section id="omitting-interaction-terms-in-anova" class="level4">
@@ -673,7 +689,7 @@ This section provides real examples of typical GenAI mistakes, with correct solu
 <div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">aov</span>(y <span class="sc">~</span> factor1 <span class="sc">+</span> factor2, <span class="at">data =</span> df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><strong>Correct:</strong></p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">aov</span>(y <span class="sc">~</span> factor1 <span class="sc">*</span> factor2, <span class="at">data =</span> df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><strong>Teaching point:</strong> Confirm that the model matches the experimental design.</p>
+<p><strong>Learning point:</strong> Confirm that the model matches the experimental design.</p>
 <hr>
 </section>
 <section id="incorrect-use-of-predict" class="level4">
@@ -684,23 +700,23 @@ This section provides real examples of typical GenAI mistakes, with correct solu
 <p>This gives <strong>in-sample fitted values</strong>, not predictions for new data.</p>
 <p><strong>Correct:</strong></p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(model, <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><strong>Teaching point:</strong> Always specify <code>newdata</code> for predictions.</p>
+<p><strong>Learning point:</strong> Always specify <code>newdata</code> for predictions.</p>
 <hr>
 </section>
 <section id="poor-explanations-of-multicollinearity" class="level4">
 <h4 class="anchored" data-anchor-id="poor-explanations-of-multicollinearity">Poor explanations of multicollinearity</h4>
 <p><strong>Incorrect GenAI claim:</strong><br>
-<em>“Multicollinearity is indicated when the model p-value is low but the individual predictor p-values are high.”</em></p>
+<em>“Multicollinearity is indicated when the model p-value is low but the individual explanatory variable p-values are high.”</em></p>
 <p>This is an unreliable and incomplete diagnostic.</p>
 <p><strong>Better diagnostics:</strong></p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>car<span class="sc">::</span><span class="fu">vif</span>(model)</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(df)</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">model.matrix</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><strong>Teaching point:</strong> AI often repeats common internet tropes rather than robust statistical principles.</p>
+<p><strong>Learning point:</strong> AI often repeats common internet tropes rather than robust statistical principles.</p>
 <hr>
 </section>
-<section id="summary-1" class="level4">
-<h4 class="anchored" data-anchor-id="summary-1">Summary</h4>
+<section id="genai-summary" class="level4">
+<h4 class="anchored" data-anchor-id="genai-summary">GenAI Summary</h4>
 <p>GenAI can:</p>
 <ul>
 <li>write useful scaffolding code,<br>
@@ -734,26 +750,10 @@ Always check:</p>
 <li>and logic.</li>
 </ul>
 <p>In statistics, clarity of reasoning matters more than code that merely <em>runs</em>.</p>
-</section>
-</section>
-</section>
-<section id="data-analysis-workflow" class="level2">
-<h2 class="anchored" data-anchor-id="data-analysis-workflow">Data analysis workflow</h2>
-<p>A general workflow for data analysis is as follows:</p>
-<ol type="1">
-<li><strong>Define the question</strong>: What are you trying to find out?</li>
-<li><strong>Define the study</strong>: How will you answer the question? What subjects, what observations, what measurements? What experimental design? What treatments? What graphics and analyses will you use?</li>
-<li><strong>Collect the data</strong>: Gather the necessary data to answer the question.</li>
-<li><strong>Explore the data</strong>: Use summary statistics and graphics to understand the data.</li>
-<li><strong>Prepare the data</strong>: Clean and format the data for analysis.</li>
-<li><strong>Visualise the data</strong>: Create plots to visualise patterns and relationships.</li>
-<li><strong>Analyse the data</strong>: Use appropriate statistical methods to analyse the data, including checking model assumptions.</li>
-<li><strong>Interpret the results</strong>: Draw conclusions from the analysis in the context of the original question.</li>
-<li><strong>Be critical</strong>: Consider limitations, alternative explanations, and the robustness of your conclusions.</li>
-<li><strong>Communicate the results</strong>: Present the findings in a clear and concise manner, using tables, figures, and written summaries.</li>
-</ol>
 
 
+</section>
+</section>
 </section>
 
 </main> <!-- /main -->

@@ -290,6 +290,7 @@ window.Quarto = {
   </ul></li>
   <li><a href="#r---poisson-glm" id="toc-r---poisson-glm" class="nav-link" data-scroll-target="#r---poisson-glm">R - Poisson GLM</a>
   <ul class="collapse">
+  <li><a href="#checking-model-assumptions" id="toc-checking-model-assumptions" class="nav-link" data-scroll-target="#checking-model-assumptions">Checking model assumptions</a></li>
   <li><a href="#interpreting-coefficients" id="toc-interpreting-coefficients" class="nav-link" data-scroll-target="#interpreting-coefficients">Interpreting coefficients</a></li>
   <li><a href="#analysis-of-deviance" id="toc-analysis-of-deviance" class="nav-link" data-scroll-target="#analysis-of-deviance">Analysis of deviance</a></li>
   <li><a href="#reporting" id="toc-reporting" class="nav-link" data-scroll-target="#reporting">Reporting</a></li>
@@ -301,7 +302,7 @@ window.Quarto = {
   </ul></li>
   <li><a href="#zero-inflation" id="toc-zero-inflation" class="nav-link" data-scroll-target="#zero-inflation">Zero inflation</a></li>
   <li><a href="#multiple-explanatory-variables" id="toc-multiple-explanatory-variables" class="nav-link" data-scroll-target="#multiple-explanatory-variables">Multiple explanatory variables</a></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  <li><a href="#review" id="toc-review" class="nav-link" data-scroll-target="#review">Review</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/opetchey/BIO144_Course_Book/edit/main/8.1-GLM1-count-data.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/opetchey/BIO144_Course_Book/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -327,6 +328,7 @@ window.Quarto = {
 </header>
 
 
+<p>In all the previous chapters, we have focused on <strong>linear models</strong> for continuous response variables. However, many biological response variables are counts (e.g., number of offspring, number of parasites). In this chapter, we introduce <strong>Generalized Linear Models (GLMs)</strong> for analysing count data, focusing on the Poisson distribution.</p>
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
 <p>So far in BIO144, we have focused on <strong>linear models</strong> fitted using <code>lm()</code>. These models assume:</p>
@@ -345,7 +347,7 @@ window.Quarto = {
 <li>Fit and interpret Poisson regression models</li>
 <li>Diagnose common problems such as overdispersion and zero inflation</li>
 </ul>
-<p><strong>Think–Pair–Share</strong> (#tps-non-neg-kinds) What kinds of biological outcomes can you think of that <em>cannot</em> be negative or continuous?</p>
+<p><strong>Think–Pair–Share</strong> (#tps-non-neg-kinds) What kinds of biological outcomes (response variables) can you think of that <em>cannot</em> be negative or continuous?</p>
 <section id="from-lm-to-glm" class="level3">
 <h3 class="anchored" data-anchor-id="from-lm-to-glm">From LM to GLM</h3>
 <p>Linear models (<code>LM</code>) describe the <strong>mean of a response variable</strong> as a linear function of explanatory variables. For example:</p>
@@ -356,7 +358,7 @@ window.Quarto = {
 <p>However, many biological response variables are:</p>
 <ul>
 <li><strong>Counts</strong> (e.g.&nbsp;offspring, parasites, species)</li>
-<li><strong>Binary outcomes</strong> (e.g.&nbsp;alive/dead)</li>
+<li><strong>Binary responses</strong> (e.g.&nbsp;alive/dead)</li>
 <li><strong>Proportions</strong></li>
 </ul>
 <p>In these cases, forcing the data into a linear model often leads to invalid predictions and misleading inference.</p>
@@ -439,7 +441,7 @@ GLMs are not a replacement for linear models — they are a <em>generalisation</
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>mod_soay_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(fitness <span class="sc">~</span> body.size, <span class="at">data =</span> soay)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>The diagnostic plots show clear violations of linear regression assumptions:</p>
+<p>The model checking plots show clear violations of linear regression assumptions:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_soay_lm, <span class="at">which =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="at">add.smooth =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -581,13 +583,13 @@ Note
 <h4 class="anchored" data-anchor-id="the-linear-predictor">The linear predictor</h4>
 <p>The linear predictor is the same as in linear regression:</p>
 <p><span class="math inline">\(\eta_i = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}\)</span></p>
-<p>It is just the linear combination of predictors and coefficients. Nothing new here.</p>
+<p>It is just the linear combination of explanatory variables and coefficients. Nothing new here.</p>
 </section>
 <section id="the-link-function" class="level4">
 <h4 class="anchored" data-anchor-id="the-link-function">The link function</h4>
 <p>In the linear models we already used (e.g., for linear regression) the link function is the <strong>identity link</strong>:</p>
 <p><span class="math inline">\(E(y_i) = \eta_i\)</span></p>
-<p>Here, <span class="math inline">\(E(y_i)\)</span> refers to the expected value (mean) of many hypothetical observations with the same predictors, not the single observed value <span class="math inline">\(y_i\)</span>.</p>
+<p>Here, <span class="math inline">\(E(y_i)\)</span> refers to the expected value (mean) of many hypothetical observations, not the single observed value <span class="math inline">\(y_i\)</span>.</p>
 <p><em>Identity link</em>: the expected value of the response <span class="math inline">\(E(y_i)\)</span> equals the linear predictor <span class="math inline">\(\eta_i\)</span>.</p>
 <p>That is:</p>
 <p><span class="math inline">\(E(y_i) = \eta_i = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}\)</span></p>
@@ -596,7 +598,7 @@ Note
 <p><span class="math inline">\(\eta_i = \log(E(y_i))\)</span></p>
 <p>which implies:</p>
 <p><span class="math inline">\(E(y_i) = \exp(\eta_i) &gt; 0\)</span></p>
-<p>The log link ensures that the expected count is always positive, regardless of the values of the predictors. Whatever the value of the linear predictor <span class="math inline">\(\eta_i\)</span>, the exponential of it <span class="math inline">\(\exp(\eta_i)\)</span> is always positive.</p>
+<p>The log link ensures that the expected count is always positive, regardless of the values of the explanatory variables. Whatever the value of the linear predictor <span class="math inline">\(\eta_i\)</span>, the exponential of it <span class="math inline">\(\exp(\eta_i)\)</span> is always positive.</p>
 <div class="callout-hint">
 <p>A good link function enforces the natural constraints of the data.</p>
 </div>
@@ -622,7 +624,9 @@ Note
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>soay_glm <span class="ot">&lt;-</span> <span class="fu">glm</span>(fitness <span class="sc">~</span> body.size, <span class="at">data =</span> soay, <span class="at">family =</span> poisson)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Specifying <code>family = poisson</code> tells R to use the Poisson distribution with a log link function by default. We could specify the link explicitly as <code>family = poisson(link = "log")</code>, but this is unnecessary since the log link is the default for the Poisson family.</p>
-<p>As always, we should check model diagnostics:</p>
+<section id="checking-model-assumptions" class="level3">
+<h3 class="anchored" data-anchor-id="checking-model-assumptions">Checking model assumptions</h3>
+<p>As always, we should check model assumptions:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(soay_glm, <span class="at">which =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="at">add.smooth =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -649,6 +653,7 @@ Important
 <p>You must specify the <strong>family</strong> in <code>glm()</code>. If you omit the link function, R uses the default link for that family.</p>
 </div>
 </div>
+</section>
 <section id="interpreting-coefficients" class="level3">
 <h3 class="anchored" data-anchor-id="interpreting-coefficients">Interpreting coefficients</h3>
 <div class="cell">
@@ -685,7 +690,7 @@ Important
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>A one-unit increase in a predictor multiplies the expected count by <span class="math inline">\(\exp(\beta)\)</span>.</p>
+<p>A one-unit increase in an explanatory variable multiplies the expected count by <span class="math inline">\(\exp(\beta)\)</span>.</p>
 </div>
 </div>
 <p><strong>Think–Pair–Share</strong> (#tps-what-change-beta) If <span class="math inline">\(\beta=0.05\)</span> what change in the expected count would be caused by an increase in body mass of 1 kg? As well as a numeric value, specify whether it is used additively or multiplicatively.</p>
@@ -739,7 +744,7 @@ body.size  1   235.32        98      97.78 &lt; 2.2e-16 ***
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
-<p>In the output we see the deviance for the null model and the fitted model, as well as the change in deviance when adding predictors. We can use a chi-squared test to assess whether adding predictors significantly improves model fit.</p>
+<p>In the output we see the deviance for the null model and the fitted model, as well as the change in deviance when adding explanatory variables. We can use a chi-squared test to assess whether adding explanatory variables significantly improves model fit.</p>
 <p>We use a chi-squared test here because, under certain regularity conditions, the change in deviance between nested models follows a chi-squared distribution with degrees of freedom equal to the difference in the number of parameters. If you are interested in what this means, you can read more about it in more advanced statistics textbooks.</p>
 </section>
 <section id="reporting" class="level3">
@@ -798,11 +803,11 @@ Note
 <p>In a Poisson model, mean and variance are assumed equal. In practice, variance often exceeds the mean, a phenomenon called <strong>overdispersion</strong>.</p>
 <p>Common causes include:</p>
 <ul>
-<li>Unmeasured explanatory variables. This means important predictors are missing from the model, leading to extra variability.</li>
-<li>Individual heterogeneity. This can arise when individuals differ in ways not captured by measured predictors, leading to extra variability in counts.</li>
+<li>Unmeasured explanatory variables. This means important explanatory variables are missing from the model, leading to extra variability.</li>
+<li>Individual heterogeneity. This can arise when individuals differ in ways not captured by measured explanatory variables, leading to extra variability in counts.</li>
 <li>Correlated observations. This can occur when observations are not independent, such as repeated measures on the same individual.</li>
 </ul>
-<p>A simple diagnostic for overdispersion is to compare the residual deviance to the residual degrees of freedom:</p>
+<p>A simple check for overdispersion is to compare the residual deviance to the residual degrees of freedom:</p>
 <p><span class="math inline">\(\text{Dispersion} = \frac{\text{Residual Deviance}}{\text{Residual DF}}\)</span></p>
 <p>If this ratio is substantially greater than 1 (e.g., &gt; 1.5 or 2), it indicates overdispersion.</p>
 <p>Check this for our Soay sheep model:</p>
@@ -827,7 +832,7 @@ Caution
 <p>Ignoring overdispersion leads to <strong>anti-conservative p-values</strong> (too small). This would be a typical example of <strong>Type I error inflation</strong>. Type I errors occur when we incorrectly reject a true null hypothesis, leading to false positives. In the context of statistical modeling, ignoring overdispersion can result in underestimating standard errors, which in turn leads to smaller p-values. Consequently, we may conclude that an effect is statistically significant when it is not, thereby increasing the likelihood of Type I errors.</p>
 </div>
 </div>
-<p><strong>Think–Pair–Share</strong> (#tps-why-ind-diff) Why might individuals differ even after accounting for measured predictors?</p>
+<p><strong>Think–Pair–Share</strong> (#tps-why-ind-diff) Why might individuals differ even after accounting for measured explanatory variables?</p>
 <section id="quasi-poisson-and-negative-binomial-models" class="level3">
 <h3 class="anchored" data-anchor-id="quasi-poisson-and-negative-binomial-models">Quasi-Poisson and negative binomial models</h3>
 <p>One solution is the <strong>quasi-Poisson</strong> model, which estimates an additional dispersion parameter:</p>
@@ -915,11 +920,11 @@ Note
 </div>
 </div>
 <p>It looks like higher parasite loads are associated with lower fitness.</p>
-<p>We can fit a Poisson GLM with both body size and parasite load as predictors:</p>
+<p>We can fit a Poisson GLM with both body size and parasite load as explanatory variables:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>soay_glm2 <span class="ot">&lt;-</span> <span class="fu">glm</span>(fitness <span class="sc">~</span> body.size <span class="sc">+</span> parasite.load, <span class="at">data =</span> soay, <span class="at">family =</span> poisson)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>As always we check model diagnostics:</p>
+<p>As always we check model assumptions:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(soay_glm2, <span class="at">which =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="at">add.smooth =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -931,7 +936,7 @@ Note
 </div>
 </div>
 </div>
-<p>The diagnostics look good. We can summarise the model:</p>
+<p>The model checking plots look good. We can summarise the model:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(soay_glm2, <span class="at">test =</span> <span class="st">"Chisq"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -951,11 +956,11 @@ parasite.load  1   11.063        97     119.78 0.0008809 ***
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
-<p>We see that both body size and parasite load significantly affect fitness. Body size has a positive effect, while parasite load has a negative effect. These effects are interpreted conditional on the other predictor being held constant, just as in multiple linear regression.</p>
+<p>We see that both body size and parasite load significantly affect fitness. Body size has a positive effect, while parasite load has a negative effect. These effects are interpreted conditional on the other explanatory variable being held constant, just as in multiple linear regression.</p>
 <p><strong>Think–Pair–Share</strong> (#tps-how-vis-poisson) How would you visualise (make a graph) of the data and the modelled relationships? Make a sketch of what you could do.</p>
 </section>
-<section id="summary" class="level2">
-<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<section id="review" class="level2">
+<h2 class="anchored" data-anchor-id="review">Review</h2>
 <p>In this chapter we have introduced Generalized Linear Models (GLMs) for count data, focusing on Poisson regression. Key points include:</p>
 <ul>
 <li>Linear regression is often inappropriate for count data due to violations of assumptions.</li>

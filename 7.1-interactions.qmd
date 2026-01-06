@@ -1,0 +1,981 @@
+```{r}
+#| echo: false
+source("_common.R")
+```
+
+
+# Interactions (L7) {.unnumbered}
+
+### Thought for the week:
+
+"*You should arrive at answers on your own, and not rely upon what you get from someone else. Answers from others are nothing more than stopgap measures, they're of no value.*"
+
+- Ichiro Kishimi & Fumitake Koga, The Courage to Be Disliked
+
+They instead encourage answers gained from curiosity, observation, and dialogue. Answers you develop for yourself are more likely to stick with you, and to be meaningful.
+
+When we mentor, ask questions that encourage others to think for themselves, rather than simply giving answers. This is hard, but worthwhile.
+
+## Introduction
+
+In the previous chapters we have looked at models with a special type of simplicity: the effect of each explanatory variable on the response variable is independent of the other explanatory variables. This is special because it means that we can understand the effect of each explanatory variable on the response variable separately, without considering the other explanatory variables. Nevertheless, this is often not the case in real life. The effect of one explanatory variable on the response variable may depend on the value of another explanatory variable. This is called an interaction effect, or simply an interaction.
+
+Interactions are some of the most interesting phenomena in science, including biology. We are not talking about interactions between species, like predation, though these are also very interesting. We are talking about effects of one thing, like diet, depending on another thing, like exercise. Let's break that down a bit...
+
+Imagine we make a study of the effect of exercise (minutes per week) on blood pressure for people with a meat heavy diet. 
+
+```{r}
+#| echo: false
+set.seed(1)
+n <- 50
+mins_per_week <- runif(n, 0, 200)
+diet <- rep("meat heavy", n)
+bp <- 100 - 0.1*mins_per_week + rnorm(n, 0, 10)
+bp_meatheavy <- data.frame(bp, mins_per_week, diet) |>
+  mutate(diet = relevel(factor(diet), "meat heavy"))
+```
+
+```{r}
+#| echo: false
+write_csv(bp_meatheavy, here("datasets", "bp_meatheavy.csv"))
+```
+
+Read in the dataset:
+
+```{r}
+bp_meatheavy <- read.csv("datasets/bp_meatheavy.csv")
+```
+
+Here are the first few rows of the data:
+
+```{r}
+head(bp_meatheavy)
+```
+
+And here is a graph of the relationship between blood pressure and minutes of exercise for people with a meat heavy diet:
+
+```{r}
+#| echo: false
+p_meat <- ggplot(bp_meatheavy, aes(x=mins_per_week, y=bp)) + 
+  geom_point(col = "red") +
+  geom_smooth(formula = y ~ x, method="lm", col = "red") +
+  labs(title="Blood pressure vs exercise for meat heavy diet",
+       x="Minutes per week of exercise",
+       y="Blood pressure") +
+  ylim(60, 120)
+p_meat
+```
+
+We see that exercise seems to lower blood pressure. But what if we look at the effect of exercise on blood pressure for people with a vegetarian diet? The relationship might look something like this:
+
+```{r}
+#| echo: false
+n <- 50
+mins_per_week <- runif(n, 0, 200)
+diet <- rep("vegetarian", n)
+bp <- 85 - 0.01*mins_per_week + rnorm(n, 0, 10)
+bp_vegetarian <- data.frame(bp, mins_per_week, diet)
+head(bp_vegetarian)
+```
+
+```{r}
+#| echo: false
+write_csv(bp_vegetarian, here("datasets", "bp_vegetarian.csv"))
+```
+
+Read in the dataset:
+
+```{r}
+bp_vegetarian <- read.csv("datasets/bp_vegetarian.csv")
+```
+
+Here is a graph of the relationship between blood pressure and minutes of exercise for people with a vegetarian diet:
+
+```{r}
+#| echo: false
+p_veg <- ggplot(bp_vegetarian, aes(x=mins_per_week, y=bp)) + 
+  geom_point(col = "blue") +
+  geom_smooth(formula = y ~ x, method="lm", col = "blue") +
+  labs(title="Blood pressure vs exercise for vegetarian diet",
+       x="Minutes per week of exercise",
+       y="Blood pressure")+
+  ylim(60, 120)
+p_veg
+```
+
+We see that exercise seems to lower blood pressure for vegetarians too, but the effect seems to be weaker.
+
+To summarise this finding, we can say that the effect of exercise on blood pressure is stronger for people with a meat heavy diet than for people with a vegetarian diet. This means that the effect of exercise on blood pressure depends on diet.
+
+This is very clear when we look at the both diets in the same graph:
+
+```{r}
+#| echo: false
+#| fig-width: 6
+#| fig-height: 4
+bp_1cont1cat <- rbind(bp_meatheavy, bp_vegetarian)
+ggplot(bp_1cont1cat, aes(x=mins_per_week, y=bp, col=diet)) + 
+  geom_point() +
+  geom_smooth(formula = y ~ x, method="lm") +
+  labs(title="Blood pressure vs exercise",
+       x="Minutes per week of exercise",
+       y="Blood pressure",
+       col="Diet") +
+  ylim(60, 120)
+```
+
+```{r}
+#| echo: false
+write_csv(bp_1cont1cat, here("datasets", "bp_1cont1cat.csv"))
+```
+
+(The dataset with both combined is in the file `bp_1cont1cat.csv`.)
+
+**Think-Pair-Share** (#tps-general-diet) Can we say anything general about the effect of diet on blood pressure?
+
+No, we can't. We cannot, for example, state that a vegetarian diet lowers blood pressure. We can say, however, that a vegetarian diet lowers blood pressure of people that do little exercise.
+
+
+**Think-Pair-Share** (#tps-general-exercise) Can we say anything general about the effect of exercise on blood pressure?
+
+Well, we can say that exercise lowers blood pressure, but we have to be careful. We have to say that exercise lowers blood pressure of people with a meat heavy diet more than it lowers blood pressure of people with a vegetarian diet.
+
+I think it is clear that the interaction was easier to see when we plotted all the data in one graph... it is much easier to visually compare the slopes of the two regression lines when they are on the same graph.
+
+As we will see later in this chapter, the same holds true for statistical tests of interactions: it is much easier to make a statistical test of the interaction when we make a single model with *an interaction term*.
+
+It is harder and is not recommended to make a separate regression for each level of the second variable (diet) and then compare the slopes of the regression lines (it is possible, just not at all efficient).
+
+
+## Parallel and non-parallel effects
+
+In the example above, the effect of exercise on blood pressure was stronger for people with a meat heavy diet than for people with a vegetarian diet. That is, the slope of the regression line was steeper for the meat heavy diet than for the vegetarian diet. Put another way, the regression lines are not parallel.
+
+**Parallel = no interaction**: Parallel regression lines are evidence of no interaction. This means that the effect of one variable (exercise) is the same for all levels of another variable (diet).
+
+**Non-parallel = interaction**: When the regression lines are not parallel, there is evidence of an interaction. This means that the effect of one variable (exercise)  depends on the level of another variable (diet).
+
+That was an example of an interaction between a continuous explanatory variable (exercise) and a categorical explanatory variable (diet). Interactions can also occur between two categorical explanatory variables, or between two continuous explanatory variables. Let us look at some more examples.
+
+**Think–Pair–Share** (#a_when_lines_cross) What does it mean biologically when lines cross in an interaction plot? What does it mean when they are parallel?
+
+
+## Two cats
+
+Two categorical explanatory variables: diet (meat heavy or vegetarian) and exercise (low or high), and one continuous response variable (blood pressure).
+
+
+```{r}
+#| echo: false
+set.seed(1)
+reps <- 1:10
+bp_2cat <- crossing(diet = c("meat heavy", "vegetarian"),
+         exercise = c("low", "high"),
+         reps = reps) %>%
+  mutate(bp = 100 - 10*(exercise=="high") - 5*(diet=="vegetarian") - 20*(exercise=="high" & diet=="vegetarian"), 
+         error = rnorm(nrow(.), 0, 10),
+         bp = bp + error) |> 
+  arrange(reps, diet, exercise) |>
+  mutate(exercise = relevel(factor(exercise), "low")) |> 
+  select(-error)
+```
+
+```{r}
+#| echo: false
+write_csv(bp_2cat, here("datasets", "bp_2cat.csv"))
+```
+
+Read in the dataset:
+
+```{r}
+bp_2cat <- read.csv("datasets/bp_2cat.csv")
+```
+
+
+Here are the first few rows of the data:
+
+```{r}
+head(bp_2cat)
+```
+
+And here is the data in a graph, where we show the individual data points as well as the group means connected by lines. The lines connecting the means are only to help visualize whether there is an interaction or not. If we see non-parallel lines connecting the means, we have evidence of an interaction.
+
+```{r}
+#| echo: false
+#| fig-width: 6
+#| fig-height: 4
+grouped_data <- group_by(bp_2cat, diet, exercise) %>%
+  summarise(mean_bp = mean(bp), sd_bp = sd(bp), .groups = "drop")
+ggplot(bp_2cat, aes(x=exercise, y=bp, col=diet)) + 
+  geom_point(position=position_dodge(width=0.1), alpha = 0.5) + 
+  geom_point(data = grouped_data, aes(x=exercise, y=mean_bp, col=diet),
+             position=position_dodge(width=0.1), size=3) +
+  geom_line(data = grouped_data, aes(x=exercise, y=mean_bp, group=diet),
+            position=position_dodge(width=0.1)) +
+  labs(title="Blood pressure vs exercise",
+       x="Exercise",
+       y="Blood pressure",
+       col="Diet")
+```
+
+Indeed, the lines connecting the means are not parallel, which is evidence of an interaction between diet and exercise on blood pressure.
+
+**Think-Pair-Share** (#tps-express-int) Express the nature of the interaction in words.
+
+
+## Two continuous
+
+Two continuous explanatory variables (age and exercise minutes) and one continuous response variable (blood pressure).
+
+
+
+```{r}
+#| echo: false
+set.seed(1)
+n <- 100
+age <- runif(n, 20, 80)
+mins_per_week <- runif(n, 0, 200)
+bp <- 100 - 0.5*mins_per_week + 0.1*age + 0.005 * mins_per_week * age + rnorm(n, 0, 0.1)
+bp_2cont <- data.frame(bp, age, mins_per_week)
+```
+
+```{r}
+#| echo: false
+write_csv(bp_2cont, here("datasets", "bp_2cont.csv"))
+```
+
+Read in the dataset:
+```{r}
+bp_2cont <- read.csv("datasets/bp_2cont.csv")
+```
+
+
+Here is the first few rows of the data:
+
+```{r}
+head(bp_2cont)
+```
+
+Now we have a little challenge, namely that we have two continuous explanatory variables. This means that we need to use three dimensions to visualize the data. Here is a standard 2D scatter plot of blood pressure against minutes of exercise, though with age represented by color grading from young (dark blue) to old (yellow):
+
+```{r}
+#| echo: false
+#| fig-width: 5
+#| fig-height: 4
+## use dark blue to yellow color scale
+ggplot(bp_2cont, aes(x=mins_per_week, y=bp, col = age)) + 
+  geom_point(size = 2) + 
+  scale_color_gradient(low = "darkblue", high = "yellow") +
+  labs(title="Blood pressure vs exercise, coloured by age",
+       x="Minutes per week of exercise",
+       y="Blood pressure")
+```
+
+And we can make the complementary plot of blood pressure against age, with minutes of exercise represented by color grading from low (green) to high (orange):
+
+```{r}
+#| echo: false
+#| fig-width: 5.5
+#| fig-height: 4
+ggplot(bp_2cont, aes(x=age, y=bp, col = mins_per_week)) + 
+  geom_point(size = 2) + 
+  scale_color_gradient(low = "green", high = "orange") +
+  labs(title="Blood pressure vs age, coloured by minutes of exercise",
+       x="Age",
+       y="Blood pressure")
+```
+
+What do we see? If we look at a set of points of the similar colour (i.e., similar number of minutes of exercised), we can see that the slope of the relationship between blood pressure and age depends on exercise. The slope is steeper for people that exercise more.
+
+**Think-Pair-Share** (#tps-small-older) Another thing we could say is that the effect of exercise is smaller for older people. How is this shown in the graph?
+
+
+Yet another way to visualise this interaction is to create categorical versions of age and minutes of exercise, and then plot the data with these categorical variables:
+
+```{r}
+#| echo: false
+bp_2cont <- bp_2cont |>
+  mutate(age_class = cut(age,
+                   breaks = seq(10, 100, 10),
+                   labels = c("10-20", "20-30", "30-40",
+                              "40-50", "50-60", "60-70",
+                              "70-80", "80-90", "90-100")),
+         mins_per_week_class = cut(mins_per_week,
+                             breaks = seq(0, 200, 20),
+                             labels = c("0-20", "20-40", "40-60",
+                                        "60-80", "80-100", "100-120",
+                                        "120-140", "140-160", "160-180",
+                                        "180-200")))
+```
+
+Here is the first few rows of the modified data:
+
+```{r}
+head(bp_2cont)
+```
+
+And here is the plot of blood pressure against minutes of exercise, with age class represented by colour. Regression lines have been added, to help visualize any interaction:
+
+```{r}
+#| echo: false
+#| fig-width: 5
+#| fig-height: 4
+ggplot(bp_2cont, aes(x=mins_per_week, y=bp, col = age_class)) +
+  geom_point(size = 2) + 
+  geom_smooth(method = "lm", formula = y ~ x) +
+  labs(title="Blood pressure vs exercise",
+       x="Minutes per week of exercise",
+       y="Blood pressure")
+```
+
+It is as we saw in the previous version of the graph. The slope of the relationship between blood pressure and minutes of exercise depends on age. The slope is shallower for older people.
+
+In the complementary graph of blood pressure against age, with minutes of exercise represented by colour, we see the same interaction:
+
+```{r}
+#| echo: false
+#| fig-width: 6
+#| fig-height: 4
+ggplot(bp_2cont, aes(x=age, y=bp, col = mins_per_week_class)) +
+  geom_point(size = 2) + 
+  geom_smooth(method = "lm", formula = y ~ x) +
+  labs(title="Blood pressure vs age",
+       x="Age",
+       y="Blood pressure")
+```
+
+::: {.callout-important}
+**There is only one interaction** We made two graphs of the same data, one with age as a categorical variable and one with minutes of exercise as a categorical variable. In both graphs we see an interaction. This is not us seeing two separate interactions, however. There is only one interaction here, namely that the effect of age on blood pressure depends on minutes of exercise, and equivalently, that the effect of minutes of exercise on blood pressure depends on age. The two graphs just look at the same interaction from different perspectives.
+:::
+
+## Other perspectives
+
+### Interactions and additivity of effects
+
+Another way of thinking about interactions is from the perspective of additivity or non-additivity of effects. Imagine we made two separate studies, one of the effect of diet on blood pressure, and one of the effect of exercise on blood pressure. In the first study we only varied diet, and in the second study we only varied exercise. In the first study we found an effect size of diet on blood pressure of say 10 mmHg (e.g., difference between meat heavy and vegetarian). And in the second study we found an effect size of exercise on blood pressure of 15 mmHg (e.g., difference between low and high exercise).
+
+
+**Think-Pair-Share** (#tps-adding-effects) If the effects of diet and exercise were additive, what would we expect the effect size to be if we estimated the effect of diet and exercise on blood pressure in the same study?
+
+**Think-Pair-Share** (#tps-comb-non-add) What would we expect the effect size of combined diet and exercise to be if the effects were non-additive? (Hint: this is a bit of a trick question.)
+
+If the effects are non-additive, we would expect the effect size to be different from additive. For example, if we found the combined effect of diet and exercise on blood pressure to be 40, we would say that the effects are non-additive. Their combined effect is more than the sum of their individual effects. This example is of a synergistic interaction because the combined effect (40) is greater than the sum of the individual effects (25).
+
+### Drug interactions
+
+When a doctor is considering giving us a particular medication, we are asked if we are taking any other medications. This is because the effects of drugs can interact. For example, if we take two drugs that both lower blood pressure and they interfere with each other, the combined effect might be less than the sum of their individual effects. This is an antagonistic interaction. It could be worse than that though, the interaction might actually be harmful, which is why doctors are so careful about drug interactions.
+
+**Think-Pair-Share** (#tps-other-int-examples) Can you think of any other examples of interactions in biology or medicine?
+
+
+## The maths bit
+
+Let us return to the example of the effects of number of minutes of exercise and diet on blood pressure:
+
+```{r}
+#| echo: false
+#| fig-width: 5.5
+#| fig-height: 4
+ggplot(bp_1cont1cat, aes(x=mins_per_week, y=bp, col=diet)) + 
+  geom_point() +
+  geom_smooth(method="lm", formula = y ~ x) +
+  labs(title="Blood pressure vs exercise",
+       x="Minutes per week of exercise",
+       y="Blood pressure",
+       col="Diet")
+```
+
+We have one continuous explanatory variable (minutes of exercise) and one binary explanatory variable (diet) and one continuous response variable (blood pressure).
+
+
+
+**Think-Pair-Share** (#tps-without-interaction) What would a linear model without an interaction term be?
+
+
+
+$$y_i = \beta_0 + \beta_1 x_{i}^{(1)} + \beta_2 x_{i}^{(2)} + \epsilon_i$$
+
+where:
+
+* $y_i$ is the blood pressure of the $i$th participant
+* $x_i^{(1)} is the number of minutes of exercise of the $i$th participant
+* $x_i^{(2)}$ is the diet of the $i$th participant
+* $\beta_0$ is the intercept
+* $\beta_1$ is the effect of exercise on blood pressure
+* $\beta_2$ is the effect of diet on blood pressure
+* $\epsilon_i$ is the error term for the $i$th participant.
+
+This model is a multiple regression model in which one of the explanatory variables is binary.
+
+
+
+**Think-Pair-Share** (#tps-with-interaction) What might the model look like if we wanted to include an interaction between diet and exercise?
+
+
+
+
+$$y_i = \beta_0 + \beta_1 x_{i}^{(1)} + \beta_2 x_{i}^{(2)} + \beta_3 (x_{i}^{(1)} x_{i}^{(2)}) + \epsilon_i$$
+
+where:
+
+* $x_{i}^{(1)}x_{i}^{(2)}$ is the product of the number of minutes of exercise and the diet of the $i$th participant.
+* $\beta_3$ is the coefficient of the interaction term between diet and exercise.
+
+We could also write this model as:
+
+$$y_i = \beta_0 + \beta_1 x_{i}^{(1)} + \beta_2 x_{i}^{(2)} + \beta_3 x_{i}^{(3)} + \epsilon_i$$
+
+where:
+
+* $x_{i}^{(3)} = x_{i}^{(1)} x_{i}^{(2)}$
+
+This is again a multiple regression model, but now with three explanatory variables.
+
+
+
+
+**Think-Pair-Share** (#tps-sketch-interaction) Make sketches of the possible relationships between diet, exercise and blood pressure. Make a sketch compatible with $\beta_3 = 0$. Make a sketch compatible with $\beta_3 \neq 0$.
+
+
+
+
+## Hypothesis testing
+
+If we want to test whether the effect of minutes of exercise on blood pressure is different for people with different diets, we need a null hypothesis to test.
+
+
+**Think-Pair-Share** (#tps-interaction-null) What is the null hypothesis in this case, verbally, and in terms of the coefficients of the model?
+
+
+The null hypothesis is that the effect of minutes of exercise on blood pressure is the same for people with different diets. This is a null hypothesis of no interaction between diet and exercise. In terms of the coefficients of the model, the null hypothesis is that $\beta_3 = 0$.
+
+If we reject the null hypothesis, we conclude that the effect of minutes of exercise on blood pressure is different for people with different diets. This is a non-additive effect.
+
+
+## Doing it in R
+
+Let us fit the model with the interaction term in R. There are two methods to do this and they are equivalent:
+
+```{r}
+#| echo: true
+mod1 <- lm(bp ~ mins_per_week + diet + mins_per_week:diet, data=bp_1cont1cat)
+mod2 <- lm(bp ~ mins_per_week * diet, data=bp_1cont1cat)
+```
+
+The second is a shorthand for the first. The `*` operator includes the main effects (main effects are terms in the model that don't include interactions) and the interaction term. The `:` operator includes only the interaction term.
+
+Of course, we check the model assumptions before we interpret the results:
+
+```{r}
+par(mfrow=c(2,2))
+plot(mod2, add.smooth=FALSE)
+```
+
+All of the plots look good.
+Now we can do hypothesis testing of the interaction term using an F-test:
+
+```{r}
+anova(mod2)
+```
+
+In the ANOVA table we see four rows. The first row is for the main effect of minutes of exercise, the second row is for the main effect of diet, the third row is for the interaction effect between diet and minutes of exercise, and the fourth row is for the residuals. As always, an interaction term in the R output is shown with a colon `:` between the two variables (here it looks like `mins_per_week:diet`). 
+
+In this example, the F-statistic for the interaction term is quite large (`r round(anova(mod2)[3,4],2)`), and the p-value is very small (`r signif(anova(mod2)[3,5],2)`). This means that we reject the null hypothesis that there is no interaction between diet and minutes of exercise on blood pressure. We conclude that the effect of minutes of exercise on blood pressure is different for people with different diets.
+
+
+If we like (and we don't have to), we can look at the coefficients of the model:
+
+```{r}
+summary(mod2)$coefficients
+```
+
+As expected, there are four coefficients.
+
+The first is `(Intercept)`, which is the expected blood pressure for a person who does 0 minutes of exercise and is on diet "meat heavy".
+
+The second is `mins_per_week`, which is the effect (slope) of minutes of exercise on blood pressure for a person on diet "meat heavy".
+
+The third is `dietvegetarian`, which is the effect of being on a vegetarian diet on blood pressure for a person who does 0 minutes of exercise. This can be thought of as the change in the intercept for a person on a vegetarian diet compared to a person on a "meat heavy" diet.
+
+The fourth is the interaction term `mins_per_week:dietvegetarian`, which is the difference in the effect (slope) of minutes of exercise on blood pressure for a person on a vegetarian diet compared to a person on a "meat heavy" diet.
+
+
+**Think-Pair-Share** (#tps-two-equations) Write two equations, one for each of the two diets. They would look something like this: $y_i = 0.1 - 0.1 x_{i}^{(1)}$, but will have other numbers.
+
+
+## Reporting our findings
+
+Of course a nice graph is always helpful. We already have quite a nice one:
+
+```{r}
+#| echo: false
+#| fig-width: 5.5
+#| fig-height: 4
+
+ggplot(bp_1cont1cat, aes(x=mins_per_week, y=bp, col=diet)) +
+  geom_point() +
+  geom_smooth(method="lm", se=FALSE, formula = y ~ x) +
+  labs(title="Blood pressure vs exercise",
+       x="Minutes per week of exercise",
+       y="Blood pressure",
+       col="Diet")
+```
+
+We also might want some tables summarizing the model results. Here is a table of the coefficients:
+
+```{r}
+#| echo: false
+tab_coef <- summary(mod2)$coefficients
+
+if (knitr::is_latex_output()) {
+  knitr::kable(tab_coef, format = "latex", booktabs = TRUE) |>
+    kableExtra::kable_styling()
+} else {
+  knitr::kable(tab_coef, format = "html") |>
+    kableExtra::kable_styling()
+}
+```
+
+
+
+We could also report the $R^2$ of the model:
+
+```{r}
+summary(mod2)$r.squared
+```
+
+And also a table of the variances of the terms in the model:
+
+```{r}
+#| echo: false
+tab_anova <- anova(mod2)
+
+if (knitr::is_latex_output()) {
+  knitr::kable(tab_anova, format = "latex", booktabs = TRUE) |>
+    kableExtra::kable_styling()
+} else {
+  knitr::kable(tab_anova, format = "html") |>
+    kableExtra::kable_styling()
+}
+```
+
+
+We also might use a sentence like this to report the results: "The effect of minutes of exercise is generally negative, but the effect is stronger for people on a meat heavy diet than for people on a vegetarian diet ($F$-statistics of interaction term = `r round(anova(mod2)[3,4],2)`, degrees of freedom = `r anova(mod2)[3,1]`, degrees of freedom residuals = `r anova(mod2)[4,1]`, $p$-value = `r signif(anova(mod2)[3,5],2)`)."
+
+
+**Think–Pair–Share (#a_interaction_vs_main_effect)** How does an interaction change the meaning of a "main effect"? Can a main effect be misleading when an interaction is present?
+
+
+## Multiple regression vs. many single regressions
+
+Question: Why not just fit a separate simple regression model and then test whether the slopes are the same (i.e., if they are parallel)? That is, why not fit the two models:
+
+$$y_i = \beta_{0,veg} + \beta_{1,veg} x_i^{(1)} + \epsilon_i$$ 
+
+$$y_i = \beta_{0,meat} + \beta_{1,meat} x_i^{(2)} + \epsilon_i$$
+
+and compare the estimate of $\beta_{1,veg}$ to the estimate of $\beta_{1,meat}$?
+
+Well, you could do that, and could probably find a way to test for whether the difference in the slopes is different from 0. This would be a test of the null hypothesis that the effect of minutes of exercise on blood pressure is the same for people with different diets. But, this would be a more complicated way to do it, and would not be as general as the model with the interaction term. The model with the interaction term is more general, more flexible, and more elegant.
+
+::: {.callout-note}
+It is usually better model the whole dataset to test a single hypothesis, rather dividing up the dataset into smaller parts, fitting a model to each part, and then comparing the results of the models. The latter approach is less efficient and less elegant. **One hypothesis = one model.**
+:::
+
+## ANCOVA
+
+The example we just worked through was with one continuous explanatory variable (minutes of exercise) and one categorical explanatory variable (diet). This is an example of an analysis of covariance (ANCOVA). ANCOVA is a type of linear model in which there are both continuous and categorical explanatory variables.
+
+ANCOVA is often used in two main ways.
+
+First, it can be used to account for covariates (continuous variables). In this case, the main interest is in comparing groups (as in ANOVA), while one or more continuous variables are included to explain additional variation in the response. These covariates are not the main focus of interpretation; instead, they help adjust group means and improve the precision of group comparisons.
+
+Second, ANCOVA can be used to test whether covariate effects differ between groups. Here, the continuous variable is of real interest, and the question is whether the relationship between the covariate and the response is the same across groups. This is done by including a group × covariate interaction, which allows the slope of the relationship to differ between groups.
+
+An important distinction is that the first use assumes the covariate has the same effect in all groups (parallel slopes), while the second explicitly tests whether this assumption is valid.
+
+
+## Two-way ANOVA
+
+Above we had an example with two categorical explanatory variables (diet [levels: meat heavy or vegetarian] and exercise [levels: low or high]) and one continuous response variable (blood pressure). This is an example of a two-way ANOVA. Two-way ANOVA is used to test for effects of two categorical explanatory variables, as well as their interaction effect on a continuous response variable.
+
+Here are the first few rows of the data again:
+
+```{r}
+#| echo: false
+head(bp_2cat)
+```
+
+Here is the graph of the data again:
+
+```{r}
+#| echo: false
+#| fig-width: 5.5
+#| fig-height: 4
+ggplot(bp_2cat, aes(x=exercise, y=bp, col=diet)) + 
+  geom_point(position=position_dodge(width=0.1), alpha = 0.5) + 
+  geom_point(data = grouped_data, aes(x=exercise, y=mean_bp, col=diet),
+             position=position_dodge(width=0.1), size=3) +
+  geom_line(data = grouped_data, aes(x=exercise, y=mean_bp, group=diet),
+            position=position_dodge(width=0.1)) +
+  labs(title="Blood pressure vs exercise",
+       x="Exercise",
+       y="Blood pressure",
+       col="Diet")
+```
+
+We can fit a two-way ANOVA model in R as follows:
+
+```{r}
+mod_2cat <- lm(bp ~ diet * exercise, data=bp_2cat)
+```
+
+Recall that this fits a model with main effects of diet and exercise, as well as their interaction effect. Recall that we could specify the model equivalently as:
+
+```{r}
+#| eval = FALSE
+mod_2cat <- lm(bp ~ diet + exercise + diet:exercise, data=bp_2cat)
+```
+
+We can check the model assumptions:
+```{r}
+par(mfrow=c(2,2))
+plot(mod_2cat, add.smooth=FALSE)
+```
+These look ok.
+
+*Hypothesis testing* the interaction is just as before. We use an F-test on the interaction term to test the null hypothesis that there is no interaction between diet and exercise on blood pressure.
+
+```{r}
+anova(mod_2cat)
+```
+
+In the ANOVA table we see four rows. The first row is for the main effect of diet, the second row is for the main effect of exercise, the third row is for the interaction effect between diet and exercise, and the fourth row is for the residuals. As always, an interaction term in the R output is shown with a colon `:` between the two variables (here it looks like `diet:exercise`).
+
+In this example, the F-statistic for the interaction term is quite large (`r round(anova(mod_2cat)[3, "F value"],2)` and the corresponding p-value is quite small (`r signif(anova(mod_2cat)[3, "Pr(>F)"],2)`. Hence, we conclude that there is a strong evidence of an interaction between diet and exercise on blood pressure. The effect of exercise on blood pressure depends on diet.
+
+**Think-Pair-Share** (#tps-two-way-report) Write a sentence reporting the results of the two-way ANOVA. Focus on the biological interpretation of the results, rather than the statistical details. Include statistics in parentheses, in support of your statements.
+
+::: {.callout-important}
+**Reporting two-way ANOVA results** When reporting the results of a two-way ANOVA, it is important to focus on the biological interpretation of the results, rather than the statistical details. Include statistics in parentheses, in support of your statements. For example, you might say something like: "The effect of exercise was different for people on different diets, with a stronger effect for those on a vegetarian diet compared to those on a meat heavy diet (F(1, 36) = 13.77, p < 0.001)."
+:::
+
+### More than two levels
+
+What if we had a categorical explanatory variable with more than two levels? For example, what if diet had three levels: meat heavy, vegetarian, and vegan?
+
+Here is an example dataset.
+
+```{r}
+#| echo: false
+set.seed(1)
+reps <- 1:10
+bp_2cat_3levels <- crossing(diet = c("meat heavy", "vegetarian",
+         "vegan"),
+         exercise = c("low", "high"),
+         reps = reps) %>%
+  mutate(bp = 100 - 10*(exercise=="high") - 5*(diet=="vegetarian") - 15*(diet=="vegan") - 15*(exercise=="high" & diet=="vegetarian") - 25*(exercise=="high" & diet=="vegan"), 
+         error = rnorm(nrow(.), 0, 10),
+         bp = bp + error) |> 
+  arrange(reps, diet, exercise) |>
+  mutate(exercise = relevel(factor(exercise), "low")) |> 
+  select(-error)
+```
+
+```{r}
+#| echo: false
+write_csv(bp_2cat_3levels, here("datasets", "bp_3cat.csv"))
+```
+
+Read in the dataset:
+```{r}
+bp_2cat_3levels <- read.csv("datasets/bp_3cat.csv")
+```
+
+Here are the first few rows of the data:
+
+```{r}
+head(bp_2cat_3levels)
+```
+
+Here is the graph of the data:
+
+```{r}
+#| echo: false
+#| fig-width: 5.5
+#| fig-height: 4
+grouped_data_3levels <- group_by(bp_2cat_3levels, diet,
+         exercise) %>%
+  summarise(mean_bp = mean(bp), sd_bp = sd(bp), .groups = "drop")
+ggplot(bp_2cat_3levels, aes(x=exercise, y=bp, col=diet)) + 
+  geom_point(position=position_dodge(width=0.1), alpha = 0.5) + 
+  geom_point(data = grouped_data_3levels, aes(x=exercise, y=mean_bp, col=diet),
+             position=position_dodge(width=0.1), size=3) +
+  geom_line(data = grouped_data_3levels, aes(x=exercise, y=mean_bp, group=diet),
+            position=position_dodge(width=0.1)) +
+  labs(title="Blood pressure vs exercise",
+       x="Exercise",
+       y="Blood pressure",
+       col="Diet")
+```
+
+Or plotted differently:
+
+```{r}
+#| echo: false
+#| fig-width: 5
+#| fig-height: 4
+ggplot(bp_2cat_3levels, aes(x=diet, y=bp, col=exercise)) + 
+  geom_point(position=position_dodge(width=0.1), alpha = 0.5) + 
+  geom_point(data = grouped_data_3levels, aes(x=diet, y=mean_bp, col=exercise),
+             position=position_dodge(width=0.1), size=3) +
+  geom_line(data = grouped_data_3levels, aes(x=diet, y=mean_bp, group=exercise),
+            position=position_dodge(width=0.1)) +
+  labs(title="Blood pressure vs diet",
+       x="Diet",
+       y="Blood pressure",
+       col="Exercise")
+```
+
+The hypothesis testing is the same as before. We fit the model with interaction term:
+
+```{r}
+mod_2cat_3levels <- lm(bp ~ diet * exercise, data=bp_2cat_3levels)
+```
+
+We check the model assumptions:
+```{r}
+par(mfrow=c(2,2))
+plot(mod_2cat_3levels, add.smooth=FALSE)
+```
+
+These look ok.
+
+Now we do the ANOVA:
+
+```{r}
+anova(mod_2cat_3levels)
+```
+
+*Important*: Although we have a categorical variable with three rather than two levels, we still have only four rows in the ANOVA table. One for each main effect (diet and exercise), one for the interaction effect (diet:exercise), and one for the residuals. This is because the ANOVA table tests each effect as a whole, rather than testing each level of the categorical variable separately.
+
+In this case, we see that there is strong evidence of main effects of diet and exercise on blood pressure, as well as strong evidence of an interaction effect between diet and exercise on blood pressure.
+
+Reporting the patterns and statistics is similar to before, but now we have more levels to consider so the reporting is a bit more complex, and we have to be careful to not over-interpret the results. For example, when the hypothesis test is on the interaction term via an F-test, we can only say that there is evidence of an interaction between diet and exercise on blood pressure. We cannot say which diets have different effects of exercise on blood pressure. To do that, we would need to do post-hoc tests, such as pairwise comparisons between the levels of diet within each level of exercise.
+
+
+
+::: {.callout-caution}
+**Degrees of freedom** Look at the ANOVA table and the degrees of freedom column. For diet, the degrees of freedom is 2, because there are three levels of diet (meat heavy, vegetarian, vegan), and the degrees of freedom is number of levels minus 1. For exercise, the degrees of freedom is 1, because there are two levels of exercise (low, high). For the interaction term diet:exercise, the degrees of freedom is 2, which is the product of the degrees of freedom for diet (2) and exercise (1).
+
+Another way to think about this is how many parameters are estimated? The answer is as follows: six parameters are estimated in total, one for each of the combinations of diet and exercise (3 diets x 2 exercises = 6 combinations). Hence the residual degrees of freedom is total number of observations (60) minus 6.
+
+Don't worry if this is a bit confusing at first. It will become clearer with practice, and you can ask for it to be explained again and in different ways.
+:::
+
+
+
+## Multiple regression with interaction term
+
+Above we had the example of two continuous explanatory variables (age and minutes of exercise) and one continuous response variable (blood pressure). We saw evidence of an interaction between age and minutes of exercise on blood pressure.
+
+Here are the first few rows of the data again:
+
+```{r}
+#| echo: false
+head(bp_2cont)
+```
+
+Here is the data in a graph, with age represented by a colour gradient:
+
+```{r}
+#| echo: false
+#| fig-width: 5
+#| fig-height: 4
+ggplot(bp_2cont, aes(x=mins_per_week, y=bp, col = age)) + 
+  geom_point(size = 2) + 
+  scale_color_gradient(low = "darkblue", high = "yellow") +
+  labs(title="Blood pressure vs exercise, coloured by age",
+       x="Minutes per week of exercise",
+       y="Blood pressure")
+```
+
+We can fit a multiple regression model with an interaction term in R as follows:
+
+```{r}
+mod_2cont <- lm(bp ~ mins_per_week * age, data=bp_2cont)
+```
+
+We check the model assumptions:
+```{r}
+par(mfrow=c(2,2))
+plot(mod_2cont, add.smooth=FALSE)
+```
+
+These look ok.
+
+Now we do the F-test for the interaction term:
+
+```{r}
+anova(mod_2cont)
+```
+
+**It looks the same as in the two-way ANOVA case!** This is because we still have two variables and their interaction, so the ANOVA table has one row for each main effect (mins_per_week and age), one row for the interaction effect (mins_per_week:age), and one row for the residuals.
+
+The F-statistic for the interaction term is very large (`r round(anova(mod_2cont)[3, "F value"],2)`) and the corresponding p-value is very small (`r signif(anova(mod_2cont)[3, "Pr(>F)"],2)`). Hence, we conclude that there is very strong evidence of an interaction between minutes of exercise and age on blood pressure. The effect of minutes of exercise on blood pressure depends on age, with a stronger effect for younger people compared to older people.
+
+
+## Intepreting main effects and interaction effects
+
+The term *main effect* refers to the individual effect of each categorical explanatory variable on the response variable, ignoring the other variable. For example, the main effect of diet would be the difference in blood pressure between meat heavy and vegetarian diets, averaged over both levels of exercise.
+
+However, if there is an interaction between the two categorical explanatory variables, the main effects may not fully capture the relationship. The interaction effect indicates that the effect of one categorical variable on the response variable depends on the level of the other categorical variable. For example, the effect of diet on blood pressure may differ between low and high exercise groups.
+
+We can see this in the example:
+
+```{r}
+#| echo: false
+#| fig-width: 5
+#| fig-height: 4
+ggplot(bp_2cat, aes(x=exercise, y=bp, col=diet)) + 
+  geom_point(position=position_dodge(width=0.1), alpha = 0.5) + 
+  geom_point(data = grouped_data, aes(x=exercise, y=mean_bp, col=diet),
+             position=position_dodge(width=0.1), size=3) +
+  geom_line(data = grouped_data, aes(x=exercise, y=mean_bp, group=diet),
+            position=position_dodge(width=0.1)) +
+  labs(title="Blood pressure vs exercise",
+       x="Exercise",
+       y="Blood pressure",
+       col="Diet")
+```
+
+There is a main effect of diet on blood pressure, as well as a main effect of exercise on blood pressure. However, there is also an interaction effect between diet and exercise on blood pressure, as the effect of diet on blood pressure depends on the level of exercise.
+
+
+It could look otherwise. For example, if we found a (albeit rather unlikely pattern) of higher blood pressure for vegetarians how exercise little, and lower blood pressure for vegetarians who exercise a lot, we would have a pattern as follows:
+
+```{r}
+#| echo: false
+#| fig-width: 5
+#| fig-height: 4
+
+bd_2cat_weird <- data.frame(
+  reps = paste0("R", 1:40),
+  diet = rep(c("meat heavy", "vegetarian"), each = 20),
+  exercise = rep(rep(c("low", "high"), each = 10), 2),
+  bp = c(rnorm(10, 130, 5), rnorm(10, 110, 5), rnorm(10, 140, 5), rnorm(10, 100, 5))) |> 
+  arrange(reps, diet, exercise) |>
+  mutate(exercise = relevel(factor(exercise), "low"))
+grouped_data_weird <- group_by(bd_2cat_weird, diet,
+         exercise) %>%
+  summarise(mean_bp = mean(bp), sd_bp = sd(bp), .groups = "drop")
+ggplot(bd_2cat_weird, aes(x=exercise, y=bp, col=diet)) + 
+  geom_point(position=position_dodge(width=0.1), alpha = 0.5) + 
+  geom_point(data = grouped_data_weird, aes(x=exercise, y=mean_bp, col=diet),
+             position=position_dodge(width=0.1), size=3) +
+  geom_line(data = grouped_data_weird, aes(x=exercise, y=mean_bp, group=diet),
+            position=position_dodge(width=0.1)) +
+  labs(title="Weird blood pressure vs exercise",
+       x="Exercise",
+       y="Blood pressure",
+       col="Diet")
+```
+
+Here there is no main effect of diet on blood pressure, as the average blood pressure for meat heavy and vegetarian diets is the same when averaged over both levels of exercise. There is still a main effect of exercise on blood pressure, as blood pressure is lower for high exercise compared to low exercise. And there is still an interaction effect between diet and exercise on blood pressure, as the effect of diet on blood pressure depends on the level of exercise.
+
+**Take home**: Interactions are very interesting, but also will require careful and nuanced interpretation.
+
+## More than two explanatory variables
+
+All the examples above had two explanatory variables. What if we have more than two explanatory variables? The principles are the same, but the models and interpretations become more complex. For example, if we have three categorical explanatory variables (A, B, C), we can fit a model with main effects of A, B, and C, as well as all possible interaction effects (A:B, A:C, B:C, A:B:C). The ANOVA table will have one row for each main effect, one row for each two-way interaction effect, one row for the three-way interaction effect, and one row for the residuals.
+
+Interpretation of three-way interactions can be quite complex, as it involves understanding how the effect of one variable on the response variable depends on the levels of the other two categorical variables. Very careful consideration and visualization of the data are often necessary to fully understand and communicate the results.
+
+## Review
+
+* Interactions are some of the most interesting effects in biology and medicine. They occur when the effect of one explanatory variable on the response variable depends on the level of another explanatory variable.
+* Interactions can occur between continuous and categorical explanatory variables, or between two categorical explanatory variables, or between two continuous explanatory variables.
+* Visualization is key to understanding interactions. Use graphs to explore and communicate interactions.
+* Hypothesis testing for interactions is done using $F$-tests on the interaction terms in linear models.
+* The degrees of freedom for interaction terms depend on the levels of the categorical variables involved. Each categorical variable takes degrees of freedom equal to the number of levels minus one. Each continuous variable takes one degree of freedom. The degrees of freedom for the interaction term is the product of the degrees of freedom of the individual variables.
+* Report interactions carefully, focusing on the biological interpretation and including relevant statistics (i.e., the $F$-statistic, degrees of freedom for the interaction term, degrees of freedom for error, and p-value).
+
+
+## Extras
+
+### 3d scatter plot
+
+Here is a 3D scatter plot of the data with two continuous explanatory variables (age and minutes of exercise) and one continuous response variable (blood pressure). This plot helps to visualise the interaction between age and minutes of exercise on blood pressure.
+
+(Please note that this plot is best viewed in the HTML version of the book; in the PDF version, it will appear as a static image.)
+
+```{r}
+#| echo: true
+plotly::plot_ly(bp_2cont, x = ~mins_per_week, y = ~age, z = ~bp, type = "scatter3d", mode = "markers", color = age, width=500, height=500) %>%
+  plotly::layout(title = "3D Scatter plot of Blood Pressure vs Exercise and Age",
+         scene = list(xaxis = list(title = "Minutes per week of exercise"),
+                      yaxis = list(title = "Age"),
+                      zaxis = list(title = "Blood Pressure"))
+         )
+```
+
+
+### Types of sums of squares
+
+::: {.callout-important}
+
+**A note on anova() and "Type I" (sequential) sums of squares**
+
+In this course we often use `anova()` to test terms in a linear model. In base R, `anova()` for an `lm` uses Type I (sequential) sums of squares. That means the test for each term is done in the order the terms appear in the model formula: each term is tested after the terms before it have already been included.
+
+In balanced designs (equal sample sizes in each group/combination), the order usually does not matter much. But in unbalanced designs (unequal sample sizes), the p-value for a “"main effect" or an interaction can change if you change the order of terms in the model formula.
+
+This is related to collinearity between explanatory variables. When explanatory variables are correlated, the variance they explain in the response variable overlaps. In that case, the order of terms matters because earlier terms get to "claim" more of the shared variance.
+
+So: when you see an ANOVA table from `anova()`, remember that it is testing terms sequentially, not "all at once".
+:::
+
+
+### Box and whisker plot for two cats
+
+Often you will see box and whisker plots used to visualise data with two categorical explanatory variables. Here is how to make such a plot in R:
+
+```{r}
+ggplot(bp_2cat, aes(x=diet, y=bp, fill=exercise)) + 
+  geom_boxplot(position=position_dodge(width=0.8)) +
+  labs(title="Blood pressure vs diet and exercise",
+       x="Diet",
+       y="Blood pressure",
+       fill="Exercise")
+```
+
+I (Owen) prefer to show the individual data points whenever possible, so here is a box and whisker plot with the individual data points overlaid:
+
+```{r}
+ggplot(bp_2cat, aes(x=diet, y=bp, fill=exercise)) + 
+  geom_boxplot(position=position_dodge(width=0.8), alpha = 0.5) +
+  geom_jitter(aes(col=exercise), position=position_jitterdodge(jitter.width=0.2, dodge.width=0.8), size=2, alpha = 0.7) +
+  labs(title="Blood pressure vs diet and exercise",
+       x="Diet",
+       y="Blood pressure",
+       fill="Exercise",
+       col="Exercise")
+```
+
+I, and others, prefer to not use bar plots with error bars to visualise data with categorical explanatory variables. Bar plots hide the individual data points and can be misleading. Box and whisker plots are better, but still hide some of the data. Scatter plots with jittered points are often the best way to visualise such data.
+
+In case you must use bar plots with error bars, here is how to make one in R:
+
+```{r}
+grouped_data <- group_by(bp_2cat, diet, exercise) %>%
+  summarise(mean_bp = mean(bp), sd_bp = sd(bp), n = n(), se_bp = sd_bp / sqrt(n), .groups = "drop")
+ggplot(grouped_data, aes(x=diet, y=mean_bp, fill=exercise)) + 
+  geom_bar(stat="identity", position=position_dodge(width=0.8), alpha = 0.5) +
+  geom_errorbar(aes(ymin=mean_bp - se_bp, ymax=mean_bp + se_bp), position=position_dodge(width=0.8), width=0.2) +
+  labs(title="Blood pressure vs diet and exercise",
+       x="Diet",
+       y="Blood pressure",
+       fill="Exercise")
+```
+
+

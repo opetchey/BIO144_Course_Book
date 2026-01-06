@@ -3,36 +3,60 @@ project:
   output-dir: docs
 
 book:
-  title: "BIO144 Course Book"
+  title: "BIO144 Course Book (version 2026)"
   author: "Owen Petchey"
   date: today
+  reader-mode: true
+
+  page-footer:
+    left: |
+      BIO144 Data Analysis for Biologists, Course Book written by Owen Petchey
+    right: |
+      This book was built with <a href="https://quarto.org/">Quarto</a>.
+  cover-image: cover.png
+  favicon: cover.png
+  site-url: https://opetchey.github.io/BIO144_Course_Book/
+  repo-url: https://github.com/opetchey/BIO144_Course_Book/
+  repo-branch: main
+  repo-actions: [edit, issue]
+
   chapters:
     - index.qmd
-    - 1-intro.qmd
-    - 2-data-wrangling.qmd
-    - 3-regression.qmd
-    - 4-multiple-regression.qmd
-    - 5-categorical-explanatory-variables.qmd
-    - 6-interactions.qmd
-    - 7-ANOVA.qmd
-    - 8-ANCOVA.qmd
-    - 9-linear-algebra.qmd
-    - 10-variable-selection.qmd
-    - 11-interpretation.qmd
-    - 12-count-data.qmd
-    - 13-binary-data.qmd
-    - 14-measurement-error.qmd
-    - 15-mixed-models.qmd
-    - 16-what-next.qmd
+    - 1.1-intro.qmd
+    - 2.1-R-and-RStudio.qmd
+    - 3.1-regression-part1.qmd
+    - 4.1-regression-part2.qmd
+    - 5.1-anova.qmd
+    - 6.1-multiple-regression.qmd
+    - 7.1-interactions.qmd
+    - 8.1-GLM1-count-data.qmd
+    - 9.1-GLM2-binary-data.qmd
+    - 10.1-ordination.qmd
+    - 11.1-mixed-models.qmd
+    - 11.2-what-next.qmd
+    - 12.1-review.qmd
+    
+    
+   
 
 format:
   html:
     theme: cosmo
-    fig-width: 5
-    fig-height: 5
+    fig-width: 4.5
+    fig-height: 4
     fig-align: center
-  
+  pdf:
+    keep-tex: true
+    documentclass: book
+    classoption:
+      - 8pt
+      - a4paper
+    toc-depth: 2
+    keep-md: false
+
+
+    
 execute: 
-  echo: false
+  echo: true
   
 

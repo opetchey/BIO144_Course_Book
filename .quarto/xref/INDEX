@@ -70,5 +70,44 @@
   },
   "16-what-next.qmd": {
     "16-what-next.html": "2020ab7a"
+  },
+  "1.1-intro.qmd": {
+    "1.1-intro.html": "3d500ccd"
+  },
+  "2.1-R-and-RStudio.qmd": {
+    "2.1-R-and-RStudio.html": "83bca055"
+  },
+  "3.1-regression-part1.qmd": {
+    "3.1-regression-part1.html": "c294b58d"
+  },
+  "4.1-regression-part2.qmd": {
+    "4.1-regression-part2.html": "4920f3fd"
+  },
+  "5.1-anova.qmd": {
+    "5.1-anova.html": "8ca7d5f4"
+  },
+  "6.1-multiple-regression.qmd": {
+    "6.1-multiple-regression.html": "37a1ae56"
+  },
+  "7.1-interactions.qmd": {
+    "7.1-interactions.html": "25a9d5d3"
+  },
+  "8.1-GLM1-count-data.qmd": {
+    "8.1-GLM1-count-data.html": "a762c695"
+  },
+  "9.1-GLM2-binary-data.qmd": {
+    "9.1-GLM2-binary-data.html": "ba534754"
+  },
+  "10.1-ordination.qmd": {
+    "10.1-ordination.html": "ff82af6d"
+  },
+  "11.1-mixed-models.qmd": {
+    "11.1-mixed-models.html": "dc5e2c67"
+  },
+  "11.2-what-next.qmd": {
+    "11.2-what-next.html": "015cf775"
+  },
+  "12.1-review.qmd": {
+    "12.1-review.html": "14a5e299"
   }
 }

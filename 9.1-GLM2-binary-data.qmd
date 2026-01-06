@@ -1,0 +1,562 @@
+```{r}
+#| echo: false
+source("_common.R")
+```
+
+
+
+# Binary data (L9) {.unnumbered}
+
+## Introduction
+
+In the previous chapter we moved from linear models and normal errors to generalized linear models (GLMs) to handle **count responses** with a Poisson GLM. In this chapter we move to another common case: **binary responses**.
+
+Binary response variables take only two values, often coded as 0 and 1:
+
+- 1 = yes / success / present / dead
+- 0 = no / failure / absent / alive
+
+The central question becomes:
+
+**Which explanatory variables influence the probability** $\pi_i = P(y_i = 1)$ **of the response variable?** 
+
+::: {.callout-important}
+**Bridge from LM to GLM**  
+A GLM keeps the familiar *linear predictor* from linear models, but:
+1) uses a distribution (family) that matches the response type, and  
+2) uses a link function so predictions respect the natural constraints.
+
+- Count data: Poisson family + log link  
+- Binary data: binomial family + logit link
+:::
+
+**Think–Pair–Share** (#tps-binary-examples) Name three response variables in biology, ecology, or medicine that are naturally binary (0/1). Why would a linear model be risky for each?
+
+## Overview
+
+In this chapter we will cover:
+
+- Contingency tables and the $\chi^2$ test (a familiar starting point)
+- Odds, odds ratios, and log-odds
+- Logistic regression as a binomial GLM
+- Interpreting coefficients (odds ratios and probabilities)
+- Model assumptions, deviances, and (some) model checking
+- Overdispersion in *aggregated* binomial data and the quasibinomial fix
+- Practical complications for individual-level (non-aggregated) 0/1 data
+
+## A warm-up: the Chi-square test for a 2×2 table
+
+Binary responses often first appear in a **contingency table**. For
+example:
+
+- Explanatory variable $x$: hormonal contraception (yes/no)
+- Response variable $y$: heart attack (yes/no)
+
+The $\chi^2$ (chi-squared) test asks whether the **proportion** (or frequency) of
+heart attacks is the same in the two contraception groups.
+
+### A concrete example dataset
+
+We will reconstruct the classic 2×2 table from some example and store it as a dataset:
+
+```{r}
+#| echo: false
+heart_attack <- tibble(
+  contraception = c("yes", "yes", "no", "no"),
+  heart_attack = c("yes", "no", "yes", "no"),
+  n = c(23, 34, 35, 132)
+)
+
+write_csv(heart_attack, here("datasets", "heart_attack_2x2.csv"))
+```
+
+Read in the heart attack dataset:
+```{r}
+heart_attack <- read_csv("datasets/heart_attack_2x2.csv")
+```
+
+Here are the first few rows of the heart attack dataset:
+
+```{r}
+head(heart_attack)
+```
+
+We can create the table and run the $\chi^2$ test.
+
+Here is the data ready for analysis:
+
+```{r}
+tab <- xtabs(n ~ contraception + heart_attack, data = heart_attack)
+tab
+```
+
+And here is the $\chi^2$ test:
+
+```{r}
+chisq.test(tab, correct = FALSE)
+```
+
+::: {.callout-note}
+**Continuity correction**  
+`chisq.test()` defaults to Yates' continuity correction for 2×2 tables.
+Here we set `correct = FALSE` to match the classic "hand-calculation"
+style example.
+:::
+
+**Think–Pair–Share** (#tps-chisq-meaning) What is the null hypothesis of this $\chi^2$ test, in words?
+
+
+
+## Quantifying an association: risk and odds
+
+If $\pi$ is the probability of "yes" (e.g. heart attack), then:
+
+- **Risk (probability)** is $\pi$
+- **Odds** is $\pi/(1-\pi)$
+
+The **odds ratio (OR)** compares the odds in two groups:
+
+Odds Ratio = OR = $\frac{\text{odds in group 1}}{\text{odds in group 2}}$.
+
+The **log odds ratio** is $\log(OR)$. It is 0 when $OR=1$.
+
+::: {.callout-important}
+**Odds are not probabilities**  
+An odds of 3 means "3 to 1", which corresponds to a probability of
+$3/(3+1)=0.75$. Odds and probabilities are linked mathematically, but they are not
+the same thing.
+:::
+
+**Think–Pair–Share** (#tps-odds-intuition) Why might odds ratios be a convenient effect size in a regression model? (This is a difficult question—think carefully, and Pair!)
+
+
+## From tables to regression models
+
+Contingency tables are a good start, but they are limited:
+
+- they typically compare **groups** (few categorical explanatory variable),
+- they don't easily handle **continuous explanatory variables** (e.g. dose),
+- they don't naturally generalise to multiple explanatory variables.
+
+When $y$ is binary or binomial, the standard regression approach is
+**logistic regression**, a **binomial GLM**.
+
+
+
+## Working example: beetle mortality and insecticide dose (aggregated data)
+
+Eight groups of beetles were exposed to an insecticide dose for 5 hours.
+For each dose level, we know how many beetles were tested and how many
+were killed. This is **binomial (aggregated)** data.
+
+```{r}
+#| echo: false
+data(beetle)
+write_csv(beetle, here("datasets", "beetle_mortality.csv"))
+```
+
+Read in the beetle dataset:
+```{r}
+beetle <- read_csv("datasets/beetle_mortality.csv")
+```
+
+Here are the first few rows of the beetle dataset:
+
+```{r}
+head(beetle)
+```
+
+It contains one explanatory variable (Dose) and two pieces of information about the
+binary response variable (Number_killed and Number_tested). The mortality rate is also included, and is the proportion killed at each dose (Number_killed / Number_tested).
+
+As always, start with a graph.
+
+```{r}
+#| echo: false
+ggplot(beetle, aes(x = Dose, y = Mortality_rate)) +
+  geom_point() +
+  #geom_smooth(method = "lm", se = FALSE) +
+  #geom_smooth(span = 1, colour = "red", se = FALSE) +
+  labs(x = "Dose", y = "Mortality rate")
+```
+
+**Think–Pair–Share** (#tps-why-lm-wrong) What goes wrong if we fit a linear regression to a probability (mortality rate)? Name at least two problems.
+
+## Two tempting but wrong analyses
+
+### Wrong analysis 1: linear regression on mortality rate
+
+```{r}
+mod_beetle_lm <- lm(Mortality_rate ~ Dose, data = beetle)
+```
+
+This can predict probabilities below 0 or above 1 and does not respect
+the mean–variance structure of binomial data.
+
+Check out the model assumptions:
+
+```{r}
+par(mfrow = c(2, 2))
+plot(mod_beetle_lm)
+```
+
+We don't have so many data points here, but the residuals vs fitted indicating non-linearity and the Q-Q plot indicating non-normality are both concerning. Also the scale-location plot suggests non-constant variance.
+
+### Wrong analysis 2: Poisson regression on counts killed
+
+A Poisson model ignores the fact that deaths are bounded by the number
+tested at each dose.
+
+```{r}
+mod_beetle_pois <- glm(Number_killed ~ Dose, data = beetle, family = poisson)
+summary(mod_beetle_pois)$coefficients
+
+# Example of the "impossible" issue:
+dose_example <- 76.54
+pred_killed <- predict(mod_beetle_pois,
+                       newdata = data.frame(Dose = dose_example),
+                       type = "response")
+pred_killed
+num_tested_example <- beetle$Number_tested[beetle$Dose == dose_example]
+num_tested_example
+```
+
+At the highest dose (76.54), the model predicts about 76 deaths, but only 60 beetles were tested! Clearly this is an impossible prediction. We can't go on with the Poisson model either.
+
+::: {.callout-caution}
+**Poisson vs binomial, when to use each**  
+Use a Poisson model when counts have *no known upper limit*.  
+Use a binomial model when counts are "$k$ successes out of $n$ trials".
+Use a binomial model when each observation is a 0/1 response.
+:::
+
+
+**Think–Pair–Share (#a_probability_not_linear)** Why is it dangerous to model probabilities directly using a linear model?
+
+
+## The probability model: Bernoulli and binomial
+
+### Bernoulli (binary) data
+
+For a single 0/1 observation:
+
+$Y \sim \text{Bernoulli}(\pi),\quad P(Y=1)=\pi,\quad P(Y=0)=1-\pi$
+
+In words, this means that the probability of success (Y=1) is $\pi$, and the probability of failure (Y=0) is $1-\pi$. And that this probability is Bernoulli distributed. Bernoulli is a special case of the binomial distribution with $n=1$.
+
+Mean and variance are:
+
+$E(Y)=\pi,\quad Var(Y)=\pi(1-\pi)$
+
+### Binomial (aggregated) data
+
+For $k$ successes out of $n$ trials:
+
+$Y \sim \text{Binomial}(n,\pi)$
+
+This means that the number of successes $Y$ in $n$ independent Bernoulli trials, each with success probability $\pi$, follows a binomial distribution.
+
+Mean and variance are:
+
+$E(Y)=n\pi,\quad Var(Y)=n\pi(1-\pi)$
+
+::: {.callout-note}
+**Key pattern**  
+For Bernoulli/binomial data, the variance is *determined by the mean*.
+This is one reason "constant variance" fails for linear models.
+:::
+
+**Think–Pair–Share** (#tps-binom-variance) For fixed $n$, at what value of $\pi$ is $Var(Y)=n\pi(1-\pi)$ largest? At what values of $\pi$ is it smallest?
+
+
+## Logistic regression: the binomial GLM
+
+We use the usual GLM structure:
+
+1. **Linear predictor**
+
+$\eta_i = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}$
+
+2. **Family**: binomial (Bernoulli is the special case $n=1$)
+
+3. **Link**: logit
+
+$\eta_i = \log\left(\frac{\pi_i}{1-\pi_i}\right)$
+
+The inverse link (back-transformation) is the **logistic function**:
+
+$\pi_i = \frac{\exp(\eta_i)}{1+\exp(\eta_i)}$
+
+::: {.callout-important}
+**Why the logit link?**  
+It maps probabilities $(0,1)$ to the whole real line $(-\infty,\infty)$,
+so the linear predictor can take any value while $\pi_i$ stays valid, i.e., [0,1].
+:::
+
+**Think–Pair–Share** (#tps-identity-link-binary) What would go wrong if we used the identity link $E(y_i)=\eta_i$ for a binary response variable? And which link function is this, by the way?
+
+## Fitting logistic regression in R (aggregated binomial data)
+
+For aggregated binomial data, we provide **successes and failures**:
+
+```{r}
+beetle <- beetle |>
+  mutate(Number_survived = Number_tested - Number_killed)
+head(beetle)
+```
+
+Now we can fit the logistic regression model, being careful to specify `family = binomial` and to use `cbind(successes, failures)` for the response. Because we specify the response this way, R knows we are working with aggregated binomial data. And because we specify `family = binomial`, R knows to use the logit link (the default).
+
+```{r}
+beetle_glm <- glm(cbind(Number_killed, Number_survived) ~ Dose,
+                  data = beetle, family = binomial)
+```
+
+And as usual we can check the model assumptions:
+
+```{r}
+par(mfrow = c(2, 2))
+plot(beetle_glm)
+```
+
+Not great, but again we have only 8 dose levels. Let us continue in any case and look at the ANOVA table and the coefficients.
+
+::: {.callout-important}
+**The response in aggregated binomial data**  
+Use `cbind(successes, failures)` in `glm(..., family = binomial)`.
+
+- successes: number of 1s  
+- failures: number of 0s
+:::
+
+## Interpreting coefficients: log-odds, odds ratios, and probabilities**
+
+In logistic regression:
+
+- $\beta_1$ is a **log odds ratio** for a one-unit change in the linear predictor
+- $\exp(\beta_1)$ is the **odds ratio** (multiplicative change in odds)
+
+```{r}
+beta1 <- coef(beetle_glm)[["Dose"]]
+exp(beta1)
+```
+
+Interpretation: increasing dose by 1 unit multiplies the odds of death by
+$\exp(\beta_1)$.
+
+::: {.callout-note}
+**Odds vs probability**  
+A constant odds ratio does *not* mean a constant change in probability.
+The probability change depends on where you start (e.g. $\pi=0.05$ vs
+$\pi=0.80$).
+:::
+
+**Think–Pair–Share** (#tps-or-vs-probability) Why might a treatment have a "big" odds ratio, but only a "small" change in probability in one situation?
+
+**Think–Pair–Share (#a_odds_vs_probability)** Why might odds be convenient mathematically,  
+even if probabilities feel more intuitive?
+
+
+## Analysis of deviance (likelihood-based ANOVA)
+
+As for count-data GLMs, we use likelihood and deviance. Nested models can be compared with a $\chi^2$ test.
+
+```{r}
+anova(beetle_glm, test = "Chisq")
+```
+
+As with the Poisson GLM, the model is fit using maximum likelihood estimation, and the deviance is used to assess goodness-of-fit. So we see a table quite similar to that for the Poisson GLM. In this case the Dose row shows a huge amount of the deviance is explained by dose, and so the $p$-value is very small.
+
+
+## Plotting the fitted relationship
+
+We will plot $P(Y=1)$ (mortality probability) against dose using model predictions.
+
+```{r}
+dose_grid <- tibble(Dose = seq(min(beetle$Dose)-20, max(beetle$Dose)+20, length.out = 400))
+preds <- predict(beetle_glm, newdata = dose_grid, se.fit = TRUE) |> 
+  as_tibble() |>
+         mutate(p_hat = exp(fit) / (1 + exp(fit)),
+         p_hat_upper_2se = exp(fit + 2*se.fit) / (1 + exp(fit + 2*se.fit)),
+         p_hat_lower_2se = exp(fit - 2*se.fit) / (1 + exp(fit - 2*se.fit))
+       )
+dose_grid <- bind_cols(dose_grid, preds)
+```
+
+And now the plot:
+
+```{r}
+ggplot() +
+  geom_point(data = beetle, aes(x = Dose, y = Mortality_rate)) +
+  geom_line(data = dose_grid, aes(x = Dose, y = p_hat), color = "blue") +
+  geom_ribbon(data = dose_grid,
+              aes(x = Dose, ymin = p_hat_lower_2se, ymax = p_hat_upper_2se),
+              alpha = 0.2, fill = "blue") +
+  labs(x = "Dose", y = "Predicted mortality probability")
+```
+
+The plot is intentionally made to show what happens at very low and very high dose. At very low dose, the predicted mortality probability approaches 0, and at very high dose it approaches 1. This is a key feature of logistic regression: the predicted probabilities are always between 0 and 1. We also see that the standard errors are larger at intermediate doses, where the slope of the curve is steepest. And the standard errors are smaller at very low and very high doses, where the curve flattens out.
+
+### Reporting
+
+When reporting results from a logistic regression, you might say something like:
+
+"A logistic regression was used to model the probability of beetle mortality as a function of insecticide dose. The odds of mortality increased by a factor of `r round(exp(coef(beetle_glm)[["Dose"]]), 2)` (95% CI: `r round(exp(confint(beetle_glm)["Dose", ]), 2)` per unit increase in dose. This indicates that higher doses are associated with higher odds of mortality. The model predicts that at a dose of 50, the probability of mortality is approximately `r round(predict(beetle_glm, newdata = data.frame(Dose = 50), type = "response"), 2)` (95% CI: `r round(predict(beetle_glm, newdata = data.frame(Dose = 50), type = "link") + c(-2, 2) * summary(beetle_glm)$coefficients["Dose", "Std. Error"], 2)` transformed to probability scale). The model explained a significant amount of deviance (Deviance = `r round(deviance(beetle_glm), 1)`, df = `r df.residual(beetle_glm)`, $\chi^2$ p < 0.001)."
+
+
+
+## Overdispersion in aggregated binomial data
+
+Overdispersion means the variability is larger than the binomial model expects. A quick (rough) check for aggregated binomial data is:
+
+$\text{Residual deviance} \approx \text{df}$
+
+Values much larger than 1 for the ratio $\frac{\text{Residual deviance}}{\text{df}}$ suggest overdispersion. In practice we look for values above about 1.5 or 2.
+
+In the beetle mortality example:
+
+```{r}
+deviance(beetle_glm)
+df.residual(beetle_glm)
+deviance(beetle_glm) / df.residual(beetle_glm)
+```
+
+::: {.callout-caution}
+**Type I error inflation (binomial overdispersion)**  
+If there is overdispersion and we ignore it, standard errors are usually too small and $p$-values can be too small (anti-conservative). That increases false positives (Type I errors).
+:::
+
+### Quasibinomial as a pragmatic fix
+
+If we had found overdispersion, a simple fix is to use the `quasibinomial` family. This estimates an extra dispersion parameter from the data. For example:
+
+```{r}
+beetle_glm_q <- glm(cbind(Number_killed, Number_survived) ~ Dose,
+                    data = beetle, family = quasibinomial)
+```
+
+::: {.callout-note}
+`quasibinomial` estimates an extra dispersion parameter from the data. It is often a good "first fix" when aggregated binomial data look overdispersed.
+:::
+
+## Individual-level binary data (non-aggregated)
+
+In some datasets we record a single 0/1 observation per individual, rather than aggregated counts for many individuals. The same logistic regression model is used, but:
+
+- simple plots of $y$ against explanatory variables look uninformative (two bands)
+- some assumption and dispersion checks need extra care
+
+### Example: blood screening (ESR)
+
+Individuals with low ESR (ESR is erythrocyte sedimentation rate and is a measure of general inflammation and infection) are generally considered healthy; ESR > 20 mm/hr indicates possible disease. We will model the probability of high ESR using fibrinogen and globulin concentration.
+
+```{r}
+#| echo: false
+data("plasma", package = "HSAUR3")
+plasma <- plasma |>
+  mutate(y = as.integer(ESR) - 1)  # ESR is a factor; convert to 0/1
+write_csv(plasma, here("datasets", "plasma_esr_original_HSAUR3.csv"))
+```
+
+Read in the plasma dataset:
+```{r}
+plasma <- read_csv("datasets/plasma_esr_original_HSAUR3.csv")
+```
+
+Here are the first few rows of the data:
+
+```{r}
+head(plasma)
+```
+
+The ESR response variable is in two variables. `ESR` is a factor with levels "low" and "high". It is also present as a numeric variable `y`, coded 0 (low) and 1 (high). The explanatory variables are `fibrinogen` and `globulin`, both continuous.
+
+### Complication 1: graphical description
+
+Simple scatter plots of 0/1 data are not so informative:
+
+```{r fig.width=6, fig.height=2.8}
+#| echo: false
+p1 <- ggplot(plasma, aes(x = fibrinogen, y = y)) +
+  geom_point() +
+  scale_y_continuous(breaks = c(0, 1)) +
+  labs(x = "Fibrinogen", y = "High ESR (0/1)")
+
+p2 <- ggplot(plasma, aes(x = globulin, y = y)) +
+  geom_point() +
+  scale_y_continuous(breaks = c(0, 1)) +
+  labs(x = "Globulin", y = "High ESR (0/1)")
+
+p1 + p2
+```
+
+A more informative plot is a conditional density plot. This shows the proportion of 0s and 1s at each value of the explanatory variable.
+
+```{r}
+#| fig-width: 6
+#| fig-height: 4
+par(mfrow = c(1, 2))
+cdplot(factor(y) ~ fibrinogen, data = plasma, xlab = "Fibrinogen")
+cdplot(factor(y) ~ globulin, data = plasma, xlab = "Globulin")
+par(mfrow = c(1, 1))
+```
+
+It looks like higher fibrinogen and higher globulin are associated with higher probability of high ESR. The pattern appears stronger for fibrinogen.
+
+### Fit the logistic regression model
+
+In the case of non-aggregated individual-level 0/1 data, we simply use `y` as the response variable. We have to remember to specify `family = binomial` in `glm()`.
+
+```{r}
+plasma_glm <- glm(y ~ fibrinogen + globulin, data = plasma, family = binomial)
+```
+
+
+### Complication 2: model checking and dispersion
+
+Residual plots exist, but can be hard to interpret for 0/1 data:
+
+```{r}
+par(mfrow = c(2, 2))
+plot(plasma_glm)
+```
+
+::: {.callout-important}
+**Dispersion checks need caution for individual 0/1 data**  
+The simple "residual deviance $\approx$ residual df" rule-of-thumb is most
+useful for *aggregated* binomial data. With individual-level 0/1 data,
+detecting overdispersion is more subtle and often requires additional
+structure (e.g. grouping, random effects).
+:::
+
+## Two common practical issues
+
+### 1. Separation
+
+Sometimes a explanatory variable (or combination of explanatory variables) perfectly predicts the response variable (all 0s on one side, all 1s on the other). This is called **(complete) separation** and can cause extremely large coefficient estimates and warnings.
+
+::: {.callout-caution}
+**Separation warning**  
+If your logistic regression produces enormous standard errors or warnings
+about fitted probabilities being 0 or 1, check for separation. Remedies
+include more data, simpler models, or penalized methods (advanced topic).
+:::
+
+### 2. Probability vs odds ratio in reporting
+
+Odds ratios are the default "native" scale of logistic regression, but
+probabilities are often easier to interpret. In practice, you may report
+odds ratios **and** translate to probabilities at meaningful explanatory variable values.
+
+## Review
+
+There is a lot more to logistic regression and binary data. We can of course make models to analyse more complex data and questions, including multiple explanatory variables, different types of explanatory variable (continuous and categorical), interactions, and so on. But the key ideas are all above. To summarize the main points:
+
+* Data can be either aggregated binomial (successes out of trials) or individual-level 0/1.
+* The key questions are about how explanatory variables influence the probability of "yes".
+* The distribution family is binomial (Bernoulli for individual-level data).
+* The link function is the logit (log-odds).
+* If we find overdispersion in aggregated binomial data, `quasibinomial` is a pragmatic fix.
+* With non-aggregated individual-level 0/1 data, plotting and checking model assumptions require more care.
+
+

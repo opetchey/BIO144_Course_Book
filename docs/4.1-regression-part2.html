@@ -293,7 +293,7 @@ window.Quarto = {
   <li><a href="#confidence-and-prediction-bands" id="toc-confidence-and-prediction-bands" class="nav-link" data-scroll-target="#confidence-and-prediction-bands">Confidence and Prediction Bands</a></li>
   <li><a href="#calculation-of-the-confidence-band" id="toc-calculation-of-the-confidence-band" class="nav-link" data-scroll-target="#calculation-of-the-confidence-band">Calculation of the confidence band</a></li>
   <li><a href="#calculations-of-the-prediction-band" id="toc-calculations-of-the-prediction-band" class="nav-link" data-scroll-target="#calculations-of-the-prediction-band">Calculations of the prediction band</a></li>
-  <li><a href="#that-is-regression-done-at-least-for-our-current-purposes" id="toc-that-is-regression-done-at-least-for-our-current-purposes" class="nav-link" data-scroll-target="#that-is-regression-done-at-least-for-our-current-purposes">That is regression done (at least for our current purposes)</a></li>
+  <li><a href="#review" id="toc-review" class="nav-link" data-scroll-target="#review">Review</a></li>
   <li><a href="#extras" id="toc-extras" class="nav-link" data-scroll-target="#extras">Extras</a>
   <ul class="collapse">
   <li><a href="#randomisation-test-for-the-slope-of-a-regression-line" id="toc-randomisation-test-for-the-slope-of-a-regression-line" class="nav-link" data-scroll-target="#randomisation-test-for-the-slope-of-a-regression-line">Randomisation test for the slope of a regression line</a></li>
@@ -324,6 +324,7 @@ window.Quarto = {
 </header>
 
 
+<p>This chapter builds on the previous chapter on simple linear regression. There we learned how to fit a regression model to data, and how to check if the assumptions of the regression model are met. In this chapter we will learn how to interpret the results of a regression model, and how to use the model to make inferences about the relationship between the dependent and independent variables.</p>
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
 <p>Now that we have a satisfactory model, we can start to use it. In the following material, you will learn:</p>
@@ -410,7 +411,7 @@ window.Quarto = {
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>SSM <span class="ot">&lt;-</span> <span class="fu">sum</span>((y1_predicted <span class="sc">-</span> <span class="fu">mean</span>(y1))<span class="sc">^</span><span class="dv">2</span>)</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>SSM</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 355.6129</code></pre>
+<pre><code>[1] 334.6947</code></pre>
 </div>
 </div>
 </section>
@@ -422,7 +423,7 @@ window.Quarto = {
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>SSE <span class="ot">&lt;-</span> <span class="fu">sum</span>((y1 <span class="sc">-</span> y1_predicted)<span class="sc">^</span><span class="dv">2</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>SSE</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 6.699313</code></pre>
+<pre><code>[1] 1.941017</code></pre>
 </div>
 </div>
 <p>Or…</p>
@@ -430,7 +431,7 @@ window.Quarto = {
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>SSE <span class="ot">&lt;-</span> SST <span class="sc">-</span> SSM</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>SSE</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 6.699313</code></pre>
+<pre><code>[1] 1.941017</code></pre>
 </div>
 </div>
 </section>
@@ -442,7 +443,7 @@ window.Quarto = {
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>R.squared <span class="ot">&lt;-</span> SSM<span class="sc">/</span>SST</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>R.squared</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.9815096</code></pre>
+<pre><code>[1] 0.9942341</code></pre>
 </div>
 </div>
 </section>
@@ -779,8 +780,10 @@ dbl (2): Age, Systolic_BP
 <p>Another way to think of the 95% confidence band is that it is where we would expect 95% of the regression lines to lie if we were to collect many samples from the same population. The 95% prediction band is where we would expect 95% of the future observations to lie.</p>
 <p><strong>Think–Pair–Share</strong> (#a_prediction_vs_estimation) Which interval answers: “What is the mean response?” Which answers: “What might a new observation look like?”</p>
 </section>
-<section id="that-is-regression-done-at-least-for-our-current-purposes" class="level2">
-<h2 class="anchored" data-anchor-id="that-is-regression-done-at-least-for-our-current-purposes">That is regression done (at least for our current purposes)</h2>
+<section id="review" class="level2">
+<h2 class="anchored" data-anchor-id="review">Review</h2>
+<p>That is regression done (at least for our current purposes). Here is a summary of what we have covered:</p>
+<p>Previous chapter:</p>
 <ul>
 <li>Why use (linear) regression?</li>
 <li>Fitting the line (= parameter estimation)</li>
@@ -788,7 +791,14 @@ dbl (2): Age, Systolic_BP
 <li>What to do when things go wrong?</li>
 <li>Transformation of variables/the response.</li>
 <li>Handling of outliers.</li>
-<li>Goodness of the model: Correlation and <span class="math inline">\(R^2\)</span></li>
+</ul>
+<p>This chapter:</p>
+<ul>
+<li>Sums of squares: <span class="math inline">\(SST\)</span>, <span class="math inline">\(SSM\)</span>, <span class="math inline">\(SSE\)</span></li>
+<li><span class="math inline">\(R^2\)</span> as a measure of goodness of fit</li>
+<li>Hypothesis testing in regression</li>
+<li>Null and alternative hypotheses</li>
+<li>t-statistic and p-values</li>
 <li>Tests and confidence intervals</li>
 <li>Confidence and prediction bands</li>
 </ul>

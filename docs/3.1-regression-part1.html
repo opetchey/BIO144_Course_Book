@@ -315,7 +315,7 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#so-what-is-a-linear-model" id="toc-so-what-is-a-linear-model" class="nav-link" data-scroll-target="#so-what-is-a-linear-model">So what is a linear model?</a></li>
   </ul></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  <li><a href="#review" id="toc-review" class="nav-link" data-scroll-target="#review">Review</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/opetchey/BIO144_Course_Book/edit/main/3.1-regression-part1.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/opetchey/BIO144_Course_Book/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -341,8 +341,6 @@ window.Quarto = {
 </header>
 
 
-<p><strong>How Owen will structure the lecture time</strong></p>
-<p><strong>The chapter content below is the reference for what students are expected to know.</strong> During the lecture time Owen will talk through and explain hopefully most of the content of this chapter. He will write on a tablet, show figures and other content of this chapter, and may live-code in RStudio. He will also present questions and ask students to <em>Think, Pair, Share</em>. The <em>Share</em> part will sometime be via clicker, sometimes by telling the class. The same will happen in lecture 3-6.</p>
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
 <p>Linear regression is a common statistical method that models the relationship between a dependent (response) variable and one or more independent (explanatory) variables. The relationship is modeled with the equation for a straight line (<span class="math inline">\(y = a + bx\)</span>).</p>
@@ -483,6 +481,19 @@ window.Quarto = {
 <p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Residuals are model-based quantities, not properties of the raw data.</p>
 </div>
 </div>
 </section>
@@ -684,6 +695,19 @@ Tip
 <li><span class="math inline">\(\epsilon_i\)</span> has constant variance: <span class="math inline">\(Var(\epsilon_i)=\sigma^2\)</span>.</li>
 <li>The <span class="math inline">\(\epsilon_i\)</span> are independent of each other.</li>
 </ol>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>These assumptions are about the residuals, not the observed data!!!</p>
+</div>
+</div>
 <p>Furthermore:</p>
 <ol start="4" type="a">
 <li>we assumed a linear relationship.</li>
@@ -824,7 +848,7 @@ Tip
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>We can also use the built-in plot function for linear models to create this plot. It is the third plot in the set of diagnostic plots.</p>
+<p>We can also use the built-in plot function for linear models to create this plot. It is the third plot in the set of model checking plots.</p>
 <div class="cell" data-evaluate="false">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(bp_age_model, <span class="at">which=</span><span class="dv">3</span>, <span class="at">add.smooth =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -1214,7 +1238,7 @@ Tip
 </div>
 </div>
 </div>
-<p>Let’s look at the four diagnostic plots for the log-log-transformed data:</p>
+<p>Let’s look at the four model checking plots for the log-log-transformed data:</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -1225,7 +1249,7 @@ Tip
 </div>
 </div>
 <p>All looks pretty good except for the scale-location plot, which shows a bit of a pattern. But overall, this looks much better than our original model.</p>
-<p>But… how to know which transformation to use…? It’s a bit of trial and error. But we can use the diagnostic plots to help us.</p>
+<p>But… how to know which transformation to use…? It’s a bit of trial and error. But we can use the model checking plots to help us.</p>
 <p><strong>Very very important</strong> is that we do this trial and error before we start using the model. E.g., we don’t want to jump from the aeroplane and then find out that our parachute is not working properly! And then try to fix the parachute while we are falling….</p>
 <p>Likewise, we must not start using the model and then try to fix it. We need to make sure our model is in good working order before we start using it.</p>
 <p>One of the traps we could fall into is called “p-hacking”. This is when we try different transformation until we find one that gives us the <strong>result we want</strong>, for example significant relationship. This is a big no-no in statistics. We need to decide on the model (including any transformations) before we start using it.</p>
@@ -1285,8 +1309,18 @@ Tip
 <p>This is clearly a linear model.</p>
 </section>
 </section>
-<section id="summary" class="level2">
-<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<section id="review" class="level2">
+<h2 class="anchored" data-anchor-id="review">Review</h2>
+<p>In this chapter we learned about first steps of regression analysis. Specifically, we learned about to:</p>
+<ul>
+<li>Motivation for regression analysis.</li>
+<li>The simple linear regression model.</li>
+<li>Estimation of the coefficients (intercept and slope) using the least squares method.</li>
+<li>How to model the errors (residuals) and the assumptions of linear regression.</li>
+<li>How to check the assumptions of linear regression using model checking plots.</li>
+<li>What can go wrong during the modeling process, and how to deal with it.</li>
+</ul>
+<p>With all that in place, we can be sure that when we use a linear regression model, we can trust the results it gives us. In the next chapter, we will start to use linear regression models to answer questions! This involves things such as hypothesis testing, confidence intervals, and prediction. Exciting times ahead!</p>
 
 
 </section>

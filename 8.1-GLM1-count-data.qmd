@@ -1,0 +1,574 @@
+```{r}
+#| echo: false
+source("_common.R")
+```
+
+
+# Count data (L8) {.unnumbered}
+
+In all the previous chapters, we have focused on **linear models** for continuous response variables. However, many biological response variables are counts (e.g., number of offspring, number of parasites). In this chapter, we introduce **Generalized Linear Models (GLMs)** for analysing count data, focusing on the Poisson distribution.
+
+## Introduction
+
+So far in BIO144, we have focused on **linear models** fitted using `lm()`. These models assume:
+
+- A **continuous response variable**
+- Normally distributed residuals
+- Constant variance (homoscedasticity)
+
+Linear models are powerful, but these assumptions are often violated in biological data.
+
+In this chapter we move beyond normal linear models to handle an important new type of response variable: **counts**.
+
+We introduce **Generalized Linear Models (GLMs)**, which extend linear models by allowing the response variable to follow distributions other than the normal distribution.
+
+By the end of this chapter, you should be able to:
+
+- Recognise when linear regression is inappropriate
+- Understand the core components of a GLM
+- Fit and interpret Poisson regression models
+- Diagnose common problems such as overdispersion and zero inflation
+
+**Think–Pair–Share** (#tps-non-neg-kinds) What kinds of biological outcomes (response variables) can you think of that *cannot* be negative or continuous?
+
+
+### From LM to GLM
+
+Linear models (`LM`) describe the **mean of a response variable** as a linear function of explanatory variables. For example:
+
+$y_i = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)} + \epsilon_i$
+
+where the error term $\epsilon_i$ is normally distributed with mean 0 and constant variance. That is:
+
+$\epsilon_i \sim N(0, \sigma^2)$.
+
+
+This works well when the response variable is continuous and approximately normally distributed.
+
+However, many biological response variables are:
+
+- **Counts** (e.g. offspring, parasites, species)
+- **Binary responses** (e.g. alive/dead)
+- **Proportions**
+
+In these cases, forcing the data into a linear model often leads to invalid predictions and misleading inference.
+
+**Generalized Linear Models (GLMs)** solve this problem by:
+
+- Keeping the familiar *linear predictor*, but
+- Allowing different distributions for the response, and
+- Linking the predictor to the mean response using a *link function*.
+
+::: {.callout-important}
+**Key idea**  
+GLMs are not a replacement for linear models — they are a *generalisation* of them. Linear regression is a special case of a GLM.
+:::
+
+**Think–Pair–Share** (#tps-which-reg-assump) Which assumption of linear regression do you think is most problematic for count data?
+
+### Count data
+
+Count data occur frequently in biology and medicine. Typical examples include:
+
+- Numbers of animals, plants, or species
+- Numbers of offspring
+- Numbers of pathological structures (e.g. polyps)
+
+Count data have four key properties:
+
+1. They are **discrete**
+2. They are **non-negative**
+3. Their **variance often increases with the mean**
+4. There is no known upper limit to the count.
+
+These properties immediately suggest that standard linear regression may be inappropriate.
+
+**Think–Pair–Share** (#tps-which-props-viol) Which of these properties is violated if we use a normal distribution for counts?
+
+## Example: Soay sheep
+
+A feral population of Soay sheep on the island of Hirta (Scotland) has been studied extensively. Ecologists were interested in whether the **body mass of female sheep** influences their fitness, measured as **lifetime reproductive success** (number of offspring produced over a lifetime).
+
+**Question:** Are heavier females fitter than lighter females?
+
+```{r}
+#| echo: false
+# simulate some data
+set.seed(1233)
+n <- 100
+body_size <- runif(n, min = 20, max = 70)
+fitness <- rpois(n, lambda = exp(0.05 * body_size - 1))
+soay <- data.frame(body.size = body_size, fitness = fitness)
+write_csv(soay, here("datasets", "soay_sheep.csv"))
+```
+
+Read in an example dataset:
+```{r}
+soay <- read.csv("datasets/soay_sheep.csv")
+```
+
+Here are the first few rows of the dataset:
+
+```{r}
+head(soay)
+```
+
+
+As always, we start by exploring the data visually:
+
+```{r fig.width=4, fig.height=4}
+#| echo: false
+ggplot(soay, aes(x = body.size, y = fitness)) +
+  geom_point(alpha = 0.4) +
+  labs(x = "Body mass (kg)", y = "Lifetime fitness")
+```
+
+**Think–Pair–Share** (#tps-what-suspicious) What features of this plot might already make you suspicious about using linear regression?
+
+### The wrong analysis
+
+A common mistake is to analyse count data using linear regression, treating counts as if they were continuous.
+
+```{r}
+mod_soay_lm <- lm(fitness ~ body.size, data = soay)
+```
+
+The model checking plots show clear violations of linear regression assumptions:
+
+```{r}
+par(mfrow = c(2, 2))
+plot(mod_soay_lm, which = 1:4, add.smooth = TRUE)
+```
+
+The qq-plot looks fine. The scale-location plot shows that variance increases with fitted values, violating homoscedasticity. Also, there is a clear non-linear pattern in the residuals vs fitted plot, suggesting that the linear model is not capturing the relationship well.
+
+Adding a quadratic term improves the fit slightly:
+
+```{r}
+mod2_soay_lm <- lm(fitness ~ body.size + I(body.size^2), data = soay)
+par(mfrow = c(2, 2))
+plot(mod2_soay_lm, which = 1:4, add.smooth = TRUE)
+```
+
+But problems remain: variance increases with fitted values.
+
+::: {.callout-caution}
+**Why this matters**  
+Violating model assumptions can lead to biased estimates, incorrect standard errors, and misleading p-values.
+:::
+
+Another issue remains, however: linear regression can predict negative counts, which are impossible. We can see this in a plot of the data and the fitted regression line:
+
+```{r}
+#| echo: false
+## extrapolate the fitted line to 10 kg
+new_data <- data.frame(body.size = seq(10, 55, by = 1))
+new_data$predicted_fitness <- predict(mod_soay_lm, newdata = new_data)
+ggplot(soay, aes(x = body.size, y = fitness)) +
+  geom_point(alpha = 0.4) +
+  geom_line(data = new_data, aes(x = body.size, y = predicted_fitness), color = "blue") +
+  labs(x = "Body mass (kg)", y = "Lifetime fitness")
+```
+
+Notice that for small body sizes the fitted line goes below 0 on the y-axis. That is, the moe predicts negative fitness values, which are biologically impossible.
+
+::: {.callout-caution}
+We have extrapolated beyond the data range here, largely for illustrative purposes. In practice we should be very cautious about extrapolating beyond the range of observed data. This is because the model may not hold outside the observed range, leading to nonsensical predictions.
+:::
+
+
+### Why linear regression fails for count data
+
+- The normal distribution is for continuous variables
+- It allows negative values
+- It assumes constant variance
+- Count data are discrete, non-negative, and typically heteroscedastic
+
+**Think–Pair–Share (#a_why_poisson)** Why is a normal distribution a poor choice for count data? Which assumptions can be expected to fail?
+
+
+## Poisson GLM
+
+To deal with count data, we need a different probability (error) model. A common probability model for counts is the **Poisson distribution**. The Poisson distribution is often the default starting point for modelling counts because it is the simplest distribution that respects discreteness, non-negativity, and increasing variance.
+
+The Poisson distribution has the following probability mass function:
+
+$P(Y = y) = \frac{\lambda^y e^{-\lambda}}{y!}$
+
+where:
+
+* $y = 0, 1, 2, \ldots$
+* $\lambda > 0$ is the mean (and variance) of the distribution
+
+Here are a couple of Poisson distributions with different means:
+
+```{r}
+#| echo: false
+lambda_values <- c(1, 4, 10)
+x_values <- 0:20
+poisson_data <- expand.grid(x = x_values, lambda = lambda_values)
+poisson_data$probability <- mapply(function(x, lambda) {
+  dpois(x, lambda)
+}, poisson_data$x, poisson_data$lambda)
+ggplot(poisson_data, aes(x = x, y = probability, color = factor(lambda))) +
+  geom_point() +
+  geom_line(alpha = 0.2) + 
+  labs(x = "Count", y = "Probability", color = expression(lambda)) 
+```
+
+
+The Poisson distribution has two important properties:
+
+1. It is defined only for **non-negative integers** (0, 1, 2, ...)
+2. The **mean and variance are equal**.
+
+
+::: {.callout-important}
+**Mean–variance relationship**  
+In a Poisson distribution, the mean and variance are equal. This captures an important feature of count data, but it will later lead to the concept of *overdispersion*.
+:::
+
+
+**Think–Pair–Share** (#a_mean_variance_link) Why does increasing variance with the mean cause problems for linear regression?
+
+
+### Generalized Linear Models (GLMs)
+
+GLMs extend linear models by combining three components:
+
+1. **Linear predictor**.
+2. **Link function**.
+3. **Probability distribution (family)**.
+
+::: {.callout-note}
+If you choose a normal family and an identity link, a GLM is mathematically identical to the linear model you fit using `lm()`.
+:::
+
+#### The linear predictor
+
+The linear predictor is the same as in linear regression:
+
+$\eta_i = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}$
+
+It is just the linear combination of explanatory variables and coefficients. Nothing new here.
+
+
+#### The link function
+
+In the linear models we already used (e.g., for linear regression) the link function is the **identity link**:
+
+$E(y_i) = \eta_i$
+
+Here, $E(y_i)$ refers to the expected value (mean) of many hypothetical observations, not the single observed value $y_i$.
+
+*Identity link*: the expected value of the response $E(y_i)$ equals the linear predictor $\eta_i$.
+
+That is:
+
+$E(y_i) = \eta_i = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}$
+
+For count data, this can lead to negative predictions.
+
+The solution is a different **link function**. For Poisson regression, the standard choice is the **log link**. It relates the linear predictor to the expected value of the response as follows:
+
+$\eta_i = \log(E(y_i))$
+
+which implies:
+
+$E(y_i) = \exp(\eta_i) > 0$
+
+The log link ensures that the expected count is always positive, regardless of the values of the explanatory variables. Whatever the value of the linear predictor $\eta_i$, the exponential of it $\exp(\eta_i)$ is always positive.
+
+::: {.callout-hint}
+A good link function enforces the natural constraints of the data.
+:::
+
+**Think–Pair–Share** (#tps-what-wrong-id) What would go wrong if we used an identity link for count data?
+
+#### The probability distribution (family)
+
+The final component of a GLM is the **probability distribution** (also called the **family**). This specifies how the response variable is distributed. In Poisson regression, we assume that the response variable follows a Poisson distribution. Hence, we say we are fitting a **Poisson GLM**.
+
+Mathematically, a Poisson GLM can be summarised as:
+
+$y_i \sim \text{Poisson}(\lambda_i)$
+
+And written out fully with the linear predictor and link function:
+
+$y_i \sim \text{Poisson}(\lambda_i)$
+
+where $\log(\lambda_i) = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}$
+
+or equivalently:
+
+$E(y_i) \sim \text{Poisson}(\exp(\beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}))$
+
+
+
+## R - Poisson GLM
+
+When fitting a Poisson GLM in R, we use the `glm()` function, specifying the family as `poisson`:
+
+```{r}
+soay_glm <- glm(fitness ~ body.size, data = soay, family = poisson)
+```
+
+Specifying `family = poisson` tells R to use the Poisson distribution with a log link function by default. We could specify the link explicitly as `family = poisson(link = "log")`, but this is unnecessary since the log link is the default for the Poisson family.
+
+### Checking model assumptions
+
+As always, we should check model assumptions:
+
+```{r}
+par(mfrow = c(2, 2))
+plot(soay_glm, which = 1:4, add.smooth = TRUE)
+```
+
+The QQ-plot is rather concerning. However, QQ-plots in GLMs are not testing normality of residuals in the same way as for linear models, so their interpretation differs. The deviance residuals should approximately follow a normal distribution if the model fits well. Here, there are some deviations from normality, which could be somewhat concerning, but for now we will focus on the other plots.
+
+The other plots look much better than for the linear model. The residuals vs fitted plot shows no obvious pattern, and the scale-location plot shows more constant variance.
+
+::: {.callout-important}
+You must specify the **family** in `glm()`. If you omit the link function, R uses the default link for that family.
+:::
+
+### Interpreting coefficients
+
+```{r}
+summary(soay_glm)
+```
+
+Coefficients are estimated on the **log scale**.
+
+::: {.callout-important}
+A one-unit increase in an explanatory variable multiplies the expected count by $\exp(\beta)$.
+:::
+
+**Think–Pair–Share** (#tps-what-change-beta) If $\beta=0.05$ what change in the expected count would be caused by an increase in body mass of 1 kg? As well as a numeric value, specify whether it is used additively or multiplicatively.
+
+To interpret the coefficient for body size ($\beta_1 = 0.05$), we exponentiate it:
+$\exp(0.05) \approx 1.65$
+
+This means that for each additional kilogram of body size, the expected count of fitness increases by a factor of approximately 1.65 (i.e., a 65% increase). We use the number multiplicatively because of the log link function.
+
+To make a prediction of the expected count for a given body size, we back-transform the linear predictor:
+
+$E(y) = \exp(\beta_0 + \beta_1 \times \text{body.size})$
+
+For example, for a body size of 40 kg:
+```{r}
+body_size_example <- 40
+linear_predictor <- coef(soay_glm)[1] + coef(soay_glm)[2] * body_size_example
+expected_count <- exp(linear_predictor)
+expected_count
+```
+
+::: {.callout-note}
+Although counts can only be integers, the expected value from a Poisson model can be any positive real number. This is because the expected value is a mean over many possible counts.
+:::
+
+
+
+### Analysis of deviance
+
+There is something technically different that we have glossed over until now: how model fit is assessed. In linear regression we estimate parameters by minimizing the sum of squared residuals. In GLMs, we use **maximum likelihood estimation (MLE)**. In this course we will not go into the mathematical details of MLE, but the key idea is that we find the parameter values that make the observed data most probable under the assumed model (just like in least squares). Instead of minimising sums of squares, we maximise the **likelihood** of the data given the model. Maximising the likelihood is equivalent to minimising the **deviance**, which is a measure of model fit based on likelihoods. Hence, when we fit a GLM in R, we get output including the **deviance** (and not sums of squares):
+
+```{r}
+anova(soay_glm, test = "Chisq")
+```
+
+In the output we see the deviance for the null model and the fitted model, as well as the change in deviance when adding explanatory variables. We can use a chi-squared test to assess whether adding explanatory variables significantly improves model fit.
+
+We use a chi-squared test here because, under certain regularity conditions, the change in deviance between nested models follows a chi-squared distribution with degrees of freedom equal to the difference in the number of parameters. If you are interested in what this means, you can read more about it in more advanced statistics textbooks.
+
+### Reporting
+
+When reporting results from a Poisson GLM, we can make a graph and a sentence describing the pattern and related statistics.
+
+When we wish to make a graph of the fitted relationship, we can either make it with the y-axis on the log scale (linear predictor scale) or back-transform to the original count scale. I usually prefer the original scale, as it is easier to interpret.
+
+The first step is to create a new data frame with a sequence of body sizes for prediction, and errors for the 95% confidence intervals:
+```{r}
+new_data <- data.frame(body.size = seq(min(soay$body.size), max(soay$body.size), length.out = 100))
+predictions <- predict(soay_glm, newdata = new_data, se.fit = TRUE)
+new_data$fit <- exp(predictions$fit)
+new_data$lower <- exp(predictions$fit - 1.96 * predictions$se.fit)
+new_data$upper <- exp(predictions$fit + 1.96 * predictions$se.fit)
+```
+
+Note that we back-transform the predictions and confidence intervals using the exponential function, since the link function is the log. And note that we must calculate the confidence intervals on the log scale first, and then back-transform them.
+
+::: {.callout-note}
+If we only wanted the fitted value (and not confidence intervals) we could have used `type = "response"` in the `predict()` function to get predictions on the original count scale (back-transformed from the log scale). When we don't specified this, we would get predictions on the log scale--this is the default behavior.
+:::
+
+Now we can plot the data and the fitted relationship with confidence intervals:
+
+```{r fig.width=4, fig.height=4}
+#| echo: false
+ggplot(soay, aes(x = body.size, y = fitness)) +
+  geom_point(alpha = 0.4) +
+  geom_line(data = new_data, aes(x = body.size, y = fit), color
+ = "blue") +
+  geom_ribbon(data = new_data, aes(x = body.size, ymin = lower,
+ ymax = upper), alpha = 0.2, fill = "blue") +
+  labs(x = "Body mass (kg)", y = "Lifetime fitness")
+```
+
+Excellent! We can now write a nice sentence for our results:
+
+Reproductive fitness (in terms of lifetime number of offspring) increased significantly with body mass, with a unit increase in body mass associated with a multiplicative increase in expected fitness of `r round(exp(coef(soay_glm)[2]), 2)` (95% CI: `r round(exp(confint(soay_glm)[2, ]), 2)`; $\chi^2 =$ `r round(anova(soay_glm, test = "Chisq")$Deviance[2], 2)`, $df = 1$, $p <$ `r signif(anova(soay_glm, test = "Chisq")[2,5], 2)`).
+
+
+## Well done!
+
+We have made our first steps into the world of GLMs and Poisson regression for count data. You should now be able to:
+
+* Recognise why linear regression is often inappropriate for count data.
+* Understand the components of a GLM: linear predictor, link function, and family.
+* Fit a Poisson GLM in R using `glm()`.
+* Interpret coefficients from a Poisson GLM.
+
+Next, we will look at common issues that arise when fitting Poisson models, such as overdispersion and zero inflation.
+
+
+## Overdispersion
+
+In a Poisson model, mean and variance are assumed equal. In practice, variance often exceeds the mean, a phenomenon called **overdispersion**.
+
+Common causes include:
+
+- Unmeasured explanatory variables. This means important explanatory variables are missing from the model, leading to extra variability.
+- Individual heterogeneity. This can arise when individuals differ in ways not captured by measured explanatory variables, leading to extra variability in counts.
+- Correlated observations. This can occur when observations are not independent, such as repeated measures on the same individual.
+
+A simple check for overdispersion is to compare the residual deviance to the residual degrees of freedom:
+
+$\text{Dispersion} = \frac{\text{Residual Deviance}}{\text{Residual DF}}$
+
+If this ratio is substantially greater than 1 (e.g., > 1.5 or 2), it indicates overdispersion.
+
+Check this for our Soay sheep model:
+
+```{r}
+dispersion_soay <- deviance(soay_glm) / df.residual(soay_glm)
+dispersion_soay
+```
+Here, the dispersion is quite close to 1 (it is `r round(dispersion_soay, 2)`), indicating little  overdispersion. However, in many real datasets, overdispersion is common.
+
+
+::: {.callout-caution}
+Ignoring overdispersion leads to **anti-conservative p-values** (too small). This would be a typical example of **Type I error inflation**. Type I errors occur when we incorrectly reject a true null hypothesis, leading to false positives. In the context of statistical modeling, ignoring overdispersion can result in underestimating standard errors, which in turn leads to smaller p-values. Consequently, we may conclude that an effect is statistically significant when it is not, thereby increasing the likelihood of Type I errors.
+:::
+
+
+**Think–Pair–Share** (#tps-why-ind-diff) Why might individuals differ even after accounting for measured explanatory variables?
+
+
+
+### Quasi-Poisson and negative binomial models
+
+One solution is the **quasi-Poisson** model, which estimates an additional dispersion parameter:
+
+For this, we can use `family = quasipoisson` in `glm()`:
+
+```{r}
+soay_quasi <- glm(fitness ~ body.size, data = soay, family = quasipoisson)
+summary(soay_quasi)
+```
+
+
+**Think–Pair–Share** (#a_overdispersion_consequences) What happens to standard errors and p-values if overdispersion is ignored?
+
+
+## Zero inflation
+
+A special case of overdispersion arises when there are **more zeros than expected** under a Poisson model. This is called **zero inflation**.
+
+Examples include:
+
+- Number of cigarettes smoked (many people do not smoke, more than can be modelled by a Poisson distribution)
+- Parasite counts (many host individual have no parasites, more than can be modelled by a Poission distribution)
+
+::: {.callout-note}
+Zero inflation often reflects **two processes**: whether an observation can be non-zero at all, and how large it is if it is. E.g., whether an individual smokes at all, and then how many cigarettes they smoke if they do.
+:::
+
+**Think–Pair–Share** (#tps-zero-inf-examples) Can you think of an ecological, biological, or medical process that would generate many structural zeros?
+
+In this course we will not describe in detail or practice fitting zero-inflated models, but they are an important tool for count data with many zeros. Examples of models include zero-inflated Poisson (ZIP) and zero-inflated negative binomial (ZINB) models. These models combine a count model (e.g., Poisson or negative binomial) with a separate model for the probability of being a structural zero. There is also a model called the **hurdle model**, which is similar but has a different interpretation.
+
+## Multiple explanatory variables
+
+GLMs can include multiple explanatory variables, just like linear models. And they can include only categorical variables, only continuous variables, or a mix of both.
+
+For example, we could include parasite load as an additional predictor of fitness in the Soay sheep data:
+
+```{r}
+#| echo: false
+# simulate parasite load
+set.seed(1234)
+soay$parasite.load <- rpois(nrow(soay), lambda = 5)
+soay$fitness <- rpois(nrow(soay), lambda = exp(0.05 * soay$body.size - 0.1 * soay$parasite.load - 1))
+write_csv(soay, here("datasets", "soay_sheep_with_parasites.csv"))
+```
+
+Read in the updated dataset:
+
+```{r}
+soay <- read.csv("datasets/soay_sheep_with_parasites.csv")
+```
+
+Here is the first few rows of the updated dataset:
+
+```{r}
+head(soay)
+```
+
+We can visualise the relationship between parasite load and fitness:
+
+```{r fig.width=4, fig.height=4}
+#| echo: false
+ggplot(soay, aes(x = parasite.load, y = fitness)) +
+  geom_point(alpha = 0.4) +
+  labs(x = "Parasite load", y = "Lifetime fitness")
+```
+
+It looks like higher parasite loads are associated with lower fitness.
+
+We can fit a Poisson GLM with both body size and parasite load as explanatory variables:
+
+```{r}
+soay_glm2 <- glm(fitness ~ body.size + parasite.load, data = soay, family = poisson)
+```
+
+As always we check model assumptions:
+```{r}
+par(mfrow = c(2, 2))
+plot(soay_glm2, which = 1:4, add.smooth = TRUE)
+```
+
+The model checking plots look good. We can summarise the model:
+
+```{r}
+anova(soay_glm2, test = "Chisq")
+```
+
+We see that both body size and parasite load significantly affect fitness. Body size has a positive effect, while parasite load has a negative effect. These effects are interpreted conditional on the other explanatory variable being held constant, just as in multiple linear regression.
+
+**Think–Pair–Share** (#tps-how-vis-poisson) How would you visualise (make a graph) of the data and the modelled relationships? Make a sketch of what you could do.
+
+
+## Review
+
+In this chapter we have introduced Generalized Linear Models (GLMs) for count data, focusing on Poisson regression. Key points include:
+
+- Linear regression is often inappropriate for count data due to violations of assumptions.
+- GLMs extend linear models by allowing different distributions and link functions.
+- Poisson GLMs use the Poisson distribution with a log link to model counts.
+- Coefficients are interpreted on the log scale, with exponentiation giving multiplicative effects.
+- Overdispersion and zero inflation are common issues that need to be addressed.
+- GLMs can include multiple explanatory variables, just like linear models.
+
+With this foundation, you are now equipped to analyse count data using GLMs in R. In the next chapter, we will explore further extensions and applications of GLMs.
+

@@ -317,7 +317,7 @@ window.Quarto = {
   <li><a href="#separation" id="toc-separation" class="nav-link" data-scroll-target="#separation">1. Separation</a></li>
   <li><a href="#probability-vs-odds-ratio-in-reporting" id="toc-probability-vs-odds-ratio-in-reporting" class="nav-link" data-scroll-target="#probability-vs-odds-ratio-in-reporting">2. Probability vs odds ratio in reporting</a></li>
   </ul></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  <li><a href="#review" id="toc-review" class="nav-link" data-scroll-target="#review">Review</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/opetchey/BIO144_Course_Book/edit/main/9.1-GLM2-binary-data.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/opetchey/BIO144_Course_Book/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -345,20 +345,14 @@ window.Quarto = {
 
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>So far in BIO144, we have focused on <strong>linear models</strong> fitted using <code>lm()</code>. These models assume:</p>
-<ul>
-<li>A <strong>continuous</strong> response variable</li>
-<li>Normally distributed residuals</li>
-<li>Constant variance (homoscedasticity)</li>
-</ul>
-<p>But many biological outcomes are not continuous. In the previous chapter we handled <strong>counts</strong> with a Poisson GLM. In this chapter we move to an even more common special case: <strong>binary outcomes</strong>.</p>
-<p>Binary outcomes take only two values, often coded as 0 and 1:</p>
+<p>In the previous chapter we moved from linear models and normal errors to generalized linear models (GLMs) to handle <strong>count responses</strong> with a Poisson GLM. In this chapter we move to another common case: <strong>binary responses</strong>.</p>
+<p>Binary response variables take only two values, often coded as 0 and 1:</p>
 <ul>
 <li>1 = yes / success / present / dead</li>
 <li>0 = no / failure / absent / alive</li>
 </ul>
 <p>The central question becomes:</p>
-<p><strong>Which explanatory variables influence the probability</strong> <span class="math inline">\(\pi_i = P(y_i = 1)\)</span> <strong>of the outcome?</strong></p>
+<p><strong>Which explanatory variables influence the probability</strong> <span class="math inline">\(\pi_i = P(y_i = 1)\)</span> <strong>of the response variable?</strong></p>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -379,7 +373,7 @@ A GLM keeps the familiar <em>linear predictor</em> from linear models, but: 1) u
 </ul>
 </div>
 </div>
-<p><strong>Think–Pair–Share</strong> (#tps-binary-examples) Name three outcomes in biology, ecology, or medicine that are naturally binary (0/1). Why would a linear model be risky for each?</p>
+<p><strong>Think–Pair–Share</strong> (#tps-binary-examples) Name three response variables in biology, ecology, or medicine that are naturally binary (0/1). Why would a linear model be risky for each?</p>
 </section>
 <section id="overview" class="level2">
 <h2 class="anchored" data-anchor-id="overview">Overview</h2>
@@ -389,17 +383,17 @@ A GLM keeps the familiar <em>linear predictor</em> from linear models, but: 1) u
 <li>Odds, odds ratios, and log-odds</li>
 <li>Logistic regression as a binomial GLM</li>
 <li>Interpreting coefficients (odds ratios and probabilities)</li>
-<li>Diagnostics, deviances, and (some) model checking</li>
+<li>Model assumptions, deviances, and (some) model checking</li>
 <li>Overdispersion in <em>aggregated</em> binomial data and the quasibinomial fix</li>
 <li>Practical complications for individual-level (non-aggregated) 0/1 data</li>
 </ul>
 </section>
 <section id="a-warm-up-the-chi-square-test-for-a-22-table" class="level2">
 <h2 class="anchored" data-anchor-id="a-warm-up-the-chi-square-test-for-a-22-table">A warm-up: the Chi-square test for a 2×2 table</h2>
-<p>Binary outcomes often first appear in a <strong>contingency table</strong>. For example:</p>
+<p>Binary responses often first appear in a <strong>contingency table</strong>. For example:</p>
 <ul>
-<li>Predictor <span class="math inline">\(x\)</span>: hormonal contraception (yes/no)</li>
-<li>Outcome <span class="math inline">\(y\)</span>: heart attack (yes/no)</li>
+<li>Explanatory variable <span class="math inline">\(x\)</span>: hormonal contraception (yes/no)</li>
+<li>Response variable <span class="math inline">\(y\)</span>: heart attack (yes/no)</li>
 </ul>
 <p>The <span class="math inline">\(\chi^2\)</span> (chi-squared) test asks whether the <strong>proportion</strong> (or frequency) of heart attacks is the same in the two contraception groups.</p>
 <section id="a-concrete-example-dataset" class="level3">
@@ -502,9 +496,9 @@ An odds of 3 means “3 to 1”, which corresponds to a probability of <span cla
 <h2 class="anchored" data-anchor-id="from-tables-to-regression-models">From tables to regression models</h2>
 <p>Contingency tables are a good start, but they are limited:</p>
 <ul>
-<li>they typically compare <strong>groups</strong> (few categorical predictors),</li>
-<li>they don’t easily handle <strong>continuous predictors</strong> (e.g.&nbsp;dose),</li>
-<li>they don’t naturally generalise to multiple predictors.</li>
+<li>they typically compare <strong>groups</strong> (few categorical explanatory variable),</li>
+<li>they don’t easily handle <strong>continuous explanatory variables</strong> (e.g.&nbsp;dose),</li>
+<li>they don’t naturally generalise to multiple explanatory variables.</li>
 </ul>
 <p>When <span class="math inline">\(y\)</span> is binary or binomial, the standard regression approach is <strong>logistic regression</strong>, a <strong>binomial GLM</strong>.</p>
 </section>
@@ -539,7 +533,7 @@ dbl (4): Dose, Number_tested, Number_killed, Mortality_rate
 6  68.7            59            53          0.898</code></pre>
 </div>
 </div>
-<p>It contains one predictor (Dose) and two pieces of information about the binary outcome (Number_killed and Number_tested). The mortality rate is also included, and is the proportion killed at each dose (Number_killed / Number_tested).</p>
+<p>It contains one explanatory variable (Dose) and two pieces of information about the binary response variable (Number_killed and Number_tested). The mortality rate is also included, and is the proportion killed at each dose (Number_killed / Number_tested).</p>
 <p>As always, start with a graph.</p>
 <div class="cell">
 <div class="cell-output-display">
@@ -560,7 +554,7 @@ dbl (4): Dose, Number_tested, Number_killed, Mortality_rate
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>mod_beetle_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(Mortality_rate <span class="sc">~</span> Dose, <span class="at">data =</span> beetle)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>This can predict probabilities below 0 or above 1 and does not respect the mean–variance structure of binomial data.</p>
-<p>Check out the model diagnostics:</p>
+<p>Check out the model assumptions:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_beetle_lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -614,7 +608,7 @@ Caution
 <div class="callout-body-container callout-body">
 <p><strong>Poisson vs binomial, when to use each</strong><br>
 Use a Poisson model when counts have <em>no known upper limit</em>.<br>
-Use a binomial model when counts are “<span class="math inline">\(k\)</span> successes out of <span class="math inline">\(n\)</span> trials”. Use a binomial model when each observation is a 0/1 outcome.</p>
+Use a binomial model when counts are “<span class="math inline">\(k\)</span> successes out of <span class="math inline">\(n\)</span> trials”. Use a binomial model when each observation is a 0/1 response.</p>
 </div>
 </div>
 <p><strong>Think–Pair–Share (#a_probability_not_linear)</strong> Why is it dangerous to model probabilities directly using a linear model?</p>
@@ -624,7 +618,7 @@ Use a binomial model when counts are “<span class="math inline">\(k\)</span> s
 <h2 class="anchored" data-anchor-id="the-probability-model-bernoulli-and-binomial">The probability model: Bernoulli and binomial</h2>
 <section id="bernoulli-binary-data" class="level3">
 <h3 class="anchored" data-anchor-id="bernoulli-binary-data">Bernoulli (binary) data</h3>
-<p>For a single 0/1 outcome:</p>
+<p>For a single 0/1 observation:</p>
 <p><span class="math inline">\(Y \sim \text{Bernoulli}(\pi),\quad P(Y=1)=\pi,\quad P(Y=0)=1-\pi\)</span></p>
 <p>In words, this means that the probability of success (Y=1) is <span class="math inline">\(\pi\)</span>, and the probability of failure (Y=0) is <span class="math inline">\(1-\pi\)</span>. And that this probability is Bernoulli distributed. Bernoulli is a special case of the binomial distribution with <span class="math inline">\(n=1\)</span>.</p>
 <p>Mean and variance are:</p>
@@ -682,7 +676,7 @@ Important
 It maps probabilities <span class="math inline">\((0,1)\)</span> to the whole real line <span class="math inline">\((-\infty,\infty)\)</span>, so the linear predictor can take any value while <span class="math inline">\(\pi_i\)</span> stays valid, i.e., [0,1].</p>
 </div>
 </div>
-<p><strong>Think–Pair–Share</strong> (#tps-identity-link-binary) What would go wrong if we used the identity link <span class="math inline">\(E(y_i)=\eta_i\)</span> for a binary outcome? And which link function is this, by the way?</p>
+<p><strong>Think–Pair–Share</strong> (#tps-identity-link-binary) What would go wrong if we used the identity link <span class="math inline">\(E(y_i)=\eta_i\)</span> for a binary response variable? And which link function is this, by the way?</p>
 </section>
 <section id="fitting-logistic-regression-in-r-aggregated-binomial-data" class="level2">
 <h2 class="anchored" data-anchor-id="fitting-logistic-regression-in-r-aggregated-binomial-data">Fitting logistic regression in R (aggregated binomial data)</h2>
@@ -708,7 +702,7 @@ It maps probabilities <span class="math inline">\((0,1)\)</span> to the whole re
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>beetle_glm <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(Number_killed, Number_survived) <span class="sc">~</span> Dose,</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">data =</span> beetle, <span class="at">family =</span> binomial)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>And as usual we can check the model diagnostics:</p>
+<p>And as usual we can check the model assumptions:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(beetle_glm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -892,10 +886,10 @@ Note
 </section>
 <section id="individual-level-binary-data-non-aggregated" class="level2">
 <h2 class="anchored" data-anchor-id="individual-level-binary-data-non-aggregated">Individual-level binary data (non-aggregated)</h2>
-<p>In some datasets we observe a single 0/1 outcome per individual, rather than aggregated counts. The same logistic regression model is used, but:</p>
+<p>In some datasets we record a single 0/1 observation per individual, rather than aggregated counts for many individuals. The same logistic regression model is used, but:</p>
 <ul>
-<li>simple plots of <span class="math inline">\(y\)</span> against predictors look uninformative (two bands)</li>
-<li>some diagnostics and dispersion checks need extra care</li>
+<li>simple plots of <span class="math inline">\(y\)</span> against explanatory variables look uninformative (two bands)</li>
+<li>some assumption and dispersion checks need extra care</li>
 </ul>
 <section id="example-blood-screening-esr" class="level3">
 <h3 class="anchored" data-anchor-id="example-blood-screening-esr">Example: blood screening (ESR)</h3>
@@ -929,7 +923,7 @@ dbl (3): fibrinogen, globulin, y
 6       2.46       36 ESR &lt; 20     0</code></pre>
 </div>
 </div>
-<p>The ESR outcome is in two variables. <code>ESR</code> is a factor with levels “low” and “high”. It is also present as a numeric variable <code>y</code>, coded 0 (low) and 1 (high). The predictors are <code>fibrinogen</code> and <code>globulin</code>, both continuous.</p>
+<p>The ESR response variable is in two variables. <code>ESR</code> is a factor with levels “low” and “high”. It is also present as a numeric variable <code>y</code>, coded 0 (low) and 1 (high). The explanatory variables are <code>fibrinogen</code> and <code>globulin</code>, both continuous.</p>
 </section>
 <section id="complication-1-graphical-description" class="level3">
 <h3 class="anchored" data-anchor-id="complication-1-graphical-description">Complication 1: graphical description</h3>
@@ -943,7 +937,7 @@ dbl (3): fibrinogen, globulin, y
 </div>
 </div>
 </div>
-<p>A more informative plot is a conditional density plot. This shows the proportion of 0s and 1s at each value of the predictor.</p>
+<p>A more informative plot is a conditional density plot. This shows the proportion of 0s and 1s at each value of the explanatory variable.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
 <span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cdplot</span>(<span class="fu">factor</span>(y) <span class="sc">~</span> fibrinogen, <span class="at">data =</span> plasma, <span class="at">xlab =</span> <span class="st">"Fibrinogen"</span>)</span>
@@ -1000,7 +994,7 @@ The simple “residual deviance <span class="math inline">\(\approx\)</span> res
 <h2 class="anchored" data-anchor-id="two-common-practical-issues">Two common practical issues</h2>
 <section id="separation" class="level3">
 <h3 class="anchored" data-anchor-id="separation">1. Separation</h3>
-<p>Sometimes a predictor (or combination of predictors) perfectly predicts the outcome (all 0s on one side, all 1s on the other). This is called <strong>(complete) separation</strong> and can cause extremely large coefficient estimates and warnings.</p>
+<p>Sometimes a explanatory variable (or combination of explanatory variables) perfectly predicts the response variable (all 0s on one side, all 1s on the other). This is called <strong>(complete) separation</strong> and can cause extremely large coefficient estimates and warnings.</p>
 <div class="callout callout-style-default callout-caution callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1018,19 +1012,19 @@ If your logistic regression produces enormous standard errors or warnings about 
 </section>
 <section id="probability-vs-odds-ratio-in-reporting" class="level3">
 <h3 class="anchored" data-anchor-id="probability-vs-odds-ratio-in-reporting">2. Probability vs odds ratio in reporting</h3>
-<p>Odds ratios are the default “native” scale of logistic regression, but probabilities are often easier to interpret. In practice, you may report odds ratios <strong>and</strong> translate to probabilities at meaningful predictor values.</p>
+<p>Odds ratios are the default “native” scale of logistic regression, but probabilities are often easier to interpret. In practice, you may report odds ratios <strong>and</strong> translate to probabilities at meaningful explanatory variable values.</p>
 </section>
 </section>
-<section id="summary" class="level2">
-<h2 class="anchored" data-anchor-id="summary">Summary</h2>
-<p>There is a lot more to logistic regression and binary data. We can of course make models to analyse more complex data and questions, including multiple predictors, different types of predictor (continuous and categorical), interactions, and so on. But the key ideas are all above. To summarize the main points:</p>
+<section id="review" class="level2">
+<h2 class="anchored" data-anchor-id="review">Review</h2>
+<p>There is a lot more to logistic regression and binary data. We can of course make models to analyse more complex data and questions, including multiple explanatory variables, different types of explanatory variable (continuous and categorical), interactions, and so on. But the key ideas are all above. To summarize the main points:</p>
 <ul>
 <li>Data can be either aggregated binomial (successes out of trials) or individual-level 0/1.</li>
-<li>The key questions are about how predictors influence the probability of “yes”.</li>
+<li>The key questions are about how explanatory variables influence the probability of “yes”.</li>
 <li>The distribution family is binomial (Bernoulli for individual-level data).</li>
 <li>The link function is the logit (log-odds).</li>
 <li>If we find overdispersion in aggregated binomial data, <code>quasibinomial</code> is a pragmatic fix.</li>
-<li>With non-aggregated individual-level 0/1 data, plotting and diagnostics require more care.</li>
+<li>With non-aggregated individual-level 0/1 data, plotting and checking model assumptions require more care.</li>
 </ul>
 
 

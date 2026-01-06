@@ -1,0 +1,34 @@
+project:
+  type: book
+
+book:
+  title: "Getting Started with R (2nd Ed.)"
+  subtitle: "An Inroduction for Biologists"
+  author: "Andrew P. Beckerman, Dylan Z. Childs, & Owen L. Petchey"
+  chapters:
+    - index.qmd
+    - 1.1-intro.qmd
+    - 2.1-R-and-RStudio.qmd
+
+format:
+  html:
+    theme: cosmo
+  pdf:
+    keep-tex: true
+    documentclass: book
+    classoption:
+      - 12pt
+      - a4paper
+    toc-depth: 2
+  docx:
+    toc: true
+    number-sections: true
+    highlight-style: github
+    toc-depth: 2
+
+execute:
+  echo: false
+  warning: false
+  message: false
+
+

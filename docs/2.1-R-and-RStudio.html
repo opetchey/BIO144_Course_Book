@@ -258,10 +258,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#clean-the-variable-names" id="toc-clean-the-variable-names" class="nav-link" data-scroll-target="#clean-the-variable-names">Clean the variable names</a></li>
   <li><a href="#manipulate-the-data-frame" id="toc-manipulate-the-data-frame" class="nav-link" data-scroll-target="#manipulate-the-data-frame">Manipulate the data frame</a></li>
-  <li><a href="#select-columns-select-columns" id="toc-select-columns-select-columns" class="nav-link" data-scroll-target="#select-columns-select-columns">Select columns [#select-columns]</a></li>
+  <li><a href="#select-columns" id="toc-select-columns" class="nav-link" data-scroll-target="#select-columns">Select columns</a></li>
   <li><a href="#filter-getting-particular-rows-of-data-filter-rows" id="toc-filter-getting-particular-rows-of-data-filter-rows" class="nav-link" data-scroll-target="#filter-getting-particular-rows-of-data-filter-rows">Filter: Getting particular rows of data [#filter-rows]</a></li>
   <li><a href="#slice-getting-rows-by-position-slice-rows" id="toc-slice-getting-rows-by-position-slice-rows" class="nav-link" data-scroll-target="#slice-getting-rows-by-position-slice-rows">Slice: Getting rows by position [#slice-rows]</a></li>
-  <li><a href="#arrange-reordering-rows-arrange-rows" id="toc-arrange-reordering-rows-arrange-rows" class="nav-link" data-scroll-target="#arrange-reordering-rows-arrange-rows">Arrange: Reordering rows [#arrange-rows]</a></li>
+  <li><a href="#arrange-reordering-rows" id="toc-arrange-reordering-rows" class="nav-link" data-scroll-target="#arrange-reordering-rows">Arrange: Reordering rows</a></li>
   <li><a href="#mutate-adding-new-variables-mutate-variables" id="toc-mutate-adding-new-variables-mutate-variables" class="nav-link" data-scroll-target="#mutate-adding-new-variables-mutate-variables">Mutate: Adding new variables [#mutate-variables]</a></li>
   <li><a href="#working-with-categorical-variables" id="toc-working-with-categorical-variables" class="nav-link" data-scroll-target="#working-with-categorical-variables">Working with categorical variables</a></li>
   </ul></li>
@@ -271,6 +271,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#understanding-ggplot2-syntax-understanding-ggplot2" id="toc-understanding-ggplot2-syntax-understanding-ggplot2" class="nav-link" data-scroll-target="#understanding-ggplot2-syntax-understanding-ggplot2">Understanding ggplot2 syntax [#understanding-ggplot2]</a></li>
   <li><a href="#saving-ggplot-visualisations-saving-ggplot" id="toc-saving-ggplot-visualisations-saving-ggplot" class="nav-link" data-scroll-target="#saving-ggplot-visualisations-saving-ggplot">Saving ggplot visualisations [#saving-ggplot]</a></li>
   </ul></li>
+  <li><a href="#review" id="toc-review" class="nav-link" data-scroll-target="#review">Review</a></li>
   <li><a href="#extras" id="toc-extras" class="nav-link" data-scroll-target="#extras">Extras</a>
   <ul class="collapse">
   <li><a href="#making-reports-directly-using-quarto-quarto-reports" id="toc-making-reports-directly-using-quarto-quarto-reports" class="nav-link" data-scroll-target="#making-reports-directly-using-quarto-quarto-reports">Making reports directly using Quarto [#quarto-reports]</a></li>
@@ -369,7 +370,19 @@ Important
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="dv">10</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>c <span class="ot">&lt;-</span> a <span class="sc">+</span> b</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p><strong>Think–Pair–Share</strong> (#a_objects_not_files) When you type <code>a &lt;- ...</code>, where does <code>x</code> live?</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In fact, just about everything in R is an object! These objects live in your R session (i.e., in the memory of your computer), and you can see them in the Environment pane. You can create objects to store data, functions, and other information. Your data files are something different. They are just like other files on your computer, such as documents, images, and music files. They live on your hard drive (or in the cloud), and you can import them into R when you need to work with them.</p>
+</div>
+</div>
 <p>And then print the value of <code>c</code>:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>c</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -437,6 +450,7 @@ Important
 </div>
 <p>Above we have numerous examples of functions: <code>exp()</code>, <code>sqrt()</code>, <code>c()</code>, <code>paste()</code>, <code>toupper()</code>, and <code>data.frame()</code>. Functions are a fundamental part of R programming. They are used to perform specific tasks, such as calculations, data manipulation, and data analysis. All functions have a name and can take arguments (inputs) and return values (outputs). They are called by writing the function name followed by parentheses, with any arguments inside the parentheses.</p>
 <p>You likely guessed that there is much much more to learn about R, but we will cover that as we go along in the course.</p>
+<p><strong>Think–Pair–Share</strong> (#tps_a_objects_not_files) When you type <code>a &lt;- ...</code>, where does <code>x</code> live?</p>
 </section>
 <section id="getting-help" class="level2">
 <h2 class="anchored" data-anchor-id="getting-help">Getting help</h2>
@@ -708,8 +722,8 @@ Tip
 <span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">score =</span> <span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="at">mean =</span> <span class="dv">75</span>, <span class="at">sd =</span> <span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="select-columns-select-columns" class="level3">
-<h3 class="anchored" data-anchor-id="select-columns-select-columns">Select columns [#select-columns]</h3>
+<section id="select-columns" class="level3">
+<h3 class="anchored" data-anchor-id="select-columns">Select columns</h3>
 <p>We can select columns by name</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>my_data2 <span class="sc">|&gt;</span> </span>
@@ -859,8 +873,8 @@ Tip
 </div>
 <p>I very rarely use this function, as I prefer to use <code>filter()</code> with logical conditions. I can’t think of a good use case for this function right now! Perhaps you can?</p>
 </section>
-<section id="arrange-reordering-rows-arrange-rows" class="level3">
-<h3 class="anchored" data-anchor-id="arrange-reordering-rows-arrange-rows">Arrange: Reordering rows [#arrange-rows]</h3>
+<section id="arrange-reordering-rows" class="level3">
+<h3 class="anchored" data-anchor-id="arrange-reordering-rows">Arrange: Reordering rows</h3>
 <p>The <code>arrange()</code> function allows us to reorder the rows of a data frame based on the values in one or more columns. For example, to reorder the rows by Age in ascending order:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>my_data2 <span class="sc">|&gt;</span> </span>
@@ -1201,6 +1215,10 @@ Note
 <div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"plots/scatterplot_age_vs_score.pdf"</span>, <span class="at">plot =</span> plot1, <span class="at">width =</span> <span class="dv">8</span>, <span class="at">height =</span> <span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
+</section>
+<section id="review" class="level2">
+<h2 class="anchored" data-anchor-id="review">Review</h2>
+<p>In this chapter we learned about using R and RStudio for data analysis. We covered the basics of R programming, including data types, variables, functions, and control structures. We also learned about importing data into R, cleaning and wrangling data using the <code>dplyr</code> package, and visualising data using the <code>ggplot2</code> package. A great starting point for your journey into data analysis with R!</p>
 </section>
 <section id="extras" class="level2">
 <h2 class="anchored" data-anchor-id="extras">Extras</h2>

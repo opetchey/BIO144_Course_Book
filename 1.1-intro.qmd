@@ -1,0 +1,482 @@
+```{r}
+#| echo: false
+source("_common.R")
+```
+
+
+# Introduction (L1) {.unnumbered}
+
+
+The first lecture of the course introduces it, gives some important information, and sets the stage for the rest of the course. Some of the time in the lecture will be used to create a dataset for use during the course. It also gives an opportunity to review some of the things about R and statistics that it is very useful to already know.
+
+The lecture includes:
+
+* Goals of the course
+* Course organisation
+* AI and the course
+* Making a course dataset
+* Using RStudio
+* Reviewing what you should already know
+* Learning objectives
+* A general workflow for data analysis
+
+
+## Notation and some definitions
+
+Throughout the course, we will use the following notation:
+
+* $x$ for a variable. Typically this variable contains a set of observations. These observations are said to represent a sample of all the possible observations that could be made of a *population*.
+* $x_1, x_2, \ldots$ for the values of a variable
+* $x_i$ for the $i$th value of a scalar variable. This is often spoken as "x sub i" or the "i-th value of x".
+* $x^{(1)}$ for variable 1, $x^{(2)}$ for variable 2, etc.
+* The mean of the sample $x$ is $\bar{x}$. This is usually spoken as "x-bar".
+* The mean of $x$ is calculated as $\bar{x} = \frac{1}{n} \sum_{i=1}^n x_i$.
+* $n$ is the number of observations in a sample.
+* The summation symbol $\sum$ is used to indicate that the values of $x$ are summed over all values of $i$ from 1 to $n$.
+* The standard deviation of the sample is $s$. The standard deviation of the population is $\sigma$.
+* The variance is $s^2$. The variance of the population is $\sigma^2$.
+* The variance of the sample is calculated as $s^2 = \frac{1}{n-1} \sum_{i=1}^n (x_i - \bar{x})^2$.
+* The standard deviation of the sample is calculated as $s = \sqrt{s^2}$.
+* $y$ is usually used to represent a dependent / response variable.
+* $x$ is usually used to represent an independent / predictor / explanatory variable.
+* $\beta_0$ is usually used to denote the intercept of a linear model.
+* $\beta_1$, $\beta_2$, etc. are usually used to denote the coefficients of the independent variables in a linear model.
+* Estimates are denoted with a hat, so $\hat{\beta}_0$ is the estimate of the intercept of a linear model.
+* Hence, the estimated value of $y_i$ in a linear regression model is $\hat{y_i} = \hat{\beta}_0 + \hat{\beta}_1 x_i^{(1)}$.
+* $e_i$ is the residual for the $i$th observation in a linear model. The residual is the difference between the observed value of $y_i$ and the predicted value of $y_i$ ($\hat{y_i}$).
+* Often we assume errors are normally distributed with mean 0 and variance $\sigma^2$. This is written as $e_i \sim N(0, \sigma^2)$.
+* SST is the total sum of squares. It is the sum of the squared differences between the observed values of $y$ and the mean of $y$. It is calculated as $\sum_{i=1}^n (y_i - \bar{y})^2$.
+* SSM is the model sum of squares. It is the sum of the squared differences between the predicted values of $y$ and the mean of $y$. It is calculated as $\sum_{i=1}^n (\hat{y_i} - \bar{y})^2$.
+* SSE is the error sum of squares. It is the sum of the squared differences between the observed values of $y$ and the predicted values of $y$. It is calculated as $\sum_{i=1}^n (y_i - \hat{y_i})^2$.
+* The variance of $x$ can be written as $Var(x)$. The covariance between $x$ and $y$ can be written as $Cov(x, y)$.
+* Covariance is calculated as $Cov(x, y) = \frac{1}{n-1} \sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y})$.
+* $H_0$ is the null hypothesis.
+* $\alpha$ is the significance level.
+* *df* is the degrees of freedom.
+* $p$ is the p-value.
+
+
+## Data analysis workflow
+
+A general workflow for data analysis is as follows:
+
+1. **Define the question**: What are you trying to find out?
+2. **Define the study**: How will you answer the question? What subjects, what observations, what measurements? What experimental design? What treatments? What graphics and analyses will you use?
+3. **Collect the data**: Gather the necessary data to answer the question.
+4. **Explore the data**: Use summary statistics and graphics to understand the data.
+5. **Prepare the data**: Clean and format the data for analysis.
+6. **Visualise the data**: Create plots to visualise patterns and relationships.
+7. **Analyse the data**: Use appropriate statistical methods to analyse the data, including checking model assumptions.
+8. **Interpret the results**: Draw conclusions from the analysis in the context of the original question.
+9. **Be critical**: Consider limitations, alternative explanations, and the robustness of your conclusions.
+10. **Communicate the results**: Present the findings in a clear and concise manner, using tables, figures, and written summaries.
+
+
+
+## Using Generative AI in R and Data Analysis: Guidance and Good Practice
+
+::: {.callout-important}
+For the final examination, you will use your own computer, but the test will run inside the Safe Exam Browser, which will be configured to block all access to generative AI tools, browser-based assistants, external software, online services, and any AI code copilots inside RStudio or other IDEs. This means **no form of generative AI will be available during the exam**. Because of this, please avoid becoming overly reliant on GenAI—such as ChatGPT, Claude, Gemini, Copilot, or similar tools for answering quiz questions, explaining results, fixing errors, guiding your analysis, or writing code. You must be able to perform all tasks independently. We also strongly recommend that you do not use RStudio with Copilot integration during the course, as it will not function in the exam environment and may leave you under prepared. Throughout the semester, be sure to practice writing your own R code, interpreting outputs yourself, and applying statistical reasoning without AI assistance, as your exam performance will depend entirely on your own knowledge and skills.
+:::
+
+
+Generative AI (GenAI) tools can support learning, exploration, and coding in R. They can be powerful assistants, but they must be used with care. This section introduces the types of tools available, provides guidelines for responsible use, highlights red flags for problematic usage, and gives examples of good and poor practice.
+
+Typical uses:
+
+- asking conceptual questions  
+- summarizing methods  
+- generating example code  
+- explaining error messages  
+
+Strengths:
+
+- flexible and conversational  
+- good for brainstorming  
+- can generate starter code  
+
+Limitations:
+
+- often wrong in subtle ways  
+- may hallucinate functions  
+- cannot see your working R session  
+
+
+
+### Guidelines for Good Use of Generative AI
+
+#### Use GenAI as a Helper, Not a Source of Truth
+
+Best uses:
+
+- drafting  
+- explanation  
+- syntax reminders  
+- scaffolding  
+
+Not reliable for:
+
+- model choice  
+- statistical inference  
+- interpreting coefficients  
+- designing analysis workflows  
+- checking assumptions  
+
+#### Always Verify AI-Generated Code and Explanations
+
+Check:
+
+- does the code run?  
+- do variable names match?  
+- is the model appropriate?  
+- are assumptions addressed?  
+- is the explanation logically correct?  
+
+
+#### Keep Human Judgement Central
+
+GenAI cannot:
+
+- understand scientific questions  
+- evaluate model assumptions  
+- know ecological/biological reasoning  
+- determine appropriate models  
+
+
+#### Provide Context Carefully
+
+When asking GenAI:
+
+- describe variables  
+- provide example data  
+- specify your goal  
+- show your existing code  
+
+Better context = better answers.
+
+
+#### Use GenAI to Improve Understanding, Not Bypass It
+
+Helpful:
+
+- *“Explain logistic regression.”*  
+- *“Why do residuals fan out?”*  
+
+Not helpful:
+
+- *“Do my assignment for me.”*  
+
+
+### Indicators of Problematic Usage
+
+#### Code That Does Not Reflect Ability
+
+Signs:
+
+- unfamiliar advanced syntax  
+- unexplained packages  
+- inconsistent style  
+
+#### Hallucinated Functions or Nonsensical Code
+
+Examples:
+
+- `slope(x)` in mixed models  
+- missing arguments  
+- fabricated packages  
+
+#### Statistical Errors Typical of AI
+
+Common issues:
+
+- wrong model family  
+- wrong inference logic  
+- invented assumptions  
+- incorrect explanation of coefficients  
+
+#### Lack of Understanding
+
+Indicators:
+
+- cannot explain model  
+- inconsistent interpretations  
+- identical phrasing to AI output  
+
+#### Over-Reliance on AI
+
+Signs:
+
+- using AI for every step  
+- no debugging effort  
+- stagnation in skill development  
+
+
+### Examples of Good and Problematic Use
+
+#### Good Use Examples
+
+**A. Syntax help**  
+*“How do I specify a random slope in `lme4`?”*
+
+**B. Clarification**  
+*“How does adding an interaction change interpretation?”*
+
+**C. Debugging**  
+*“What does ‘object not found’ usually mean?”*
+
+**D. Brainstorming**  
+*“How can I visualise a logistic regression?”*
+
+
+
+#### Problematic Use Examples
+
+**A. Blindly copying model code**
+```r
+lm(y ~ x1 + x2 * x3 * x1)
+```
+
+**B. Incorrect statistical logic**  
+AI code labelled as a bootstrap but is actually a permutation test.
+
+**C. Misleading interpretation**  
+Claims that coefficients assume explanatory variable independence.
+
+**D. Presenting AI-generated plots without understanding**  
+
+**E. Outsourcing entire workflow**  
+*“Write a script that loads data, cleans it, runs models, interprets, and writes the report.”*
+
+
+
+#### Summary
+
+Generative AI can:
+
+- help learning  
+- support debugging  
+- provide code scaffolds  
+- explain concepts  
+
+But it can also:
+
+- hallucinate  
+- produce incorrect models  
+- misinterpret statistics  
+
+**Use GenAI as a supportive tool—never as an unquestioned authority.**  
+Good use of GenAI *supports* learning. Problematic use *replaces* it.
+
+
+
+
+### Common GenAI Errors in R and Statistical Modelling
+
+Generative AI tools can be helpful for writing R code, exploring ideas, and learning syntax.  
+However, they sometimes produce *plausible but incorrect* code or explanations.  
+This section provides real examples of typical GenAI mistakes, with correct solutions and learning points.
+
+**Why this matters:** GenAI is a **pattern-matching system**, not a statistical reasoning engine.   It does not understand assumptions, inference, or modelling logic.Therefore, students should **never accept code or explanations without checking them**.
+
+---
+
+#### Incorrect formula structure in `lm()`
+
+**Prompt:** *Fit a linear model with main effects and a two-way interaction between `x2` and `x3`.*
+
+**Incorrect GenAI output:**
+```r
+lm(y ~ x1 + x2 * x3 * x1, data = df)
+```
+
+This includes an unintended **three-way interaction** and extra terms.
+
+**Correct:**
+```r
+lm(y ~ x1 + x2 * x3, data = df)
+```
+
+**Learning point:** Always check model formulas carefully. AI often adds or removes interactions.
+
+
+
+#### Confusing bootstrap and permutation tests
+
+**Documented case:** GenAI was asked for a *bootstrap t-test*.
+
+**Incorrect GenAI code (actually a permutation test):**
+```r
+t_stats <- replicate(1000, {
+  perm <- sample(df$group)
+  t.test(df$value ~ perm)$statistic
+})
+```
+
+**Correct bootstrap approach:**
+```r
+t_stats <- replicate(1000, {
+  sample_df <- df[sample(nrow(df), replace = TRUE), ]
+  t.test(value ~ group, data = sample_df)$statistic
+})
+```
+
+**Learning point:** The logic of inference matters. Code that runs is not necessarily correct.
+
+---
+
+#### Incorrect explanation of linear-model coefficients
+
+**Incorrect claim:** *“Coefficients assume independence among explanatory variable.”*
+
+This is false. Linear model coefficients describe **conditional effects within the model**, regardless of collinearity.
+
+**Learning point:** Interpretations come from the model structure, not from simplistic assumptions GenAI sometimes invents.
+
+---
+
+####  Hallucinated functions in mixed models
+
+**Incorrect GenAI output:**
+```r
+lmer(y ~ x + (slope(x) | group), data = df)
+```
+
+`slope()` does not exist.
+
+**Correct random-slope specification:**
+```r
+lmer(y ~ x + (x | group), data = df)
+```
+
+**Learning point:** Always verify syntax in package documentation.
+
+---
+
+####  Wrong variable names
+
+The dataset has variables `height` and `age`.
+
+**Incorrect GenAI output:**
+```r
+lm(Height ~ Age, data = df)
+```
+
+**Correct:**
+```r
+lm(height ~ age, data = df)
+```
+
+**Learning point:** GenAI often guesses variable names. Check against your data.
+
+---
+
+####  Wrong model family for binary data
+
+**Incorrect GenAI output (linear regression):**
+```r
+lm(y ~ x, data = df)
+```
+
+**Correct logistic regression:**
+```r
+glm(y ~ x, data = df, family = binomial)
+```
+
+**Learning point:** For binary response variables, specify the model family explicitly.
+
+---
+
+####  Incorrect explanation of random intercepts
+
+**Incorrect claim:**  
+*“Random intercepts eliminate correlation among repeated measures.”*
+
+Incorrect — they **model** correlation, not eliminate it.
+
+**Learning point:** Random effects structure determines the implied correlation. AI explanations are often vague or wrong here.
+
+---
+
+#### Omitting interaction terms in ANOVA
+
+**Prompt:** *Two-way ANOVA with interaction.*
+
+**Incorrect:**
+```r
+aov(y ~ factor1 + factor2, data = df)
+```
+
+**Correct:**
+```r
+aov(y ~ factor1 * factor2, data = df)
+```
+
+**Learning point:** Confirm that the model matches the experimental design.
+
+---
+
+#### Incorrect use of `predict()`
+
+**Prompt:** *Predict for new x values.*
+
+**Incorrect GenAI output:**
+```r
+predict(model)
+```
+
+This gives **in-sample fitted values**, not predictions for new data.
+
+**Correct:**
+```r
+predict(model, newdata = data.frame(x = c(1, 2, 3)))
+```
+
+**Learning point:** Always specify `newdata` for predictions.
+
+---
+
+#### Poor explanations of multicollinearity
+
+**Incorrect GenAI claim:**  
+*"Multicollinearity is indicated when the model p-value is low but the individual explanatory variable p-values are high."*
+
+This is an unreliable and incomplete diagnostic.
+
+**Better diagnostics:**
+```r
+car::vif(model)
+cor(df)
+model.matrix(model)
+```
+
+**Learning point:** AI often repeats common internet tropes rather than robust statistical principles.
+
+---
+
+#### GenAI Summary
+
+GenAI can:
+
+- write useful scaffolding code,  
+- provide quick reminders,  
+- help with simple tasks.
+
+But it can also:
+
+- hallucinate functions,  
+- give subtly incorrect models,  
+- invent statistical logic,  
+- provide plausible but wrong explanations.
+
+**Advice for students:**  
+Use GenAI as a starting point, not an authority.  
+Always check:
+
+- function names,  
+- model formulas,  
+- assumptions,  
+- interpretations,  
+- and logic.
+
+In statistics, clarity of reasoning matters more than code that merely *runs*.
+

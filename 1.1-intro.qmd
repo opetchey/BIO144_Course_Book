@@ -480,3 +480,16 @@ Always check:
 
 In statistics, clarity of reasoning matters more than code that merely *runs*.
 
+## Further reading
+
+Students who are curious and would like to explore these topics further (purely for their own interest) may find the following resources useful. Material from these resources will not be examined in the final exam, unless it is also already present in the course book.
+
+If you would like to read more about reaction time differences between men and women, this is a quite interesting paper: [On the Implications of a Sex Difference in the Reaction Times of Sprinters at the Beijing Olympics, by Lipps et al (2011)](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0026141). The analyses are relatively simple, and the implications explored are quite interesting. Unfortunately, the data used in the paper is not publicly available, so you cannot use it for practice here.
+
+A more detailed data analysis workflow suggestion is here on the [Insights from data website.](https://insightsfromdata.io/insights-workflow.html#insights-workflow)
+
+Here is an article about [Exploring The Ethical Implications Of Ai In Data
+Analytics: Challenges And Strategies For Responsible Implementation](https://www.ijcrt.org/papers/IJCRT2309747.pdf). It is rather brief and high-level, but may be of interest when you seek an ethical perspective on the use of AI tools in data analysis.
+
+
+

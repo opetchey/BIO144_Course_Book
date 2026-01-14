@@ -272,6 +272,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#saving-ggplot-visualisations-saving-ggplot" id="toc-saving-ggplot-visualisations-saving-ggplot" class="nav-link" data-scroll-target="#saving-ggplot-visualisations-saving-ggplot">Saving ggplot visualisations [#saving-ggplot]</a></li>
   </ul></li>
   <li><a href="#review" id="toc-review" class="nav-link" data-scroll-target="#review">Review</a></li>
+  <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading">Further reading</a></li>
   <li><a href="#extras" id="toc-extras" class="nav-link" data-scroll-target="#extras">Extras</a>
   <ul class="collapse">
   <li><a href="#making-reports-directly-using-quarto-quarto-reports" id="toc-making-reports-directly-using-quarto-quarto-reports" class="nav-link" data-scroll-target="#making-reports-directly-using-quarto-quarto-reports">Making reports directly using Quarto [#quarto-reports]</a></li>
@@ -1220,6 +1221,19 @@ Note
 <h2 class="anchored" data-anchor-id="review">Review</h2>
 <p>In this chapter we learned about using R and RStudio for data analysis. We covered the basics of R programming, including data types, variables, functions, and control structures. We also learned about importing data into R, cleaning and wrangling data using the <code>dplyr</code> package, and visualising data using the <code>ggplot2</code> package. A great starting point for your journey into data analysis with R!</p>
 </section>
+<section id="further-reading" class="level2">
+<h2 class="anchored" data-anchor-id="further-reading">Further reading</h2>
+<p>The data wrangling packages we use, such as <code>dplyr</code> and <code>tidyr</code>, are part of the <em>tidyverse</em>, a collection of R packages designed for data science. These packages were developed by Hadley Wickham and his team at RStudio. Moreover, Hadley Wickham is also the creator of <code>ggplot2</code>, the package we use for data visualisation.</p>
+<p>A great place to consolidate your learning so far, and to learn more about the <em>tidyverse</em> and data science with R is the book <em>R for Data Science</em> by Hadley Wickham and Garrett Grolemund (https://r4ds.had.co.nz/). This book is available for free online and covers many topics related to data science with R, including:</p>
+<ul>
+<li><a href="https://r4ds.hadley.nz/workflow-scripts.html">Scripts and projects</a></li>
+<li><a href="https://r4ds.hadley.nz/data-import.html">Data import</a></li>
+<li><a href="https://r4ds.hadley.nz/data-transform.html">Data wrangling with dplyr and tidyr</a></li>
+<li><a href="https://r4ds.hadley.nz/data-visualize.html">Data visualisation with ggplot2</a></li>
+<li>And much more…</li>
+</ul>
+<p><strong>Base R</strong> is a term used to describe the core functionality of R, without any additional packages. While the <em>tidyverse</em> packages are very useful and powerful, it can be useful to learn about the base R functions, especially if someone else is using base R in their code. A starting point for learning about base R is the chapter “A field guide to base R” in the <em>R for Data Science</em> book – <a href="https://r4ds.hadley.nz/base-R.html">A field guide to base R</a>.</p>
+</section>
 <section id="extras" class="level2">
 <h2 class="anchored" data-anchor-id="extras">Extras</h2>
 <section id="making-reports-directly-using-quarto-quarto-reports" class="level3">
@@ -1230,6 +1244,7 @@ Note
 <p>With Quarto, you can create a report that automatically includes the code and visualisations directly from your R script. This way, if you change the code or data, you can simply re-render the report and everything is automatically updated. It takes away a lot of the tediousness and potential for errors. And it makes updating reports much easier.</p>
 <p>If you’d like to get started with Quarto, check out the Quarto website (https://quarto.org/) and the RStudio Quarto documentation (https://quarto.org/docs/get-started/). There are also many tutorials and resources available online to help you learn how to use Quarto effectively.</p>
 <p>If you have questions about Quarto, feel free to ask me or TAs during the practicals, though note that any particular TAs may or may not be experienced with Quarto themselves.</p>
+<p>Quarto reports are also covered in the <em>R for Data Science</em> book – <a href="https://r4ds.hadley.nz/quarto.html">Quarto</a>.</p>
 </section>
 <section id="combining-ggplots-with-patchwork-combining-ggplots" class="level3">
 <h3 class="anchored" data-anchor-id="combining-ggplots-with-patchwork-combining-ggplots">Combining ggplots with patchwork [#combining-ggplots]</h3>
@@ -1281,6 +1296,7 @@ Note
 </div>
 </div>
 <p>Amazing eh! OK, lets leave it there for now. We’ll use ggplot2 throughout the course, and explore more features as we go along.</p>
+<p>If you’d like to read more about the patchwork package, check out the package website – <a href="https://patchwork.data-imaginist.com/">patchwork</a>.</p>
 </section>
 <section id="setting-a-reference-level-in-a-linear-model" class="level3">
 <h3 class="anchored" data-anchor-id="setting-a-reference-level-in-a-linear-model">Setting a reference level in a linear model</h3>
@@ -1387,6 +1403,7 @@ F-statistic: 9.333 on 2 and 3 DF,  p-value: 0.05152</code></pre>
 </div>
 </div>
 <p>The (Intercept) term now corresponds to the “Control” group, and the coefficients for “Aspirin” and “Ibuprofen” are relative to “Control”. This makes interpretation of the model coefficients more intuitive.</p>
+<p>Also see the chapter about factors in the R for Data Science book – <a href="https://r4ds.hadley.nz/factors.html">Factors</a>.</p>
 
 
 </section>

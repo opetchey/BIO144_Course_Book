@@ -462,3 +462,15 @@ anova(m_lmm1)
 
 **Think–Pair–Share** (#a_partial_pooling_intuition) How does partial pooling differ from complete pooling or no pooling at all? Hint: pooling is sharing of information.
 
+
+## Further reading (optional): mixed models
+
+In this course, there is only a short introduction to mixed (multilevel) models. Students who are curious and would like to explore this topic further (purely for their own interest) may find the following resources useful. Material from these resources will not be examined in the final exam, unless it is also already present in the course book.
+
+**McElreath, R. – Statistical Rethinking** This book offers an excellent conceptual introduction to hierarchical (mixed) models, with a strong focus on understanding why they are useful. It introduces ideas such as partial pooling and shrinkage in a very intuitive way. The book uses a Bayesian perspective, but the conceptual insights are valuable even if you later apply frequentist methods. Strongly recommended by Owen for conceptual understanding.
+
+**Gelman, A. & Hill, J. – Data Analysis Using Regression and Multilevel/Hierarchical Models** A classic and very practical text on regression and mixed models, with many applied examples. It complements Statistical Rethinking well and is particularly useful if you want to understand mixed models as they are commonly used in practice.
+
+**R documentation and tutorials for mixed-model packages** If you are interested in implementation in R, the vignettes and documentation for packages such as lme4 (frequentist) or brms (Bayesian) provide hands-on examples of fitting, interpreting, and extending mixed models.
+
+These resources are entirely optional and intended for students who wish to deepen their understanding beyond the scope of the course.

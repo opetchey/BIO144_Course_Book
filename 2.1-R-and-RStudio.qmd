@@ -704,7 +704,19 @@ ggsave("plots/scatterplot_age_vs_score.pdf", plot = plot1, width = 8, height = 6
 
 In this chapter we learned about using R and RStudio for data analysis. We covered the basics of R programming, including data types, variables, functions, and control structures. We also learned about importing data into R, cleaning and wrangling data using the `dplyr` package, and visualising data using the `ggplot2` package. A great starting point for your journey into data analysis with R!
 
+## Further reading
 
+The data wrangling packages we use, such as `dplyr` and `tidyr`, are part of the *tidyverse*, a collection of R packages designed for data science. These packages were developed by Hadley Wickham and his team at RStudio. Moreover, Hadley Wickham is also the creator of `ggplot2`, the package we use for data visualisation.
+
+A great place to consolidate your learning so far, and to learn more about the *tidyverse* and data science with R is the book *R for Data Science* by Hadley Wickham and Garrett Grolemund (https://r4ds.had.co.nz/). This book is available for free online and covers many topics related to data science with R, including:
+
+* [Scripts and projects](https://r4ds.hadley.nz/workflow-scripts.html)
+* [Data import](https://r4ds.hadley.nz/data-import.html)
+* [Data wrangling with dplyr and tidyr](https://r4ds.hadley.nz/data-transform.html)
+* [Data visualisation with ggplot2](https://r4ds.hadley.nz/data-visualize.html)
+* And much more...
+
+**Base R** is a term used to describe the core functionality of R, without any additional packages. While the *tidyverse* packages are very useful and powerful, it can be useful to learn about the base R functions, especially if someone else is using base R in their code. A starting point for learning about base R is the chapter "A field guide to base R" in the *R for Data Science* book -- [A field guide to base R](https://r4ds.hadley.nz/base-R.html). 
 
 ## Extras
 
@@ -721,6 +733,8 @@ With Quarto, you can create a report that automatically includes the code and vi
 If you'd like to get started with Quarto, check out the Quarto website (https://quarto.org/) and the RStudio Quarto documentation (https://quarto.org/docs/get-started/). There are also many tutorials and resources available online to help you learn how to use Quarto effectively.
 
 If you have questions about Quarto, feel free to ask me or TAs during the practicals, though note that any particular TAs may or may not be experienced with Quarto themselves.
+
+Quarto reports are also covered in the *R for Data Science* book -- [Quarto](https://r4ds.hadley.nz/quarto.html).
 
 ### Combining ggplots with patchwork [#combining-ggplots]
 
@@ -776,6 +790,8 @@ combined_plot
 ```
 
 Amazing eh! OK, lets leave it there for now. We'll use ggplot2 throughout the course, and explore more features as we go along.
+
+If you'd like to read more about the patchwork package, check out the package website -- [patchwork](https://patchwork.data-imaginist.com/).
 
 ### Setting a reference level in a linear model 
 
@@ -848,3 +864,4 @@ summary(model2)
 
 The (Intercept) term now corresponds to the "Control" group, and the coefficients for "Aspirin" and "Ibuprofen" are relative to "Control". This makes interpretation of the model coefficients more intuitive.
 
+Also see the chapter about factors in the R for Data Science book -- [Factors](https://r4ds.hadley.nz/factors.html).

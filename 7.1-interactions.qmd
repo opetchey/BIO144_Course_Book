@@ -903,6 +903,24 @@ Interpretation of three-way interactions can be quite complex, as it involves un
 
 ## Extras
 
+### Degrees of freedom
+
+It can be useful to think about degrees of freedom in terms of how many parameters / coefficients have to be estimated by the model.
+
+In one-way ANOVA, this is the number of groups one has. So if you have a categorical variable with five categories (in another language one would say a factor variable with five levels), there will be five means estimated, and so the model uses five degrees of freedom. So error degrees of freedom will be the total number of observation minus five.
+
+In two-way ANOVA (which includes the interaction of the two categorical variables) we have to estimate a mean for each of the combinations of the categories. So if we have one categorical variable with three levels and another with four, there are 3*4 combinations, so 12 means to estimate. So the model takes 12 degrees of freedom, and the error degrees of freedom will be the number of observations minus 12.
+
+If we made a two-way ANOVA without an interaction (i.e. we included only the main effects) between the two explanatory variables, and we could have (i.e. we had performed a fully factorial experiment), well, this is just weird. Why would we not do the analysis we planned when we designed the experiment?
+
+(I raised that in case anyone wants to know how to calculate degrees of freedom with only main effects. In that case, the two explanatory variables share the same reference level (intercept) so in the case above, only 6 things would need to be estimated: A shared intercept, and the other five means. Its a bit like when we previously made a regression model with two regression lines, both with the same slope. They shared the same slope -- so only one needed to be estimated. So often when we use only main effects, getting the degrees of freedom is a bit tricky.)
+
+Bottom line: more explanatory variables, more interactions, more levels in categorical explanatory variables = more things have to be estimated = fewer degrees of freedom for error. And few degrees of freedom for error is not good, generally speaking.
+
+
+
+
+
 ### 3d scatter plot
 
 Here is a 3D scatter plot of the data with two continuous explanatory variables (age and minutes of exercise) and one continuous response variable (blood pressure). This plot helps to visualise the interaction between age and minutes of exercise on blood pressure.

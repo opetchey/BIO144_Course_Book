@@ -718,6 +718,11 @@ A great place to consolidate your learning so far, and to learn more about the *
 
 **Base R** is a term used to describe the core functionality of R, without any additional packages. While the *tidyverse* packages are very useful and powerful, it can be useful to learn about the base R functions, especially if someone else is using base R in their code. A starting point for learning about base R is the chapter "A field guide to base R" in the *R for Data Science* book -- [A field guide to base R](https://r4ds.hadley.nz/base-R.html). 
 
+
+### Cheat sheets
+
+There are a series of excellent cheat sheets for R and RStudio, and for packages in the *tidyverse*. They're pretty dense and packed with information, but they can be very useful as a quick reference. You can find them here: [RStudio Cheat Sheets](https://posit.co/resources/cheatsheets/).
+
 ## Extras
 
 ### Making reports directly using Quarto [#quarto-reports]

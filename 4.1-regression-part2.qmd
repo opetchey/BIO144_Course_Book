@@ -705,6 +705,14 @@ This chapter:
 * Confidence and prediction bands
 
 
+## Further reading
+
+Again, there are many good books and online resources about regression models. The same ones as last week are recommended, also for interpreting results of regression models.
+
+* Faraway, J. J. (2016). Linear models with R (2nd ed.). Chapman and Hall/CRC. [Link](https://www.routledge.com/Linear-Models-with-R-2nd-Edition/Faraway/p/book/9781482215754).
+* Chapter 7 of The New Statistics with R, by Andy Hector.
+
+
 
 ## Extras
 

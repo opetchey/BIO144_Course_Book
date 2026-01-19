@@ -773,3 +773,20 @@ Here are the key points from this chapter:
 
 
 **Think–Pair–Share** (#a_anova_is_regression) What changes when we move from regression to ANOVA? What stays exactly the same?
+
+
+## Further reading
+
+...
+
+## Extras
+
+### ANOVA and experimental design
+
+This is not a course about experimental design (this is much too large a subject to cover). You may have noticed, however, that all of the example datasets and questions in your reading about ANOVA have been experiments, where researchers had various treatment groups containing the experimental subjects. That is, the researchers manipulated something to be different among the groups, and looked for any evidence of resulting differences.
+
+This might lead you to wonder if we analyse experiments with ANOVA, and analyse observations (involving no manipulations) with regression. The answer is no, we can use either for either. It just happens that manipulations in experiments are often of the categorical nature: type of food, parasite species, light level (high or low), and so on. Of course some experiments contain manipulations that are continuous (e.g. a range of temperatures or drug concentrations) and these are analysed with regression. And some studies include a manipulation (e.g., drug concentration) and observed variables like gender.
+
+So there isn't necessarily and association between type of explanatory variable (continuous or categorical) and whether an study is experimental or observational. Important, no essential, is for the researcher to clearly be aware of which variables are manipulation and which are observations. Because only the manipulations can be used to infer causation.
+
+

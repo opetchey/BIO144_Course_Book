@@ -1000,6 +1000,13 @@ Multiple regression:
 * Collinearity between explanatory variables can make the coefficients unstable and difficult to interpret. This can be assessed with the Variance Inflation Factor (VIF). Remedies include combining explanatory variables, removing redundant predictors, or using regularization if prediction is the goal. The importance of an explanatory variable in the presence of collinearity can be assessed by comparing models with and without that variable, using an F-test.
 
 
+
+## Further reading
+
+If you'd like to solidify your understanding of multiple linear regression, you might like to look at Chapter 11 of **Statistics. An Introduction using R** by Crawley. This section is about 14 pages. You will also see that the chapter includes material not included in this course, such as interactions, polynomial regression, model selection, and regression trees. Fun stuff (of course it will not be in the examination for this course!).
+
+
+
 ## Extras
 
 ### 3D plot of multiple linear regression

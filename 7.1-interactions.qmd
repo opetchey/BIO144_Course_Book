@@ -6,7 +6,7 @@ source("_common.R")
 
 # Interactions (L7) {.unnumbered}
 
-### Thought for the week:
+## Thought for the week:
 
 "*You should arrive at answers on your own, and not rely upon what you get from someone else. Answers from others are nothing more than stopgap measures, they're of no value.*"
 
@@ -900,6 +900,12 @@ Interpretation of three-way interactions can be quite complex, as it involves un
 * The degrees of freedom for interaction terms depend on the levels of the categorical variables involved. Each categorical variable takes degrees of freedom equal to the number of levels minus one. Each continuous variable takes one degree of freedom. The degrees of freedom for the interaction term is the product of the degrees of freedom of the individual variables.
 * Report interactions carefully, focusing on the biological interpretation and including relevant statistics (i.e., the $F$-statistic, degrees of freedom for the interaction term, degrees of freedom for error, and p-value).
 
+
+## Further reading
+
+* Wikipedia is always a good place to start for understanding concepts: [Interaction term (statistics)](https://en.wikipedia.org/wiki/Interaction_(statistics))
+* This is a nice paper for clinicians on understanding interactions: [How to interact with interactions: what clinicians should know about statistical interactions](https://publications.aap.org/hospitalpediatrics/article/13/10/e319/194006/How-to-Interact-With-Interactions-What-Clinicians?autologincheck=redirected)
+* If you want a challenge, and to see how nuanced interactions and interpretation can be, have a look at this paper [Interactions in statistical models: Three things to know](https://besjournals.onlinelibrary.wiley.com/doi/10.1111/2041-210X.13714)
 
 ## Extras
 

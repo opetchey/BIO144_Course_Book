@@ -559,4 +559,8 @@ There is a lot more to logistic regression and binary data. We can of course mak
 * If we find overdispersion in aggregated binomial data, `quasibinomial` is a pragmatic fix.
 * With non-aggregated individual-level 0/1 data, plotting and checking model assumptions require more care.
 
+## Further reading
+
+* Chapter 17 of *The R Book* by Crawley (2012) provides a comprehensive introduction to GLMs in R, including binomial regression. The R is a bit old fashioned but the concepts are well explained.
+* Generalized Linear Models With Examples in R (2018) by Peter K. Dunn and Gordon K. Smyth.
 

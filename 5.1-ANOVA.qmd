@@ -777,7 +777,12 @@ Here are the key points from this chapter:
 
 ## Further reading
 
-...
+If you'd like some further reading on ANOVA and ANOVA in R, here are some good resources. There is lots of overlap among them, however, and with the material in this chapter. I suggest to look at them mostly for different perspectives and examples. And only if you'd like to solidify your understanding.
+
+* Chapter 5, Section 5.6, of *Getting Started with R* by Beckerman et al. This section is about 10 pages.
+* Chapter 11 of *The New Statistics with R* by Hector, not including the section on two-way ANOVA. This chapter is about 10 pages.
+* Chapter 14 of *Linear Models with R* by Faraway. This chapter is eight pages.
+* Chapter 9 of **Statistics. An Introduction using R** by Crawley, up to the section *Factorial experiments*. This section is about 16 pages.
 
 ## Extras
 

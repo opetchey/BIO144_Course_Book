@@ -303,6 +303,12 @@ window.Quarto = {
   <li><a href="#zero-inflation" id="toc-zero-inflation" class="nav-link" data-scroll-target="#zero-inflation">Zero inflation</a></li>
   <li><a href="#multiple-explanatory-variables" id="toc-multiple-explanatory-variables" class="nav-link" data-scroll-target="#multiple-explanatory-variables">Multiple explanatory variables</a></li>
   <li><a href="#review" id="toc-review" class="nav-link" data-scroll-target="#review">Review</a></li>
+  <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading">Further reading</a></li>
+  <li><a href="#extras" id="toc-extras" class="nav-link" data-scroll-target="#extras">Extras</a>
+  <ul class="collapse">
+  <li><a href="#deviance-residuals" id="toc-deviance-residuals" class="nav-link" data-scroll-target="#deviance-residuals">Deviance residuals</a></li>
+  <li><a href="#pseudo-r-squared-for-glms" id="toc-pseudo-r-squared-for-glms" class="nav-link" data-scroll-target="#pseudo-r-squared-for-glms">Pseudo-R-squared for GLMs</a></li>
+  </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/opetchey/BIO144_Course_Book/edit/main/8.1-GLM1-count-data.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/opetchey/BIO144_Course_Book/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -638,7 +644,7 @@ Note
 </div>
 </div>
 </div>
-<p>The QQ-plot is rather concerning. However, QQ-plots in GLMs are not testing normality of residuals in the same way as for linear models, so their interpretation differs. The deviance residuals should approximately follow a normal distribution if the model fits well. Here, there are some deviations from normality, which could be somewhat concerning, but for now we will focus on the other plots.</p>
+<p>The QQ-plot is rather concerning. However, QQ-plots in GLMs are not testing normality of residuals in the same way as for linear models, so their interpretation differs. The <em>deviance residuals</em> should approximately follow a normal distribution if the model fits well. Here, there are some deviations from normality, which could be somewhat concerning, but for now we will focus on the other plots. (If you’re interested in what are deviance residuals, please see the <em>Extras</em> section at the end of this chapter.)</p>
 <p>The other plots look much better than for the linear model. The residuals vs fitted plot shows no obvious pattern, and the scale-location plot shows more constant variance.</p>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -746,6 +752,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 <p>In the output we see the deviance for the null model and the fitted model, as well as the change in deviance when adding explanatory variables. We can use a chi-squared test to assess whether adding explanatory variables significantly improves model fit.</p>
 <p>We use a chi-squared test here because, under certain regularity conditions, the change in deviance between nested models follows a chi-squared distribution with degrees of freedom equal to the difference in the number of parameters. If you are interested in what this means, you can read more about it in more advanced statistics textbooks.</p>
+<p>You may be wondering if we can calculate an r-squared value for GLMs. While there is no direct equivalent of r-squared for GLMs, several pseudo-r-squared measures have been proposed. However, these are not as widely used or interpreted as r-squared in linear regression. If you’re interested, check out the <em>Extras</em> section at the end of this chapter for more information.</p>
 </section>
 <section id="reporting" class="level3">
 <h3 class="anchored" data-anchor-id="reporting">Reporting</h3>
@@ -971,8 +978,56 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <li>GLMs can include multiple explanatory variables, just like linear models.</li>
 </ul>
 <p>With this foundation, you are now equipped to analyse count data using GLMs in R. In the next chapter, we will explore further extensions and applications of GLMs.</p>
+</section>
+<section id="further-reading" class="level2">
+<h2 class="anchored" data-anchor-id="further-reading">Further reading</h2>
+<ul>
+<li>Chapter 14 of <em>The R Book</em> by Crawley (2012) provides a comprehensive introduction to GLMs in R, including Poisson regression. The R is a bit old fashioned but the concepts are well explained.</li>
+<li>Generalized Linear Models With Examples in R (2018) by Peter K. Dunn and Gordon K. Smyth.</li>
+</ul>
+</section>
+<section id="extras" class="level2">
+<h2 class="anchored" data-anchor-id="extras">Extras</h2>
+<section id="deviance-residuals" class="level3">
+<h3 class="anchored" data-anchor-id="deviance-residuals">Deviance residuals</h3>
+<p>In linear models, residuals are simply the difference between observed and predicted values. In GLMs, residuals are more complex due to the non-normal distribution of the response variable.</p>
+<p>Recall from above that a Poisson GLM is mathematically summarised as:</p>
+<p><span class="math inline">\(y_i \sim \text{Poisson}(\lambda_i)\)</span></p>
+<p>where <span class="math inline">\(\log(\lambda_i) = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}\)</span></p>
+<p>The <strong>deviance residuals</strong> are a type of residual used in GLMs to assess model fit. They are derived from the concept of deviance, which measures the difference between the fitted model and a saturated model (a model that perfectly fits the data).</p>
+<p>The deviance residual for each observation is calculated as: <span class="math inline">\(r_i = \text{sign}(y_i - \hat{y}_i) \sqrt{2 \left( y_i \log\left(\frac{y_i}{\hat{y}_i}\right) - (y_i - \hat{y}_i) \right)}\)</span></p>
+<p>where: - <span class="math inline">\(y_i\)</span> is the observed count - <span class="math inline">\(\hat{y}_i\)</span> is the predicted count from the model</p>
+<p>Deviance residuals have the following properties:</p>
+<ul>
+<li>They are approximately normally distributed if the model fits well. <strong>Therefore they can be used in QQ-plots to assess model fit.</strong></li>
+<li>They can be positive or negative, indicating whether the observed count is above or below the predicted</li>
+<li>They are used in diagnostic plots to assess model fit, similar to residuals in linear models.</li>
+</ul>
+</section>
+<section id="pseudo-r-squared-for-glms" class="level3">
+<h3 class="anchored" data-anchor-id="pseudo-r-squared-for-glms">Pseudo-R-squared for GLMs</h3>
+<p>While there is no direct equivalent of r-squared for GLMs, several pseudo-r-squared measures have been proposed. These measures aim to provide an indication of model fit similar to r-squared in linear regression, but they do not have the same interpretation.</p>
+<p>To understand how pseudo-r-squared works, we first need to understand the concept of deviance and log-likelihoods in GLMs. Deviance is a measure of model fit based on likelihoods. It compares the fitted model to a null model (a model with only an intercept) and a saturated model (a model that perfectly fits the data). Let’s break that down a bit further:</p>
+<p><strong>Residual deviance</strong> is calculated as:</p>
+<p><span class="math inline">\(D = -2 \left( \log L(\text{fitted model}) - \log L(\text{saturated model}) \right)\)</span></p>
+<p>where - <span class="math inline">\(\log L(\text{fitted model})\)</span> is the log-likelihood of the fitted model and - <span class="math inline">\(\log L(\text{saturated model})\)</span> is the log-likelihood of the saturated model.</p>
+<p>The log-likelihood measures how well the model explains the observed data; higher values indicate better fit. The fitted model is the model we have estimated, while the saturated model is a hypothetical model that perfectly fits the data.</p>
+<p><strong>Null deviance</strong> is calculated similarly, but for the null model:</p>
+<p><span class="math inline">\(D_{null} = -2 \left( \log L(\text{null model}) - \log L(\text{fitted model}) \right)\)</span></p>
+<p>where - <span class="math inline">\(\log L(\text{null model})\)</span> is the log-likelihood of the null model.</p>
+<p>(By the way, the -2 factor is included to make the deviance comparable to the chi-squared distribution, with degrees of freedom equal to the difference in the number of parameters between models. This is useful for hypothesis testing.)</p>
+<p>So:</p>
+<ul>
+<li><strong>Null deviance</strong>: This is the deviance of the null model, which includes only an intercept. It represents how well a model with no predictors fits the data.</li>
+<li><strong>Residual deviance</strong>: This is the deviance of the fitted model. It represents how well the model with predictors fits the data relative to the null model.</li>
+</ul>
+<p>One common pseudo-r-squared measure is McFadden’s R-squared, defined as:</p>
+<p><span class="math inline">\(R^2_{McFadden} = 1 - \frac{D_{fitted}}{D_{null}}\)</span> where <span class="math inline">\(D_{fitted}\)</span> is the residual deviance of the fitted model and <span class="math inline">\(D_{null}\)</span> is the null deviance.</p>
+<p>This measure ranges from 0 to 1, with higher values indicating better model fit. However, it is important to note that pseudo-r-squared values for GLMs are generally lower than r-squared values in linear regression, and they should be interpreted with caution.</p>
+<p>There is much more to learn about the methods surrounding GLMs and their diagnostics, but this introduction should give you a solid foundation to start working with count data in R using Poisson regression.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

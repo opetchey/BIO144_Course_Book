@@ -301,6 +301,11 @@ window.Quarto = {
   </ul></li>
   <li><a href="#communicating-the-results-of-anova" id="toc-communicating-the-results-of-anova" class="nav-link" data-scroll-target="#communicating-the-results-of-anova">Communicating the results of ANOVA</a></li>
   <li><a href="#review" id="toc-review" class="nav-link" data-scroll-target="#review">Review</a></li>
+  <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading">Further reading</a></li>
+  <li><a href="#extras" id="toc-extras" class="nav-link" data-scroll-target="#extras">Extras</a>
+  <ul class="collapse">
+  <li><a href="#anova-and-experimental-design" id="toc-anova-and-experimental-design" class="nav-link" data-scroll-target="#anova-and-experimental-design">ANOVA and experimental design</a></li>
+  </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/opetchey/BIO144_Course_Book/edit/main/5.1-anova.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/opetchey/BIO144_Course_Book/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -1062,8 +1067,27 @@ F-statistic: 20.73 on 3 and 46 DF,  p-value: 1.214e-08</code></pre>
 <li>We can use contrasts and post-hoc tests to test specific hypotheses about the means of the groups.</li>
 </ul>
 <p><strong>Think–Pair–Share</strong> (#a_anova_is_regression) What changes when we move from regression to ANOVA? What stays exactly the same?</p>
+</section>
+<section id="further-reading" class="level2">
+<h2 class="anchored" data-anchor-id="further-reading">Further reading</h2>
+<p>If you’d like some further reading on ANOVA and ANOVA in R, here are some good resources. There is lots of overlap among them, however, and with the material in this chapter. I suggest to look at them mostly for different perspectives and examples. And only if you’d like to solidify your understanding.</p>
+<ul>
+<li>Chapter 5, Section 5.6, of <em>Getting Started with R</em> by Beckerman et al.&nbsp;This section is about 10 pages.</li>
+<li>Chapter 11 of <em>The New Statistics with R</em> by Hector, not including the section on two-way ANOVA. This chapter is about 10 pages.</li>
+<li>Chapter 14 of <em>Linear Models with R</em> by Faraway. This chapter is eight pages.</li>
+<li>Chapter 9 of <strong>Statistics. An Introduction using R</strong> by Crawley, up to the section <em>Factorial experiments</em>. This section is about 16 pages.</li>
+</ul>
+</section>
+<section id="extras" class="level2">
+<h2 class="anchored" data-anchor-id="extras">Extras</h2>
+<section id="anova-and-experimental-design" class="level3">
+<h3 class="anchored" data-anchor-id="anova-and-experimental-design">ANOVA and experimental design</h3>
+<p>This is not a course about experimental design (this is much too large a subject to cover). You may have noticed, however, that all of the example datasets and questions in your reading about ANOVA have been experiments, where researchers had various treatment groups containing the experimental subjects. That is, the researchers manipulated something to be different among the groups, and looked for any evidence of resulting differences.</p>
+<p>This might lead you to wonder if we analyse experiments with ANOVA, and analyse observations (involving no manipulations) with regression. The answer is no, we can use either for either. It just happens that manipulations in experiments are often of the categorical nature: type of food, parasite species, light level (high or low), and so on. Of course some experiments contain manipulations that are continuous (e.g.&nbsp;a range of temperatures or drug concentrations) and these are analysed with regression. And some studies include a manipulation (e.g., drug concentration) and observed variables like gender.</p>
+<p>So there isn’t necessarily and association between type of explanatory variable (continuous or categorical) and whether an study is experimental or observational. Important, no essential, is for the researcher to clearly be aware of which variables are manipulation and which are observations. Because only the manipulations can be used to infer causation.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

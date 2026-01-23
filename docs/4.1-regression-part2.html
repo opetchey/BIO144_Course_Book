@@ -294,6 +294,7 @@ window.Quarto = {
   <li><a href="#calculation-of-the-confidence-band" id="toc-calculation-of-the-confidence-band" class="nav-link" data-scroll-target="#calculation-of-the-confidence-band">Calculation of the confidence band</a></li>
   <li><a href="#calculations-of-the-prediction-band" id="toc-calculations-of-the-prediction-band" class="nav-link" data-scroll-target="#calculations-of-the-prediction-band">Calculations of the prediction band</a></li>
   <li><a href="#review" id="toc-review" class="nav-link" data-scroll-target="#review">Review</a></li>
+  <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading">Further reading</a></li>
   <li><a href="#extras" id="toc-extras" class="nav-link" data-scroll-target="#extras">Extras</a>
   <ul class="collapse">
   <li><a href="#randomisation-test-for-the-slope-of-a-regression-line" id="toc-randomisation-test-for-the-slope-of-a-regression-line" class="nav-link" data-scroll-target="#randomisation-test-for-the-slope-of-a-regression-line">Randomisation test for the slope of a regression line</a></li>
@@ -411,7 +412,7 @@ window.Quarto = {
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>SSM <span class="ot">&lt;-</span> <span class="fu">sum</span>((y1_predicted <span class="sc">-</span> <span class="fu">mean</span>(y1))<span class="sc">^</span><span class="dv">2</span>)</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>SSM</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 296.6647</code></pre>
+<pre><code>[1] 362.6976</code></pre>
 </div>
 </div>
 </section>
@@ -423,7 +424,7 @@ window.Quarto = {
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>SSE <span class="ot">&lt;-</span> <span class="fu">sum</span>((y1 <span class="sc">-</span> y1_predicted)<span class="sc">^</span><span class="dv">2</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>SSE</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 4.814299</code></pre>
+<pre><code>[1] 9.693436</code></pre>
 </div>
 </div>
 <p>Or…</p>
@@ -431,7 +432,7 @@ window.Quarto = {
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>SSE <span class="ot">&lt;-</span> SST <span class="sc">-</span> SSM</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>SSE</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 4.814299</code></pre>
+<pre><code>[1] 9.693436</code></pre>
 </div>
 </div>
 </section>
@@ -443,7 +444,7 @@ window.Quarto = {
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>R.squared <span class="ot">&lt;-</span> SSM<span class="sc">/</span>SST</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>R.squared</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.9840311</code></pre>
+<pre><code>[1] 0.9739697</code></pre>
 </div>
 </div>
 </section>
@@ -801,6 +802,14 @@ dbl (2): Age, Systolic_BP
 <li>t-statistic and p-values</li>
 <li>Tests and confidence intervals</li>
 <li>Confidence and prediction bands</li>
+</ul>
+</section>
+<section id="further-reading" class="level2">
+<h2 class="anchored" data-anchor-id="further-reading">Further reading</h2>
+<p>Again, there are many good books and online resources about regression models. The same ones as last week are recommended, also for interpreting results of regression models.</p>
+<ul>
+<li>Faraway, J. J. (2016). Linear models with R (2nd ed.). Chapman and Hall/CRC. <a href="https://www.routledge.com/Linear-Models-with-R-2nd-Edition/Faraway/p/book/9781482215754">Link</a>.</li>
+<li>Chapter 7 of The New Statistics with R, by Andy Hector.</li>
 </ul>
 </section>
 <section id="extras" class="level2">

@@ -1,8 +1,3 @@
-::: {.callout-warning}
-**Under construction**: This 2026 version of this book is currently being prepared. Some chapters are not yet available, and some content may change before the course starts in February 2026.
-:::
-
-
 # Preface {.unnumbered}
 
 

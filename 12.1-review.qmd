@@ -6,15 +6,15 @@ In the final lecture of the course, we will review and repeat any of the content
 
 So the preparation for this lecture is to think about which topics you would like to discuss again, and to post these in the Forum.
 
-
 Here are some ideas of topics that you might want to revisit:
 
 * Types of study designs in biology.
-* Framing research questions
-* Observational studies
-* Experimental studies  
+* Framing research questions.
+* Observational studies.
+* Experimental studies.
 * Key modeling concepts: interactions, overfitting, degrees of freedom, variance explained, hypothesis testing, null hypothesis  
-* Parametric vs non-parametric approaches: what they mean and when to use them  
+* Parametric vs non-parametric approaches: what they mean and when to use them
+* Going through any of the practical exercises in the course.
 
 
 

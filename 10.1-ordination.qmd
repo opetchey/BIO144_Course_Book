@@ -718,6 +718,7 @@ Summary:
 * Checking dispersion (PERMDISP) is important to interpret PERMANOVA results.
 * Fitting explanatory variables onto ordinations (envfit, ordisurf) helps interpret patterns.
 
+## Further reading
 
-
+Evelyn Chrystalla "E.C." Pielou was a Canadian statistical ecologist. She began her career as a researcher for the Canadian Department of Forestry and the Canadian Department of Agriculture. Pielou's books are classics that helped establish quantitative ecology. They range from the mathematics of ordination to kinds of (ecological) question ordination helps answer. A great place to start is *The Interpretation of Ecological Data: A Primer on Classification and Ordination* 
 

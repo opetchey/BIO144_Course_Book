@@ -353,7 +353,6 @@ window.Quarto = {
 <li>Fit and interpret Poisson regression models</li>
 <li>Diagnose common problems such as overdispersion and zero inflation</li>
 </ul>
-<p><strong>Think–Pair–Share</strong> (#tps-non-neg-kinds) What kinds of biological outcomes (response variables) can you think of that <em>cannot</em> be negative or continuous?</p>
 <section id="from-lm-to-glm" class="level3">
 <h3 class="anchored" data-anchor-id="from-lm-to-glm">From LM to GLM</h3>
 <p>Linear models (<code>LM</code>) describe the <strong>mean of a response variable</strong> as a linear function of explanatory variables. For example:</p>
@@ -388,7 +387,6 @@ Important
 GLMs are not a replacement for linear models — they are a <em>generalisation</em> of them. Linear regression is a special case of a GLM.</p>
 </div>
 </div>
-<p><strong>Think–Pair–Share</strong> (#tps-which-reg-assump) Which assumption of linear regression do you think is most problematic for count data?</p>
 </section>
 <section id="count-data" class="level3">
 <h3 class="anchored" data-anchor-id="count-data">Count data</h3>
@@ -406,7 +404,6 @@ GLMs are not a replacement for linear models — they are a <em>generalisation</
 <li>There is no known upper limit to the count.</li>
 </ol>
 <p>These properties immediately suggest that standard linear regression may be inappropriate.</p>
-<p><strong>Think–Pair–Share</strong> (#tps-which-props-viol) Which of these properties is violated if we use a normal distribution for counts?</p>
 </section>
 </section>
 <section id="example-soay-sheep" class="level2">
@@ -440,7 +437,6 @@ GLMs are not a replacement for linear models — they are a <em>generalisation</
 </div>
 </div>
 </div>
-<p><strong>Think–Pair–Share</strong> (#tps-what-suspicious) What features of this plot might already make you suspicious about using linear regression?</p>
 <section id="the-wrong-analysis" class="level3">
 <h3 class="anchored" data-anchor-id="the-wrong-analysis">The wrong analysis</h3>
 <p>A common mistake is to analyse count data using linear regression, treating counts as if they were continuous.</p>
@@ -521,7 +517,6 @@ Caution
 <li>It assumes constant variance</li>
 <li>Count data are discrete, non-negative, and typically heteroscedastic</li>
 </ul>
-<p><strong>Think–Pair–Share (#a_why_poisson)</strong> Why is a normal distribution a poor choice for count data? Which assumptions can be expected to fail?</p>
 </section>
 </section>
 <section id="poisson-glm" class="level2">
@@ -563,7 +558,6 @@ Important
 In a Poisson distribution, the mean and variance are equal. This captures an important feature of count data, but it will later lead to the concept of <em>overdispersion</em>.</p>
 </div>
 </div>
-<p><strong>Think–Pair–Share</strong> (#a_mean_variance_link) Why does increasing variance with the mean cause problems for linear regression?</p>
 <section id="generalized-linear-models-glms" class="level3">
 <h3 class="anchored" data-anchor-id="generalized-linear-models-glms">Generalized Linear Models (GLMs)</h3>
 <p>GLMs extend linear models by combining three components:</p>
@@ -608,7 +602,6 @@ Note
 <div class="callout-hint">
 <p>A good link function enforces the natural constraints of the data.</p>
 </div>
-<p><strong>Think–Pair–Share</strong> (#tps-what-wrong-id) What would go wrong if we used an identity link for count data?</p>
 </section>
 <section id="the-probability-distribution-family" class="level4">
 <h4 class="anchored" data-anchor-id="the-probability-distribution-family">The probability distribution (family)</h4>
@@ -699,7 +692,6 @@ Important
 <p>A one-unit increase in an explanatory variable multiplies the expected count by <span class="math inline">\(\exp(\beta)\)</span>.</p>
 </div>
 </div>
-<p><strong>Think–Pair–Share</strong> (#tps-what-change-beta) If <span class="math inline">\(\beta=0.05\)</span> what change in the expected count would be caused by an increase in body mass of 1 kg? As well as a numeric value, specify whether it is used additively or multiplicatively.</p>
 <p>To interpret the coefficient for body size (<span class="math inline">\(\beta_1 = 0.05\)</span>), we exponentiate it: <span class="math inline">\(\exp(0.05) \approx 1.65\)</span></p>
 <p>This means that for each additional kilogram of body size, the expected count of fitness increases by a factor of approximately 1.65 (i.e., a 65% increase). We use the number multiplicatively because of the log link function.</p>
 <p>To make a prediction of the expected count for a given body size, we back-transform the linear predictor:</p>
@@ -839,7 +831,6 @@ Caution
 <p>Ignoring overdispersion leads to <strong>anti-conservative p-values</strong> (too small). This would be a typical example of <strong>Type I error inflation</strong>. Type I errors occur when we incorrectly reject a true null hypothesis, leading to false positives. In the context of statistical modeling, ignoring overdispersion can result in underestimating standard errors, which in turn leads to smaller p-values. Consequently, we may conclude that an effect is statistically significant when it is not, thereby increasing the likelihood of Type I errors.</p>
 </div>
 </div>
-<p><strong>Think–Pair–Share</strong> (#tps-why-ind-diff) Why might individuals differ even after accounting for measured explanatory variables?</p>
 <section id="quasi-poisson-and-negative-binomial-models" class="level3">
 <h3 class="anchored" data-anchor-id="quasi-poisson-and-negative-binomial-models">Quasi-Poisson and negative binomial models</h3>
 <p>One solution is the <strong>quasi-Poisson</strong> model, which estimates an additional dispersion parameter:</p>
@@ -868,7 +859,6 @@ AIC: NA
 Number of Fisher Scoring iterations: 5</code></pre>
 </div>
 </div>
-<p><strong>Think–Pair–Share</strong> (#a_overdispersion_consequences) What happens to standard errors and p-values if overdispersion is ignored?</p>
 </section>
 </section>
 <section id="zero-inflation" class="level2">
@@ -892,7 +882,6 @@ Note
 <p>Zero inflation often reflects <strong>two processes</strong>: whether an observation can be non-zero at all, and how large it is if it is. E.g., whether an individual smokes at all, and then how many cigarettes they smoke if they do.</p>
 </div>
 </div>
-<p><strong>Think–Pair–Share</strong> (#tps-zero-inf-examples) Can you think of an ecological, biological, or medical process that would generate many structural zeros?</p>
 <p>In this course we will not describe in detail or practice fitting zero-inflated models, but they are an important tool for count data with many zeros. Examples of models include zero-inflated Poisson (ZIP) and zero-inflated negative binomial (ZINB) models. These models combine a count model (e.g., Poisson or negative binomial) with a separate model for the probability of being a structural zero. There is also a model called the <strong>hurdle model</strong>, which is similar but has a different interpretation.</p>
 </section>
 <section id="multiple-explanatory-variables" class="level2">
@@ -964,7 +953,6 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
 <p>We see that both body size and parasite load significantly affect fitness. Body size has a positive effect, while parasite load has a negative effect. These effects are interpreted conditional on the other explanatory variable being held constant, just as in multiple linear regression.</p>
-<p><strong>Think–Pair–Share</strong> (#tps-how-vis-poisson) How would you visualise (make a graph) of the data and the modelled relationships? Make a sketch of what you could do.</p>
 </section>
 <section id="review" class="level2">
 <h2 class="anchored" data-anchor-id="review">Review</h2>

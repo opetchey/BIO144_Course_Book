@@ -255,7 +255,6 @@ Actually, the $F$-test does not directly test the null hypothesis that all the g
 
 The $F$-test does this by comparing two variance estimates: the variance explained by the group means (between-group variance) and the variance that remains unexplained within each group (within-group variance).
 
-**Think–Pair–Share (#a_what_f_test_answers)** What question does the ANOVA F-test answer? What question does it *not* answer?
 
 ### Interpretation of the $F$ statistic
 
@@ -574,9 +573,6 @@ plot(fit, add.smooth = FALSE)
 
 Nothing looks too bad.
 
-** Think-pair-share**: Which of the four plots above would you use to check each of the three assumptions listed above?
-
-** Think-pair-share**: Before we look at the ANOVA table, lets figure out the total degrees of freedom, the degrees of freedom for the model, and the degrees of freedom for the residuals. Have a think-pair-share about each of these. Write you ideas down. Chat with you neighbour. Then share with the class.
 
 Now we can look at the ANOVA table:
 
@@ -588,7 +584,6 @@ The ANOVA table shows the sum of squares, degrees of freedom, mean square, F val
 
 A suitable sentence to report our findings would be: "Diet has a significant effect on blood pressure ($F(2, 27) = 20.7, p < 0.0001$)". This means that the probability of observing such a large $F$ value under the null hypothesis is less than 0.01%.
 
-*Think-pair-share*: You know that the $R^2$ value is a measure of how much variance in the response variable is explained by the model. How would you calculate the $R^2$ value from the ANOVA table above?
 
 
 ## Difference between pairs of groups
@@ -614,7 +609,6 @@ All well and good up to a point. But there are two issues with using the results
 
 1. The greater the number of individual tests, the more likely one will be significant just by chance. This is called the problem of multiple comparisons. Many test can result in a type-I error: rejecting the null hypothesis when it is actually true. The more tests one does, the more likely one is to make a type-I error.
 
-** Think-pair-share**: Imagine that when our threshold p-value each individual test is 0.05 (5%) so that if it is less than 0.05 we call it "significant" and if it is greater than 0.05 we call it "not significant" (this is the standard practice in many fields). When we make 20 hypothesis tests, how many would we expect to be "significant" just by chance (i.e., when we assume that all null hypotheses is true.)
 
 2. The summary table does not provide all the possible pairwise comparisons. It does not, for example, provide the comparison between the "vegan" and the "vegetarian" group.
 
@@ -772,7 +766,6 @@ Here are the key points from this chapter:
 * We can use contrasts and post-hoc tests to test specific hypotheses about the means of the groups.
 
 
-**Think–Pair–Share** (#a_anova_is_regression) What changes when we move from regression to ANOVA? What stays exactly the same?
 
 
 ## Further reading

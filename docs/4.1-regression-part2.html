@@ -350,7 +350,6 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p><strong>Think-Pair-Share</strong> (#tps-better-model) In which of these two would you say the model is better, and in which is it worse?</p>
 <p>The first model seems to fit the data well, while the second one does not. But how can we quantify this?</p>
 <p>Let’s say that we will measure the goodness of the model by the amount of variability of the dependent variable that is explained by the independent variable. To do this we need to do the following:</p>
 <ol type="1">
@@ -412,7 +411,7 @@ window.Quarto = {
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>SSM <span class="ot">&lt;-</span> <span class="fu">sum</span>((y1_predicted <span class="sc">-</span> <span class="fu">mean</span>(y1))<span class="sc">^</span><span class="dv">2</span>)</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>SSM</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 371.237</code></pre>
+<pre><code>[1] 330.6744</code></pre>
 </div>
 </div>
 </section>
@@ -424,7 +423,7 @@ window.Quarto = {
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>SSE <span class="ot">&lt;-</span> <span class="fu">sum</span>((y1 <span class="sc">-</span> y1_predicted)<span class="sc">^</span><span class="dv">2</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>SSE</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 6.323436</code></pre>
+<pre><code>[1] 3.465252</code></pre>
 </div>
 </div>
 <p>Or…</p>
@@ -432,7 +431,7 @@ window.Quarto = {
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>SSE <span class="ot">&lt;-</span> SST <span class="sc">-</span> SSM</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>SSE</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 6.323436</code></pre>
+<pre><code>[1] 3.465252</code></pre>
 </div>
 </div>
 </section>
@@ -444,7 +443,7 @@ window.Quarto = {
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>R.squared <span class="ot">&lt;-</span> SSM<span class="sc">/</span>SST</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>R.squared</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.9832519</code></pre>
+<pre><code>[1] 0.9896293</code></pre>
 </div>
 </div>
 </section>
@@ -461,7 +460,6 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p><strong>Think-Pair-Share</strong> (#tps-what-minimised) What is minimised when we fit a regression model? And therefore what is maximised?</p>
 </section>
 </section>
 <section id="how-unlikey-is-the-observed-data-given-the-null-hypothesis" class="level2">
@@ -470,7 +468,6 @@ window.Quarto = {
 <p>What is a meaningful null hypothesis for a regression model?</p>
 <p>As mentioned, often we’re interested in whether there is a relationship between the dependent (response) and independent (explanatory) variable. Therefore, the null hypothesis is that there is no relationship between the dependent and independent variable. This means that the null hypothesis is that the slope of the regression line is zero.</p>
 <p>Recall the regression model: <span class="math display">\[y = \beta_0 + \beta_1 x + \epsilon\]</span></p>
-<p><strong>Think-Pair-Share</strong> (#tps-null-hypothesis) Write down the null hypothesis of no relationship between <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> in terms of a <span class="math inline">\(\beta\)</span> parameter.</p>
 <p>The null hypothesis is that the slope of the regression line is zero: <span class="math display">\[H_0: \beta_1 = 0\]</span></p>
 <p>What is the alternative hypothesis?</p>
 <p><span class="math display">\[H_1: \beta_1 \neq 0\]</span></p>
@@ -504,7 +501,6 @@ x            2.1161160  0.1072104</code></pre>
 </div>
 </div>
 </div>
-<p><strong>Think-Pair-Share</strong> (#tps-chance-area) In what areas of the graph is the slope estimate more likely to have been observed by chance? And what regions is it less likely to have been observed by chance? Think about this before you look at the end of this chapter for an answer.</p>
 <p>When the slope estimate is larger, it is less likely to have been observed by chance. And when the standard error is larger, it is more likely to have been observed by chance. How can we put these together into a single measure?</p>
 <p>If we divide the slope estimate by the standard error, we get a measure of how many standard errors the slope estimate is from the null hypothesis slope of zero. This is the <span class="math inline">\(t\)</span>-statistic:</p>
 <p><span class="math display">\[t = \frac{\hat\beta_1 - \beta_{1,H_0}}{\sigma^{(\beta_1)}}\]</span></p>
@@ -779,7 +775,6 @@ dbl (2): Age, Systolic_BP
 </div>
 </div>
 <p>Another way to think of the 95% confidence band is that it is where we would expect 95% of the regression lines to lie if we were to collect many samples from the same population. The 95% prediction band is where we would expect 95% of the future observations to lie.</p>
-<p><strong>Think–Pair–Share</strong> (#a_prediction_vs_estimation) Which interval answers: “What is the mean response?” Which answers: “What might a new observation look like?”</p>
 </section>
 <section id="review" class="level2">
 <h2 class="anchored" data-anchor-id="review">Review</h2>

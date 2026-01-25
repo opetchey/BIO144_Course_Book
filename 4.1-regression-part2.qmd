@@ -47,9 +47,6 @@ p1 + p2
 ```
 
 
-**Think-Pair-Share** (#tps-better-model) In which of these two would you say the model is better, and in which is it worse?
-
-
 
 The first model seems to fit the data well, while the second one does not. But how can we quantify this?
 
@@ -219,9 +216,6 @@ p4 <- ggplot(data.frame(x = x, y4 = y4), aes(x = x, y = y4)) +
 
 
 
-**Think-Pair-Share** (#tps-what-minimised) What is minimised when we fit a regression model? And therefore what is maximised?
-
-
 ## How unlikey is the observed data given the null hypothesis?
 
 We often hear this expressed as "is the relationship significant?" And maybe we heard that the relationship is significant if the p-value is less than 0.05. But what does all this actually mean? In this section we'll figure all this out. The first step to is to formulate a null hypothesis.
@@ -233,7 +227,7 @@ As mentioned, often we're interested in whether there is a relationship between 
 Recall the regression model:
 $$y = \beta_0 + \beta_1 x + \epsilon$$
 
-**Think-Pair-Share** (#tps-null-hypothesis) Write down the null hypothesis of no relationship between $x$ and $y$ in terms of a $\beta$ parameter.
+
 
 
 The null hypothesis is that the slope of the regression line is zero:
@@ -282,11 +276,6 @@ ggplot(data.frame(slope_estimate = slope_estimate_value,
        aes(x = slope_estimate, y = standard_error)) 
 ```
 
-
-
-
-
-**Think-Pair-Share** (#tps-chance-area) In what areas of the graph is the slope estimate more likely to have been observed by chance? And what regions is it less likely to have been observed by chance? Think about this before you look at the end of this chapter for an answer.
 
 
 
@@ -678,7 +667,6 @@ ggplot(bp_data, aes(x = Age, y = Systolic_BP)) +
 Another way to think of the 95% confidence band is that it is where we would expect 95% of the regression lines to lie if we were to collect many samples from the same population. The 95% prediction band is where we would expect 95% of the future observations to lie.
 
 
-**Think–Pair–Share** (#a_prediction_vs_estimation) Which interval answers: "What is the mean response?" Which answers: "What might a new observation look like?"
 
 
 ## Review

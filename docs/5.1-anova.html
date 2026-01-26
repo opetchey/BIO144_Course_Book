@@ -511,6 +511,7 @@ Note
 </div>
 <p>Actually, the <span class="math inline">\(F\)</span>-test does not directly test the null hypothesis that all the group means are equal. Instead, it tests whether the model that includes the <em>group means</em> explains significantly more variance in the data than a model that only includes the overall mean (i.e., without considering group differences).</p>
 <p>The <span class="math inline">\(F\)</span>-test does this by comparing two variance estimates: the variance explained by the group means (between-group variance) and the variance that remains unexplained within each group (within-group variance).</p>
+<p><strong>Think–Pair–Share (#a_what_f_test_answers)</strong> What question does the ANOVA F-test answer? What question does it <em>not</em> answer?</p>
 </section>
 <section id="interpretation-of-the-f-statistic" class="level3">
 <h3 class="anchored" data-anchor-id="interpretation-of-the-f-statistic">Interpretation of the <span class="math inline">\(F\)</span> statistic</h3>
@@ -794,6 +795,8 @@ Note
 </div>
 </div>
 <p>Nothing looks too bad.</p>
+<p>** Think-pair-share**: Which of the four plots above would you use to check each of the three assumptions listed above?</p>
+<p>** Think-pair-share**: Before we look at the ANOVA table, lets figure out the total degrees of freedom, the degrees of freedom for the model, and the degrees of freedom for the residuals. Have a think-pair-share about each of these. Write you ideas down. Chat with you neighbour. Then share with the class.</p>
 <p>Now we can look at the ANOVA table:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -810,6 +813,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 <p>The ANOVA table shows the sum of squares, degrees of freedom, mean square, F value, and p-value for the model and residuals. As we know, the <span class="math inline">\(F\)</span> value (<span class="math inline">\(F\)</span> statistics) is calculated as the mean square of the model divided by the mean square of the residuals. The p-value is calculated based on the F-distribution with the appropriate degrees of freedom.</p>
 <p>A suitable sentence to report our findings would be: “Diet has a significant effect on blood pressure (<span class="math inline">\(F(2, 27) = 20.7, p &lt; 0.0001\)</span>)”. This means that the probability of observing such a large <span class="math inline">\(F\)</span> value under the null hypothesis is less than 0.01%.</p>
+<p><em>Think-pair-share</em>: You know that the <span class="math inline">\(R^2\)</span> value is a measure of how much variance in the response variable is explained by the model. How would you calculate the <span class="math inline">\(R^2\)</span> value from the ANOVA table above?</p>
 </section>
 <section id="difference-between-pairs-of-groups" class="level2">
 <h2 class="anchored" data-anchor-id="difference-between-pairs-of-groups">Difference between pairs of groups</h2>
@@ -849,8 +853,11 @@ F-statistic: 20.73 on 3 and 46 DF,  p-value: 1.214e-08</code></pre>
 <p>In this table we have the intercept (<span class="math inline">\(\beta_0\)</span>) and the three <span class="math inline">\(\beta\)</span> values for the diet groups: “dietMeat”, “dietVegetarian”, and “dietVegan”. The Estimate column shows the estimated coefficients for each group. The intercept (<span class="math inline">\(\beta_0\)</span>) represents the mean blood pressure for the reference group (in this case, the “meat” diet group). The other three coefficients represent <em>the difference</em> in mean blood pressure between each diet group and the reference group.</p>
 <p>All well and good up to a point. But there are two issues with using the results from this table:</p>
 <ol type="1">
-<li><p>The greater the number of individual tests, the more likely one will be significant just by chance. This is called the problem of multiple comparisons. Many test can result in a type-I error: rejecting the null hypothesis when it is actually true. The more tests one does, the more likely one is to make a type-I error.</p></li>
-<li><p>The summary table does not provide all the possible pairwise comparisons. It does not, for example, provide the comparison between the “vegan” and the “vegetarian” group.</p></li>
+<li>The greater the number of individual tests, the more likely one will be significant just by chance. This is called the problem of multiple comparisons. Many test can result in a type-I error: rejecting the null hypothesis when it is actually true. The more tests one does, the more likely one is to make a type-I error.</li>
+</ol>
+<p>** Think-pair-share**: Imagine that when our threshold p-value each individual test is 0.05 (5%) so that if it is less than 0.05 we call it “significant” and if it is greater than 0.05 we call it “not significant” (this is the standard practice in many fields). When we make 20 hypothesis tests, how many would we expect to be “significant” just by chance (i.e., when we assume that all null hypotheses is true.)</p>
+<ol start="2" type="1">
+<li>The summary table does not provide all the possible pairwise comparisons. It does not, for example, provide the comparison between the “vegan” and the “vegetarian” group.</li>
 </ol>
 <p>Several methods to circumvent the problem of too many “significant” test results (type-I error) have been proposed. The most prominent ones are:</p>
 <ul>
@@ -1059,6 +1066,7 @@ F-statistic: 20.73 on 3 and 46 DF,  p-value: 1.214e-08</code></pre>
 <li>We use <span class="math inline">\(F\)</span>-tests to test the null hypothesis of no difference among the means of the groups (categories).</li>
 <li>We can use contrasts and post-hoc tests to test specific hypotheses about the means of the groups.</li>
 </ul>
+<p><strong>Think–Pair–Share</strong> (#a_anova_is_regression) What changes when we move from regression to ANOVA? What stays exactly the same?</p>
 </section>
 <section id="further-reading" class="level2">
 <h2 class="anchored" data-anchor-id="further-reading">Further reading</h2>

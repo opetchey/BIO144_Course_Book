@@ -131,9 +131,14 @@ write_csv(bp_1cont1cat, here("datasets", "bp_1cont1cat.csv"))
 
 (The dataset with both combined is in the file `bp_1cont1cat.csv`.)
 
-Can we say anything general about the effect of diet on blood pressure? No, we can't. We cannot, for example, state that a vegetarian diet lowers blood pressure. We can say, however, that a vegetarian diet lowers blood pressure of people that do little exercise.
+**Think-Pair-Share** (#tps-general-diet) Can we say anything general about the effect of diet on blood pressure?
 
-Can we say anything general about the effect of exercise on blood pressure? Well, we can say that exercise lowers blood pressure, but we have to be careful. We have to say that exercise lowers blood pressure of people with a meat heavy diet more than it lowers blood pressure of people with a vegetarian diet.
+No, we can't. We cannot, for example, state that a vegetarian diet lowers blood pressure. We can say, however, that a vegetarian diet lowers blood pressure of people that do little exercise.
+
+
+**Think-Pair-Share** (#tps-general-exercise) Can we say anything general about the effect of exercise on blood pressure?
+
+Well, we can say that exercise lowers blood pressure, but we have to be careful. We have to say that exercise lowers blood pressure of people with a meat heavy diet more than it lowers blood pressure of people with a vegetarian diet.
 
 I think it is clear that the interaction was easier to see when we plotted all the data in one graph... it is much easier to visually compare the slopes of the two regression lines when they are on the same graph.
 
@@ -152,6 +157,7 @@ In the example above, the effect of exercise on blood pressure was stronger for 
 
 That was an example of an interaction between a continuous explanatory variable (exercise) and a categorical explanatory variable (diet). Interactions can also occur between two categorical explanatory variables, or between two continuous explanatory variables. Let us look at some more examples.
 
+**Think–Pair–Share** (#a_when_lines_cross) What does it mean biologically when lines cross in an interaction plot? What does it mean when they are parallel?
 
 
 ## Two cats
@@ -214,6 +220,7 @@ ggplot(bp_2cat, aes(x=exercise, y=bp, col=diet)) +
 
 Indeed, the lines connecting the means are not parallel, which is evidence of an interaction between diet and exercise on blood pressure.
 
+**Think-Pair-Share** (#tps-express-int) Express the nature of the interaction in words.
 
 
 ## Two continuous
@@ -280,6 +287,7 @@ ggplot(bp_2cont, aes(x=age, y=bp, col = mins_per_week)) +
 
 What do we see? If we look at a set of points of the similar colour (i.e., similar number of minutes of exercised), we can see that the slope of the relationship between blood pressure and age depends on exercise. The slope is steeper for people that exercise more.
 
+**Think-Pair-Share** (#tps-small-older) Another thing we could say is that the effect of exercise is smaller for older people. How is this shown in the graph?
 
 
 Yet another way to visualise this interaction is to create categorical versions of age and minutes of exercise, and then plot the data with these categorical variables:
@@ -347,6 +355,9 @@ ggplot(bp_2cont, aes(x=age, y=bp, col = mins_per_week_class)) +
 Another way of thinking about interactions is from the perspective of additivity or non-additivity of effects. Imagine we made two separate studies, one of the effect of diet on blood pressure, and one of the effect of exercise on blood pressure. In the first study we only varied diet, and in the second study we only varied exercise. In the first study we found an effect size of diet on blood pressure of say 10 mmHg (e.g., difference between meat heavy and vegetarian). And in the second study we found an effect size of exercise on blood pressure of 15 mmHg (e.g., difference between low and high exercise).
 
 
+**Think-Pair-Share** (#tps-adding-effects) If the effects of diet and exercise were additive, what would we expect the effect size to be if we estimated the effect of diet and exercise on blood pressure in the same study?
+
+**Think-Pair-Share** (#tps-comb-non-add) What would we expect the effect size of combined diet and exercise to be if the effects were non-additive? (Hint: this is a bit of a trick question.)
 
 If the effects are non-additive, we would expect the effect size to be different from additive. For example, if we found the combined effect of diet and exercise on blood pressure to be 40, we would say that the effects are non-additive. Their combined effect is more than the sum of their individual effects. This example is of a synergistic interaction because the combined effect (40) is greater than the sum of the individual effects (25).
 
@@ -354,6 +365,7 @@ If the effects are non-additive, we would expect the effect size to be different
 
 When a doctor is considering giving us a particular medication, we are asked if we are taking any other medications. This is because the effects of drugs can interact. For example, if we take two drugs that both lower blood pressure and they interfere with each other, the combined effect might be less than the sum of their individual effects. This is an antagonistic interaction. It could be worse than that though, the interaction might actually be harmful, which is why doctors are so careful about drug interactions.
 
+**Think-Pair-Share** (#tps-other-int-examples) Can you think of any other examples of interactions in biology or medicine?
 
 
 ## The maths bit
@@ -377,6 +389,7 @@ We have one continuous explanatory variable (minutes of exercise) and one binary
 
 
 
+**Think-Pair-Share** (#tps-without-interaction) What would a linear model without an interaction term be?
 
 
 
@@ -396,6 +409,7 @@ This model is a multiple regression model in which one of the explanatory variab
 
 
 
+**Think-Pair-Share** (#tps-with-interaction) What might the model look like if we wanted to include an interaction between diet and exercise?
 
 
 
@@ -420,6 +434,8 @@ This is again a multiple regression model, but now with three explanatory variab
 
 
 
+**Think-Pair-Share** (#tps-sketch-interaction) Make sketches of the possible relationships between diet, exercise and blood pressure. Make a sketch compatible with $\beta_3 = 0$. Make a sketch compatible with $\beta_3 \neq 0$.
+
 
 
 
@@ -428,6 +444,7 @@ This is again a multiple regression model, but now with three explanatory variab
 If we want to test whether the effect of minutes of exercise on blood pressure is different for people with different diets, we need a null hypothesis to test.
 
 
+**Think-Pair-Share** (#tps-interaction-null) What is the null hypothesis in this case, verbally, and in terms of the coefficients of the model?
 
 
 The null hypothesis is that the effect of minutes of exercise on blood pressure is the same for people with different diets. This is a null hypothesis of no interaction between diet and exercise. In terms of the coefficients of the model, the null hypothesis is that $\beta_3 = 0$.
@@ -483,6 +500,7 @@ The third is `dietvegetarian`, which is the effect of being on a vegetarian diet
 The fourth is the interaction term `mins_per_week:dietvegetarian`, which is the difference in the effect (slope) of minutes of exercise on blood pressure for a person on a vegetarian diet compared to a person on a "meat heavy" diet.
 
 
+**Think-Pair-Share** (#tps-two-equations) Write two equations, one for each of the two diets. They would look something like this: $y_i = 0.1 - 0.1 x_{i}^{(1)}$, but will have other numbers.
 
 
 ## Reporting our findings
@@ -545,6 +563,7 @@ if (knitr::is_latex_output()) {
 We also might use a sentence like this to report the results: "The effect of minutes of exercise is generally negative, but the effect is stronger for people on a meat heavy diet than for people on a vegetarian diet ($F$-statistics of interaction term = `r round(anova(mod2)[3,4],2)`, degrees of freedom = `r anova(mod2)[3,1]`, degrees of freedom residuals = `r anova(mod2)[4,1]`, $p$-value = `r signif(anova(mod2)[3,5],2)`)."
 
 
+**Think–Pair–Share (#a_interaction_vs_main_effect)** How does an interaction change the meaning of a "main effect"? Can a main effect be misleading when an interaction is present?
 
 
 ## Multiple regression vs. many single regressions
@@ -635,7 +654,7 @@ In the ANOVA table we see four rows. The first row is for the main effect of die
 
 In this example, the F-statistic for the interaction term is quite large (`r round(anova(mod_2cat)[3, "F value"],2)` and the corresponding p-value is quite small (`r signif(anova(mod_2cat)[3, "Pr(>F)"],2)`. Hence, we conclude that there is a strong evidence of an interaction between diet and exercise on blood pressure. The effect of exercise on blood pressure depends on diet.
 
-
+**Think-Pair-Share** (#tps-two-way-report) Write a sentence reporting the results of the two-way ANOVA. Focus on the biological interpretation of the results, rather than the statistical details. Include statistics in parentheses, in support of your statements.
 
 ::: {.callout-important}
 **Reporting two-way ANOVA results** When reporting the results of a two-way ANOVA, it is important to focus on the biological interpretation of the results, rather than the statistical details. Include statistics in parentheses, in support of your statements. For example, you might say something like: "The effect of exercise was different for people on different diets, with a stronger effect for those on a vegetarian diet compared to those on a meat heavy diet (F(1, 36) = 13.77, p < 0.001)."

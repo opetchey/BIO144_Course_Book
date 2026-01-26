@@ -374,6 +374,7 @@ A GLM keeps the familiar <em>linear predictor</em> from linear models, but: 1) u
 </ul>
 </div>
 </div>
+<p><strong>Think–Pair–Share</strong> (#tps-binary-examples) Name three response variables in biology, ecology, or medicine that are naturally binary (0/1). Why would a linear model be risky for each?</p>
 </section>
 <section id="overview" class="level2">
 <h2 class="anchored" data-anchor-id="overview">Overview</h2>
@@ -463,6 +464,7 @@ Note
 <code>chisq.test()</code> defaults to Yates’ continuity correction for 2×2 tables. Here we set <code>correct = FALSE</code> to match the classic “hand-calculation” style example.</p>
 </div>
 </div>
+<p><strong>Think–Pair–Share</strong> (#tps-chisq-meaning) What is the null hypothesis of this <span class="math inline">\(\chi^2\)</span> test, in words?</p>
 </section>
 </section>
 <section id="quantifying-an-association-risk-and-odds" class="level2">
@@ -489,6 +491,7 @@ Important
 An odds of 3 means “3 to 1”, which corresponds to a probability of <span class="math inline">\(3/(3+1)=0.75\)</span>. Odds and probabilities are linked mathematically, but they are not the same thing.</p>
 </div>
 </div>
+<p><strong>Think–Pair–Share</strong> (#tps-odds-intuition) Why might odds ratios be a convenient effect size in a regression model? (This is a difficult question—think carefully, and Pair!)</p>
 </section>
 <section id="from-tables-to-regression-models" class="level2">
 <h2 class="anchored" data-anchor-id="from-tables-to-regression-models">From tables to regression models</h2>
@@ -542,6 +545,7 @@ dbl (4): Dose, Number_tested, Number_killed, Mortality_rate
 </div>
 </div>
 </div>
+<p><strong>Think–Pair–Share</strong> (#tps-why-lm-wrong) What goes wrong if we fit a linear regression to a probability (mortality rate)? Name at least two problems.</p>
 </section>
 <section id="two-tempting-but-wrong-analyses" class="level2">
 <h2 class="anchored" data-anchor-id="two-tempting-but-wrong-analyses">Two tempting but wrong analyses</h2>
@@ -608,6 +612,7 @@ Use a Poisson model when counts have <em>no known upper limit</em>.<br>
 Use a binomial model when counts are “<span class="math inline">\(k\)</span> successes out of <span class="math inline">\(n\)</span> trials”. Use a binomial model when each observation is a 0/1 response.</p>
 </div>
 </div>
+<p><strong>Think–Pair–Share (#a_probability_not_linear)</strong> Why is it dangerous to model probabilities directly using a linear model?</p>
 </section>
 </section>
 <section id="the-probability-model-bernoulli-and-binomial" class="level2">
@@ -641,6 +646,7 @@ Note
 For Bernoulli/binomial data, the variance is <em>determined by the mean</em>. This is one reason “constant variance” fails for linear models.</p>
 </div>
 </div>
+<p><strong>Think–Pair–Share</strong> (#tps-binom-variance) For fixed <span class="math inline">\(n\)</span>, at what value of <span class="math inline">\(\pi\)</span> is <span class="math inline">\(Var(Y)=n\pi(1-\pi)\)</span> largest? At what values of <span class="math inline">\(\pi\)</span> is it smallest?</p>
 </section>
 </section>
 <section id="logistic-regression-the-binomial-glm" class="level2">
@@ -671,6 +677,7 @@ Important
 It maps probabilities <span class="math inline">\((0,1)\)</span> to the whole real line <span class="math inline">\((-\infty,\infty)\)</span>, so the linear predictor can take any value while <span class="math inline">\(\pi_i\)</span> stays valid, i.e., [0,1].</p>
 </div>
 </div>
+<p><strong>Think–Pair–Share</strong> (#tps-identity-link-binary) What would go wrong if we used the identity link <span class="math inline">\(E(y_i)=\eta_i\)</span> for a binary response variable? And which link function is this, by the way?</p>
 </section>
 <section id="fitting-logistic-regression-in-r-aggregated-binomial-data" class="level2">
 <h2 class="anchored" data-anchor-id="fitting-logistic-regression-in-r-aggregated-binomial-data">Fitting logistic regression in R (aggregated binomial data)</h2>
@@ -758,6 +765,9 @@ Note
 A constant odds ratio does <em>not</em> mean a constant change in probability. The probability change depends on where you start (e.g.&nbsp;<span class="math inline">\(\pi=0.05\)</span> vs <span class="math inline">\(\pi=0.80\)</span>).</p>
 </div>
 </div>
+<p><strong>Think–Pair–Share</strong> (#tps-or-vs-probability) Why might a treatment have a “big” odds ratio, but only a “small” change in probability in one situation?</p>
+<p><strong>Think–Pair–Share (#a_odds_vs_probability)</strong> Why might odds be convenient mathematically,<br>
+even if probabilities feel more intuitive?</p>
 </section>
 <section id="analysis-of-deviance-likelihood-based-anova" class="level2">
 <h2 class="anchored" data-anchor-id="analysis-of-deviance-likelihood-based-anova">Analysis of deviance (likelihood-based ANOVA)</h2>

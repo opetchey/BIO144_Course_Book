@@ -25,6 +25,7 @@ What do we recommend? Try the cloud first. If you like it then continue to use i
 Whether you use the RStudio application on your computer, or use RStudio on the Cloud, you are responsible for the safety and persistence of your files (data, code, etc.). Just because you're using RStudio on the Cloud does not mean your files are automatically saved forever. Make sure to download and back up your important files regularly! 
 :::
 
+**Think–Pair–Share** (#a_r_vs_rstudio_roles)  What is one thing that R does, and one thing that RStudio does? Why is it useful that these are separate?
 
 
 ## Getting to know the RStudio IDE 
@@ -133,6 +134,7 @@ Above we have numerous examples of functions: `exp()`, `sqrt()`, `c()`, `paste()
 
 You likely guessed that there is much much more to learn about R, but we will cover that as we go along in the course.
 
+**Think–Pair–Share** (#tps_a_objects_not_files) When you type `a <- ...`, where does `x` live?
 
 
 
@@ -161,6 +163,7 @@ AI assistants like ChatGPT can also be useful for getting help with R programmin
 And of course there is always your course instructors and fellow students to help you out when you get stuck.
 
 
+**Think–Pair–Share** (#a_errors_are_information) When we do something that R does not understand, it often gives us an error message. In red! What will you do when you get an error message?
 
 
 ## Add-on packages 

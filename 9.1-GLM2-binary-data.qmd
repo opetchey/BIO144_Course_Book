@@ -30,6 +30,7 @@ A GLM keeps the familiar *linear predictor* from linear models, but:
 - Binary data: binomial family + logit link
 :::
 
+**Think–Pair–Share** (#tps-binary-examples) Name three response variables in biology, ecology, or medicine that are naturally binary (0/1). Why would a linear model be risky for each?
 
 ## Overview
 
@@ -102,6 +103,7 @@ Here we set `correct = FALSE` to match the classic "hand-calculation"
 style example.
 :::
 
+**Think–Pair–Share** (#tps-chisq-meaning) What is the null hypothesis of this $\chi^2$ test, in words?
 
 
 
@@ -125,6 +127,7 @@ $3/(3+1)=0.75$. Odds and probabilities are linked mathematically, but they are n
 the same thing.
 :::
 
+**Think–Pair–Share** (#tps-odds-intuition) Why might odds ratios be a convenient effect size in a regression model? (This is a difficult question—think carefully, and Pair!)
 
 
 ## From tables to regression models
@@ -177,6 +180,7 @@ ggplot(beetle, aes(x = Dose, y = Mortality_rate)) +
   labs(x = "Dose", y = "Mortality rate")
 ```
 
+**Think–Pair–Share** (#tps-why-lm-wrong) What goes wrong if we fit a linear regression to a probability (mortality rate)? Name at least two problems.
 
 ## Two tempting but wrong analyses
 
@@ -227,6 +231,7 @@ Use a binomial model when each observation is a 0/1 response.
 :::
 
 
+**Think–Pair–Share (#a_probability_not_linear)** Why is it dangerous to model probabilities directly using a linear model?
 
 
 ## The probability model: Bernoulli and binomial
@@ -261,6 +266,7 @@ For Bernoulli/binomial data, the variance is *determined by the mean*.
 This is one reason "constant variance" fails for linear models.
 :::
 
+**Think–Pair–Share** (#tps-binom-variance) For fixed $n$, at what value of $\pi$ is $Var(Y)=n\pi(1-\pi)$ largest? At what values of $\pi$ is it smallest?
 
 
 ## Logistic regression: the binomial GLM
@@ -287,6 +293,7 @@ It maps probabilities $(0,1)$ to the whole real line $(-\infty,\infty)$,
 so the linear predictor can take any value while $\pi_i$ stays valid, i.e., [0,1].
 :::
 
+**Think–Pair–Share** (#tps-identity-link-binary) What would go wrong if we used the identity link $E(y_i)=\eta_i$ for a binary response variable? And which link function is this, by the way?
 
 ## Fitting logistic regression in R (aggregated binomial data)
 
@@ -343,6 +350,11 @@ A constant odds ratio does *not* mean a constant change in probability.
 The probability change depends on where you start (e.g. $\pi=0.05$ vs
 $\pi=0.80$).
 :::
+
+**Think–Pair–Share** (#tps-or-vs-probability) Why might a treatment have a "big" odds ratio, but only a "small" change in probability in one situation?
+
+**Think–Pair–Share (#a_odds_vs_probability)** Why might odds be convenient mathematically,  
+even if probabilities feel more intuitive?
 
 
 ## Analysis of deviance (likelihood-based ANOVA)

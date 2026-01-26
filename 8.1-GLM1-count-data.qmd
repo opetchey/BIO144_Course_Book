@@ -29,7 +29,7 @@ By the end of this chapter, you should be able to:
 - Fit and interpret Poisson regression models
 - Diagnose common problems such as overdispersion and zero inflation
 
-**Think–Pair–Share** (#tps-non-neg-kinds) What kinds of biological outcomes (response variables) can you think of that *cannot* be negative or continuous?
+[**Think–Pair–Share** (#tps-non-neg-kinds) What kinds of biological outcomes (response variables) can you think of that *cannot* be negative or continuous?
 
 
 ### From LM to GLM
@@ -64,7 +64,7 @@ In these cases, forcing the data into a linear model often leads to invalid pred
 GLMs are not a replacement for linear models — they are a *generalisation* of them. Linear regression is a special case of a GLM.
 :::
 
-**Think–Pair–Share** (#tps-which-reg-assump) Which assumption of linear regression do you think is most problematic for count data?
+[**Think–Pair–Share** (#tps-which-reg-assump) Which assumption of linear regression do you think is most problematic for count data?
 
 ### Count data
 
@@ -83,7 +83,7 @@ Count data have four key properties:
 
 These properties immediately suggest that standard linear regression may be inappropriate.
 
-**Think–Pair–Share** (#tps-which-props-viol) Which of these properties is violated if we use a normal distribution for counts?
+[**Think–Pair–Share** (#tps-which-props-viol) Which of these properties is violated if we use a normal distribution for counts?
 
 ## Example: Soay sheep
 
@@ -123,7 +123,7 @@ ggplot(soay, aes(x = body.size, y = fitness)) +
   labs(x = "Body mass (kg)", y = "Lifetime fitness")
 ```
 
-**Think–Pair–Share** (#tps-what-suspicious) What features of this plot might already make you suspicious about using linear regression?
+[**Think–Pair–Share** (#tps-what-suspicious) What features of this plot might already make you suspicious about using linear regression?
 
 ### The wrong analysis
 
@@ -184,7 +184,7 @@ We have extrapolated beyond the data range here, largely for illustrative purpos
 - It assumes constant variance
 - Count data are discrete, non-negative, and typically heteroscedastic
 
-**Think–Pair–Share (#a_why_poisson)** Why is a normal distribution a poor choice for count data? Which assumptions can be expected to fail?
+[**Think–Pair–Share (#a_why_poisson)** Why is a normal distribution a poor choice for count data? Which assumptions can be expected to fail?
 
 
 ## Poisson GLM
@@ -229,7 +229,7 @@ In a Poisson distribution, the mean and variance are equal. This captures an imp
 :::
 
 
-**Think–Pair–Share** (#a_mean_variance_link) Why does increasing variance with the mean cause problems for linear regression?
+[**Think–Pair–Share** (#a_mean_variance_link) Why does increasing variance with the mean cause problems for linear regression?
 
 
 ### Generalized Linear Models (GLMs)
@@ -283,7 +283,7 @@ The log link ensures that the expected count is always positive, regardless of t
 A good link function enforces the natural constraints of the data.
 :::
 
-**Think–Pair–Share** (#tps-what-wrong-id) What would go wrong if we used an identity link for count data?
+[**Think–Pair–Share** (#tps-what-wrong-id) What would go wrong if we used an identity link for count data?
 
 #### The probability distribution (family)
 
@@ -346,7 +346,7 @@ Coefficients are estimated on the **log scale**.
 A one-unit increase in an explanatory variable multiplies the expected count by $\exp(\beta)$.
 :::
 
-**Think–Pair–Share** (#tps-what-change-beta) If $\beta=0.05$ what change in the expected count would be caused by an increase in body mass of 1 kg? As well as a numeric value, specify whether it is used additively or multiplicatively.
+[**Think–Pair–Share** (#tps-what-change-beta) If $\beta=0.05$ what change in the expected count would be caused by an increase in body mass of 1 kg? As well as a numeric value, specify whether it is used additively or multiplicatively.
 
 To interpret the coefficient for body size ($\beta_1 = 0.05$), we exponentiate it:
 $\exp(0.05) \approx 1.65$
@@ -466,7 +466,7 @@ Ignoring overdispersion leads to **anti-conservative p-values** (too small). Thi
 :::
 
 
-**Think–Pair–Share** (#tps-why-ind-diff) Why might individuals differ even after accounting for measured explanatory variables?
+[**Think–Pair–Share** (#tps-why-ind-diff) Why might individuals differ even after accounting for measured explanatory variables?
 
 
 
@@ -482,7 +482,7 @@ summary(soay_quasi)
 ```
 
 
-**Think–Pair–Share** (#a_overdispersion_consequences) What happens to standard errors and p-values if overdispersion is ignored?
+[**Think–Pair–Share** (#a_overdispersion_consequences) What happens to standard errors and p-values if overdispersion is ignored?
 
 
 ## Zero inflation
@@ -498,7 +498,7 @@ Examples include:
 Zero inflation often reflects **two processes**: whether an observation can be non-zero at all, and how large it is if it is. E.g., whether an individual smokes at all, and then how many cigarettes they smoke if they do.
 :::
 
-**Think–Pair–Share** (#tps-zero-inf-examples) Can you think of an ecological, biological, or medical process that would generate many structural zeros?
+[**Think–Pair–Share** (#tps-zero-inf-examples) Can you think of an ecological, biological, or medical process that would generate many structural zeros?
 
 In this course we will not describe in detail or practice fitting zero-inflated models, but they are an important tool for count data with many zeros. Examples of models include zero-inflated Poisson (ZIP) and zero-inflated negative binomial (ZINB) models. These models combine a count model (e.g., Poisson or negative binomial) with a separate model for the probability of being a structural zero. There is also a model called the **hurdle model**, which is similar but has a different interpretation.
 
@@ -560,7 +560,7 @@ anova(soay_glm2, test = "Chisq")
 
 We see that both body size and parasite load significantly affect fitness. Body size has a positive effect, while parasite load has a negative effect. These effects are interpreted conditional on the other explanatory variable being held constant, just as in multiple linear regression.
 
-**Think–Pair–Share** (#tps-how-vis-poisson) How would you visualise (make a graph) of the data and the modelled relationships? Make a sketch of what you could do.
+[**Think–Pair–Share** (#tps-how-vis-poisson) How would you visualise (make a graph) of the data and the modelled relationships? Make a sketch of what you could do.
 
 
 ## Review

@@ -260,7 +260,7 @@ How do our guesses of the intercept and slope compare to the guesses we made ear
 Recal that the units of the *Age* coefficient are in mmHg per year. This means that for each additional year of age, the systolic blood pressure increases by ´r round(coef(bp_age_model)[2],2)´ mmHg.
 
 
-**Think–Pair–Share** (#a_interpreting_slope) In words, what does the slope represent in this model? What does it *not* tell you?
+[**Think–Pair–Share** (#a_interpreting_slope) In words, what does the slope represent in this model? What does it *not* tell you?]{.mark}
 
 
 ## Dealing with the error
@@ -896,7 +896,7 @@ Some texts will give a rule of thumb that points with Cook’s distances greater
  where $n$ is the sample size, and $p$ is the number of $beta$ parameters.
 
 
-**Think–Pair–Share** (#a_linear_model_assumptions) Which assumption of linear regression feels most fragile in real biological data? Why?
+[**Think–Pair–Share** (#a_linear_model_assumptions) Which assumption of linear regression feels most fragile in real biological data? Why?]{.mark}
 
 
 ### The `autoplot()` function from the `ggfortify` package

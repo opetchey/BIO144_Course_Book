@@ -157,7 +157,7 @@ In the example above, the effect of exercise on blood pressure was stronger for 
 
 That was an example of an interaction between a continuous explanatory variable (exercise) and a categorical explanatory variable (diet). Interactions can also occur between two categorical explanatory variables, or between two continuous explanatory variables. Let us look at some more examples.
 
-**Think–Pair–Share** (#a_when_lines_cross) What does it mean biologically when lines cross in an interaction plot? What does it mean when they are parallel?
+[**Think–Pair–Share** (#a_when_lines_cross) What does it mean biologically when lines cross in an interaction plot? What does it mean when they are parallel?]{.mark}
 
 
 ## Two cats
@@ -220,7 +220,7 @@ ggplot(bp_2cat, aes(x=exercise, y=bp, col=diet)) +
 
 Indeed, the lines connecting the means are not parallel, which is evidence of an interaction between diet and exercise on blood pressure.
 
-**Think-Pair-Share** (#tps-express-int) Express the nature of the interaction in words.
+[**Think-Pair-Share** (#tps-express-int) Express the nature of the interaction in words.]{.mark}
 
 
 ## Two continuous
@@ -287,7 +287,7 @@ ggplot(bp_2cont, aes(x=age, y=bp, col = mins_per_week)) +
 
 What do we see? If we look at a set of points of the similar colour (i.e., similar number of minutes of exercised), we can see that the slope of the relationship between blood pressure and age depends on exercise. The slope is steeper for people that exercise more.
 
-**Think-Pair-Share** (#tps-small-older) Another thing we could say is that the effect of exercise is smaller for older people. How is this shown in the graph?
+[**Think-Pair-Share** (#tps-small-older) Another thing we could say is that the effect of exercise is smaller for older people. How is this shown in the graph?]{.mark}
 
 
 Yet another way to visualise this interaction is to create categorical versions of age and minutes of exercise, and then plot the data with these categorical variables:
@@ -355,9 +355,9 @@ ggplot(bp_2cont, aes(x=age, y=bp, col = mins_per_week_class)) +
 Another way of thinking about interactions is from the perspective of additivity or non-additivity of effects. Imagine we made two separate studies, one of the effect of diet on blood pressure, and one of the effect of exercise on blood pressure. In the first study we only varied diet, and in the second study we only varied exercise. In the first study we found an effect size of diet on blood pressure of say 10 mmHg (e.g., difference between meat heavy and vegetarian). And in the second study we found an effect size of exercise on blood pressure of 15 mmHg (e.g., difference between low and high exercise).
 
 
-**Think-Pair-Share** (#tps-adding-effects) If the effects of diet and exercise were additive, what would we expect the effect size to be if we estimated the effect of diet and exercise on blood pressure in the same study?
+[**Think-Pair-Share** (#tps-adding-effects) If the effects of diet and exercise were additive, what would we expect the effect size to be if we estimated the effect of diet and exercise on blood pressure in the same study?]{.mark}
 
-**Think-Pair-Share** (#tps-comb-non-add) What would we expect the effect size of combined diet and exercise to be if the effects were non-additive? (Hint: this is a bit of a trick question.)
+[**Think-Pair-Share** (#tps-comb-non-add) What would we expect the effect size of combined diet and exercise to be if the effects were non-additive? (Hint: this is a bit of a trick question.)]{.mark}
 
 If the effects are non-additive, we would expect the effect size to be different from additive. For example, if we found the combined effect of diet and exercise on blood pressure to be 40, we would say that the effects are non-additive. Their combined effect is more than the sum of their individual effects. This example is of a synergistic interaction because the combined effect (40) is greater than the sum of the individual effects (25).
 
@@ -365,7 +365,7 @@ If the effects are non-additive, we would expect the effect size to be different
 
 When a doctor is considering giving us a particular medication, we are asked if we are taking any other medications. This is because the effects of drugs can interact. For example, if we take two drugs that both lower blood pressure and they interfere with each other, the combined effect might be less than the sum of their individual effects. This is an antagonistic interaction. It could be worse than that though, the interaction might actually be harmful, which is why doctors are so careful about drug interactions.
 
-**Think-Pair-Share** (#tps-other-int-examples) Can you think of any other examples of interactions in biology or medicine?
+[**Think-Pair-Share** (#tps-other-int-examples) Can you think of any other examples of interactions in biology or medicine?]{.mark}
 
 
 ## The maths bit
@@ -389,7 +389,7 @@ We have one continuous explanatory variable (minutes of exercise) and one binary
 
 
 
-**Think-Pair-Share** (#tps-without-interaction) What would a linear model without an interaction term be?
+[**Think-Pair-Share** (#tps-without-interaction) What would a linear model without an interaction term be?]{.mark}
 
 
 
@@ -408,9 +408,9 @@ where:
 This model is a multiple regression model in which one of the explanatory variables is binary.
 
 
-
-**Think-Pair-Share** (#tps-with-interaction) What might the model look like if we wanted to include an interaction between diet and exercise?
-
+<!-- 
+**Think-Pair-Share** (#tps-with-interaction) What might the model look like if we wanted to include an interaction between diet and exercise? Test-test-test
+-->
 
 
 
@@ -563,7 +563,7 @@ if (knitr::is_latex_output()) {
 We also might use a sentence like this to report the results: "The effect of minutes of exercise is generally negative, but the effect is stronger for people on a meat heavy diet than for people on a vegetarian diet ($F$-statistics of interaction term = `r round(anova(mod2)[3,4],2)`, degrees of freedom = `r anova(mod2)[3,1]`, degrees of freedom residuals = `r anova(mod2)[4,1]`, $p$-value = `r signif(anova(mod2)[3,5],2)`)."
 
 
-**Think–Pair–Share (#a_interaction_vs_main_effect)** How does an interaction change the meaning of a "main effect"? Can a main effect be misleading when an interaction is present?
+[**Think–Pair–Share (#a_interaction_vs_main_effect)** How does an interaction change the meaning of a "main effect"? Can a main effect be misleading when an interaction is present?
 
 
 ## Multiple regression vs. many single regressions

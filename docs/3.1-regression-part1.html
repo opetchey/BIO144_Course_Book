@@ -415,7 +415,9 @@ window.Quarto = {
 <li>How much uncertainty is there in predictions?</li>
 </ul>
 <p>Lets try to figure some of these out from the visualisation.</p>
-<p><strong>Think-Pair-Share</strong> (#tps-guess-params) Make a guess of the slope. Make a guess of the intercept (hint be careful, lots of people get this wrong).</p>
+<!---
+**Think-Pair-Share** (#tps-guess-params) Make a guess of the slope. Make a guess of the intercept (hint be careful, lots of people get this wrong).
+--->
 </section>
 </section>
 <section id="calculating-the-intercept-and-slope" class="level2">
@@ -570,7 +572,9 @@ F-statistic: 884.4 on 1 and 98 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 <p>How do our guesses of the intercept and slope compare to the guesses we made earlier?</p>
 <p>Recal that the units of the <em>Age</em> coefficient are in mmHg per year. This means that for each additional year of age, the systolic blood pressure increases by ´r round(coef(bp_age_model)[2],2)´ mmHg.</p>
-<p><strong>Think–Pair–Share</strong> (#a_interpreting_slope) In words, what does the slope represent in this model? What does it <em>not</em> tell you?</p>
+<!---
+**Think–Pair–Share** (#a_interpreting_slope) In words, what does the slope represent in this model? What does it *not* tell you?
+--->
 </section>
 </section>
 <section id="dealing-with-the-error" class="level2">
@@ -675,14 +679,15 @@ Tip
 <p><span class="math display">\[SystolicBP = \beta_0 + \beta_1 \times Age + \epsilon\]</span></p>
 <p>where: <em>SystolicBP</em> is the dependent (response) variable, <span class="math inline">\(\beta_0\)</span> is the intercept, <span class="math inline">\(\beta_1\)</span> is the coefficient of Age, <em>Age</em> is the independent (explanatory) variable, <span class="math inline">\(\epsilon\)</span> is the error term.</p>
 <p>Let’s ensure we understand this, by thinking about the units of the variables in this model. This can be very useful because it can help us to understand the model better and to check that the model makes sense.</p>
-<p><strong>Think-Pair-Share</strong> (#tps-what-units)</p>
-<ul>
-<li>What are the units of blood pressure?</li>
-<li>What are the units of age?</li>
-<li>What are the units of the intercept?</li>
-<li>What are the units of the coefficient of Age?</li>
-<li>What are the units of the error term?</li>
-</ul>
+<!---
+**Think-Pair-Share** (#tps-what-units)
+
+* What are the units of blood pressure?
+* What are the units of age?
+* What are the units of the intercept?
+* What are the units of the coefficient of Age?
+* What are the units of the error term?
+--->
 </section>
 </section>
 <section id="is-the-model-good-enough-to-use" class="level2">
@@ -1041,7 +1046,9 @@ Tip
 </div>
 </div>
 <p>There are no obvious outliers in this data. The data points are all close to the line of best fit. This is a good sign that the line of best fit is a good representation of the data.</p>
-<p><strong>Think-Pair-Share</strong> (#tps-odd-data) Where on this graph would you expect to see particularly influential outliers? Influential in the sense that they would have a large effect on the slope of the line of best fit.</p>
+<!---
+**Think-Pair-Share** (#tps-odd-data) Where on this graph would you expect to see particularly influential outliers? Influential in the sense that they would have a large effect on the slope of the line of best fit.
+--->
 <p>Data points that are far from the mean of the independent variable have a large effect on the value of the slope. These data points have a large leverage. They are data points that are far from the other data points in the <span class="math inline">\(x\)</span> direction.</p>
 <p>We can think of this with the analogy of a seesaw. The slope of the line of best fit is like the pivot point of a seesaw. Data points that are far from the pivot point have a large effect on the slope. Data points that are close to the pivot point have a small effect on the slope.</p>
 <p>A measure of distance from the pivot point is called the <span class="math inline">\(leverage\)</span> of a data point. In simple regression, the leverage of individual <span class="math inline">\(i\)</span> is defined as</p>
@@ -1050,7 +1057,9 @@ Tip
 <p>So, the leverage of a data point is inversely related to <span class="math inline">\(n\)</span> (the number of data points). The leverage of a data point is also inversely related to the sum of the squares of the <span class="math inline">\(x\)</span> values. The leverage of a data point is directly related to the square of the distance of the <span class="math inline">\(x\)</span> value from the mean of the <span class="math inline">\(x\)</span> values.</p>
 <p>More intuitively perhaps, the leverage of a data point will be greater when the are fewer other data points. It will also be greater when the distance from the mean value of <span class="math inline">\(x\)</span> is greater.</p>
 <p>Going back to the analogy of a seesaw, with data points as children on the seesaw, the leverage of a data point is like the distance from the pivot a child sits. But we also have children of different weights. A lighter child will have less effect on the tilt of the seesaw. A heavier one will have a greater effect on the tilt. A heavier child sitting far from the pivot will have a very large effect.</p>
-<p><strong>Think-Pair-Share</strong> (#tps-like-weight) What quantity that we already experienced is like the weight of the child?</p>
+<!---
+**Think-Pair-Share** (#tps-like-weight) What quantity that we already experienced is like the weight of the child?
+--->
 <p>The size of the residuals are like the weight of the child. Data points with large residuals have a large effect on the slope of the line of best fit. Data points with small residuals have a small effect on the slope of the line of best fit.</p>
 <p>So the overall effect of a data point on the slope of the line of best fit is a combination of the leverage and the residual. This quantity is called the <span class="math inline">\(influence\)</span> of a data point.</p>
 <p>Let’s add a rather extreme data point to the blood pressure versus age data:</p>
@@ -1129,7 +1138,9 @@ Tip
 <p>Critical ranges are the top and bottom right corners!!</p>
 <p>Here, observations 71, 85, and 87 are labelled as potential outliers.</p>
 <p>Some texts will give a rule of thumb that points with Cook’s distances greater than 1 should be considered influential, while others claim a reasonable rule of thumb is <span class="math inline">\(4 / ( n - p - 1 )\)</span> where <span class="math inline">\(n\)</span> is the sample size, and <span class="math inline">\(p\)</span> is the number of <span class="math inline">\(beta\)</span> parameters.</p>
-<p><strong>Think–Pair–Share</strong> (#a_linear_model_assumptions) Which assumption of linear regression feels most fragile in real biological data? Why?</p>
+<!---
+**Think–Pair–Share** (#a_linear_model_assumptions) Which assumption of linear regression feels most fragile in real biological data? Why?
+--->
 </section>
 </section>
 <section id="the-autoplot-function-from-the-ggfortify-package" class="level3">

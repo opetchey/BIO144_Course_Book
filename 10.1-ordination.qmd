@@ -29,7 +29,9 @@ Ordination finds a low-dimensional representation (often 2D) of *multivariate* d
 so that points that are "similar" in the original multivariate space end up close together in the ordination plot.
 :::
 
+<!---
 **Think–Pair–Share** (#tps-ordination-why) Name one dataset you work with (or could imagine working with) that has many response variables. What would you like to learn from it that a single-response analysis might miss?
+--->
 
 ### Working example: skull shape through time
 
@@ -100,7 +102,9 @@ p_vars
 If all dimensions change similarly through time, that’s mostly a **size** change.
 If some change differently, that suggests **shape** change.
 
+<!---
 **Think–Pair–Share** (#tps-size-shape) How would you distinguish "size change" from "shape change" using these plots?
+--->
 
 ### Why not four separate regressions?
 
@@ -108,9 +112,9 @@ Fitting separate regressions for each measurement has two problems:
 1. **Multiple testing**: testing four times increases the chance of false positives.
 2. **Ignoring covariance**: measurements may be correlated, so analyzing them separately misses joint patterns
 
-
+<!---
 **Think–Pair–Share (#a_why_ordination)** What information is lost when you analyze multivariate data one variable at a time? Why could this be important?
-
+--->
 
 ## Ordination I: PCA (Principal Components Analysis)
 
@@ -232,8 +236,10 @@ X <- skull |>
 round(cor(X, skull_pca$x), 2)
 ```
 
-
+<!---
 **Think–Pair–Share** (#tps-pc-meaning) If PC1 is positively correlated with all four skull measurements, what biological interpretation is most natural?
+--->
+
 
 ### A simple biplot (scores + loadings)
 
@@ -265,14 +271,19 @@ In this graph we see all arrow point in the same horizontal direction, indicatin
 
 In contrast, the arrows for PC2 point in different directions, indicating that PC2 represents shape differences where some measurements increase while others decrease. The two longest arrows are for basi.length and max.breadth, suggesting that these measurements contribute most strongly to shape variation captured by PC2.
 
+<!---
 **Think–Pair–Share** (#tps-biplot-interpretation) Make a sketch of how skull size / shape changes along the two PC axis.
+--->
 
-
+<!---
 **Think–Pair–Share** (#a_size_vs_shape) What pattern would indicate pure size change? What pattern would indicate shape change?
+--->
 
 ## When ordination helps
 
+<!---
 **Think–Pair–Share** (#tps-when-ordination) In what situations would ordination methods like PCA be especially helpful? When would they be less useful? Think about the nature of the data, and, if you like, the biological questions.
+--->
 
 We might think that ordination is more useful when we have a greater number of variables, because then the reducing down to two or three dimensions is more helpful. But the key factor is actually the **correlation structure** among the variables. If many variables are correlated, then ordination can capture most of the variance in a few dimensions. If variables are uncorrelated, then ordination may not help much since most of the variance is spread evenly across many dimensions. Let's have a look a this with some simulated data. We will simulate three datasets with three variables each, but with different correlation structures: high correlation, moderate correlation, and low correlation.
 
@@ -427,7 +438,9 @@ p3
   
 The first plot shows data with high correlation among variables, where the points are clustered along a diagonal line, indicating that the variables are strongly related. The second plot shows moderate correlation, where the points are more spread out but still show some clustering. The third plot shows low correlation, where the points are scattered randomly in space, indicating that the variables are largely independent.
 
+<!---
 **Think–Pair–Share** (#tps-ordination-correlation) What output of the PCA would you expect to differ among these three datasets? 
+--->
 
 We expect that in the high correlation case, the first principal component will capture a large proportion of the variance, while in the low correlation case, the variance will be more evenly distributed across all principal components. Let's check this by performing PCA on each dataset and examining the variance explained by each principal component.
 
@@ -598,8 +611,9 @@ ggplot(nmds_scores, aes(x = NMDS1, y = NMDS2)) +
 This NMDS graph looks a lot like the PCA biplot. This is because our data are fairly linear and Euclidean distances are appropriate. In more complex datasets, NMDS can reveal patterns that PCA might miss.
 :::
 
-
+<!---
 **Think–Pair–Share (#a_linear_vs_nonlinear_ordination)** When might a linear method like PCA be misleading? What does NMDS relax?
+--->
 
 
 ## Hypothesis testing: avoid "four separate regressions"

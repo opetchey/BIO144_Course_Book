@@ -274,19 +274,16 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a>
-  <ul class="collapse">
-  <li><a href="#from-lm-to-glm" id="toc-from-lm-to-glm" class="nav-link" data-scroll-target="#from-lm-to-glm">From LM to GLM</a></li>
-  <li><a href="#count-data" id="toc-count-data" class="nav-link" data-scroll-target="#count-data">Count data</a></li>
-  </ul></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
   <li><a href="#example-soay-sheep" id="toc-example-soay-sheep" class="nav-link" data-scroll-target="#example-soay-sheep">Example: Soay sheep</a>
   <ul class="collapse">
   <li><a href="#the-wrong-analysis" id="toc-the-wrong-analysis" class="nav-link" data-scroll-target="#the-wrong-analysis">The wrong analysis</a></li>
   <li><a href="#why-linear-regression-fails-for-count-data" id="toc-why-linear-regression-fails-for-count-data" class="nav-link" data-scroll-target="#why-linear-regression-fails-for-count-data">Why linear regression fails for count data</a></li>
   </ul></li>
+  <li><a href="#from-lm-to-glm" id="toc-from-lm-to-glm" class="nav-link" data-scroll-target="#from-lm-to-glm">From LM to GLM</a></li>
   <li><a href="#poisson-glm" id="toc-poisson-glm" class="nav-link" data-scroll-target="#poisson-glm">Poisson GLM</a>
   <ul class="collapse">
-  <li><a href="#generalized-linear-models-glms" id="toc-generalized-linear-models-glms" class="nav-link" data-scroll-target="#generalized-linear-models-glms">Generalized Linear Models (GLMs)</a></li>
+  <li><a href="#parameter-estimation" id="toc-parameter-estimation" class="nav-link" data-scroll-target="#parameter-estimation">Parameter estimation</a></li>
   </ul></li>
   <li><a href="#r---poisson-glm" id="toc-r---poisson-glm" class="nav-link" data-scroll-target="#r---poisson-glm">R - Poisson GLM</a>
   <ul class="collapse">
@@ -334,18 +331,16 @@ window.Quarto = {
 </header>
 
 
-<p>In all the previous chapters, we have focused on <strong>linear models</strong> for continuous response variables. However, many biological response variables are counts (e.g., number of offspring, number of parasites). In this chapter, we introduce <strong>Generalized Linear Models (GLMs)</strong> for analysing count data, focusing on the Poisson distribution.</p>
+<p>In all the previous chapters, we have focused on <strong>linear models</strong> for continuous response variables that can, mathematically, take negative values. However, response variables can be otherwise. For example, we might have a response variable that is the number of offspring produced by a mother. This is a <em>count</em> type of response variable. In this chapter, you’ll see why the models we used so far are usually innapropriate for count data. Then you’ll learn about a more appropriate type of model: <strong>Generalized Linear Models (GLMs)</strong>.</p>
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
 <p>So far in BIO144, we have focused on <strong>linear models</strong> fitted using <code>lm()</code>. These models assume:</p>
 <ul>
-<li>A <strong>continuous response variable</strong></li>
-<li>Normally distributed residuals</li>
-<li>Constant variance (homoscedasticity)</li>
+<li>A <strong>continuous response variable</strong> that can take any real value.</li>
+<li>Normally distributed residuals.</li>
+<li>Constant variance (homoscedasticity).</li>
 </ul>
-<p>Linear models are powerful, but these assumptions are often violated in biological data.</p>
-<p>In this chapter we move beyond normal linear models to handle an important new type of response variable: <strong>counts</strong>.</p>
-<p>We introduce <strong>Generalized Linear Models (GLMs)</strong>, which extend linear models by allowing the response variable to follow distributions other than the normal distribution.</p>
+<p>Linear models are powerful, but these assumptions are often violated in biological data. In this chapter we move beyond normal linear models to handle an important new type of response variable: <strong>counts</strong>. We introduce <strong>Generalized Linear Models (GLMs)</strong>, which extend linear models by allowing the response variable to follow distributions other than the normal distribution.</p>
 <p>By the end of this chapter, you should be able to:</p>
 <ul>
 <li>Recognise when linear regression is inappropriate</li>
@@ -356,64 +351,6 @@ window.Quarto = {
 <!---
 **Think–Pair–Share** (#tps-non-neg-kinds) What kinds of biological outcomes (response variables) can you think of that *cannot* be negative or continuous?
 --->
-<section id="from-lm-to-glm" class="level3">
-<h3 class="anchored" data-anchor-id="from-lm-to-glm">From LM to GLM</h3>
-<p>Linear models (<code>LM</code>) describe the <strong>mean of a response variable</strong> as a linear function of explanatory variables. For example:</p>
-<p><span class="math inline">\(y_i = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)} + \epsilon_i\)</span></p>
-<p>where the error term <span class="math inline">\(\epsilon_i\)</span> is normally distributed with mean 0 and constant variance. That is:</p>
-<p><span class="math inline">\(\epsilon_i \sim N(0, \sigma^2)\)</span>.</p>
-<p>This works well when the response variable is continuous and approximately normally distributed.</p>
-<p>However, many biological response variables are:</p>
-<ul>
-<li><strong>Counts</strong> (e.g.&nbsp;offspring, parasites, species)</li>
-<li><strong>Binary responses</strong> (e.g.&nbsp;alive/dead)</li>
-<li><strong>Proportions</strong></li>
-</ul>
-<p>In these cases, forcing the data into a linear model often leads to invalid predictions and misleading inference.</p>
-<p><strong>Generalized Linear Models (GLMs)</strong> solve this problem by:</p>
-<ul>
-<li>Keeping the familiar <em>linear predictor</em>, but</li>
-<li>Allowing different distributions for the response, and</li>
-<li>Linking the predictor to the mean response using a <em>link function</em>.</li>
-</ul>
-<div class="callout callout-style-default callout-important callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Important
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><strong>Key idea</strong><br>
-GLMs are not a replacement for linear models — they are a <em>generalisation</em> of them. Linear regression is a special case of a GLM.</p>
-</div>
-</div>
-<!---
-**Think–Pair–Share** (#tps-which-reg-assump) Which assumption of linear regression do you think is most problematic for count data?
---->
-</section>
-<section id="count-data" class="level3">
-<h3 class="anchored" data-anchor-id="count-data">Count data</h3>
-<p>Count data occur frequently in biology and medicine. Typical examples include:</p>
-<ul>
-<li>Numbers of animals, plants, or species</li>
-<li>Numbers of offspring</li>
-<li>Numbers of pathological structures (e.g.&nbsp;polyps)</li>
-</ul>
-<p>Count data have four key properties:</p>
-<ol type="1">
-<li>They are <strong>discrete</strong></li>
-<li>They are <strong>non-negative</strong></li>
-<li>Their <strong>variance often increases with the mean</strong></li>
-<li>There is no known upper limit to the count.</li>
-</ol>
-<p>These properties immediately suggest that standard linear regression may be inappropriate.</p>
-<!---
-**Think–Pair–Share** (#tps-which-props-viol) Which of these properties is violated if we use a normal distribution for counts?
---->
-</section>
 </section>
 <section id="example-soay-sheep" class="level2">
 <h2 class="anchored" data-anchor-id="example-soay-sheep">Example: Soay sheep</h2>
@@ -451,7 +388,7 @@ GLMs are not a replacement for linear models — they are a <em>generalisation</
 --->
 <section id="the-wrong-analysis" class="level3">
 <h3 class="anchored" data-anchor-id="the-wrong-analysis">The wrong analysis</h3>
-<p>A common mistake is to analyse count data using linear regression, treating counts as if they were continuous.</p>
+<p>Let’s analyse the data with linear regression, treating counts as if they were continuous.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>mod_soay_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(fitness <span class="sc">~</span> body.size, <span class="at">data =</span> soay)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -467,21 +404,23 @@ GLMs are not a replacement for linear models — they are a <em>generalisation</
 </div>
 </div>
 </div>
-<p>The qq-plot looks fine. The scale-location plot shows that variance increases with fitted values, violating homoscedasticity. Also, there is a clear non-linear pattern in the residuals vs fitted plot, suggesting that the linear model is not capturing the relationship well.</p>
-<p>Adding a quadratic term improves the fit slightly:</p>
+<p>The qq-plot looks ok-ish, though the larger residuals show a tendency to be larger than expected. The scale-location plot shows that variance increases with fitted values, violating homoscedasticity. Also, there is a clear non-linear pattern in the residuals vs fitted plot, suggesting that the linear model is not capturing the relationship well.</p>
+<p>When we plot the fitted line, we see the linear relationship:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>mod2_soay_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(fitness <span class="sc">~</span> body.size <span class="sc">+</span> <span class="fu">I</span>(body.size<span class="sc">^</span><span class="dv">2</span>), <span class="at">data =</span> soay)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod2_soay_lm, <span class="at">which =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="at">add.smooth =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="8.1-GLM1-count-data_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="8.1-GLM1-count-data_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="384"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>But problems remain: variance increases with fitted values.</p>
+<!--
+Think-pair-share Other than non-linearity, heteroscedasticity, what other problems can you see with this linear model for count data? Answer: negative predicted values -- negative number of offspring!
+--->
 <div class="callout callout-style-default callout-caution callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -497,59 +436,171 @@ Violating model assumptions can lead to biased estimates, incorrect standard err
 </div>
 </div>
 <p>Another issue remains, however: linear regression can predict negative counts, which are impossible. We can see this in a plot of the data and the fitted regression line:</p>
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="8.1-GLM1-count-data_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="432"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Notice that for small body sizes the fitted line goes below 0 on the y-axis. That is, the moe predicts negative fitness values, which are biologically impossible.</p>
-<div class="callout callout-style-default callout-caution callout-titled">
+</section>
+<section id="why-linear-regression-fails-for-count-data" class="level3">
+<h3 class="anchored" data-anchor-id="why-linear-regression-fails-for-count-data">Why linear regression fails for count data</h3>
+<ul>
+<li>The normal distribution is for continuous variables.</li>
+<li>It allows negative values.</li>
+<li>It assumes constant variance.</li>
+<li>Count data are discrete, non-negative, and typically heteroscedastic.</li>
+</ul>
+<!---
+**Think–Pair–Share (#a_why_poisson)** Why is a normal distribution a poor choice for count data? Which assumptions can be expected to fail?
+--->
+<p>However, many biological response variables are:</p>
+<ul>
+<li><strong>Counts</strong> (e.g.&nbsp;offspring, parasites, species)</li>
+<li><strong>Binary responses</strong> (e.g.&nbsp;alive/dead)</li>
+<li><strong>Proportions</strong></li>
+</ul>
+<p>In these cases, forcing the data into a linear model often leads to invalid predictions and misleading inference. <strong>Generalized Linear Models (GLMs)</strong> solve this problem.</p>
+<div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Caution
+Important
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>We have extrapolated beyond the data range here, largely for illustrative purposes. In practice we should be very cautious about extrapolating beyond the range of observed data. This is because the model may not hold outside the observed range, leading to nonsensical predictions.</p>
+<p><strong>Key idea</strong> GLMs are not a replacement for linear models — they are a <em>generalisation</em> of them. Linear regression is a special case of a GLM.</p>
 </div>
 </div>
-</section>
-<section id="why-linear-regression-fails-for-count-data" class="level3">
-<h3 class="anchored" data-anchor-id="why-linear-regression-fails-for-count-data">Why linear regression fails for count data</h3>
-<ul>
-<li>The normal distribution is for continuous variables</li>
-<li>It allows negative values</li>
-<li>It assumes constant variance</li>
-<li>Count data are discrete, non-negative, and typically heteroscedastic</li>
-</ul>
 <!---
-**Think–Pair–Share (#a_why_poisson)** Why is a normal distribution a poor choice for count data? Which assumptions can be expected to fail?
+**Think–Pair–Share** (#tps-which-reg-assump) Which assumption of linear regression do you think is most problematic for count data?
 --->
 </section>
 </section>
+<section id="from-lm-to-glm" class="level2">
+<h2 class="anchored" data-anchor-id="from-lm-to-glm">From LM to GLM</h2>
+<p><strong>A linear model is actually a special case of a generalized linear model.</strong></p>
+<p>What you already know: in a linear model we write:</p>
+<p><span class="math display">\[y_i = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)} + \epsilon_i, \quad \epsilon_i \sim N(0, \sigma^2)\]</span></p>
+<p>In words, this means an observed response variable <span class="math inline">\(y_i\)</span> is modelled as a linear combination of explanatory variables plus normally distributed error.</p>
+<p>This implies that</p>
+<p><span class="math display">\[y_i \sim N(\mu_i, \sigma^2)\]</span></p>
+<p>where <span class="math inline">\(mu_i\)</span> is the mean of the normal distribution for observation <span class="math inline">\(i\)</span>, and</p>
+<p><span class="math display">\[\mu_i = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}\]</span> is the mean of the normal distribution for observation <span class="math inline">\(i\)</span>.</p>
+<p>Moving to things you don’t know:</p>
+<p>A generalised linear model has three components: a random component (<em>family</em>), a systematic component (<em>linear predictor</em>), and a link function. In a linear model (like the ones you already saw), these are as follows:</p>
+<ul>
+<li><strong>Random component (family)</strong>: Normal distribution <span class="math inline">\(N(\mu_i, \sigma^2)\)</span></li>
+<li><strong>Systematic component (linear predictor)</strong>: <span class="math inline">\(\eta_i = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}\)</span></li>
+<li><strong>Link function</strong>: Identity link, <span class="math inline">\(\mu_i = \eta_i\)</span>. So the link function is <span class="math inline">\(g(\mu_i) = \mu_i\)</span> – that is, the identity link.</li>
+</ul>
+<p>Putting this all together in a description of a generalised linear model we have:</p>
+<p><strong>Family</strong>: <span class="math inline">\(y_i \sim N(\mu_i, \sigma^2)\)</span></p>
+<p><strong>Linear predictor</strong>: <span class="math inline">\(g(\mu_i) = \eta_i = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}\)</span></p>
+<p><strong>Link function</strong>: <span class="math inline">\(g(\mu_i) = \mu_i\)</span></p>
+<p>In R, we use the function <code>glm()</code> to fit generalised linear models. For a normal linear model of the Soay sheep data, we would write:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>mod_soay_glm <span class="ot">&lt;-</span> <span class="fu">glm</span>(fitness <span class="sc">~</span> body.size, <span class="at">data =</span> soay, <span class="at">family =</span> <span class="fu">gaussian</span>(<span class="at">link =</span> <span class="st">"identity"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Here we have specified the family as Gaussian (i.e., Normal) with an identity link. This model produces the same results as the linear model we fitted earlier with <code>lm()</code>. And we can get the following model summary:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_soay_glm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = fitness ~ body.size, family = gaussian(link = "identity"), 
+    data = soay)
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) -5.16768    0.68895  -7.501  2.9e-11 ***
+body.size    0.21163    0.01501  14.097  &lt; 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for gaussian family taken to be 4.805055)
+
+    Null deviance: 1425.8  on 99  degrees of freedom
+Residual deviance:  470.9  on 98  degrees of freedom
+AIC: 444.73
+
+Number of Fisher Scoring iterations: 2</code></pre>
+</div>
+</div>
+<p>Compare that to the linear model summary:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_soay_lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = fitness ~ body.size, data = soay)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-4.9760 -1.5468 -0.2568  0.9733  6.3887 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) -5.16768    0.68895  -7.501  2.9e-11 ***
+body.size    0.21163    0.01501  14.097  &lt; 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 2.192 on 98 degrees of freedom
+Multiple R-squared:  0.6697,    Adjusted R-squared:  0.6664 
+F-statistic: 198.7 on 1 and 98 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>The coefficients table is exactly the same. Other parts of the output differ slightly because <code>glm()</code> uses maximum likelihood estimation (MLE) while <code>lm()</code> uses least squares estimation. Put that aside for now; the key point is that both R functions fit the same model when using a normal family with an identity link.</p>
+<p>So, you now know what is a generalised linear model. In one sentence it is a model where the response variable follows a specified distribution (family), the mean of that distribution is linked to a linear combination of explanatory variables (linear predictor) via a link function. We will now look at a specific type of GLM for count data: the Poisson GLM.</p>
+</section>
 <section id="poisson-glm" class="level2">
 <h2 class="anchored" data-anchor-id="poisson-glm">Poisson GLM</h2>
-<p>To deal with count data, we need a different probability (error) model. A common probability model for counts is the <strong>Poisson distribution</strong>. The Poisson distribution is often the default starting point for modelling counts because it is the simplest distribution that respects discreteness, non-negativity, and increasing variance.</p>
-<p>The Poisson distribution has the following probability mass function:</p>
+<p>We need three components for a GLM: 1. A probability distribution (family) for the response variable. 2. A linear predictor. 3. A link function relating the linear predictor to the mean of the distribution.</p>
+<p>Let’s start with a discussion of the probability distribution (family) for count data. And what we’re aiming for is a probability distribution that we expect to be a reasonably good starting point for modelling count data. A common probability model for counts is the <strong>Poisson distribution</strong>. The Poisson distribution is often the default starting point for modelling counts because it is the simplest distribution that respects characteristics of count data: discreteness, non-negativity, and increasing variance.</p>
+<p>Unlike the normal distribution, which has two parameters (mean and spread), the Poisson distribution has only one parameter: the mean <span class="math inline">\(\lambda\)</span>. In the Poisson distribution, the mean and variance are equal.</p>
+<p>In a Poisson distribution, the probability of observing a count <span class="math inline">\(y\)</span> is given by:</p>
 <p><span class="math inline">\(P(Y = y) = \frac{\lambda^y e^{-\lambda}}{y!}\)</span></p>
 <p>where:</p>
 <ul>
+<li><span class="math inline">\(Y\)</span> is a random variable representing the count.</li>
 <li><span class="math inline">\(y = 0, 1, 2, \ldots\)</span></li>
-<li><span class="math inline">\(\lambda &gt; 0\)</span> is the mean (and variance) of the distribution</li>
+<li><span class="math inline">\(\lambda &gt; 0\)</span> is the mean (and variance) of the distribution.</li>
 </ul>
-<p>Here are a couple of Poisson distributions with different means:</p>
+<p>In R, we can get the probability of observing a count of 3, when the expected count is 5, using the <code>dpois()</code> function:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dpois</span>(<span class="dv">3</span>, <span class="at">lambda =</span> <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.1403739</code></pre>
+</div>
+</div>
+<p>And we expect the probability of observing a count of 5 when the expected count is 5 to be higher:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dpois</span>(<span class="dv">5</span>, <span class="at">lambda =</span> <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.1754674</code></pre>
+</div>
+</div>
+<p>What happens when we ask for the probability of observing a count of 3.5 when the expected count is 5? Or a count of -1?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dpois</span>(<span class="fl">3.5</span>, <span class="at">lambda =</span> <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dpois(3.5, lambda = 5): non-integer x = 3.500000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0</code></pre>
+</div>
+</div>
+<p>The warning message tells us that the Poisson distribution is only defined for non-negative integers. This is a key property of the Poisson distribution: it is only defined for counts (0, 1, 2, …).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dpois</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="at">lambda =</span> <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0</code></pre>
+</div>
+</div>
+<p>And we see that the probability of observing a negative count is zero.</p>
+<p>Here are a few of Poisson distributions with different means:</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="8.1-GLM1-count-data_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="8.1-GLM1-count-data_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -576,84 +627,46 @@ In a Poisson distribution, the mean and variance are equal. This captures an imp
 <!---
 **Think–Pair–Share** (#a_mean_variance_link) Why does increasing variance with the mean cause problems for linear regression?
 --->
-<section id="generalized-linear-models-glms" class="level3">
-<h3 class="anchored" data-anchor-id="generalized-linear-models-glms">Generalized Linear Models (GLMs)</h3>
-<p>GLMs extend linear models by combining three components:</p>
-<ol type="1">
-<li><strong>Linear predictor</strong>.</li>
-<li><strong>Link function</strong>.</li>
-<li><strong>Probability distribution (family)</strong>.</li>
-</ol>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>If you choose a normal family and an identity link, a GLM is mathematically identical to the linear model you fit using <code>lm()</code>.</p>
-</div>
-</div>
-<section id="the-linear-predictor" class="level4">
-<h4 class="anchored" data-anchor-id="the-linear-predictor">The linear predictor</h4>
+<p><strong>So, in a Poisson GLM we assume a Poisson distribution (family) for the response variable.</strong></p>
+<p><span class="math display">\[y_i \sim \text{Poisson}(\mu_i)\]</span></p>
+<p>where <span class="math inline">\(\mu_i = \lambda_i\)</span> is the expected count for observation <span class="math inline">\(i\)</span>.</p>
+<p>Next we need to define the linear predictor (and then we finish with the link function).</p>
 <p>The linear predictor is the same as in linear regression:</p>
 <p><span class="math inline">\(\eta_i = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}\)</span></p>
 <p>It is just the linear combination of explanatory variables and coefficients. Nothing new here.</p>
-</section>
-<section id="the-link-function" class="level4">
-<h4 class="anchored" data-anchor-id="the-link-function">The link function</h4>
-<p>In the linear models we already used (e.g., for linear regression) the link function is the <strong>identity link</strong>:</p>
-<p><span class="math inline">\(E(y_i) = \eta_i\)</span></p>
-<p>Here, <span class="math inline">\(E(y_i)\)</span> refers to the expected value (mean) of many hypothetical observations, not the single observed value <span class="math inline">\(y_i\)</span>.</p>
-<p><em>Identity link</em>: the expected value of the response <span class="math inline">\(E(y_i)\)</span> equals the linear predictor <span class="math inline">\(\eta_i\)</span>.</p>
-<p>That is:</p>
-<p><span class="math inline">\(E(y_i) = \eta_i = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}\)</span></p>
-<p>For count data, this can lead to negative predictions.</p>
-<p>The solution is a different <strong>link function</strong>. For Poisson regression, the standard choice is the <strong>log link</strong>. It relates the linear predictor to the expected value of the response as follows:</p>
-<p><span class="math inline">\(\eta_i = \log(E(y_i))\)</span></p>
+<p>Finally, we need to define the link function that relates the linear predictor to the expected count <span class="math inline">\(\mu_i\)</span>.</p>
+<p>We cannot use the identity link here, because that would allow negative expected counts. Instead, we use the <strong>log link</strong>:</p>
+<p><span class="math display">\[\eta_i = \log(\mu_i)\]</span></p>
 <p>which implies:</p>
-<p><span class="math inline">\(E(y_i) = \exp(\eta_i) &gt; 0\)</span></p>
-<p>The log link ensures that the expected count is always positive, regardless of the values of the explanatory variables. Whatever the value of the linear predictor <span class="math inline">\(\eta_i\)</span>, the exponential of it <span class="math inline">\(\exp(\eta_i)\)</span> is always positive.</p>
-<div class="callout-hint">
-<p>A good link function enforces the natural constraints of the data.</p>
-</div>
-<!---
-**Think–Pair–Share** (#tps-what-wrong-id) What would go wrong if we used an identity link for count data?
---->
-</section>
-<section id="the-probability-distribution-family" class="level4">
-<h4 class="anchored" data-anchor-id="the-probability-distribution-family">The probability distribution (family)</h4>
-<p>The final component of a GLM is the <strong>probability distribution</strong> (also called the <strong>family</strong>). This specifies how the response variable is distributed. In Poisson regression, we assume that the response variable follows a Poisson distribution. Hence, we say we are fitting a <strong>Poisson GLM</strong>.</p>
-<p>Mathematically, a Poisson GLM can be summarised as:</p>
-<p><span class="math inline">\(y_i \sim \text{Poisson}(\lambda_i)\)</span></p>
-<p>And written out fully with the linear predictor and link function:</p>
-<p><span class="math inline">\(y_i \sim \text{Poisson}(\lambda_i)\)</span></p>
-<p>where <span class="math inline">\(\log(\lambda_i) = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}\)</span></p>
-<p>or equivalently:</p>
-<p><span class="math inline">\(E(y_i) \sim \text{Poisson}(\exp(\beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}))\)</span></p>
-</section>
+<p><span class="math inline">\(\mu_i = \exp(\eta_i)\)</span></p>
+<p>The log link ensures that the expected count is always positive, regardless of the values of the <span class="math inline">\(\beta\)</span> parameters and explanatory variables. Whatever the value of the linear predictor <span class="math inline">\(\eta_i\)</span>, the exponential of it <span class="math inline">\(\exp(\eta_i)\)</span> is always positive.</p>
+<p>Putting this all together, a Poisson GLM can be summarised as:</p>
+<p><strong>Family</strong>: <span class="math inline">\(y_i \sim \text{Poisson}(\mu_i)\)</span></p>
+<p><strong>Linear predictor</strong>: <span class="math inline">\(\eta_i = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}\)</span></p>
+<p><strong>Link function</strong>: <span class="math inline">\(\log(\mu_i) = \eta_i\)</span></p>
+<section id="parameter-estimation" class="level3">
+<h3 class="anchored" data-anchor-id="parameter-estimation">Parameter estimation</h3>
+<p>We observe the counts <span class="math inline">\(y_i\)</span>, and the model predicts the expected counts <span class="math inline">\(\mu_i\)</span>. The GLM estimates the parameters <span class="math inline">\(\beta_0, \beta_1, \ldots, \beta_p\)</span> that make the observed data most probable under the assumed Poisson model. This is done using maximum likelihood estimation (MLE). The likelihood of the data given the model is maximised.</p>
+<p>Recall that we saw that the summary information of the linear model and the GLM with normal family and identity link were different. This is because of differences in estimation methods (least squares vs MLE). In GLMs, we always use MLE for parameter estimation. In this course we will not go into the mathematical details of MLE, but the key idea is that we find parameter values that make the observed data most probable under the assumed model. This is analogous to least squares estimation in linear models, which is a special case of MLE for Normally distributed errors.</p>
 </section>
 </section>
 <section id="r---poisson-glm" class="level2">
 <h2 class="anchored" data-anchor-id="r---poisson-glm">R - Poisson GLM</h2>
 <p>When fitting a Poisson GLM in R, we use the <code>glm()</code> function, specifying the family as <code>poisson</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>soay_glm <span class="ot">&lt;-</span> <span class="fu">glm</span>(fitness <span class="sc">~</span> body.size, <span class="at">data =</span> soay, <span class="at">family =</span> poisson)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>soay_glm <span class="ot">&lt;-</span> <span class="fu">glm</span>(fitness <span class="sc">~</span> body.size, <span class="at">data =</span> soay, <span class="at">family =</span> <span class="fu">poisson</span>(<span class="at">link =</span> <span class="st">"log"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Specifying <code>family = poisson</code> tells R to use the Poisson distribution with a log link function by default. We could specify the link explicitly as <code>family = poisson(link = "log")</code>, but this is unnecessary since the log link is the default for the Poisson family.</p>
+<p>Specifying <code>family = poisson</code> tells R to use the Poisson distribution with a log link function by default. We also specify the link explicitly as <code>link = "log"</code>. You will, however, often only see <code>family = poisson</code> and not the log link, because the log link is the default for the Poisson family.</p>
 <section id="checking-model-assumptions" class="level3">
 <h3 class="anchored" data-anchor-id="checking-model-assumptions">Checking model assumptions</h3>
 <p>As always, we should check model assumptions:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(soay_glm, <span class="at">which =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="at">add.smooth =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(soay_glm, <span class="at">which =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="at">add.smooth =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="8.1-GLM1-count-data_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="8.1-GLM1-count-data_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -677,11 +690,12 @@ Important
 <section id="interpreting-coefficients" class="level3">
 <h3 class="anchored" data-anchor-id="interpreting-coefficients">Interpreting coefficients</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(soay_glm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(soay_glm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
-glm(formula = fitness ~ body.size, family = poisson, data = soay)
+glm(formula = fitness ~ body.size, family = poisson(link = "log"), 
+    data = soay)
 
 Coefficients:
              Estimate Std. Error z value Pr(&gt;|z|)    
@@ -722,10 +736,10 @@ Important
 <p><span class="math inline">\(E(y) = \exp(\beta_0 + \beta_1 \times \text{body.size})\)</span></p>
 <p>For example, for a body size of 40 kg:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>body_size_example <span class="ot">&lt;-</span> <span class="dv">40</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>linear_predictor <span class="ot">&lt;-</span> <span class="fu">coef</span>(soay_glm)[<span class="dv">1</span>] <span class="sc">+</span> <span class="fu">coef</span>(soay_glm)[<span class="dv">2</span>] <span class="sc">*</span> body_size_example</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>expected_count <span class="ot">&lt;-</span> <span class="fu">exp</span>(linear_predictor)</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>expected_count</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>body_size_example <span class="ot">&lt;-</span> <span class="dv">40</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>linear_predictor <span class="ot">&lt;-</span> <span class="fu">coef</span>(soay_glm)[<span class="dv">1</span>] <span class="sc">+</span> <span class="fu">coef</span>(soay_glm)[<span class="dv">2</span>] <span class="sc">*</span> body_size_example</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>expected_count <span class="ot">&lt;-</span> <span class="fu">exp</span>(linear_predictor)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>expected_count</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>(Intercept) 
    2.455011 </code></pre>
@@ -749,7 +763,7 @@ Note
 <h3 class="anchored" data-anchor-id="analysis-of-deviance">Analysis of deviance</h3>
 <p>There is something technically different that we have glossed over until now: how model fit is assessed. In linear regression we estimate parameters by minimizing the sum of squared residuals. In GLMs, we use <strong>maximum likelihood estimation (MLE)</strong>. In this course we will not go into the mathematical details of MLE, but the key idea is that we find the parameter values that make the observed data most probable under the assumed model (just like in least squares). Instead of minimising sums of squares, we maximise the <strong>likelihood</strong> of the data given the model. Maximising the likelihood is equivalent to minimising the <strong>deviance</strong>, which is a measure of model fit based on likelihoods. Hence, when we fit a GLM in R, we get output including the <strong>deviance</strong> (and not sums of squares):</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(soay_glm, <span class="at">test =</span> <span class="st">"Chisq"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(soay_glm, <span class="at">test =</span> <span class="st">"Chisq"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Deviance Table
 
@@ -776,11 +790,11 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <p>When we wish to make a graph of the fitted relationship, we can either make it with the y-axis on the log scale (linear predictor scale) or back-transform to the original count scale. I usually prefer the original scale, as it is easier to interpret.</p>
 <p>The first step is to create a new data frame with a sequence of body sizes for prediction, and errors for the 95% confidence intervals:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>new_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">body.size =</span> <span class="fu">seq</span>(<span class="fu">min</span>(soay<span class="sc">$</span>body.size), <span class="fu">max</span>(soay<span class="sc">$</span>body.size), <span class="at">length.out =</span> <span class="dv">100</span>))</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(soay_glm, <span class="at">newdata =</span> new_data, <span class="at">se.fit =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>new_data<span class="sc">$</span>fit <span class="ot">&lt;-</span> <span class="fu">exp</span>(predictions<span class="sc">$</span>fit)</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>new_data<span class="sc">$</span>lower <span class="ot">&lt;-</span> <span class="fu">exp</span>(predictions<span class="sc">$</span>fit <span class="sc">-</span> <span class="fl">1.96</span> <span class="sc">*</span> predictions<span class="sc">$</span>se.fit)</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>new_data<span class="sc">$</span>upper <span class="ot">&lt;-</span> <span class="fu">exp</span>(predictions<span class="sc">$</span>fit <span class="sc">+</span> <span class="fl">1.96</span> <span class="sc">*</span> predictions<span class="sc">$</span>se.fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>new_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">body.size =</span> <span class="fu">seq</span>(<span class="fu">min</span>(soay<span class="sc">$</span>body.size), <span class="fu">max</span>(soay<span class="sc">$</span>body.size), <span class="at">length.out =</span> <span class="dv">100</span>))</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(soay_glm, <span class="at">newdata =</span> new_data, <span class="at">se.fit =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>new_data<span class="sc">$</span>fit <span class="ot">&lt;-</span> <span class="fu">exp</span>(predictions<span class="sc">$</span>fit)</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>new_data<span class="sc">$</span>lower <span class="ot">&lt;-</span> <span class="fu">exp</span>(predictions<span class="sc">$</span>fit <span class="sc">-</span> <span class="fl">1.96</span> <span class="sc">*</span> predictions<span class="sc">$</span>se.fit)</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>new_data<span class="sc">$</span>upper <span class="ot">&lt;-</span> <span class="fu">exp</span>(predictions<span class="sc">$</span>fit <span class="sc">+</span> <span class="fl">1.96</span> <span class="sc">*</span> predictions<span class="sc">$</span>se.fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Note that we back-transform the predictions and confidence intervals using the exponential function, since the link function is the log. And note that we must calculate the confidence intervals on the log scale first, and then back-transform them.</p>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -801,7 +815,7 @@ Note
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="8.1-GLM1-count-data_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="384"></p>
+<p><img src="8.1-GLM1-count-data_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="384"></p>
 </figure>
 </div>
 </div>
@@ -835,8 +849,8 @@ Note
 <p>If this ratio is substantially greater than 1 (e.g., &gt; 1.5 or 2), it indicates overdispersion.</p>
 <p>Check this for our Soay sheep model:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>dispersion_soay <span class="ot">&lt;-</span> <span class="fu">deviance</span>(soay_glm) <span class="sc">/</span> <span class="fu">df.residual</span>(soay_glm)</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>dispersion_soay</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>dispersion_soay <span class="ot">&lt;-</span> <span class="fu">deviance</span>(soay_glm) <span class="sc">/</span> <span class="fu">df.residual</span>(soay_glm)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>dispersion_soay</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.9977877</code></pre>
 </div>
@@ -863,8 +877,8 @@ Caution
 <p>One solution is the <strong>quasi-Poisson</strong> model, which estimates an additional dispersion parameter:</p>
 <p>For this, we can use <code>family = quasipoisson</code> in <code>glm()</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>soay_quasi <span class="ot">&lt;-</span> <span class="fu">glm</span>(fitness <span class="sc">~</span> body.size, <span class="at">data =</span> soay, <span class="at">family =</span> quasipoisson)</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(soay_quasi)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>soay_quasi <span class="ot">&lt;-</span> <span class="fu">glm</span>(fitness <span class="sc">~</span> body.size, <span class="at">data =</span> soay, <span class="at">family =</span> quasipoisson)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(soay_quasi)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -923,11 +937,11 @@ Note
 <p>For example, we could include parasite load as an additional predictor of fitness in the Soay sheep data:</p>
 <p>Read in the updated dataset:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>soay <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"datasets/soay_sheep_with_parasites.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>soay <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"datasets/soay_sheep_with_parasites.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Here is the first few rows of the updated dataset:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(soay)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(soay)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  body.size fitness parasite.load
 1  53.99529       1             2
@@ -943,7 +957,7 @@ Note
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="8.1-GLM1-count-data_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="384"></p>
+<p><img src="8.1-GLM1-count-data_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="384"></p>
 </figure>
 </div>
 </div>
@@ -951,23 +965,23 @@ Note
 <p>It looks like higher parasite loads are associated with lower fitness.</p>
 <p>We can fit a Poisson GLM with both body size and parasite load as explanatory variables:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>soay_glm2 <span class="ot">&lt;-</span> <span class="fu">glm</span>(fitness <span class="sc">~</span> body.size <span class="sc">+</span> parasite.load, <span class="at">data =</span> soay, <span class="at">family =</span> poisson)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>soay_glm2 <span class="ot">&lt;-</span> <span class="fu">glm</span>(fitness <span class="sc">~</span> body.size <span class="sc">+</span> parasite.load, <span class="at">data =</span> soay, <span class="at">family =</span> poisson)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>As always we check model assumptions:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(soay_glm2, <span class="at">which =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="at">add.smooth =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(soay_glm2, <span class="at">which =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="at">add.smooth =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="8.1-GLM1-count-data_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="8.1-GLM1-count-data_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>The model checking plots look good. We can summarise the model:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(soay_glm2, <span class="at">test =</span> <span class="st">"Chisq"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(soay_glm2, <span class="at">test =</span> <span class="st">"Chisq"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Deviance Table
 

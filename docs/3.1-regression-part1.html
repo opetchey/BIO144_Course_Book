@@ -814,6 +814,35 @@ Note
 </div>
 </div>
 <p>Each of the graphs above has data points that are randomly generated from a normal distribution. In all cases the data points are close to the line. This is what we would expect if the data were normally distributed. The amount of deviation from the line is what we would expect from random variation, and so seeing this amount of variation in a QQ-plot of your model should not be cause for concern.</p>
+<!---
+**Think-Pair-Share** (#tps-qq-plot) Look at the following QQ-plots. Which do you think shows residuals that are not drawn from a normal distribution
+
+
+::: {.cell}
+
+```{.r .cell-code}
+## make 9 qqplots with normal residuals, and 1 with uniform residuals
+set.seed(123)
+par(mfrow=c(2,5), mar=c(4,4,1,1))
+for (ii in 1:10){
+  if (ii == 7){
+    ss <- runif(100)
+  } else {
+    ss <- rnorm(100)
+  }
+  qqnorm(ss,main="")
+  qqline(ss,xlab="")
+  ## add a title to the plot
+  title(paste("Plot", ii))
+}
+```
+
+::: {.cell-output-display}
+![](3.1-regression-part1_files/figure-html/unnamed-chunk-26-1.png){width=432}
+:::
+:::
+
+--->
 </section>
 </section>
 <section id="b-constant-error-variance-homoscedasticity" class="level3">
@@ -844,7 +873,7 @@ Note
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -866,7 +895,7 @@ Tip
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -887,7 +916,7 @@ Tip
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -899,7 +928,7 @@ Tip
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -935,7 +964,7 @@ Tip
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -957,7 +986,7 @@ Tip
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -971,7 +1000,7 @@ Tip
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -985,7 +1014,7 @@ Tip
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -997,7 +1026,7 @@ Tip
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-37-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -1008,7 +1037,7 @@ Tip
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-37-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-38-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -1020,12 +1049,39 @@ Tip
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-38-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-39-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>There is very little evidence of any pattern in the residuals. This data is simulated with a truly linear relationship, so we would not expect to see any pattern in the residuals.</p>
+<!--
+Think pair share. Which of the following Tukey-Anscombe plots show evidence of non-linearity?
+
+::: {.cell}
+
+```{.r .cell-code}
+set.seed(123)
+par(mfrow=c(2,3), mar=c(4,4,1,1))
+for (ii in 1:6){
+  x <- runif(100, 1, 10)
+  if (ii == 4){
+    y <- 2*x + rnorm(100,0,2) + 0.22*x^2
+  } else {
+    y <- 2*x + rnorm(100,0,2)
+  }
+  m <- lm(y~x)
+  plot(m, which=1, add.smooth = FALSE)
+  mtext(paste("Plot", ii), side=3, line=-1.3)
+}
+```
+
+::: {.cell-output-display}
+![](3.1-regression-part1_files/figure-html/unnamed-chunk-40-1.png){width=432}
+:::
+:::
+
+--->
 </section>
 <section id="e-no-outliers" class="level3">
 <h3 class="anchored" data-anchor-id="e-no-outliers">(e) No outliers</h3>
@@ -1040,7 +1096,7 @@ Tip
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-39-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-41-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -1058,7 +1114,7 @@ Tip
 <p>More intuitively perhaps, the leverage of a data point will be greater when the are fewer other data points. It will also be greater when the distance from the mean value of <span class="math inline">\(x\)</span> is greater.</p>
 <p>Going back to the analogy of a seesaw, with data points as children on the seesaw, the leverage of a data point is like the distance from the pivot a child sits. But we also have children of different weights. A lighter child will have less effect on the tilt of the seesaw. A heavier one will have a greater effect on the tilt. A heavier child sitting far from the pivot will have a very large effect.</p>
 <!---
-**Think-Pair-Share** (#tps-like-weight) What quantity that we already experienced is like the weight of the child?
+**Think-Pair-Share** (#tps-like-weight) In the seesaw analogy, what quantity in the linear model is like the weight of the child?
 --->
 <p>The size of the residuals are like the weight of the child. Data points with large residuals have a large effect on the slope of the line of best fit. Data points with small residuals have a small effect on the slope of the line of best fit.</p>
 <p>So the overall effect of a data point on the slope of the line of best fit is a combination of the leverage and the residual. This quantity is called the <span class="math inline">\(influence\)</span> of a data point.</p>
@@ -1067,7 +1123,7 @@ Tip
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-40-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -1078,7 +1134,7 @@ Tip
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-41-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-43-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -1092,7 +1148,7 @@ Tip
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-44-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -1102,7 +1158,7 @@ Tip
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-43-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-45-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -1115,7 +1171,7 @@ Tip
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-44-1.png" class="img-fluid figure-img" width="768"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-46-1.png" class="img-fluid figure-img" width="768"></p>
 </figure>
 </div>
 </div>
@@ -1130,7 +1186,7 @@ Tip
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-45-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-47-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -1197,7 +1253,7 @@ Tip
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-47-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-49-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1218,7 +1274,7 @@ Tip
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-48-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-50-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1239,7 +1295,7 @@ Tip
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-49-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-51-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1260,7 +1316,7 @@ Tip
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-50-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-52-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1270,7 +1326,7 @@ Tip
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-51-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:14cm"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-53-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:14cm"></p>
 </figure>
 </div>
 </div>
@@ -1323,17 +1379,17 @@ Tip
 <p>Moreover, the same function in R ‘lm’ is used to make all those statistical models Awesome.</p>
 <section id="so-what-is-a-linear-model" class="level3">
 <h3 class="anchored" data-anchor-id="so-what-is-a-linear-model">So what is a linear model?</h3>
-<p>A linear model is a model where the relationship between the dependent variable and the independent variables is linear. That is, the dependent variable can be expressed as a linear combination of the independent variables. An example of a linear model is:</p>
+<p>A common misconception is that a linear model is a model where the relationship between the dependent variable and the independent variables must be linear linear. Actually, we can have non-linear relationships in a linear model. For example, we can have quadratic terms in a linear model:</p>
+<p><span class="math display">\[y = \beta_0 + \beta_1 x + \beta_2 x^2 + \epsilon\]</span></p>
+<p>If this is still a linear model, what then is the meaning of “linear” in “linear model”? The answer is a little nuanced: a linear model is a mathematical model in which the expected value of the response variable is expressed as a <strong>linear combination of parameters (coefficients).</strong></p>
+<p>When we say a model has “a linear combination of parameters”, we mean that the unknown coefficients (the <span class="math inline">\(\beta\)</span>’s) are only multiplied by things and added together… they are not exponentiated, for example.</p>
+<p>That is, the dependent variable can be expressed as a linear combination of the independent variables. An example of a linear model is:</p>
 <p><span class="math display">\[y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \ldots + \beta_p x_p + \epsilon\]</span></p>
 <p>where: <span class="math inline">\(y\)</span> is the dependent variable, <span class="math inline">\(\beta_0\)</span> is the intercept, <span class="math inline">\(\beta_1, \beta_2, \ldots, \beta_p\)</span> are the coefficients of the independent variables, <span class="math inline">\(x_1, x_2, \ldots, x_p\)</span> are the independent variables, <span class="math inline">\(\epsilon\)</span> is the error term.</p>
-<p>In contrast, a non-linear model is a model where the relationship between the dependent variable and the independent variables is non-linear. An example of a non-linear model is the exponential growth model:</p>
+<p>In contrast, a non-linear model is one where a parameter enters in a non-linear way. An example of a non-linear model is:</p>
 <p><span class="math display">\[y = \beta_0 + \beta_1 e^{\beta_2 x} + \epsilon\]</span></p>
 <p>where: y is the dependent variable, <span class="math inline">\(\beta_0\)</span> is the intercept, <span class="math inline">\(\beta_1, \beta_2\)</span> are the coefficients of the independent variables, <span class="math inline">\(x\)</span> is the independent variable, <span class="math inline">\(\epsilon\)</span> is the error term.</p>
-<p>Keep in mind that a model with a quadratic term is still a linear model. For example:</p>
-<p><span class="math display">\[y = \beta_0 + \beta_1 x_1 + \beta_2 x^2 + \epsilon\]</span></p>
-<p>is still a linear model. We can see this if we substitute <span class="math inline">\(x^2\)</span> with a new variable <span class="math inline">\(x_2\)</span>, where <span class="math inline">\(x_2 = x^2\)</span>. The model then becomes:</p>
-<p><span class="math display">\[y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \epsilon\]</span></p>
-<p>This is clearly a linear model.</p>
+<p>In this model, changing the value of <span class="math display">\[\beta_2\]</span> does not change the value of <span class="math display">\[y\]</span> linearly. This happens because exponentiation is a non-linear operation.</p>
 </section>
 </section>
 <section id="review" class="level2">
@@ -1380,7 +1436,7 @@ Tip
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-52-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-54-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -1393,7 +1449,7 @@ Tip
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-53-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-55-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -1422,7 +1478,7 @@ W = 0.99467, p-value = 0.9658</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-55-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-57-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -1435,7 +1491,7 @@ W = 0.99467, p-value = 0.9658</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-56-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-58-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -1480,7 +1536,7 @@ W = 0.92167, p-value = 1.728e-05</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-59-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-61-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -1493,7 +1549,7 @@ W = 0.92167, p-value = 1.728e-05</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-60-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-62-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -1537,7 +1593,7 @@ W = 0.99966, p-value = 0.5779</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-62-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-64-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>

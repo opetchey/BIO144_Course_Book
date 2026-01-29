@@ -136,7 +136,7 @@ Above we have numerous examples of functions: `exp()`, `sqrt()`, `c()`, `paste()
 You likely guessed that there is much much more to learn about R, but we will cover that as we go along in the course.
 
 <!---
-**Think–Pair–Share** (#tps_a_objects_not_files) When you type `a <- ...`, where does `x` live?
+**Think–Pair–Share** (#tps_a_objects_not_files) When you type `x <- ...`, where does `x` live?
 --->
 
 

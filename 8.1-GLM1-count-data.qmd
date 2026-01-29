@@ -6,21 +6,17 @@ source("_common.R")
 
 # Count data (L8) {.unnumbered}
 
-In all the previous chapters, we have focused on **linear models** for continuous response variables. However, many biological response variables are counts (e.g., number of offspring, number of parasites). In this chapter, we introduce **Generalized Linear Models (GLMs)** for analysing count data, focusing on the Poisson distribution.
+In all the previous chapters, we have focused on **linear models** for continuous response variables that can, mathematically, take negative values. However, response variables can be otherwise. For example, we might have a response variable that is the number of offspring produced by a mother. This is a *count* type of response variable. In this chapter, you'll see why the models we used so far are usually innapropriate for count data. Then you'll learn about a more appropriate type of model: **Generalized Linear Models (GLMs)**.
 
 ## Introduction
 
 So far in BIO144, we have focused on **linear models** fitted using `lm()`. These models assume:
 
-- A **continuous response variable**
-- Normally distributed residuals
-- Constant variance (homoscedasticity)
+- A **continuous response variable** that can take any real value.
+- Normally distributed residuals.
+- Constant variance (homoscedasticity).
 
-Linear models are powerful, but these assumptions are often violated in biological data.
-
-In this chapter we move beyond normal linear models to handle an important new type of response variable: **counts**.
-
-We introduce **Generalized Linear Models (GLMs)**, which extend linear models by allowing the response variable to follow distributions other than the normal distribution.
+Linear models are powerful, but these assumptions are often violated in biological data. In this chapter we move beyond normal linear models to handle an important new type of response variable: **counts**. We introduce **Generalized Linear Models (GLMs)**, which extend linear models by allowing the response variable to follow distributions other than the normal distribution.
 
 By the end of this chapter, you should be able to:
 
@@ -34,63 +30,7 @@ By the end of this chapter, you should be able to:
 --->
 
 
-### From LM to GLM
 
-Linear models (`LM`) describe the **mean of a response variable** as a linear function of explanatory variables. For example:
-
-$y_i = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)} + \epsilon_i$
-
-where the error term $\epsilon_i$ is normally distributed with mean 0 and constant variance. That is:
-
-$\epsilon_i \sim N(0, \sigma^2)$.
-
-
-This works well when the response variable is continuous and approximately normally distributed.
-
-However, many biological response variables are:
-
-- **Counts** (e.g. offspring, parasites, species)
-- **Binary responses** (e.g. alive/dead)
-- **Proportions**
-
-In these cases, forcing the data into a linear model often leads to invalid predictions and misleading inference.
-
-**Generalized Linear Models (GLMs)** solve this problem by:
-
-- Keeping the familiar *linear predictor*, but
-- Allowing different distributions for the response, and
-- Linking the predictor to the mean response using a *link function*.
-
-::: {.callout-important}
-**Key idea**  
-GLMs are not a replacement for linear models — they are a *generalisation* of them. Linear regression is a special case of a GLM.
-:::
-
-<!---
-**Think–Pair–Share** (#tps-which-reg-assump) Which assumption of linear regression do you think is most problematic for count data?
---->
-
-
-### Count data
-
-Count data occur frequently in biology and medicine. Typical examples include:
-
-- Numbers of animals, plants, or species
-- Numbers of offspring
-- Numbers of pathological structures (e.g. polyps)
-
-Count data have four key properties:
-
-1. They are **discrete**
-2. They are **non-negative**
-3. Their **variance often increases with the mean**
-4. There is no known upper limit to the count.
-
-These properties immediately suggest that standard linear regression may be inappropriate.
-
-<!---
-**Think–Pair–Share** (#tps-which-props-viol) Which of these properties is violated if we use a normal distribution for counts?
---->
 
 ## Example: Soay sheep
 
@@ -137,7 +77,7 @@ ggplot(soay, aes(x = body.size, y = fitness)) +
 
 ### The wrong analysis
 
-A common mistake is to analyse count data using linear regression, treating counts as if they were continuous.
+Let's analyse the data with linear regression, treating counts as if they were continuous.
 
 ```{r}
 mod_soay_lm <- lm(fitness ~ body.size, data = soay)
@@ -150,17 +90,22 @@ par(mfrow = c(2, 2))
 plot(mod_soay_lm, which = 1:4, add.smooth = TRUE)
 ```
 
-The qq-plot looks fine. The scale-location plot shows that variance increases with fitted values, violating homoscedasticity. Also, there is a clear non-linear pattern in the residuals vs fitted plot, suggesting that the linear model is not capturing the relationship well.
+The qq-plot looks ok-ish, though the larger residuals show a tendency to be larger than expected. The scale-location plot shows that variance increases with fitted values, violating homoscedasticity. Also, there is a clear non-linear pattern in the residuals vs fitted plot, suggesting that the linear model is not capturing the relationship well.
 
-Adding a quadratic term improves the fit slightly:
+When we plot the fitted line, we see the linear relationship:
 
-```{r}
-mod2_soay_lm <- lm(fitness ~ body.size + I(body.size^2), data = soay)
-par(mfrow = c(2, 2))
-plot(mod2_soay_lm, which = 1:4, add.smooth = TRUE)
+```{r fig.width=4, fig.height=4}
+#| echo: false
+ggplot(soay, aes(x = body.size, y = fitness)) +
+  geom_point(alpha = 0.4) +
+  geom_smooth(method = "lm", se = FALSE, color = "blue") +
+  labs(x = "Body mass (kg)", y = "Lifetime fitness")
 ```
 
-But problems remain: variance increases with fitted values.
+<!--
+Think-pair-share Other than non-linearity, heteroscedasticity, what other problems can you see with this linear model for count data? Answer: negative predicted values -- negative number of offspring!
+--->
+
 
 ::: {.callout-caution}
 **Why this matters**  
@@ -169,50 +114,140 @@ Violating model assumptions can lead to biased estimates, incorrect standard err
 
 Another issue remains, however: linear regression can predict negative counts, which are impossible. We can see this in a plot of the data and the fitted regression line:
 
-```{r}
-#| echo: false
-## extrapolate the fitted line to 10 kg
-new_data <- data.frame(body.size = seq(10, 55, by = 1))
-new_data$predicted_fitness <- predict(mod_soay_lm, newdata = new_data)
-ggplot(soay, aes(x = body.size, y = fitness)) +
-  geom_point(alpha = 0.4) +
-  geom_line(data = new_data, aes(x = body.size, y = predicted_fitness), color = "blue") +
-  labs(x = "Body mass (kg)", y = "Lifetime fitness")
-```
-
-Notice that for small body sizes the fitted line goes below 0 on the y-axis. That is, the moe predicts negative fitness values, which are biologically impossible.
-
-::: {.callout-caution}
-We have extrapolated beyond the data range here, largely for illustrative purposes. In practice we should be very cautious about extrapolating beyond the range of observed data. This is because the model may not hold outside the observed range, leading to nonsensical predictions.
-:::
 
 
 ### Why linear regression fails for count data
 
-- The normal distribution is for continuous variables
-- It allows negative values
-- It assumes constant variance
-- Count data are discrete, non-negative, and typically heteroscedastic
+- The normal distribution is for continuous variables.
+- It allows negative values.
+- It assumes constant variance.
+- Count data are discrete, non-negative, and typically heteroscedastic.
 
 <!---
 **Think–Pair–Share (#a_why_poisson)** Why is a normal distribution a poor choice for count data? Which assumptions can be expected to fail?
 --->
 
 
+However, many biological response variables are:
+
+- **Counts** (e.g. offspring, parasites, species)
+- **Binary responses** (e.g. alive/dead)
+- **Proportions**
+
+In these cases, forcing the data into a linear model often leads to invalid predictions and misleading inference. **Generalized Linear Models (GLMs)** solve this problem.
+
+::: {.callout-important}
+**Key idea** GLMs are not a replacement for linear models — they are a *generalisation* of them. Linear regression is a special case of a GLM.
+:::
+
+<!---
+**Think–Pair–Share** (#tps-which-reg-assump) Which assumption of linear regression do you think is most problematic for count data?
+--->
+
+## From LM to GLM
+
+**A linear model is actually a special case of a generalized linear model.**
+
+What you already know: in a linear model we write:
+
+$$y_i = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)} + \epsilon_i, \quad \epsilon_i \sim N(0, \sigma^2)$$
+
+In words, this means an observed response variable $y_i$ is modelled as a linear combination of explanatory variables plus normally distributed error.
+
+This implies that
+
+$$y_i \sim N(\mu_i, \sigma^2)$$
+
+where $mu_i$ is the mean of the normal distribution for observation $i$, and
+
+$$\mu_i = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}$$ is the mean of the normal distribution for observation $i$.
+
+Moving to things you don't know:
+
+A generalised linear model has three components: a random component (*family*), a systematic component (*linear predictor*), and a link function. In a linear model (like the ones you already saw), these are as follows:
+
+- **Random component (family)**: Normal distribution $N(\mu_i, \sigma^2)$
+- **Systematic component (linear predictor)**: $\eta_i = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}$
+- **Link function**: Identity link, $\mu_i = \eta_i$. So the link function is $g(\mu_i) = \mu_i$ -- that is, the identity link.
+
+Putting this all together in a description of a generalised linear model we have:
+
+**Family**: $y_i \sim N(\mu_i, \sigma^2)$
+
+**Linear predictor**: $g(\mu_i) = \eta_i = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}$
+
+**Link function**: $g(\mu_i) = \mu_i$
+
+In R, we use the function `glm()` to fit generalised linear models. For a normal linear model of the Soay sheep data, we would write:
+
+```{r}
+mod_soay_glm <- glm(fitness ~ body.size, data = soay, family = gaussian(link = "identity"))
+```
+
+Here we have specified the family as Gaussian (i.e., Normal) with an identity link. This model produces the same results as the linear model we fitted earlier with `lm()`. And we can get the following model summary:
+
+```{r}
+summary(mod_soay_glm)
+```
+
+Compare that to the linear model summary:
+
+```{r}
+summary(mod_soay_lm)
+```
+
+The coefficients table is exactly the same. Other parts of the output differ slightly because `glm()` uses maximum likelihood estimation (MLE) while `lm()` uses least squares estimation. Put that aside for now; the key point is that both R functions fit the same model when using a normal family with an identity link.
+
+So, you now know what is a generalised linear model. In one sentence it is a model where the response variable follows a specified distribution (family), the mean of that distribution is linked to a linear combination of explanatory variables (linear predictor) via a link function. We will now look at a specific type of GLM for count data: the Poisson GLM.
+
 ## Poisson GLM
 
-To deal with count data, we need a different probability (error) model. A common probability model for counts is the **Poisson distribution**. The Poisson distribution is often the default starting point for modelling counts because it is the simplest distribution that respects discreteness, non-negativity, and increasing variance.
+We need three components for a GLM:
+1. A probability distribution (family) for the response variable.
+2. A linear predictor.
+3. A link function relating the linear predictor to the mean of the distribution.
 
-The Poisson distribution has the following probability mass function:
+Let's start with a discussion of the probability distribution (family) for count data. And what we're aiming for is a probability distribution that we expect to be a reasonably good starting point for modelling count data. A common probability model for counts is the **Poisson distribution**. The Poisson distribution is often the default starting point for modelling counts because it is the simplest distribution that respects characteristics of count data: discreteness, non-negativity, and increasing variance.
+
+Unlike the normal distribution, which has two parameters (mean and spread), the Poisson distribution has only one parameter: the mean $\lambda$. In the Poisson distribution, the mean and variance are equal.
+
+In a Poisson distribution, the probability of observing a count $y$ is given by:
 
 $P(Y = y) = \frac{\lambda^y e^{-\lambda}}{y!}$
 
 where:
 
+* $Y$ is a random variable representing the count.
 * $y = 0, 1, 2, \ldots$
-* $\lambda > 0$ is the mean (and variance) of the distribution
+* $\lambda > 0$ is the mean (and variance) of the distribution.
 
-Here are a couple of Poisson distributions with different means:
+In R, we can get the probability of observing a count of 3, when the expected count is 5, using the `dpois()` function:
+
+```{r}
+dpois(3, lambda = 5)
+```
+
+And we expect the probability of observing a count of 5 when the expected count is 5 to be higher:
+
+```{r}
+dpois(5, lambda = 5)
+```
+
+What happens when we ask for the probability of observing a count of 3.5 when the expected count is 5? Or a count of -1?
+
+```{r}
+dpois(3.5, lambda = 5)
+```
+
+The warning message tells us that the Poisson distribution is only defined for non-negative integers. This is a key property of the Poisson distribution: it is only defined for counts (0, 1, 2, ...).
+
+```{r}
+dpois(-1, lambda = 5)
+```
+
+And we see that the probability of observing a negative count is zero.
+
+Here are a few of Poisson distributions with different means:
 
 ```{r}
 #| echo: false
@@ -227,7 +262,6 @@ ggplot(poisson_data, aes(x = x, y = probability, color = factor(lambda))) +
   geom_line(alpha = 0.2) + 
   labs(x = "Count", y = "Probability", color = expression(lambda)) 
 ```
-
 
 The Poisson distribution has two important properties:
 
@@ -244,19 +278,13 @@ In a Poisson distribution, the mean and variance are equal. This captures an imp
 **Think–Pair–Share** (#a_mean_variance_link) Why does increasing variance with the mean cause problems for linear regression?
 --->
 
-### Generalized Linear Models (GLMs)
+**So, in a Poisson GLM we assume a Poisson distribution (family) for the response variable.**
 
-GLMs extend linear models by combining three components:
+$$y_i \sim \text{Poisson}(\mu_i)$$
 
-1. **Linear predictor**.
-2. **Link function**.
-3. **Probability distribution (family)**.
+where $\mu_i = \lambda_i$ is the expected count for observation $i$.
 
-::: {.callout-note}
-If you choose a normal family and an identity link, a GLM is mathematically identical to the linear model you fit using `lm()`.
-:::
-
-#### The linear predictor
+Next we need to define the linear predictor (and then we finish with the link function).
 
 The linear predictor is the same as in linear regression:
 
@@ -264,70 +292,46 @@ $\eta_i = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}$
 
 It is just the linear combination of explanatory variables and coefficients. Nothing new here.
 
+Finally, we need to define the link function that relates the linear predictor to the expected count $\mu_i$.
 
-#### The link function
+We cannot use the identity link here, because that would allow negative expected counts. Instead, we use the **log link**:
 
-In the linear models we already used (e.g., for linear regression) the link function is the **identity link**:
-
-$E(y_i) = \eta_i$
-
-Here, $E(y_i)$ refers to the expected value (mean) of many hypothetical observations, not the single observed value $y_i$.
-
-*Identity link*: the expected value of the response $E(y_i)$ equals the linear predictor $\eta_i$.
-
-That is:
-
-$E(y_i) = \eta_i = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}$
-
-For count data, this can lead to negative predictions.
-
-The solution is a different **link function**. For Poisson regression, the standard choice is the **log link**. It relates the linear predictor to the expected value of the response as follows:
-
-$\eta_i = \log(E(y_i))$
+$$\eta_i = \log(\mu_i)$$
 
 which implies:
 
-$E(y_i) = \exp(\eta_i) > 0$
+$\mu_i = \exp(\eta_i)$
 
-The log link ensures that the expected count is always positive, regardless of the values of the explanatory variables. Whatever the value of the linear predictor $\eta_i$, the exponential of it $\exp(\eta_i)$ is always positive.
+The log link ensures that the expected count is always positive, regardless of the values of the $\beta$ parameters and explanatory variables. Whatever the value of the linear predictor $\eta_i$, the exponential of it $\exp(\eta_i)$ is always positive.
 
-::: {.callout-hint}
-A good link function enforces the natural constraints of the data.
-:::
+Putting this all together, a Poisson GLM can be summarised as:
 
-<!---
-**Think–Pair–Share** (#tps-what-wrong-id) What would go wrong if we used an identity link for count data?
---->
+**Family**: $y_i \sim \text{Poisson}(\mu_i)$
 
-#### The probability distribution (family)
+**Linear predictor**: $\eta_i = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}$
 
-The final component of a GLM is the **probability distribution** (also called the **family**). This specifies how the response variable is distributed. In Poisson regression, we assume that the response variable follows a Poisson distribution. Hence, we say we are fitting a **Poisson GLM**.
+**Link function**: $\log(\mu_i) = \eta_i$
 
-Mathematically, a Poisson GLM can be summarised as:
+We could also write this as:
 
-$y_i \sim \text{Poisson}(\lambda_i)$
-
-And written out fully with the linear predictor and link function:
-
-$y_i \sim \text{Poisson}(\lambda_i)$
-
-where $\log(\lambda_i) = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}$
-
-or equivalently:
-
-$E(y_i) \sim \text{Poisson}(\exp(\beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}))$
+$$y_i \sim \mathrm{Poisson}\!\left(\exp\!\left(\beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}\right)\right)$$
 
 
+### Parameter estimation
+
+We observe the counts $y_i$, and the model predicts the expected counts $\mu_i$. The GLM estimates the parameters $\beta_0, \beta_1, \ldots, \beta_p$ that make the observed data most probable under the assumed Poisson model. This is done using maximum likelihood estimation (MLE). The likelihood of the data given the model is maximised.
+
+Recall that we saw that the summary information of the linear model and the GLM with normal family and identity link were different. This is because of differences in estimation methods (least squares vs MLE). In GLMs, we always use MLE for parameter estimation. In this course we will not go into the mathematical details of MLE, but the key idea is that we find parameter values that make the observed data most probable under the assumed model. This is analogous to least squares estimation in linear models, which is a special case of MLE for Normally distributed errors.
 
 ## R - Poisson GLM
 
 When fitting a Poisson GLM in R, we use the `glm()` function, specifying the family as `poisson`:
 
 ```{r}
-soay_glm <- glm(fitness ~ body.size, data = soay, family = poisson)
+soay_glm <- glm(fitness ~ body.size, data = soay, family = poisson(link = "log"))
 ```
 
-Specifying `family = poisson` tells R to use the Poisson distribution with a log link function by default. We could specify the link explicitly as `family = poisson(link = "log")`, but this is unnecessary since the log link is the default for the Poisson family.
+Specifying `family = poisson` tells R to use the Poisson distribution with a log link function by default. We also specify the link explicitly as `link = "log"`. You will, however, often only see `family = poisson` and not the log link, because the log link is the default for the Poisson family.
 
 ### Checking model assumptions
 

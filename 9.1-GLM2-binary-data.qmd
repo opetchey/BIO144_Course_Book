@@ -233,7 +233,7 @@ At the highest dose (76.54), the model predicts about 76 deaths, but only 60 bee
 **Poisson vs binomial, when to use each**  
 Use a Poisson model when counts have *no known upper limit*.  
 Use a binomial model when counts are "$k$ successes out of $n$ trials".
-Use a binomial model when each observation is a 0/1 response.
+Use a binomial/binary model when each observation is a 0/1 response.
 :::
 
 <!---
@@ -246,21 +246,49 @@ Use a binomial model when each observation is a 0/1 response.
 
 For a single 0/1 observation:
 
-$Y \sim \text{Bernoulli}(\pi),\quad P(Y=1)=\pi,\quad P(Y=0)=1-\pi$
+$y_i \sim \text{Bernoulli}(\pi),\quad P(Y=1)=\pi,\quad P(Y=0)=1-\pi$
 
-In words, this means that the probability of success (Y=1) is $\pi$, and the probability of failure (Y=0) is $1-\pi$. And that this probability is Bernoulli distributed. Bernoulli is a special case of the binomial distribution with $n=1$.
+In words, this means that the probability of success ($y_i=1$) is $\pi$, and the probability of failure ($y_i=0$) is $1-\pi$. And that this probability is Bernoulli distributed. Bernoulli is a special case of the binomial distribution with $n=1$.
+
+In R, we can calculate the probability of one success (1) in one trial as:
+
+```{r}
+dbinom(1, size = 1, prob = 0.7)
+```
+
+And the probability of zero successes (0) in one trial as:
+
+```{r}
+dbinom(0, size = 1, prob = 0.7)
+```
+
 
 Mean and variance are:
 
-$E(Y)=\pi,\quad Var(Y)=\pi(1-\pi)$
+$E(y_i)=\pi,\quad Var(y_i)=\pi(1-\pi)$
 
 ### Binomial (aggregated) data
 
-For $k$ successes out of $n$ trials:
+For $y_i$ successes out of $n$ trials:
 
-$Y \sim \text{Binomial}(n,\pi)$
+$y_i \sim \text{Binomial}(n,\pi)$
 
 This means that the number of successes $Y$ in $n$ independent Bernoulli trials, each with success probability $\pi$, follows a binomial distribution.
+
+And, for example, the probability of getting $n$ success in 10 trials with success probability 0.7 is:
+
+```{r}
+p_n_successes <- dbinom(1:10, size = 10, prob = 0.7)
+ggplot(mapping = aes(x = 1:10, y = p_n_successes)) +
+  geom_point() +
+  geom_line(col="lightgrey") +
+  scale_x_continuous(breaks = seq(0, 10, by = 1)) +
+  labs(x = "Number of successes", y = "Probability")
+```
+
+This is actually the probability distribution for getting $n$ heads when we toss a coin 10 times, if the coin has a probability of heads of 0.7.
+
+
 
 Mean and variance are:
 
@@ -272,6 +300,11 @@ For Bernoulli/binomial data, the variance is *determined by the mean*.
 This is one reason "constant variance" fails for linear models.
 :::
 
+::: {.callout-note}
+Not that the Bernoulli distribution is a special case of the binmoial when number of trials is one. I.e., $y_i \sim \text{Bernoulli}(\pi)$ is equivalent to $y_i \sim \text{Binomial}(1, \pi)$.
+:::
+
+
 <!---
 **Think–Pair–Share** (#tps-binom-variance) For fixed $n$, at what value of $\pi$ is $Var(Y)=n\pi(1-\pi)$ largest? At what values of $\pi$ is it smallest?
 --->
@@ -280,15 +313,13 @@ This is one reason "constant variance" fails for linear models.
 
 We use the usual GLM structure:
 
-1. **Linear predictor**
 
-$\eta_i = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}$
+1. **Family**: $y_i \sim \text{Binomial}(n_i,\pi_i)$
 
-2. **Family**: binomial (Bernoulli is the special case $n=1$)
+2. **Linear predictor**: $\eta_i = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}$
 
-3. **Link**: logit
 
-$\eta_i = \log\left(\frac{\pi_i}{1-\pi_i}\right)$
+3. **Link**: logit link: $\eta_i = \log\left(\frac{\pi_i}{1-\pi_i}\right)$
 
 The inverse link (back-transformation) is the **logistic function**:
 

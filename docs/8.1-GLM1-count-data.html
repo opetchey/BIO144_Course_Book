@@ -331,7 +331,7 @@ window.Quarto = {
 </header>
 
 
-<p>In all the previous chapters, we have focused on <strong>linear models</strong> for continuous response variables that can, mathematically, take negative values. However, response variables can be otherwise. For example, we might have a response variable that is the number of offspring produced by a mother. This is a <em>count</em> type of response variable. In this chapter, you’ll see why the models we used so far are usually innapropriate for count data. Then you’ll learn about a more appropriate type of model: <strong>Generalized Linear Models (GLMs)</strong>.</p>
+<p>In all the previous chapters, we have focused on <strong>linear models</strong>. These are suitable for continuous response variables that can, mathematically, take negative values. However, response variables can be otherwise. For example, we might have a response variable that is the number of offspring produced by a mother. This is a <em>count</em> type of response variable. In this chapter, you’ll see why the models we used so far are usually inappropriate for count data. Then you’ll learn about a more appropriate type of model: <strong>Generalized Linear Models (GLMs)</strong>.</p>
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
 <p>So far in BIO144, we have focused on <strong>linear models</strong> fitted using <code>lm()</code>. These models assume:</p>
@@ -340,7 +340,7 @@ window.Quarto = {
 <li>Normally distributed residuals.</li>
 <li>Constant variance (homoscedasticity).</li>
 </ul>
-<p>Linear models are powerful, but these assumptions are often violated in biological data. In this chapter we move beyond normal linear models to handle an important new type of response variable: <strong>counts</strong>. We introduce <strong>Generalized Linear Models (GLMs)</strong>, which extend linear models by allowing the response variable to follow distributions other than the normal distribution.</p>
+<p>Linear models are powerful, but these assumptions can be violated in biological data. In this chapter we move beyond linear models to handle an important new type of response variable: <strong>counts</strong>. We introduce <strong>Generalized Linear Models (GLMs)</strong>, which extend linear models by allowing the response variable to follow distributions other than the normal distribution.</p>
 <p>By the end of this chapter, you should be able to:</p>
 <ul>
 <li>Recognise when linear regression is inappropriate</li>
@@ -435,7 +435,7 @@ Caution
 Violating model assumptions can lead to biased estimates, incorrect standard errors, and misleading p-values.</p>
 </div>
 </div>
-<p>Another issue remains, however: linear regression can predict negative counts, which are impossible. We can see this in a plot of the data and the fitted regression line:</p>
+<p>Another issue remains, however: linear regression can predict negative counts, which are impossible. We can see this in a plot of the data and the fitted regression line.</p>
 </section>
 <section id="why-linear-regression-fails-for-count-data" class="level3">
 <h3 class="anchored" data-anchor-id="why-linear-regression-fails-for-count-data">Why linear regression fails for count data</h3>
@@ -443,7 +443,6 @@ Violating model assumptions can lead to biased estimates, incorrect standard err
 <li>The normal distribution is for continuous variables.</li>
 <li>It allows negative values.</li>
 <li>It assumes constant variance.</li>
-<li>Count data are discrete, non-negative, and typically heteroscedastic.</li>
 </ul>
 <!---
 **Think–Pair–Share (#a_why_poisson)** Why is a normal distribution a poor choice for count data? Which assumptions can be expected to fail?
@@ -481,8 +480,8 @@ Important
 <p>In words, this means an observed response variable <span class="math inline">\(y_i\)</span> is modelled as a linear combination of explanatory variables plus normally distributed error.</p>
 <p>This implies that</p>
 <p><span class="math display">\[y_i \sim N(\mu_i, \sigma^2)\]</span></p>
-<p>where <span class="math inline">\(mu_i\)</span> is the mean of the normal distribution for observation <span class="math inline">\(i\)</span>, and</p>
-<p><span class="math display">\[\mu_i = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}\]</span> is the mean of the normal distribution for observation <span class="math inline">\(i\)</span>.</p>
+<p>where <span class="math inline">\(\mu_i\)</span> is the mean of the normal distribution for observation <span class="math inline">\(i\)</span>, and</p>
+<p><span class="math display">\[\mu_i = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}\]</span></p>
 <p>Moving to things you don’t know:</p>
 <p>A generalised linear model has three components: a random component (<em>family</em>), a systematic component (<em>linear predictor</em>), and a link function. In a linear model (like the ones you already saw), these are as follows:</p>
 <ul>
@@ -644,6 +643,8 @@ In a Poisson distribution, the mean and variance are equal. This captures an imp
 <p><strong>Family</strong>: <span class="math inline">\(y_i \sim \text{Poisson}(\mu_i)\)</span></p>
 <p><strong>Linear predictor</strong>: <span class="math inline">\(\eta_i = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}\)</span></p>
 <p><strong>Link function</strong>: <span class="math inline">\(\log(\mu_i) = \eta_i\)</span></p>
+<p>We could also write this as:</p>
+<p><span class="math display">\[y_i \sim \mathrm{Poisson}\!\left(\exp\!\left(\beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}\right)\right)\]</span></p>
 <section id="parameter-estimation" class="level3">
 <h3 class="anchored" data-anchor-id="parameter-estimation">Parameter estimation</h3>
 <p>We observe the counts <span class="math inline">\(y_i\)</span>, and the model predicts the expected counts <span class="math inline">\(\mu_i\)</span>. The GLM estimates the parameters <span class="math inline">\(\beta_0, \beta_1, \ldots, \beta_p\)</span> that make the observed data most probable under the assumed Poisson model. This is done using maximum likelihood estimation (MLE). The likelihood of the data given the model is maximised.</p>

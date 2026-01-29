@@ -6,7 +6,7 @@ source("_common.R")
 
 # Count data (L8) {.unnumbered}
 
-In all the previous chapters, we have focused on **linear models** for continuous response variables that can, mathematically, take negative values. However, response variables can be otherwise. For example, we might have a response variable that is the number of offspring produced by a mother. This is a *count* type of response variable. In this chapter, you'll see why the models we used so far are usually innapropriate for count data. Then you'll learn about a more appropriate type of model: **Generalized Linear Models (GLMs)**.
+In all the previous chapters, we have focused on **linear models**. These are suitable for continuous response variables that can, mathematically, take negative values. However, response variables can be otherwise. For example, we might have a response variable that is the number of offspring produced by a mother. This is a *count* type of response variable. In this chapter, you'll see why the models we used so far are usually inappropriate for count data. Then you'll learn about a more appropriate type of model: **Generalized Linear Models (GLMs)**.
 
 ## Introduction
 
@@ -16,7 +16,7 @@ So far in BIO144, we have focused on **linear models** fitted using `lm()`. Thes
 - Normally distributed residuals.
 - Constant variance (homoscedasticity).
 
-Linear models are powerful, but these assumptions are often violated in biological data. In this chapter we move beyond normal linear models to handle an important new type of response variable: **counts**. We introduce **Generalized Linear Models (GLMs)**, which extend linear models by allowing the response variable to follow distributions other than the normal distribution.
+Linear models are powerful, but these assumptions can be violated in biological data. In this chapter we move beyond linear models to handle an important new type of response variable: **counts**. We introduce **Generalized Linear Models (GLMs)**, which extend linear models by allowing the response variable to follow distributions other than the normal distribution.
 
 By the end of this chapter, you should be able to:
 
@@ -112,7 +112,7 @@ Think-pair-share Other than non-linearity, heteroscedasticity, what other proble
 Violating model assumptions can lead to biased estimates, incorrect standard errors, and misleading p-values.
 :::
 
-Another issue remains, however: linear regression can predict negative counts, which are impossible. We can see this in a plot of the data and the fitted regression line:
+Another issue remains, however: linear regression can predict negative counts, which are impossible. We can see this in a plot of the data and the fitted regression line.
 
 
 
@@ -121,7 +121,6 @@ Another issue remains, however: linear regression can predict negative counts, w
 - The normal distribution is for continuous variables.
 - It allows negative values.
 - It assumes constant variance.
-- Count data are discrete, non-negative, and typically heteroscedastic.
 
 <!---
 **Think–Pair–Share (#a_why_poisson)** Why is a normal distribution a poor choice for count data? Which assumptions can be expected to fail?
@@ -137,7 +136,8 @@ However, many biological response variables are:
 In these cases, forcing the data into a linear model often leads to invalid predictions and misleading inference. **Generalized Linear Models (GLMs)** solve this problem.
 
 ::: {.callout-important}
-**Key idea** GLMs are not a replacement for linear models — they are a *generalisation* of them. Linear regression is a special case of a GLM.
+**Key idea**
+GLMs are not a replacement for linear models — they are a *generalisation* of them. Linear regression is a special case of a GLM.
 :::
 
 <!---
@@ -158,9 +158,9 @@ This implies that
 
 $$y_i \sim N(\mu_i, \sigma^2)$$
 
-where $mu_i$ is the mean of the normal distribution for observation $i$, and
+where $\mu_i$ is the mean of the normal distribution for observation $i$, and
 
-$$\mu_i = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}$$ is the mean of the normal distribution for observation $i$.
+$$\mu_i = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}$$
 
 Moving to things you don't know:
 
@@ -168,15 +168,15 @@ A generalised linear model has three components: a random component (*family*), 
 
 - **Random component (family)**: Normal distribution $N(\mu_i, \sigma^2)$
 - **Systematic component (linear predictor)**: $\eta_i = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}$
-- **Link function**: Identity link, $\mu_i = \eta_i$. So the link function is $g(\mu_i) = \mu_i$ -- that is, the identity link.
+- **Link function**: Identity link, $\mu_i = \eta_i$.
 
 Putting this all together in a description of a generalised linear model we have:
 
 **Family**: $y_i \sim N(\mu_i, \sigma^2)$
 
-**Linear predictor**: $g(\mu_i) = \eta_i = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}$
+**Linear predictor**: $\eta_i = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}$
 
-**Link function**: $g(\mu_i) = \mu_i$
+**Link function**: $\mu_i = \eta_i$
 
 In R, we use the function `glm()` to fit generalised linear models. For a normal linear model of the Soay sheep data, we would write:
 
@@ -198,11 +198,14 @@ summary(mod_soay_lm)
 
 The coefficients table is exactly the same. Other parts of the output differ slightly because `glm()` uses maximum likelihood estimation (MLE) while `lm()` uses least squares estimation. Put that aside for now; the key point is that both R functions fit the same model when using a normal family with an identity link.
 
-So, you now know what is a generalised linear model. In one sentence it is a model where the response variable follows a specified distribution (family), the mean of that distribution is linked to a linear combination of explanatory variables (linear predictor) via a link function. We will now look at a specific type of GLM for count data: the Poisson GLM.
+So, you now know what is a generalised linear model.
+
+In one sentence, a GLM is a model where the response variable follows a specified distribution (family), the mean of that distribution is linked to a linear combination of explanatory variables (linear predictor) via a link function. We will now look at a specific type of GLM for count data: the Poisson GLM.
 
 ## Poisson GLM
 
 We need three components for a GLM:
+
 1. A probability distribution (family) for the response variable.
 2. A linear predictor.
 3. A link function relating the linear predictor to the mean of the distribution.
@@ -239,7 +242,7 @@ What happens when we ask for the probability of observing a count of 3.5 when th
 dpois(3.5, lambda = 5)
 ```
 
-The warning message tells us that the Poisson distribution is only defined for non-negative integers. This is a key property of the Poisson distribution: it is only defined for counts (0, 1, 2, ...).
+The warning message tells us that the Poisson distribution is only defined for non-negative integers. This is a key property of the Poisson distribution: it is only defined for integers (0, 1, 2, ...).
 
 ```{r}
 dpois(-1, lambda = 5)

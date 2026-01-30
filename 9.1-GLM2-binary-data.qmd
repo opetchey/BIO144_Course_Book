@@ -5,30 +5,22 @@ source("_common.R")
 
 
 
-# Binary data (L9) {.unnumbered}
+# Binomial data (L9) {.unnumbered}
 
 ## Introduction
 
-In the previous chapter we moved from linear models and normal errors to generalized linear models (GLMs) to handle **count responses** with a Poisson GLM. In this chapter we move to another common case: **binary responses**.
+In the previous chapter we moved from linear models and normal errors to generalized linear models (GLMs) to handle **count responses** with a Poisson GLM. In this chapter we move to another common case: **binary responses** and **binomial responses*. Because binary data is a special case of binomial data, we will often refer to both as "binomial data".
 
-Binary response variables take only two values, often coded as 0 and 1:
+At the heart of binomial data is an event that happens or does not happen. Examples include:
 
-- 1 = yes / success / present / dead
-- 0 = no / failure / absent / alive
+* Disease status: infected (1) or not infected (0)
+* Survival: dead (1) or alive (0)
+* Presence/absence of a species at a site: present (1) or absent (0)
+* Success/failure of a treatment: success (1) or failure (0)
 
-The central question becomes:
+The central question is therefore:
 
-**Which explanatory variables influence the probability** $\pi_i = P(y_i = 1)$ **of the response variable?** 
-
-::: {.callout-important}
-**Bridge from LM to GLM**  
-A GLM keeps the familiar *linear predictor* from linear models, but:
-1) uses a distribution (family) that matches the response type, and  
-2) uses a link function so predictions respect the natural constraints.
-
-- Count data: Poisson family + log link  
-- Binary data: binomial family + logit link
-:::
+**Which explanatory variables influence the probability of the event happening.** 
 
 <!---
 **Think–Pair–Share** (#tps-binary-examples) Name three response variables in biology, ecology, or medicine that are naturally binary (0/1). Why would a linear model be risky for each?
@@ -38,120 +30,316 @@ A GLM keeps the familiar *linear predictor* from linear models, but:
 
 In this chapter we will cover:
 
-- Contingency tables and the $\chi^2$ test (a familiar starting point)
-- Odds, odds ratios, and log-odds
-- Logistic regression as a binomial GLM
-- Interpreting coefficients (odds ratios and probabilities)
-- Model assumptions, deviances, and (some) model checking
-- Overdispersion in *aggregated* binomial data and the quasibinomial fix
-- Practical complications for individual-level (non-aggregated) 0/1 data
+- Probabilities, odds, log-odds, odds ratios (the link function).
+- A review of Bernoulli and binomial distributions (the family).
+- Two examples of binomial GLM.
+- Interpreting coefficients (odds ratios and probabilities).
+- Model assumptions, deviances, and (some) model checking.
+- Overdispersion in *aggregated* binomial data and the quasibinomial fix.
+- Practical complications for individual-level (non-aggregated) 0/1 data.
 
-## A warm-up: the Chi-square test for a 2×2 table
 
-Binary responses often first appear in a **contingency table**. For
-example:
 
-- Explanatory variable $x$: hormonal contraception (yes/no)
-- Response variable $y$: heart attack (yes/no)
+## Binary and binomial data
 
-The $\chi^2$ (chi-squared) test asks whether the **proportion** (or frequency) of
-heart attacks is the same in the two contraception groups.
+When we model binary/binomial data, we are often interested in the **probability** of an event happening. For example, the probability of a heart attack, or the probability of a species being present at a site.
 
-### A concrete example dataset
+Let us label this probability $\pi$. So $\pi$ is the probability of "yes" (e.g. pass a test), and $1-\pi$ is the probability of "no" (e.g. fail a test).
 
-We will reconstruct the classic 2×2 table from some example and store it as a dataset:
+So, if the probability $\pi$ is 0.8, then there is an 80% chance of "yes" and a 20% chance of "no". In R we can simulate the pass or fail of each of a group of people with an expected pass rate (probability) of 0.8 like this:
 
 ```{r}
-#| echo: false
-heart_attack <- tibble(
-  contraception = c("yes", "yes", "no", "no"),
-  heart_attack = c("yes", "no", "yes", "no"),
-  n = c(23, 34, 35, 132)
-)
-
-write_csv(heart_attack, here("datasets", "heart_attack_2x2.csv"))
+set.seed(123)
+number_persons <- 10
+y_binary <- rbinom(number_persons, size = 1, prob = 0.8)
 ```
 
-Read in the heart attack dataset:
-```{r}
-heart_attack <- read_csv("datasets/heart_attack_2x2.csv")
-```
+This code says please draw 10 random numbers from a binomial distribution where each number is the result of 1 trial (size = 1) with a probability of success of 0.8 (prob = 0.8). Because size = 1, each number will be either 0 or 1.
 
-Here are the first few rows of the heart attack dataset:
+Hence, the object `y` contains 10 simulated persons, where each person has an 80% chance of being 1:
 
 ```{r}
-head(heart_attack)
+y_binary
 ```
 
-We can create the table and run the $\chi^2$ test.
+What we have done is to simulate 10 *Bernoulli trials* with probability 0.8. A Bernoulli trial is one random experiment with exactly two possible outcomes, "success" (1) and "failure" (0), where the probability of success is $\pi$.)
 
-Here is the data ready for analysis:
+**You can see that the observations in `y` are either 0 or 1: they are `binary` data.**
+
+An alternate method to simulate and express the same kind of data is binomial data, where we count the number of successes (1s) in a number of trials. In R, we simulate this like so:
 
 ```{r}
-tab <- xtabs(n ~ contraception + heart_attack, data = heart_attack)
-tab
+set.seed(123)
+number_persons <- 10
+y_binomial <- rbinom(1, size = number_persons, prob = 0.8)
 ```
 
-And here is the $\chi^2$ test:
+This code says please draw 1 random number from a binomial distribution where the number of trials is 10 (size = 10) with a probability of success of 0.8 (prob = 0.8). The result is the number of successes (1s) in those 10 trials, in this particular simulation it is:
 
 ```{r}
-chisq.test(tab, correct = FALSE)
+y_binomial
 ```
 
-::: {.callout-note}
-**Continuity correction**  
-`chisq.test()` defaults to Yates' continuity correction for 2×2 tables.
-Here we set `correct = FALSE` to match the classic "hand-calculation"
-style example.
+We know to expect that 8 of the 10 persons will be 1 (success), because the probability of success $\pi = 0.8$. But the actual number of successes in any one simulation can vary due to chance. In the binary data example above we by chance got
+
+```{r}
+sum(y_binary)
+```
+
+successes (1s) out of 10 persons. In the binomial data example above we got:
+
+```{r}
+y_binomial
+```
+
+So in neither case did we get exactly 8 successes! What is the chance of that!
+
+Well, we can calculate the probability of getting exactly $k$ successes in $n$ trials with success probability $\pi$ using the binomial probability formula:
+
+$P(Y=k) = \binom{n}{k} \pi^k (1-\pi)^{n-k}$
+
+where $\binom{n}{k} = \frac{n!}{k!(n-k)!}$ is the binomial coefficient, which counts the number of ways to choose $k$ successes from $n$ trials.
+
+In R, we can calculate the probability of getting exactly 8 successes in 10 trials with success probability 0.8 as:
+
+```{r}
+dbinom(8, size = 10, prob = 0.8)
+```
+
+And we can make a graph of the full probability distribution for getting $k$ successes in 10 trials with success probability 0.8:
+
+```{r}
+p_k_successes <- dbinom(0:10, size = 10, prob = 0.8)
+ggplot(mapping = aes(x = 0:10, y = p_k_successes)) +
+  geom_point() +
+  geom_line(col="lightgrey") +
+  scale_x_continuous(breaks = seq(0, 10, by = 1)) +
+  labs(x = "Number of successes", y = "Probability")
+```
+
+So the probability of getting exactly 8 successes is actually quite low, at about 0.3. But it is still the most likely outcome.
+
+
+::: {.callout-important}
+**So what???**
+You should now understand two important things:
+
+* The relationship between binary data (0/1) and binomial data (counts of successes out of trials).
+* That the binomial distribution is appropriate for modelling both binary and binomial data. Hint: in a GLM, we will therefore use the `binomial` family.
 :::
 
-<!---
-**Think–Pair–Share** (#tps-chisq-meaning) What is the null hypothesis of this $\chi^2$ test, in words?
---->
+## Probabilities, odds, log-odds, and odds ratios
 
+### Odds
 
-## Quantifying an association: risk and odds
+OK, so we know that when we analyse binary/binomial data, we are interested in the **probability** of an event happening, denoted $\pi$.
 
-If $\pi$ is the probability of "yes" (e.g. heart attack), then:
+A related quantity is the **odds** of the event happening. The odds is defined as the ratio of the probability of the event happening to the probability of it not happening:
 
-- **Risk (probability)** is $\pi$
 - **Odds** is $\pi/(1-\pi)$
+
+We sometimes say "the odds of an event happening are x to y". For example, a horse has 4 to 1 odds of winning a race. This means that in 5 races we expect the horse to win 4 times and lose once. The odds are $4/1 = 4$. The probability of winning is then $4/(4+1) = 0.8$.
+
+If the horse was really bad and had 1 to 4 odds of winning, then the odds of winning would be 0.2/0.8 = 0.25, and the probability of winning would be 0.2.
+
+So, odds and probabilities are related mathematically, but they are not the same thing. Lets look at a graph of probability on the $x$-axis and odds on the $y$-axis:
+
+```{r}
+prob_seq <- seq(0.01, 0.99, by = 0.01)
+ggplot(mapping = aes(x = prob_seq, y = odds_seq)) +
+  geom_line() +
+  labs(x = "Probability", y = "Odds") #+
+  #scale_y_continuous(limits = c(0, 10))
+```
+
+So, when we transform probabilities to odds, we go from a bounded scale (0 to 1) to an unbounded scale (0 to infinity).
+
+### Log-odds (logit)
+
+Another useful transformation is the **log-odds**, also known as the **logit**:
+
+- **Log-odds (logit)** is $\log\left(\frac{\pi}{1-\pi}\right)$
+
+Here is the relationship between probability and log-odds:
+
+```{r}
+odds_seq <- prob_seq / (1 - prob_seq)
+log_odds_seq <- log(odds_seq)
+ggplot(mapping = aes(x = prob_seq, y = log_odds_seq)) +
+  geom_line() +
+  labs(x = "Probability", y = "Log-odds (logit)")
+```
+
+::: {.callout-important}
+**So what???**
+
+The reason why the logit is useful is that it maps probabilities (0 to 1) to the whole real line (-infinity to infinity). This is important because in a GLM, the linear predictor can take any value from -infinity to infinity, so we need a link function that can map between the two scales. The logit does this perfectly.
+:::
+
+
+
+### Odds ratio
+
+Finally, we often want to compare the odds of an event happening in two different groups. Say we have two groups, group 1 and group 2, with probabilities $\pi_1$ and $\pi_2$. The odds in each group are:
+
+- Odds in group 1: $\frac{\pi_1}{1-\pi_1}$
+- Odds in group 2: $\frac{\pi_2}{1-\pi_2}$
 
 The **odds ratio (OR)** compares the odds in two groups:
 
 Odds Ratio = OR = $\frac{\text{odds in group 1}}{\text{odds in group 2}}$.
 
-The **log odds ratio** is $\log(OR)$. It is 0 when $OR=1$.
+Let's go through a couple of examples. First, suppose in group 1 the probability of success is 0.2 in both groups. Then the odds in both groups are:
+
+- Odds in group 1 and 2: $\frac{0.2}{1-0.2} = \frac{0.2}{0.8} = 0.25$
+
+So the odds ratio is:
+
+$OR = \frac{0.25}{0.25} = 1$
+
+Now take an example where the probability of success in group 1 is 0.4, and in group 2 it is 0.2. Then the odds in each group are:
+
+- Odds in group 1: $\frac{0.4}{1-0.4} = \frac{0.4}{0.6} \approx 0.6667$
+- Odds in group 2: $\frac{0.2}{1-0.2} = \frac{0.2}{0.8} = 0.25$
+
+So the odds ratio is:
+
+$OR = \frac{0.6667}{0.25} \approx 2.67$
+
+This means that the odds of success in group 1 are about 2.67 times the odds of success in group 2.
 
 ::: {.callout-important}
-**Odds are not probabilities**  
-An odds of 3 means "3 to 1", which corresponds to a probability of
-$3/(3+1)=0.75$. Odds and probabilities are linked mathematically, but they are not
-the same thing.
+**So what???**
+
+The reason why the logit is useful is that it maps probabilities (0 to 1) to the whole real line (-infinity to infinity). This is important because in a GLM, the linear predictor can take any value from -infinity to infinity, so we need a link function that can map between the two scales. The logit does this perfectly.
 :::
 
-<!---
-**Think–Pair–Share** (#tps-odds-intuition) Why might odds ratios be a convenient effect size in a regression model? (This is a difficult question—think carefully, and Pair!)
---->
 
-## From tables to regression models
-
-Contingency tables are a good start, but they are limited:
-
-- they typically compare **groups** (few categorical explanatory variable),
-- they don't easily handle **continuous explanatory variables** (e.g. dose),
-- they don't naturally generalise to multiple explanatory variables.
-
-When $y$ is binary or binomial, the standard regression approach is
-**logistic regression**, a **binomial GLM**.
+(The **log odds ratio** is $\log(OR)$. It is 0 when $OR=1$.)
 
 
+## A simple binomial GLM
 
-## Working example: beetle mortality and insecticide dose (aggregated data)
+We now have the pieces to define a simple binomial GLM:
 
-Eight groups of beetles were exposed to an insecticide dose for 5 hours.
-For each dose level, we know how many beetles were tested and how many
-were killed. This is **binomial (aggregated)** data.
+1. **Family**: $y_i \sim \text{Binomial}(n_i,\pi_i)$
+2. **Linear predictor**: $\eta_i = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}$
+3. **Link**: logit link: $\eta_i = \log\left(\frac{\pi_i}{1-\pi_i}\right)$
+
+Let us make a very simple example in which there we are interested in how the probability of passing a test difference between children and adults. We will simulate the data, and then fit a binomial GLM.
+
+To simulate that data we will define the number of children and adults, and the probability of passing the test in each group:
+
+```{r}
+set.seed(8761)
+n_children <- 50
+n_adults <- 50
+p_pass_children <- 0.8
+p_pass_adults <- 0.4
+```
+
+Now let us simulate whether each person passes or fails, using the `rbinom()` function:
+
+```{r}
+y_children <- rbinom(n_children, size = 1, prob = p_pass_children)
+y_adults <- rbinom(n_adults, size = 1, prob = p_pass_adults)
+```
+
+Now we can combine the data into a data frame (tibble), and look at the data:
+
+```{r}
+data_binom <- tibble(
+  age_group = rep(c("child", "adult"), each = 50),
+  pass = c(y_children, y_adults)
+)
+data_binom
+```
+
+We can summarize the data to see how many passed in each group:
+
+```{r}
+data_summary <- data_binom |>
+  group_by(age_group) |>
+  summarise(
+    n_tested = n(),
+    n_passed = sum(pass),
+    pass_rate = mean(pass)
+  )
+data_summary
+```
+
+In the simulated experiment, 78% of the children passed, when the true probability of passing was 0.8. The adults did really well! -- 60% of the adults passed, when the true probability was 0.4.
+
+If we had collected that data for real, we might be interested in if the difference in pass rates between children and adults is statistically significant. We can use a binomial GLM to test that. Here is how we specify and fit the model in R:
+
+```{r}
+binom_glm <- glm(pass ~ age_group, data = data_binom, family = binomial(link = "logit"))
+```
+
+The critical part here is the `family = binomial(link = "logit")` argument, which tells R to fit a binomial GLM with a logit link function. Note that if we do not specify the link function, R will use the logit link by default for the binomial family. This means that the following model specification is equivalent:
+
+```{r eval = FALSE}
+binom_glm <- glm(pass ~ age_group, data = data_binom, family = binomial)
+```
+
+We can look at the estimated coefficients to see the result:
+
+```{r}
+coef(summary(binom_glm))
+```
+
+**Important**: The estimates are on the scale of the linear predictor, which is the logit (log-odds) scale. The intercept corresponds to the log-odds of passing for the reference group (adults), and the coefficient for `age_groupchild` corresponds to the difference in log-odds between adults and children.
+
+So the logit (log-odds) for adults to pass is 0.405. To convert that to a probability, we can use the inverse logit function:
+
+$\pi = \frac{\exp(\eta)}{1+\exp(\eta)}$
+
+Calculating that in R:
+
+```{r}
+eta_adults <- coef(binom_glm)[["(Intercept)"]]
+p_adults <- exp(eta_adults) / (1 + exp(eta_adults))
+p_adults
+```
+
+Perfect. It is as we saw when we summarised the data -- this is the observed pass rate for adults.
+
+To find the probability of passing for children, we first calculate the logit for children by adding the coefficient for `age_groupchild` to the intercept:
+
+Logit for children = 0.405 + 0.860 = 1.265
+
+Then we convert that to a probability:
+```{r}
+eta_children <- eta_adults + coef(binom_glm)[["age_groupchild"]]
+p_children <- exp(eta_children) / (1 + exp(eta_children))
+p_children
+```
+
+Perfect again.
+
+### The odds ratio
+
+It is useful to know about and use something called the **odds ratio**. The odds ratio compares the odds of an event happening in two situations. In our example, we can calculate the odds ratio for passing the test for children compared to adults.
+
+Let's use the logit values we calculated above, which we have to exponentiate to transform back to odds:
+
+- Odds for adults: exp(0.405)
+- Odds for children: exp(1.265)
+
+The odds ratio (OR) for children compared to adults is:
+
+$$\exp(1.265) / \exp(0.405) = \exp(1.265 - 0.405) = \exp(0.860) = 2.363$$
+
+In the line above, notice the $exp(0.860)$ term. The number 0.860 is exactly the coefficient for `age_groupchild` in the model output. So we can get the odds ratio directly from the model coefficients by exponentiating the coefficient for `age_groupchild`. Put another way, the coefficient for `age_groupchild` is the log-odds ratio for children compared to adults.
+
+This isn't magic. Its just a straightforward consequence of how the logit link function works. In the following example of binomial regression, you will see how with a continuous explanatory variable, the coefficient (slope) corresponds to the change in log-odds for a one-unit increase in the explanatory variable, and exponentiating that coefficient gives the odds ratio for a one-unit increase.
+
+
+## Beetle mortality and insecticide dose (aggregated data)
+
+Let's work though an example of binomial regression, with data in what we call *aggregated* format. This simply means that we have counts of successes and failures for groups of individuals, rather than individual-level 0/1 data.
+
+Eight groups of beetles were exposed to an insecticide dose for 5 hours. For each dose level, we know how many beetles were tested and how many died. This is **binomial (aggregated)** data.
 
 ```{r}
 #| echo: false
@@ -326,10 +514,15 @@ The inverse link (back-transformation) is the **logistic function**:
 $\pi_i = \frac{\exp(\eta_i)}{1+\exp(\eta_i)}$
 
 ::: {.callout-important}
-**Why the logit link?**  
+**Why the logit link?**
+
 It maps probabilities $(0,1)$ to the whole real line $(-\infty,\infty)$,
 so the linear predictor can take any value while $\pi_i$ stays valid, i.e., [0,1].
+
+The logit is also known as the log of the odds.
 :::
+
+
 
 <!---
 **Think–Pair–Share** (#tps-identity-link-binary) What would go wrong if we used the identity link $E(y_i)=\eta_i$ for a binary response variable? And which link function is this, by the way?
@@ -370,6 +563,14 @@ Use `cbind(successes, failures)` in `glm(..., family = binomial)`.
 :::
 
 ## Interpreting coefficients: log-odds, odds ratios, and probabilities**
+
+Recall that the linear predictor is on the logit scale:
+
+$$\eta_i = \log\left(\frac{\pi_i}{1-\pi_i}\right) = \beta_0 + \beta_1 x_i$$
+
+Another term for logit is **log-odds**. 
+
+
 
 In logistic regression:
 

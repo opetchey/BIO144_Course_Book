@@ -237,7 +237,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./9.1-GLM2-binary-data.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Binary data (L9)</span></a>
+ <span class="menu-text">Binomial data (L9)</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -331,7 +331,7 @@ window.Quarto = {
 </header>
 
 
-<p>In all the previous chapters, we have focused on <strong>linear models</strong> for continuous response variables that can, mathematically, take negative values. However, response variables can be otherwise. For example, we might have a response variable that is the number of offspring produced by a mother. This is a <em>count</em> type of response variable. In this chapter, you’ll see why the models we used so far are usually innapropriate for count data. Then you’ll learn about a more appropriate type of model: <strong>Generalized Linear Models (GLMs)</strong>.</p>
+<p>In all the previous chapters, we have focused on <strong>linear models</strong>. These are suitable for continuous response variables that can, mathematically, take negative values. However, response variables can be otherwise. For example, we might have a response variable that is the number of offspring produced by a mother. This is a <em>count</em> type of response variable. In this chapter, you’ll see why the models we used so far are usually inappropriate for count data. Then you’ll learn about a more appropriate type of model: <strong>Generalized Linear Models (GLMs)</strong>.</p>
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
 <p>So far in BIO144, we have focused on <strong>linear models</strong> fitted using <code>lm()</code>. These models assume:</p>
@@ -340,7 +340,7 @@ window.Quarto = {
 <li>Normally distributed residuals.</li>
 <li>Constant variance (homoscedasticity).</li>
 </ul>
-<p>Linear models are powerful, but these assumptions are often violated in biological data. In this chapter we move beyond normal linear models to handle an important new type of response variable: <strong>counts</strong>. We introduce <strong>Generalized Linear Models (GLMs)</strong>, which extend linear models by allowing the response variable to follow distributions other than the normal distribution.</p>
+<p>Linear models are powerful, but these assumptions can be violated in biological data. In this chapter we move beyond linear models to handle an important new type of response variable: <strong>counts</strong>. We introduce <strong>Generalized Linear Models (GLMs)</strong>, which extend linear models by allowing the response variable to follow distributions other than the normal distribution.</p>
 <p>By the end of this chapter, you should be able to:</p>
 <ul>
 <li>Recognise when linear regression is inappropriate</li>
@@ -435,7 +435,7 @@ Caution
 Violating model assumptions can lead to biased estimates, incorrect standard errors, and misleading p-values.</p>
 </div>
 </div>
-<p>Another issue remains, however: linear regression can predict negative counts, which are impossible. We can see this in a plot of the data and the fitted regression line:</p>
+<p>Another issue remains, however: linear regression can predict negative counts, which are impossible. We can see this in a plot of the data and the fitted regression line.</p>
 </section>
 <section id="why-linear-regression-fails-for-count-data" class="level3">
 <h3 class="anchored" data-anchor-id="why-linear-regression-fails-for-count-data">Why linear regression fails for count data</h3>
@@ -443,7 +443,6 @@ Violating model assumptions can lead to biased estimates, incorrect standard err
 <li>The normal distribution is for continuous variables.</li>
 <li>It allows negative values.</li>
 <li>It assumes constant variance.</li>
-<li>Count data are discrete, non-negative, and typically heteroscedastic.</li>
 </ul>
 <!---
 **Think–Pair–Share (#a_why_poisson)** Why is a normal distribution a poor choice for count data? Which assumptions can be expected to fail?
@@ -481,17 +480,19 @@ Important
 <p>In words, this means an observed response variable <span class="math inline">\(y_i\)</span> is modelled as a linear combination of explanatory variables plus normally distributed error.</p>
 <p>This implies that</p>
 <p><span class="math display">\[y_i \sim N(\mu_i, \sigma^2)\]</span></p>
-<p>where <span class="math inline">\(mu_i\)</span> is the mean of the normal distribution for observation <span class="math inline">\(i\)</span>, and</p>
-<p><span class="math display">\[\mu_i = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}\]</span> is the mean of the normal distribution for observation <span class="math inline">\(i\)</span>.</p>
+<p>where <span class="math inline">\(\mu_i\)</span> is the mean of the normal distribution for observation <span class="math inline">\(i\)</span>, and</p>
+<p><span class="math display">\[\mu_i = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}\]</span></p>
 <p>Moving to things you don’t know:</p>
 <p>A generalised linear model has three components: a random component (<em>family</em>), a systematic component (<em>linear predictor</em>), and a link function. In a linear model (like the ones you already saw), these are as follows:</p>
 <ul>
 <li><strong>Random component (family)</strong>: Normal distribution <span class="math inline">\(N(\mu_i, \sigma^2)\)</span></li>
 <li><strong>Systematic component (linear predictor)</strong>: <span class="math inline">\(\eta_i = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}\)</span></li>
-<li><strong>Link function</strong>: Identity link, <span class="math inline">\(\mu_i = \eta_i\)</span>. So the link function is <span class="math inline">\(g(\mu_i) = \mu_i\)</span> – that is, the identity link.</li>
+<li><strong>Link function</strong>: Identity link, <span class="math inline">\(\mu_i = \eta_i\)</span>.</li>
 </ul>
 <p>Putting this all together in a description of a generalised linear model we have:</p>
-<p>Family: <span class="math inline">\(y_i \sim N(\mu_i, \sigma^2)\)</span> Linear predictor: <span class="math inline">\(g(\mu_i) = \eta_i = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}\)</span> Link function: <span class="math display">\[g(\mu_i) = \mu_i\]</span></p>
+<p><strong>Family</strong>: <span class="math inline">\(y_i \sim N(\mu_i, \sigma^2)\)</span></p>
+<p><strong>Linear predictor</strong>: <span class="math inline">\(\eta_i = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}\)</span></p>
+<p><strong>Link function</strong>: <span class="math inline">\(\mu_i = \eta_i\)</span></p>
 <p>In R, we use the function <code>glm()</code> to fit generalised linear models. For a normal linear model of the Soay sheep data, we would write:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>mod_soay_glm <span class="ot">&lt;-</span> <span class="fu">glm</span>(fitness <span class="sc">~</span> body.size, <span class="at">data =</span> soay, <span class="at">family =</span> <span class="fu">gaussian</span>(<span class="at">link =</span> <span class="st">"identity"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -546,11 +547,17 @@ F-statistic: 198.7 on 1 and 98 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 </div>
 <p>The coefficients table is exactly the same. Other parts of the output differ slightly because <code>glm()</code> uses maximum likelihood estimation (MLE) while <code>lm()</code> uses least squares estimation. Put that aside for now; the key point is that both R functions fit the same model when using a normal family with an identity link.</p>
-<p>So, you now know what is a generalised linear model. In one sentence it is a model where the response variable follows a specified distribution (family), the mean of that distribution is linked to a linear combination of explanatory variables (linear predictor) via a link function. We will now look at a specific type of GLM for count data: the Poisson GLM.</p>
+<p>So, you now know what is a generalised linear model.</p>
+<p>In one sentence, a GLM is a model where the response variable follows a specified distribution (family), the mean of that distribution is linked to a linear combination of explanatory variables (linear predictor) via a link function. We will now look at a specific type of GLM for count data: the Poisson GLM.</p>
 </section>
 <section id="poisson-glm" class="level2">
 <h2 class="anchored" data-anchor-id="poisson-glm">Poisson GLM</h2>
-<p>We need three components for a GLM: 1. A probability distribution (family) for the response variable. 2. A linear predictor. 3. A link function relating the linear predictor to the mean of the distribution.</p>
+<p>We need three components for a GLM:</p>
+<ol type="1">
+<li>A probability distribution (family) for the response variable.</li>
+<li>A linear predictor.</li>
+<li>A link function relating the linear predictor to the mean of the distribution.</li>
+</ol>
 <p>Let’s start with a discussion of the probability distribution (family) for count data. And what we’re aiming for is a probability distribution that we expect to be a reasonably good starting point for modelling count data. A common probability model for counts is the <strong>Poisson distribution</strong>. The Poisson distribution is often the default starting point for modelling counts because it is the simplest distribution that respects characteristics of count data: discreteness, non-negativity, and increasing variance.</p>
 <p>Unlike the normal distribution, which has two parameters (mean and spread), the Poisson distribution has only one parameter: the mean <span class="math inline">\(\lambda\)</span>. In the Poisson distribution, the mean and variance are equal.</p>
 <p>In a Poisson distribution, the probability of observing a count <span class="math inline">\(y\)</span> is given by:</p>
@@ -585,7 +592,7 @@ F-statistic: 198.7 on 1 and 98 DF,  p-value: &lt; 2.2e-16</code></pre>
 <pre><code>[1] 0</code></pre>
 </div>
 </div>
-<p>The warning message tells us that the Poisson distribution is only defined for non-negative integers. This is a key property of the Poisson distribution: it is only defined for counts (0, 1, 2, …).</p>
+<p>The warning message tells us that the Poisson distribution is only defined for non-negative integers. This is a key property of the Poisson distribution: it is only defined for integers (0, 1, 2, …).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dpois</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="at">lambda =</span> <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -639,7 +646,11 @@ In a Poisson distribution, the mean and variance are equal. This captures an imp
 <p><span class="math inline">\(\mu_i = \exp(\eta_i)\)</span></p>
 <p>The log link ensures that the expected count is always positive, regardless of the values of the <span class="math inline">\(\beta\)</span> parameters and explanatory variables. Whatever the value of the linear predictor <span class="math inline">\(\eta_i\)</span>, the exponential of it <span class="math inline">\(\exp(\eta_i)\)</span> is always positive.</p>
 <p>Putting this all together, a Poisson GLM can be summarised as:</p>
-<p>Family: <span class="math inline">\(y_i \sim \text{Poisson}(\mu_i)\)</span>$ Linear predictor: <span class="math inline">\(\eta_i = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}\)</span>$ Link function: <span class="math inline">\(\log(\mu_i) = \eta_i\)</span>$</p>
+<p><strong>Family</strong>: <span class="math inline">\(y_i \sim \text{Poisson}(\mu_i)\)</span></p>
+<p><strong>Linear predictor</strong>: <span class="math inline">\(\eta_i = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}\)</span></p>
+<p><strong>Link function</strong>: <span class="math inline">\(\log(\mu_i) = \eta_i\)</span></p>
+<p>We could also write this as:</p>
+<p><span class="math display">\[y_i \sim \mathrm{Poisson}\!\left(\exp\!\left(\beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}\right)\right)\]</span></p>
 <section id="parameter-estimation" class="level3">
 <h3 class="anchored" data-anchor-id="parameter-estimation">Parameter estimation</h3>
 <p>We observe the counts <span class="math inline">\(y_i\)</span>, and the model predicts the expected counts <span class="math inline">\(\mu_i\)</span>. The GLM estimates the parameters <span class="math inline">\(\beta_0, \beta_1, \ldots, \beta_p\)</span> that make the observed data most probable under the assumed Poisson model. This is done using maximum likelihood estimation (MLE). The likelihood of the data given the model is maximised.</p>
@@ -709,7 +720,35 @@ AIC: 378.16
 Number of Fisher Scoring iterations: 5</code></pre>
 </div>
 </div>
-<p>Coefficients are estimated on the <strong>log scale</strong>.</p>
+<p>So we have an intercept of <span class="math inline">\(\beta_0 = -1.253\)</span>. Because of the log link, this means that when body size is 0 kg (which is outside the range of our data), the expected count of fitness is <span class="math inline">\(\exp(-1.253) = 0.285\)</span> offspring.</p>
+<p>But what is the biological meaning of the slope for body size: <span class="math inline">\(\beta_1 = 0.054\)</span>? It must be describing how something changes as a result of 1 unit change in body size (1 kg). But what?</p>
+<p>Lets’s find out by calculating the expected fitness for two body sizes that differ by 1 kg.</p>
+<p>For a sheep of body size 40 kg, the linear predictor is:</p>
+<p><span class="math inline">\(\eta = \beta_0 + \beta_1 \times \text{body.size} = -1.253 + 0.054 \times 40 = 0.907\)</span></p>
+<p>But this doesn’t mean we predict a fitness of 0.907 offspring. Instead, we need to back-transform this using the link function. Since we used a log link, we exponentiate the linear predictor to get the expected count:</p>
+<p><span class="math inline">\(E(y_{40}) = \exp(\eta) = \exp(0.907) = 2.48\)</span></p>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Caution
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Some of the calculations in this text are done with rounded values for clarity. In practice, you should use the full precision values from R to avoid rounding errors. You will see below that the predicted value calculated here (2.48) differs from that calculated in R (2.46) due to rounding. Always do calculations with full precision values from R, and only round the final result if needed.</p>
+</div>
+</div>
+<p>Let us now calculate the expected fitness for a sheep of body size 41 kg. First calculate the value of the linear predictor:</p>
+<p><span class="math inline">\(\eta = -1.253 + 0.054 \times 40 + 0.054 = 0.907 + 0.054 = 0.961\)</span></p>
+<p>The expected count is then <span class="math inline">\(E(y) = \exp(0.961) = 2.61\)</span></p>
+<p>Now let’s compare the value of the predicted fitness for the 41 and 40 kg sheep:</p>
+<p><span class="math inline">\(\frac{E(y_{41})}{E(y_{40})} = \frac{\exp(0.907 + 0.054)}{\exp(0.907)}\)</span></p>
+<p>And because <span class="math inline">\(\frac{\exp(a)} {\exp(b)} = \exp(a - b)\)</span>, we have:</p>
+<p><span class="math inline">\(\frac{E(y_{41})}{E(y_{40})} = \exp(0.054) = 1.055\)</span></p>
+<p>This means that each increase in body size of 1 kg multiplies the expected count of fitness by a factor of <span class="math inline">\(\exp(0.054) = 1.055\)</span> (i.e., a 5.5% increase).</p>
+<p>This shows that the exponentiated coefficient <span class="math inline">\(\exp(\beta_1)\)</span> gives the multiplicative change in expected count for a one-unit change in the explanatory variable.</p>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -726,11 +765,8 @@ Important
 <!---
 **Think–Pair–Share** (#tps-what-change-beta) If $\beta=0.05$ what change in the expected count would be caused by an increase in body mass of 1 kg? As well as a numeric value, specify whether it is used additively or multiplicatively.
 --->
-<p>To interpret the coefficient for body size (<span class="math inline">\(\beta_1 = 0.05\)</span>), we exponentiate it: <span class="math inline">\(\exp(0.05) \approx 1.65\)</span></p>
-<p>This means that for each additional kilogram of body size, the expected count of fitness increases by a factor of approximately 1.65 (i.e., a 65% increase). We use the number multiplicatively because of the log link function.</p>
-<p>To make a prediction of the expected count for a given body size, we back-transform the linear predictor:</p>
-<p><span class="math inline">\(E(y) = \exp(\beta_0 + \beta_1 \times \text{body.size})\)</span></p>
-<p>For example, for a body size of 40 kg:</p>
+<p>This means that for each additional kilogram of body size, the expected count of fitness increases by a factor of approximately 1.06 (i.e., a 6% increase). We use the number multiplicatively because of the log link function.</p>
+<p>Pleaes note that of course all these calculations can be done in R. For example, for a body size of 40 kg:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>body_size_example <span class="ot">&lt;-</span> <span class="dv">40</span></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>linear_predictor <span class="ot">&lt;-</span> <span class="fu">coef</span>(soay_glm)[<span class="dv">1</span>] <span class="sc">+</span> <span class="fu">coef</span>(soay_glm)[<span class="dv">2</span>] <span class="sc">*</span> body_size_example</span>
@@ -1471,8 +1507,8 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./9.1-GLM2-binary-data.html" class="pagination-link" aria-label="Binary data (L9)">
-        <span class="nav-page-text">Binary data (L9)</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./9.1-GLM2-binary-data.html" class="pagination-link" aria-label="Binomial data (L9)">
+        <span class="nav-page-text">Binomial data (L9)</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

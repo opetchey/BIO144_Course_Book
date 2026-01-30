@@ -9,7 +9,7 @@ source("_common.R")
 
 ## Introduction
 
-In the previous chapter we moved from linear models and normal errors to generalized linear models (GLMs) to handle **count responses** with a Poisson GLM. In this chapter we move to another common case: **binary responses** and **binomial responses*. Because binary data is a special case of binomial data, we will often refer to both as "binomial data".
+In the previous chapter we moved from linear models and normal errors to generalized linear models (GLMs) to handle count responses with a Poisson GLM. In this chapter we move to another common case: **binary** and **binomial responses**. Because binary data is a special case of binomial data, we will often refer to both as "binomial data".
 
 At the heart of binomial data is an event that happens or does not happen. Examples include:
 
@@ -30,8 +30,8 @@ The central question is therefore:
 
 In this chapter we will cover:
 
-- Probabilities, odds, log-odds, odds ratios (the link function).
 - A review of Bernoulli and binomial distributions (the family).
+- Probabilities, odds, log-odds, odds ratios (the link function).
 - Two examples of binomial GLM.
 - Interpreting coefficients (odds ratios and probabilities).
 - Model assumptions, deviances, and (some) model checking.
@@ -42,9 +42,9 @@ In this chapter we will cover:
 
 ## Binary and binomial data
 
-When we model binary/binomial data, we are often interested in the **probability** of an event happening. For example, the probability of a heart attack, or the probability of a species being present at a site.
+When we model binary/binomial data, we are interested in the **probability** of an event happening. For example, the probability of a heart attack, or the probability of a species being present at a site. And we are interested in whether such probabilities differ between groups, or vary along a continuous explanatory variable.
 
-Let us label this probability $\pi$. So $\pi$ is the probability of "yes" (e.g. pass a test), and $1-\pi$ is the probability of "no" (e.g. fail a test).
+Let us label this probability $\pi$. So $\pi$ is the probability of "yes" (e.g., pass a test), and $1-\pi$ is the probability of "no" (e.g., fail a test).
 
 So, if the probability $\pi$ is 0.8, then there is an 80% chance of "yes" and a 20% chance of "no". In R we can simulate the pass or fail of each of a group of people with an expected pass rate (probability) of 0.8 like this:
 
@@ -132,7 +132,7 @@ You should now understand two important things:
 
 ### Odds
 
-OK, so we know that when we analyse binary/binomial data, we are interested in the **probability** of an event happening, denoted $\pi$.
+OK, so we know that when we analyse binary/binomial data, we are interested in the **probability** of an event happening, denoted by $\pi$.
 
 A related quantity is the **odds** of the event happening. The odds is defined as the ratio of the probability of the event happening to the probability of it not happening:
 
@@ -146,10 +146,10 @@ So, odds and probabilities are related mathematically, but they are not the same
 
 ```{r}
 prob_seq <- seq(0.01, 0.99, by = 0.01)
+odds_seq <- prob_seq / (1 - prob_seq)
 ggplot(mapping = aes(x = prob_seq, y = odds_seq)) +
   geom_line() +
-  labs(x = "Probability", y = "Odds") #+
-  #scale_y_continuous(limits = c(0, 10))
+  labs(x = "Probability", y = "Odds") 
 ```
 
 So, when we transform probabilities to odds, we go from a bounded scale (0 to 1) to an unbounded scale (0 to infinity).
@@ -163,7 +163,6 @@ Another useful transformation is the **log-odds**, also known as the **logit**:
 Here is the relationship between probability and log-odds:
 
 ```{r}
-odds_seq <- prob_seq / (1 - prob_seq)
 log_odds_seq <- log(odds_seq)
 ggplot(mapping = aes(x = prob_seq, y = log_odds_seq)) +
   geom_line() +
@@ -189,7 +188,7 @@ The **odds ratio (OR)** compares the odds in two groups:
 
 Odds Ratio = OR = $\frac{\text{odds in group 1}}{\text{odds in group 2}}$.
 
-Let's go through a couple of examples. First, suppose in group 1 the probability of success is 0.2 in both groups. Then the odds in both groups are:
+Let's go through a couple of examples. First, suppose the probability of success is 0.2 in both groups. Then the odds in both groups are:
 
 - Odds in group 1 and 2: $\frac{0.2}{1-0.2} = \frac{0.2}{0.8} = 0.25$
 
@@ -199,34 +198,35 @@ $OR = \frac{0.25}{0.25} = 1$
 
 Now take an example where the probability of success in group 1 is 0.4, and in group 2 it is 0.2. Then the odds in each group are:
 
-- Odds in group 1: $\frac{0.4}{1-0.4} = \frac{0.4}{0.6} \approx 0.6667$
-- Odds in group 2: $\frac{0.2}{1-0.2} = \frac{0.2}{0.8} = 0.25$
+- Odds in group 1: $\frac{0.4}{1-0.4} = \frac{0.4}{0.6} = 0.667$
+- Odds in group 2: $\frac{0.2}{1-0.2} = \frac{0.2}{0.8} = 0.250$
 
 So the odds ratio is:
 
-$OR = \frac{0.6667}{0.25} \approx 2.67$
+$OR = \frac{0.667}{0.250} = 2.67$
 
 This means that the odds of success in group 1 are about 2.67 times the odds of success in group 2.
 
 ::: {.callout-important}
 **So what???**
 
-The reason why the logit is useful is that it maps probabilities (0 to 1) to the whole real line (-infinity to infinity). This is important because in a GLM, the linear predictor can take any value from -infinity to infinity, so we need a link function that can map between the two scales. The logit does this perfectly.
+You will see below that the coefficients in a binomial GLM with logit link correspond to log-odds ratios. Exponentiating those coefficients gives odds ratios. This is a key part of interpreting the results of a binomial GLM.
+
+For example, when we see a coefficient (e.g., slope) close to zero, that means the log-odds ratio is close to zero, which means the odds ratio is close to 1, which means there is little difference in odds between the two groups.
+
 :::
 
-
-(The **log odds ratio** is $\log(OR)$. It is 0 when $OR=1$.)
 
 
 ## A simple binomial GLM
 
-We now have the pieces to define a simple binomial GLM:
+We now have the pieces to define a binomial GLM:
 
 1. **Family**: $y_i \sim \text{Binomial}(n_i,\pi_i)$
 2. **Linear predictor**: $\eta_i = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}$
 3. **Link**: logit link: $\eta_i = \log\left(\frac{\pi_i}{1-\pi_i}\right)$
 
-Let us make a very simple example in which there we are interested in how the probability of passing a test difference between children and adults. We will simulate the data, and then fit a binomial GLM.
+Let us make a simple example in which there we are interested in how the probability of passing a test differs between children and adults. We will simulate the data, and then fit a binomial GLM.
 
 To simulate that data we will define the number of children and adults, and the probability of passing the test in each group:
 
@@ -304,7 +304,7 @@ p_adults
 
 Perfect. It is as we saw when we summarised the data -- this is the observed pass rate for adults.
 
-To find the probability of passing for children, we first calculate the logit for children by adding the coefficient for `age_groupchild` to the intercept:
+To find the probability of passing for children, we calculate the logit value for children by adding the coefficient for `age_groupchild` to the intercept:
 
 Logit for children = 0.405 + 0.860 = 1.265
 
@@ -330,7 +330,7 @@ The odds ratio (OR) for children compared to adults is:
 
 $$\exp(1.265) / \exp(0.405) = \exp(1.265 - 0.405) = \exp(0.860) = 2.363$$
 
-In the line above, notice the $exp(0.860)$ term. The number 0.860 is exactly the coefficient for `age_groupchild` in the model output. So we can get the odds ratio directly from the model coefficients by exponentiating the coefficient for `age_groupchild`. Put another way, the coefficient for `age_groupchild` is the log-odds ratio for children compared to adults.
+In the line above, notice the $\exp(0.860)$ term. The number 0.860 is exactly the coefficient for `age_groupchild` in the model output. So we can get the odds ratio directly from the model coefficients by exponentiating the coefficient for `age_groupchild`. Put another way, the coefficient for `age_groupchild` is the log-odds ratio for children compared to adults.
 
 This isn't magic. Its just a straightforward consequence of how the logit link function works. In the following example of binomial regression, you will see how with a continuous explanatory variable, the coefficient (slope) corresponds to the change in log-odds for a one-unit increase in the explanatory variable, and exponentiating that coefficient gives the odds ratio for a one-unit increase.
 
@@ -404,7 +404,11 @@ tested at each dose.
 ```{r}
 mod_beetle_pois <- glm(Number_killed ~ Dose, data = beetle, family = poisson)
 summary(mod_beetle_pois)$coefficients
+```
 
+One issue that can now happen is that we can get "impossible" predictions: predicted counts killed that exceed the number tested.
+
+```{r}
 # Example of the "impossible" issue:
 dose_example <- 76.54
 pred_killed <- predict(mod_beetle_pois,
@@ -428,107 +432,9 @@ Use a binomial/binary model when each observation is a 0/1 response.
 **Think–Pair–Share (#a_probability_not_linear)** Why is it dangerous to model probabilities directly using a linear model?
 --->
 
-## The probability model: Bernoulli and binomial
-
-### Bernoulli (binary) data
-
-For a single 0/1 observation:
-
-$y_i \sim \text{Bernoulli}(\pi),\quad P(Y=1)=\pi,\quad P(Y=0)=1-\pi$
-
-In words, this means that the probability of success ($y_i=1$) is $\pi$, and the probability of failure ($y_i=0$) is $1-\pi$. And that this probability is Bernoulli distributed. Bernoulli is a special case of the binomial distribution with $n=1$.
-
-In R, we can calculate the probability of one success (1) in one trial as:
-
-```{r}
-dbinom(1, size = 1, prob = 0.7)
-```
-
-And the probability of zero successes (0) in one trial as:
-
-```{r}
-dbinom(0, size = 1, prob = 0.7)
-```
 
 
-Mean and variance are:
-
-$E(y_i)=\pi,\quad Var(y_i)=\pi(1-\pi)$
-
-### Binomial (aggregated) data
-
-For $y_i$ successes out of $n$ trials:
-
-$y_i \sim \text{Binomial}(n,\pi)$
-
-This means that the number of successes $Y$ in $n$ independent Bernoulli trials, each with success probability $\pi$, follows a binomial distribution.
-
-And, for example, the probability of getting $n$ success in 10 trials with success probability 0.7 is:
-
-```{r}
-p_n_successes <- dbinom(1:10, size = 10, prob = 0.7)
-ggplot(mapping = aes(x = 1:10, y = p_n_successes)) +
-  geom_point() +
-  geom_line(col="lightgrey") +
-  scale_x_continuous(breaks = seq(0, 10, by = 1)) +
-  labs(x = "Number of successes", y = "Probability")
-```
-
-This is actually the probability distribution for getting $n$ heads when we toss a coin 10 times, if the coin has a probability of heads of 0.7.
-
-
-
-Mean and variance are:
-
-$E(Y)=n\pi,\quad Var(Y)=n\pi(1-\pi)$
-
-::: {.callout-note}
-**Key pattern**  
-For Bernoulli/binomial data, the variance is *determined by the mean*.
-This is one reason "constant variance" fails for linear models.
-:::
-
-::: {.callout-note}
-Not that the Bernoulli distribution is a special case of the binmoial when number of trials is one. I.e., $y_i \sim \text{Bernoulli}(\pi)$ is equivalent to $y_i \sim \text{Binomial}(1, \pi)$.
-:::
-
-
-<!---
-**Think–Pair–Share** (#tps-binom-variance) For fixed $n$, at what value of $\pi$ is $Var(Y)=n\pi(1-\pi)$ largest? At what values of $\pi$ is it smallest?
---->
-
-## Logistic regression: the binomial GLM
-
-We use the usual GLM structure:
-
-
-1. **Family**: $y_i \sim \text{Binomial}(n_i,\pi_i)$
-
-2. **Linear predictor**: $\eta_i = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}$
-
-
-3. **Link**: logit link: $\eta_i = \log\left(\frac{\pi_i}{1-\pi_i}\right)$
-
-The inverse link (back-transformation) is the **logistic function**:
-
-$\pi_i = \frac{\exp(\eta_i)}{1+\exp(\eta_i)}$
-
-::: {.callout-important}
-**Why the logit link?**
-
-It maps probabilities $(0,1)$ to the whole real line $(-\infty,\infty)$,
-so the linear predictor can take any value while $\pi_i$ stays valid, i.e., [0,1].
-
-The logit is also known as the log of the odds.
-:::
-
-
-
-<!---
-**Think–Pair–Share** (#tps-identity-link-binary) What would go wrong if we used the identity link $E(y_i)=\eta_i$ for a binary response variable? And which link function is this, by the way?
---->
-
-## Fitting logistic regression in R (aggregated binomial data)
+### Doing it right!
 
 For aggregated binomial data, we provide **successes and failures**:
 
@@ -562,7 +468,7 @@ Use `cbind(successes, failures)` in `glm(..., family = binomial)`.
 - failures: number of 0s
 :::
 
-## Interpreting coefficients: log-odds, odds ratios, and probabilities**
+## Interpreting coefficients: log-odds, odds ratios, and probabilities
 
 Recall that the linear predictor is on the logit scale:
 
@@ -603,13 +509,13 @@ even if probabilities feel more intuitive?
 
 ## Analysis of deviance (likelihood-based ANOVA)
 
-As for count-data GLMs, we use likelihood and deviance. Nested models can be compared with a $\chi^2$ test.
+As for count-data GLMs, the estimation of the coefficients is by maximum likelihood estimation (MLE). The measure of goodness-of-fit is the deviance. We can use an analysis of deviance table to see how much deviance is explained by dose.
 
 ```{r}
 anova(beetle_glm, test = "Chisq")
 ```
 
-As with the Poisson GLM, the model is fit using maximum likelihood estimation, and the deviance is used to assess goodness-of-fit. So we see a table quite similar to that for the Poisson GLM. In this case the Dose row shows a huge amount of the deviance is explained by dose, and so the $p$-value is very small.
+We see a table quite similar to that for the Poisson GLM. In this case the Dose row shows a huge amount of the deviance (259.23 units) is explained by dose, and so the $p$-value is very small.
 
 
 ## Plotting the fitted relationship
@@ -639,7 +545,9 @@ ggplot() +
   labs(x = "Dose", y = "Predicted mortality probability")
 ```
 
-The plot is intentionally made to show what happens at very low and very high dose. At very low dose, the predicted mortality probability approaches 0, and at very high dose it approaches 1. This is a key feature of logistic regression: the predicted probabilities are always between 0 and 1. We also see that the standard errors are larger at intermediate doses, where the slope of the curve is steepest. And the standard errors are smaller at very low and very high doses, where the curve flattens out.
+The plot is intentionally made to show what happens at very low and very high dose. At very low dose, the predicted mortality probability approaches 0, and at very high dose it approaches 1. This is a key feature of binomial regression: the predicted probabilities are always between 0 and 1. No matter the value of the linear predictor, the inverse logit transformation always maps it to a probability between 0 and 1.
+
+We also see that the standard errors are larger at intermediate doses, where the slope of the curve is steepest. And the standard errors are smaller at very low and very high doses, where the curve flattens out.
 
 ### Reporting
 
@@ -651,7 +559,7 @@ When reporting results from a logistic regression, you might say something like:
 
 ## Overdispersion in aggregated binomial data
 
-Overdispersion means the variability is larger than the binomial model expects. A quick (rough) check for aggregated binomial data is:
+Overdispersion means the variability is larger than the binomial model assumes. A quick (rough) check for aggregated binomial data is:
 
 $\text{Residual deviance} \approx \text{df}$
 
@@ -664,6 +572,8 @@ deviance(beetle_glm)
 df.residual(beetle_glm)
 deviance(beetle_glm) / df.residual(beetle_glm)
 ```
+
+The ratio is about 1.4, which is suggests some overdispersion, but is on the limit of what is usually considered acceptable.
 
 ::: {.callout-caution}
 **Type I error inflation (binomial overdispersion)**  
@@ -710,7 +620,7 @@ plasma <- read_csv("datasets/plasma_esr_original_HSAUR3.csv")
 Here are the first few rows of the data:
 
 ```{r}
-head(plasma)
+plasma
 ```
 
 The ESR response variable is in two variables. `ESR` is a factor with levels "low" and "high". It is also present as a numeric variable `y`, coded 0 (low) and 1 (high). The explanatory variables are `fibrinogen` and `globulin`, both continuous.
@@ -747,7 +657,7 @@ par(mfrow = c(1, 1))
 
 It looks like higher fibrinogen and higher globulin are associated with higher probability of high ESR. The pattern appears stronger for fibrinogen.
 
-### Fit the logistic regression model
+### Fit the binomial regression model
 
 In the case of non-aggregated individual-level 0/1 data, we simply use `y` as the response variable. We have to remember to specify `family = binomial` in `glm()`.
 
@@ -788,7 +698,7 @@ include more data, simpler models, or penalized methods (advanced topic).
 
 ### 2. Probability vs odds ratio in reporting
 
-Odds ratios are the default "native" scale of logistic regression, but
+Log odds ratios are the default "native" scale of the coefficients logistic regression, but
 probabilities are often easier to interpret. In practice, you may report
 odds ratios **and** translate to probabilities at meaningful explanatory variable values.
 

@@ -361,7 +361,43 @@ You must specify the **family** in `glm()`. If you omit the link function, R use
 summary(soay_glm)
 ```
 
-Coefficients are estimated on the **log scale**.
+So we have an intercept of $\beta_0 = -1.253$. Because of the log link, this means that when body size is 0 kg (which is outside the range of our data), the expected count of fitness is $\exp(-1.253) = 0.285$ offspring.
+
+But what is the biological meaning of the slope for body size: $\beta_1 = 0.054$? It must be describing how something changes as a result of 1 unit change in body size (1 kg). But what?
+
+Lets's find out by calculating the expected fitness for two body sizes that differ by 1 kg.
+
+For a sheep of body size 40 kg, the linear predictor is:
+
+$\eta = \beta_0 + \beta_1 \times \text{body.size} = -1.253 + 0.054 \times 40 = 0.907$
+
+
+But this doesn't mean we predict a fitness of 0.907 offspring. Instead, we need to back-transform this using the link function. Since we used a log link, we exponentiate the linear predictor to get the expected count:
+
+$E(y_{40}) = \exp(\eta) = \exp(0.907) = 2.48$
+
+::: {.callout-caution}
+Some of the calculations in this text are done with rounded values for clarity. In practice, you should use the full precision values from R to avoid rounding errors. You will see below that the predicted value calculated here (2.48) differs from that calculated in R (2.46) due to rounding. Always do calculations with full precision values from R, and only round the final result if needed.
+:::
+
+Let us now calculate the expected fitness for a sheep of body size 41 kg. First calculate the value of the linear predictor:
+
+$\eta = -1.253 + 0.054 \times 40 + 0.054 = 0.907 + 0.054 = 0.961$
+
+The expected count is then $E(y) = \exp(0.961) = 2.61$
+
+Now let's compare the value of the predicted fitness for the 41 and 40 kg sheep:
+
+$\frac{E(y_{41})}{E(y_{40})} = \frac{\exp(0.907 + 0.054)}{\exp(0.907)}$
+
+And because $\frac{\exp(a)} {\exp(b)} = \exp(a - b)$, we have:
+
+$\frac{E(y_{41})}{E(y_{40})} = \exp(0.054) = 1.055$
+
+This means that each increase in body size of 1 kg multiplies the expected count of fitness by a factor of $\exp(0.054) = 1.055$ (i.e., a 5.5% increase).
+
+This shows that the exponentiated coefficient $\exp(\beta_1)$ gives the multiplicative change in expected count for a one-unit change in the explanatory variable.
+
 
 ::: {.callout-important}
 A one-unit increase in an explanatory variable multiplies the expected count by $\exp(\beta)$.
@@ -372,22 +408,21 @@ A one-unit increase in an explanatory variable multiplies the expected count by 
 --->
 
 
-To interpret the coefficient for body size ($\beta_1 = 0.05$), we exponentiate it:
-$\exp(0.05) \approx 1.65$
+This means that for each additional kilogram of body size, the expected count of fitness increases by a factor of approximately 1.06 (i.e., a 6% increase). We use the number multiplicatively because of the log link function.
 
-This means that for each additional kilogram of body size, the expected count of fitness increases by a factor of approximately 1.65 (i.e., a 65% increase). We use the number multiplicatively because of the log link function.
 
-To make a prediction of the expected count for a given body size, we back-transform the linear predictor:
 
-$E(y) = \exp(\beta_0 + \beta_1 \times \text{body.size})$
+Pleaes note that of course all these calculations can be done in R. For example, for a body size of 40 kg:
 
-For example, for a body size of 40 kg:
 ```{r}
 body_size_example <- 40
 linear_predictor <- coef(soay_glm)[1] + coef(soay_glm)[2] * body_size_example
 expected_count <- exp(linear_predictor)
 expected_count
 ```
+
+
+
 
 ::: {.callout-note}
 Although counts can only be integers, the expected value from a Poisson model can be any positive real number. This is because the expected value is a mean over many possible counts.

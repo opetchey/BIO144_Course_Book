@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Binary data (L9) – BIO144 Course Book (version 2026)</title>
+<title>Binomial data (L9) – BIO144 Course Book (version 2026)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -147,7 +147,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./9.1-GLM2-binary-data.html">Binary data (L9)</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./9.1-GLM2-binary-data.html">Binomial data (L9)</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -237,7 +237,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./9.1-GLM2-binary-data.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Binary data (L9)</span></a>
+ <span class="menu-text">Binomial data (L9)</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -276,26 +276,25 @@ window.Quarto = {
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
   <li><a href="#overview" id="toc-overview" class="nav-link" data-scroll-target="#overview">Overview</a></li>
-  <li><a href="#a-warm-up-the-chi-square-test-for-a-22-table" id="toc-a-warm-up-the-chi-square-test-for-a-22-table" class="nav-link" data-scroll-target="#a-warm-up-the-chi-square-test-for-a-22-table">A warm-up: the Chi-square test for a 2×2 table</a>
+  <li><a href="#binary-and-binomial-data" id="toc-binary-and-binomial-data" class="nav-link" data-scroll-target="#binary-and-binomial-data">Binary and binomial data</a></li>
+  <li><a href="#probabilities-odds-log-odds-and-odds-ratios" id="toc-probabilities-odds-log-odds-and-odds-ratios" class="nav-link" data-scroll-target="#probabilities-odds-log-odds-and-odds-ratios">Probabilities, odds, log-odds, and odds ratios</a>
   <ul class="collapse">
-  <li><a href="#a-concrete-example-dataset" id="toc-a-concrete-example-dataset" class="nav-link" data-scroll-target="#a-concrete-example-dataset">A concrete example dataset</a></li>
+  <li><a href="#odds" id="toc-odds" class="nav-link" data-scroll-target="#odds">Odds</a></li>
+  <li><a href="#log-odds-logit" id="toc-log-odds-logit" class="nav-link" data-scroll-target="#log-odds-logit">Log-odds (logit)</a></li>
+  <li><a href="#odds-ratio" id="toc-odds-ratio" class="nav-link" data-scroll-target="#odds-ratio">Odds ratio</a></li>
   </ul></li>
-  <li><a href="#quantifying-an-association-risk-and-odds" id="toc-quantifying-an-association-risk-and-odds" class="nav-link" data-scroll-target="#quantifying-an-association-risk-and-odds">Quantifying an association: risk and odds</a></li>
-  <li><a href="#from-tables-to-regression-models" id="toc-from-tables-to-regression-models" class="nav-link" data-scroll-target="#from-tables-to-regression-models">From tables to regression models</a></li>
-  <li><a href="#working-example-beetle-mortality-and-insecticide-dose-aggregated-data" id="toc-working-example-beetle-mortality-and-insecticide-dose-aggregated-data" class="nav-link" data-scroll-target="#working-example-beetle-mortality-and-insecticide-dose-aggregated-data">Working example: beetle mortality and insecticide dose (aggregated data)</a></li>
+  <li><a href="#a-simple-binomial-glm" id="toc-a-simple-binomial-glm" class="nav-link" data-scroll-target="#a-simple-binomial-glm">A simple binomial GLM</a>
+  <ul class="collapse">
+  <li><a href="#the-odds-ratio" id="toc-the-odds-ratio" class="nav-link" data-scroll-target="#the-odds-ratio">The odds ratio</a></li>
+  </ul></li>
+  <li><a href="#beetle-mortality-and-insecticide-dose-aggregated-data" id="toc-beetle-mortality-and-insecticide-dose-aggregated-data" class="nav-link" data-scroll-target="#beetle-mortality-and-insecticide-dose-aggregated-data">Beetle mortality and insecticide dose (aggregated data)</a></li>
   <li><a href="#two-tempting-but-wrong-analyses" id="toc-two-tempting-but-wrong-analyses" class="nav-link" data-scroll-target="#two-tempting-but-wrong-analyses">Two tempting but wrong analyses</a>
   <ul class="collapse">
   <li><a href="#wrong-analysis-1-linear-regression-on-mortality-rate" id="toc-wrong-analysis-1-linear-regression-on-mortality-rate" class="nav-link" data-scroll-target="#wrong-analysis-1-linear-regression-on-mortality-rate">Wrong analysis 1: linear regression on mortality rate</a></li>
   <li><a href="#wrong-analysis-2-poisson-regression-on-counts-killed" id="toc-wrong-analysis-2-poisson-regression-on-counts-killed" class="nav-link" data-scroll-target="#wrong-analysis-2-poisson-regression-on-counts-killed">Wrong analysis 2: Poisson regression on counts killed</a></li>
+  <li><a href="#doing-it-right" id="toc-doing-it-right" class="nav-link" data-scroll-target="#doing-it-right">Doing it right!</a></li>
   </ul></li>
-  <li><a href="#the-probability-model-bernoulli-and-binomial" id="toc-the-probability-model-bernoulli-and-binomial" class="nav-link" data-scroll-target="#the-probability-model-bernoulli-and-binomial">The probability model: Bernoulli and binomial</a>
-  <ul class="collapse">
-  <li><a href="#bernoulli-binary-data" id="toc-bernoulli-binary-data" class="nav-link" data-scroll-target="#bernoulli-binary-data">Bernoulli (binary) data</a></li>
-  <li><a href="#binomial-aggregated-data" id="toc-binomial-aggregated-data" class="nav-link" data-scroll-target="#binomial-aggregated-data">Binomial (aggregated) data</a></li>
-  </ul></li>
-  <li><a href="#logistic-regression-the-binomial-glm" id="toc-logistic-regression-the-binomial-glm" class="nav-link" data-scroll-target="#logistic-regression-the-binomial-glm">Logistic regression: the binomial GLM</a></li>
-  <li><a href="#fitting-logistic-regression-in-r-aggregated-binomial-data" id="toc-fitting-logistic-regression-in-r-aggregated-binomial-data" class="nav-link" data-scroll-target="#fitting-logistic-regression-in-r-aggregated-binomial-data">Fitting logistic regression in R (aggregated binomial data)</a></li>
-  <li><a href="#interpreting-coefficients-log-odds-odds-ratios-and-probabilities" id="toc-interpreting-coefficients-log-odds-odds-ratios-and-probabilities" class="nav-link" data-scroll-target="#interpreting-coefficients-log-odds-odds-ratios-and-probabilities">Interpreting coefficients: log-odds, odds ratios, and probabilities**</a></li>
+  <li><a href="#interpreting-coefficients-log-odds-odds-ratios-and-probabilities" id="toc-interpreting-coefficients-log-odds-odds-ratios-and-probabilities" class="nav-link" data-scroll-target="#interpreting-coefficients-log-odds-odds-ratios-and-probabilities">Interpreting coefficients: log-odds, odds ratios, and probabilities</a></li>
   <li><a href="#analysis-of-deviance-likelihood-based-anova" id="toc-analysis-of-deviance-likelihood-based-anova" class="nav-link" data-scroll-target="#analysis-of-deviance-likelihood-based-anova">Analysis of deviance (likelihood-based ANOVA)</a></li>
   <li><a href="#plotting-the-fitted-relationship" id="toc-plotting-the-fitted-relationship" class="nav-link" data-scroll-target="#plotting-the-fitted-relationship">Plotting the fitted relationship</a>
   <ul class="collapse">
@@ -309,7 +308,7 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#example-blood-screening-esr" id="toc-example-blood-screening-esr" class="nav-link" data-scroll-target="#example-blood-screening-esr">Example: blood screening (ESR)</a></li>
   <li><a href="#complication-1-graphical-description" id="toc-complication-1-graphical-description" class="nav-link" data-scroll-target="#complication-1-graphical-description">Complication 1: graphical description</a></li>
-  <li><a href="#fit-the-logistic-regression-model" id="toc-fit-the-logistic-regression-model" class="nav-link" data-scroll-target="#fit-the-logistic-regression-model">Fit the logistic regression model</a></li>
+  <li><a href="#fit-the-binomial-regression-model" id="toc-fit-the-binomial-regression-model" class="nav-link" data-scroll-target="#fit-the-binomial-regression-model">Fit the binomial regression model</a></li>
   <li><a href="#complication-2-model-checking-and-dispersion" id="toc-complication-2-model-checking-and-dispersion" class="nav-link" data-scroll-target="#complication-2-model-checking-and-dispersion">Complication 2: model checking and dispersion</a></li>
   </ul></li>
   <li><a href="#two-common-practical-issues" id="toc-two-common-practical-issues" class="nav-link" data-scroll-target="#two-common-practical-issues">Two common practical issues</a>
@@ -327,7 +326,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Binary data (L9)</h1>
+<h1 class="title">Binomial data (L9)</h1>
 </div>
 
 
@@ -346,34 +345,16 @@ window.Quarto = {
 
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>In the previous chapter we moved from linear models and normal errors to generalized linear models (GLMs) to handle <strong>count responses</strong> with a Poisson GLM. In this chapter we move to another common case: <strong>binary responses</strong>.</p>
-<p>Binary response variables take only two values, often coded as 0 and 1:</p>
+<p>In the previous chapter we moved from linear models and normal errors to generalized linear models (GLMs) to handle count responses with a Poisson GLM. In this chapter we move to another common case: <strong>binary</strong> and <strong>binomial responses</strong>. Because binary data is a special case of binomial data, we will often refer to both as “binomial data”.</p>
+<p>At the heart of binomial data is an event that happens or does not happen. Examples include:</p>
 <ul>
-<li>1 = yes / success / present / dead</li>
-<li>0 = no / failure / absent / alive</li>
+<li>Disease status: infected (1) or not infected (0)</li>
+<li>Survival: dead (1) or alive (0)</li>
+<li>Presence/absence of a species at a site: present (1) or absent (0)</li>
+<li>Success/failure of a treatment: success (1) or failure (0)</li>
 </ul>
-<p>The central question becomes:</p>
-<p><strong>Which explanatory variables influence the probability</strong> <span class="math inline">\(\pi_i = P(y_i = 1)\)</span> <strong>of the response variable?</strong></p>
-<div class="callout callout-style-default callout-important callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Important
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><strong>Bridge from LM to GLM</strong><br>
-A GLM keeps the familiar <em>linear predictor</em> from linear models, but: 1) uses a distribution (family) that matches the response type, and<br>
-2) uses a link function so predictions respect the natural constraints.</p>
-<ul>
-<li>Count data: Poisson family + log link<br>
-</li>
-<li>Binary data: binomial family + logit link</li>
-</ul>
-</div>
-</div>
+<p>The central question is therefore:</p>
+<p><strong>Which explanatory variables influence the probability of the event happening.</strong></p>
 <!---
 **Think–Pair–Share** (#tps-binary-examples) Name three response variables in biology, ecology, or medicine that are naturally binary (0/1). Why would a linear model be risky for each?
 --->
@@ -382,105 +363,90 @@ A GLM keeps the familiar <em>linear predictor</em> from linear models, but: 1) u
 <h2 class="anchored" data-anchor-id="overview">Overview</h2>
 <p>In this chapter we will cover:</p>
 <ul>
-<li>Contingency tables and the <span class="math inline">\(\chi^2\)</span> test (a familiar starting point)</li>
-<li>Odds, odds ratios, and log-odds</li>
-<li>Logistic regression as a binomial GLM</li>
-<li>Interpreting coefficients (odds ratios and probabilities)</li>
-<li>Model assumptions, deviances, and (some) model checking</li>
-<li>Overdispersion in <em>aggregated</em> binomial data and the quasibinomial fix</li>
-<li>Practical complications for individual-level (non-aggregated) 0/1 data</li>
+<li>A review of Bernoulli and binomial distributions (the family).</li>
+<li>Probabilities, odds, log-odds, odds ratios (the link function).</li>
+<li>Two examples of binomial GLM.</li>
+<li>Interpreting coefficients (odds ratios and probabilities).</li>
+<li>Model assumptions, deviances, and (some) model checking.</li>
+<li>Overdispersion in <em>aggregated</em> binomial data and the quasibinomial fix.</li>
+<li>Practical complications for individual-level (non-aggregated) 0/1 data.</li>
 </ul>
 </section>
-<section id="a-warm-up-the-chi-square-test-for-a-22-table" class="level2">
-<h2 class="anchored" data-anchor-id="a-warm-up-the-chi-square-test-for-a-22-table">A warm-up: the Chi-square test for a 2×2 table</h2>
-<p>Binary responses often first appear in a <strong>contingency table</strong>. For example:</p>
-<ul>
-<li>Explanatory variable <span class="math inline">\(x\)</span>: hormonal contraception (yes/no)</li>
-<li>Response variable <span class="math inline">\(y\)</span>: heart attack (yes/no)</li>
-</ul>
-<p>The <span class="math inline">\(\chi^2\)</span> (chi-squared) test asks whether the <strong>proportion</strong> (or frequency) of heart attacks is the same in the two contraception groups.</p>
-<section id="a-concrete-example-dataset" class="level3">
-<h3 class="anchored" data-anchor-id="a-concrete-example-dataset">A concrete example dataset</h3>
-<p>We will reconstruct the classic 2×2 table from some example and store it as a dataset:</p>
-<p>Read in the heart attack dataset:</p>
+<section id="binary-and-binomial-data" class="level2">
+<h2 class="anchored" data-anchor-id="binary-and-binomial-data">Binary and binomial data</h2>
+<p>When we model binary/binomial data, we are interested in the <strong>probability</strong> of an event happening. For example, the probability of a heart attack, or the probability of a species being present at a site. And we are interested in whether such probabilities differ between groups, or vary along a continuous explanatory variable.</p>
+<p>Let us label this probability <span class="math inline">\(\pi\)</span>. So <span class="math inline">\(\pi\)</span> is the probability of “yes” (e.g., pass a test), and <span class="math inline">\(1-\pi\)</span> is the probability of “no” (e.g., fail a test).</p>
+<p>So, if the probability <span class="math inline">\(\pi\)</span> is 0.8, then there is an 80% chance of “yes” and a 20% chance of “no”. In R we can simulate the pass or fail of each of a group of people with an expected pass rate (probability) of 0.8 like this:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>heart_attack <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"datasets/heart_attack_2x2.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Rows: 4 Columns: 3
-── Column specification ────────────────────────────────────────────────────────
-Delimiter: ","
-chr (2): contraception, heart_attack
-dbl (1): n
-
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>number_persons <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>y_binary <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(number_persons, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">prob =</span> <span class="fl">0.8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
-<p>Here are the first few rows of the heart attack dataset:</p>
+<p>This code says please draw 10 random numbers from a binomial distribution where each number is the result of 1 trial (size = 1) with a probability of success of 0.8 (prob = 0.8). Because size = 1, each number will be either 0 or 1.</p>
+<p>Hence, the object <code>y</code> contains 10 simulated persons, where each person has an 80% chance of being 1:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(heart_attack)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>y_binary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 4 × 3
-  contraception heart_attack     n
-  &lt;chr&gt;         &lt;chr&gt;        &lt;dbl&gt;
-1 yes           yes             23
-2 yes           no              34
-3 no            yes             35
-4 no            no             132</code></pre>
+<pre><code> [1] 1 1 1 0 0 1 1 0 1 1</code></pre>
 </div>
 </div>
-<p>We can create the table and run the <span class="math inline">\(\chi^2\)</span> test.</p>
-<p>Here is the data ready for analysis:</p>
+<p>What we have done is to simulate 10 <em>Bernoulli trials</em> with probability 0.8. A Bernoulli trial is one random experiment with exactly two possible outcomes, “success” (1) and “failure” (0), where the probability of success is <span class="math inline">\(\pi\)</span>.)</p>
+<p><strong>You can see that the observations in <code>y</code> are either 0 or 1: they are <code>binary</code> data.</strong></p>
+<p>An alternate method to simulate and express the same kind of data is binomial data, where we count the number of successes (1s) in a number of trials. In R, we simulate this like so:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>tab <span class="ot">&lt;-</span> <span class="fu">xtabs</span>(n <span class="sc">~</span> contraception <span class="sc">+</span> heart_attack, <span class="at">data =</span> heart_attack)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>tab</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>             heart_attack
-contraception  no yes
-          no  132  35
-          yes  34  23</code></pre>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>number_persons <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>y_binomial <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(<span class="dv">1</span>, <span class="at">size =</span> number_persons, <span class="at">prob =</span> <span class="fl">0.8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
-<p>And here is the <span class="math inline">\(\chi^2\)</span> test:</p>
+<p>This code says please draw 1 random number from a binomial distribution where the number of trials is 10 (size = 10) with a probability of success of 0.8 (prob = 0.8). The result is the number of successes (1s) in those 10 trials, in this particular simulation it is:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(tab, <span class="at">correct =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>y_binomial</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>
-    Pearson's Chi-squared test
-
-data:  tab
-X-squared = 8.3288, df = 1, p-value = 0.003902</code></pre>
+<pre><code>[1] 9</code></pre>
 </div>
 </div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note
+<p>We know to expect that 8 of the 10 persons will be 1 (success), because the probability of success <span class="math inline">\(\pi = 0.8\)</span>. But the actual number of successes in any one simulation can vary due to chance. In the binary data example above we by chance got</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(y_binary)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 7</code></pre>
 </div>
 </div>
-<div class="callout-body-container callout-body">
-<p><strong>Continuity correction</strong><br>
-<code>chisq.test()</code> defaults to Yates’ continuity correction for 2×2 tables. Here we set <code>correct = FALSE</code> to match the classic “hand-calculation” style example.</p>
+<p>successes (1s) out of 10 persons. In the binomial data example above we got:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>y_binomial</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 9</code></pre>
 </div>
 </div>
-<!---
-**Think–Pair–Share** (#tps-chisq-meaning) What is the null hypothesis of this $\chi^2$ test, in words?
---->
-</section>
-</section>
-<section id="quantifying-an-association-risk-and-odds" class="level2">
-<h2 class="anchored" data-anchor-id="quantifying-an-association-risk-and-odds">Quantifying an association: risk and odds</h2>
-<p>If <span class="math inline">\(\pi\)</span> is the probability of “yes” (e.g.&nbsp;heart attack), then:</p>
-<ul>
-<li><strong>Risk (probability)</strong> is <span class="math inline">\(\pi\)</span></li>
-<li><strong>Odds</strong> is <span class="math inline">\(\pi/(1-\pi)\)</span></li>
-</ul>
-<p>The <strong>odds ratio (OR)</strong> compares the odds in two groups:</p>
-<p>Odds Ratio = OR = <span class="math inline">\(\frac{\text{odds in group 1}}{\text{odds in group 2}}\)</span>.</p>
-<p>The <strong>log odds ratio</strong> is <span class="math inline">\(\log(OR)\)</span>. It is 0 when <span class="math inline">\(OR=1\)</span>.</p>
+<p>So in neither case did we get exactly 8 successes! What is the chance of that!</p>
+<p>Well, we can calculate the probability of getting exactly <span class="math inline">\(k\)</span> successes in <span class="math inline">\(n\)</span> trials with success probability <span class="math inline">\(\pi\)</span> using the binomial probability formula:</p>
+<p><span class="math inline">\(P(Y=k) = \binom{n}{k} \pi^k (1-\pi)^{n-k}\)</span></p>
+<p>where <span class="math inline">\(\binom{n}{k} = \frac{n!}{k!(n-k)!}\)</span> is the binomial coefficient, which counts the number of ways to choose <span class="math inline">\(k\)</span> successes from <span class="math inline">\(n\)</span> trials.</p>
+<p>In R, we can calculate the probability of getting exactly 8 successes in 10 trials with success probability 0.8 as:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dbinom</span>(<span class="dv">8</span>, <span class="at">size =</span> <span class="dv">10</span>, <span class="at">prob =</span> <span class="fl">0.8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.3019899</code></pre>
+</div>
+</div>
+<p>And we can make a graph of the full probability distribution for getting <span class="math inline">\(k\)</span> successes in 10 trials with success probability 0.8:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>p_k_successes <span class="ot">&lt;-</span> <span class="fu">dbinom</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">10</span>, <span class="at">size =</span> <span class="dv">10</span>, <span class="at">prob =</span> <span class="fl">0.8</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">10</span>, <span class="at">y =</span> p_k_successes)) <span class="sc">+</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">col=</span><span class="st">"lightgrey"</span>) <span class="sc">+</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">10</span>, <span class="at">by =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Number of successes"</span>, <span class="at">y =</span> <span class="st">"Probability"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="9.1-GLM2-binary-data_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="432"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>So the probability of getting exactly 8 successes is actually quite low, at about 0.3. But it is still the most likely outcome.</p>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -491,30 +457,245 @@ Important
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>Odds are not probabilities</strong><br>
-An odds of 3 means “3 to 1”, which corresponds to a probability of <span class="math inline">\(3/(3+1)=0.75\)</span>. Odds and probabilities are linked mathematically, but they are not the same thing.</p>
-</div>
-</div>
-<!---
-**Think–Pair–Share** (#tps-odds-intuition) Why might odds ratios be a convenient effect size in a regression model? (This is a difficult question—think carefully, and Pair!)
---->
-</section>
-<section id="from-tables-to-regression-models" class="level2">
-<h2 class="anchored" data-anchor-id="from-tables-to-regression-models">From tables to regression models</h2>
-<p>Contingency tables are a good start, but they are limited:</p>
+<p><strong>So what???</strong> You should now understand two important things:</p>
 <ul>
-<li>they typically compare <strong>groups</strong> (few categorical explanatory variable),</li>
-<li>they don’t easily handle <strong>continuous explanatory variables</strong> (e.g.&nbsp;dose),</li>
-<li>they don’t naturally generalise to multiple explanatory variables.</li>
+<li>The relationship between binary data (0/1) and binomial data (counts of successes out of trials).</li>
+<li>That the binomial distribution is appropriate for modelling both binary and binomial data. Hint: in a GLM, we will therefore use the <code>binomial</code> family.</li>
 </ul>
-<p>When <span class="math inline">\(y\)</span> is binary or binomial, the standard regression approach is <strong>logistic regression</strong>, a <strong>binomial GLM</strong>.</p>
+</div>
+</div>
 </section>
-<section id="working-example-beetle-mortality-and-insecticide-dose-aggregated-data" class="level2">
-<h2 class="anchored" data-anchor-id="working-example-beetle-mortality-and-insecticide-dose-aggregated-data">Working example: beetle mortality and insecticide dose (aggregated data)</h2>
-<p>Eight groups of beetles were exposed to an insecticide dose for 5 hours. For each dose level, we know how many beetles were tested and how many were killed. This is <strong>binomial (aggregated)</strong> data.</p>
+<section id="probabilities-odds-log-odds-and-odds-ratios" class="level2">
+<h2 class="anchored" data-anchor-id="probabilities-odds-log-odds-and-odds-ratios">Probabilities, odds, log-odds, and odds ratios</h2>
+<section id="odds" class="level3">
+<h3 class="anchored" data-anchor-id="odds">Odds</h3>
+<p>OK, so we know that when we analyse binary/binomial data, we are interested in the <strong>probability</strong> of an event happening, denoted by <span class="math inline">\(\pi\)</span>.</p>
+<p>A related quantity is the <strong>odds</strong> of the event happening. The odds is defined as the ratio of the probability of the event happening to the probability of it not happening:</p>
+<ul>
+<li><strong>Odds</strong> is <span class="math inline">\(\pi/(1-\pi)\)</span></li>
+</ul>
+<p>We sometimes say “the odds of an event happening are x to y”. For example, a horse has 4 to 1 odds of winning a race. This means that in 5 races we expect the horse to win 4 times and lose once. The odds are <span class="math inline">\(4/1 = 4\)</span>. The probability of winning is then <span class="math inline">\(4/(4+1) = 0.8\)</span>.</p>
+<p>If the horse was really bad and had 1 to 4 odds of winning, then the odds of winning would be 0.2/0.8 = 0.25, and the probability of winning would be 0.2.</p>
+<p>So, odds and probabilities are related mathematically, but they are not the same thing. Lets look at a graph of probability on the <span class="math inline">\(x\)</span>-axis and odds on the <span class="math inline">\(y\)</span>-axis:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>prob_seq <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">0.01</span>, <span class="fl">0.99</span>, <span class="at">by =</span> <span class="fl">0.01</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>odds_seq <span class="ot">&lt;-</span> prob_seq <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> prob_seq)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> prob_seq, <span class="at">y =</span> odds_seq)) <span class="sc">+</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Probability"</span>, <span class="at">y =</span> <span class="st">"Odds"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="9.1-GLM2-binary-data_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="432"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>So, when we transform probabilities to odds, we go from a bounded scale (0 to 1) to an unbounded scale (0 to infinity).</p>
+</section>
+<section id="log-odds-logit" class="level3">
+<h3 class="anchored" data-anchor-id="log-odds-logit">Log-odds (logit)</h3>
+<p>Another useful transformation is the <strong>log-odds</strong>, also known as the <strong>logit</strong>:</p>
+<ul>
+<li><strong>Log-odds (logit)</strong> is <span class="math inline">\(\log\left(\frac{\pi}{1-\pi}\right)\)</span></li>
+</ul>
+<p>Here is the relationship between probability and log-odds:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>log_odds_seq <span class="ot">&lt;-</span> <span class="fu">log</span>(odds_seq)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> prob_seq, <span class="at">y =</span> log_odds_seq)) <span class="sc">+</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Probability"</span>, <span class="at">y =</span> <span class="st">"Log-odds (logit)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="9.1-GLM2-binary-data_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="432"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>So what???</strong></p>
+<p>The reason why the logit is useful is that it maps probabilities (0 to 1) to the whole real line (-infinity to infinity). This is important because in a GLM, the linear predictor can take any value from -infinity to infinity, so we need a link function that can map between the two scales. The logit does this perfectly.</p>
+</div>
+</div>
+</section>
+<section id="odds-ratio" class="level3">
+<h3 class="anchored" data-anchor-id="odds-ratio">Odds ratio</h3>
+<p>Finally, we often want to compare the odds of an event happening in two different groups. Say we have two groups, group 1 and group 2, with probabilities <span class="math inline">\(\pi_1\)</span> and <span class="math inline">\(\pi_2\)</span>. The odds in each group are:</p>
+<ul>
+<li>Odds in group 1: <span class="math inline">\(\frac{\pi_1}{1-\pi_1}\)</span></li>
+<li>Odds in group 2: <span class="math inline">\(\frac{\pi_2}{1-\pi_2}\)</span></li>
+</ul>
+<p>The <strong>odds ratio (OR)</strong> compares the odds in two groups:</p>
+<p>Odds Ratio = OR = <span class="math inline">\(\frac{\text{odds in group 1}}{\text{odds in group 2}}\)</span>.</p>
+<p>Let’s go through a couple of examples. First, suppose the probability of success is 0.2 in both groups. Then the odds in both groups are:</p>
+<ul>
+<li>Odds in group 1 and 2: <span class="math inline">\(\frac{0.2}{1-0.2} = \frac{0.2}{0.8} = 0.25\)</span></li>
+</ul>
+<p>So the odds ratio is:</p>
+<p><span class="math inline">\(OR = \frac{0.25}{0.25} = 1\)</span></p>
+<p>Now take an example where the probability of success in group 1 is 0.4, and in group 2 it is 0.2. Then the odds in each group are:</p>
+<ul>
+<li>Odds in group 1: <span class="math inline">\(\frac{0.4}{1-0.4} = \frac{0.4}{0.6} = 0.667\)</span></li>
+<li>Odds in group 2: <span class="math inline">\(\frac{0.2}{1-0.2} = \frac{0.2}{0.8} = 0.250\)</span></li>
+</ul>
+<p>So the odds ratio is:</p>
+<p><span class="math inline">\(OR = \frac{0.667}{0.250} = 2.67\)</span></p>
+<p>This means that the odds of success in group 1 are about 2.67 times the odds of success in group 2.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>So what???</strong></p>
+<p>You will see below that the coefficients in a binomial GLM with logit link correspond to log-odds ratios. Exponentiating those coefficients gives odds ratios. This is a key part of interpreting the results of a binomial GLM.</p>
+<p>For example, when we see a coefficient (e.g., slope) close to zero, that means the log-odds ratio is close to zero, which means the odds ratio is close to 1, which means there is little difference in odds between the two groups.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="a-simple-binomial-glm" class="level2">
+<h2 class="anchored" data-anchor-id="a-simple-binomial-glm">A simple binomial GLM</h2>
+<p>We now have the pieces to define a binomial GLM:</p>
+<ol type="1">
+<li><strong>Family</strong>: <span class="math inline">\(y_i \sim \text{Binomial}(n_i,\pi_i)\)</span></li>
+<li><strong>Linear predictor</strong>: <span class="math inline">\(\eta_i = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}\)</span></li>
+<li><strong>Link</strong>: logit link: <span class="math inline">\(\eta_i = \log\left(\frac{\pi_i}{1-\pi_i}\right)\)</span></li>
+</ol>
+<p>Let us make a simple example in which there we are interested in how the probability of passing a test differs between children and adults. We will simulate the data, and then fit a binomial GLM.</p>
+<p>To simulate that data we will define the number of children and adults, and the probability of passing the test in each group:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">8761</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>n_children <span class="ot">&lt;-</span> <span class="dv">50</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>n_adults <span class="ot">&lt;-</span> <span class="dv">50</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>p_pass_children <span class="ot">&lt;-</span> <span class="fl">0.8</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>p_pass_adults <span class="ot">&lt;-</span> <span class="fl">0.4</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now let us simulate whether each person passes or fails, using the <code>rbinom()</code> function:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>y_children <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n_children, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">prob =</span> p_pass_children)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>y_adults <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n_adults, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">prob =</span> p_pass_adults)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now we can combine the data into a data frame (tibble), and look at the data:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>data_binom <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">age_group =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"child"</span>, <span class="st">"adult"</span>), <span class="at">each =</span> <span class="dv">50</span>),</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">pass =</span> <span class="fu">c</span>(y_children, y_adults)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>data_binom</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 100 × 2
+   age_group  pass
+   &lt;chr&gt;     &lt;int&gt;
+ 1 child         1
+ 2 child         0
+ 3 child         1
+ 4 child         1
+ 5 child         1
+ 6 child         1
+ 7 child         0
+ 8 child         1
+ 9 child         1
+10 child         1
+# ℹ 90 more rows</code></pre>
+</div>
+</div>
+<p>We can summarize the data to see how many passed in each group:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>data_summary <span class="ot">&lt;-</span> data_binom <span class="sc">|&gt;</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(age_group) <span class="sc">|&gt;</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_tested =</span> <span class="fu">n</span>(),</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_passed =</span> <span class="fu">sum</span>(pass),</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">pass_rate =</span> <span class="fu">mean</span>(pass)</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>data_summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 4
+  age_group n_tested n_passed pass_rate
+  &lt;chr&gt;        &lt;int&gt;    &lt;int&gt;     &lt;dbl&gt;
+1 adult           50       30      0.6 
+2 child           50       39      0.78</code></pre>
+</div>
+</div>
+<p>In the simulated experiment, 78% of the children passed, when the true probability of passing was 0.8. The adults did really well! – 60% of the adults passed, when the true probability was 0.4.</p>
+<p>If we had collected that data for real, we might be interested in if the difference in pass rates between children and adults is statistically significant. We can use a binomial GLM to test that. Here is how we specify and fit the model in R:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>binom_glm <span class="ot">&lt;-</span> <span class="fu">glm</span>(pass <span class="sc">~</span> age_group, <span class="at">data =</span> data_binom, <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"logit"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The critical part here is the <code>family = binomial(link = "logit")</code> argument, which tells R to fit a binomial GLM with a logit link function. Note that if we do not specify the link function, R will use the logit link by default for the binomial family. This means that the following model specification is equivalent:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>binom_glm <span class="ot">&lt;-</span> <span class="fu">glm</span>(pass <span class="sc">~</span> age_group, <span class="at">data =</span> data_binom, <span class="at">family =</span> binomial)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can look at the estimated coefficients to see the result:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(<span class="fu">summary</span>(binom_glm))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                Estimate Std. Error  z value   Pr(&gt;|z|)
+(Intercept)    0.4054651  0.2886751 1.404572 0.16014849
+age_groupchild 0.8602013  0.4470831 1.924030 0.05435084</code></pre>
+</div>
+</div>
+<p><strong>Important</strong>: The estimates are on the scale of the linear predictor, which is the logit (log-odds) scale. The intercept corresponds to the log-odds of passing for the reference group (adults), and the coefficient for <code>age_groupchild</code> corresponds to the difference in log-odds between adults and children.</p>
+<p>So the logit (log-odds) for adults to pass is 0.405. To convert that to a probability, we can use the inverse logit function:</p>
+<p><span class="math inline">\(\pi = \frac{\exp(\eta)}{1+\exp(\eta)}\)</span></p>
+<p>Calculating that in R:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>eta_adults <span class="ot">&lt;-</span> <span class="fu">coef</span>(binom_glm)[[<span class="st">"(Intercept)"</span>]]</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>p_adults <span class="ot">&lt;-</span> <span class="fu">exp</span>(eta_adults) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(eta_adults))</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>p_adults</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.6</code></pre>
+</div>
+</div>
+<p>Perfect. It is as we saw when we summarised the data – this is the observed pass rate for adults.</p>
+<p>To find the probability of passing for children, we calculate the logit value for children by adding the coefficient for <code>age_groupchild</code> to the intercept:</p>
+<p>Logit for children = 0.405 + 0.860 = 1.265</p>
+<p>Then we convert that to a probability:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>eta_children <span class="ot">&lt;-</span> eta_adults <span class="sc">+</span> <span class="fu">coef</span>(binom_glm)[[<span class="st">"age_groupchild"</span>]]</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>p_children <span class="ot">&lt;-</span> <span class="fu">exp</span>(eta_children) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(eta_children))</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>p_children</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.78</code></pre>
+</div>
+</div>
+<p>Perfect again.</p>
+<section id="the-odds-ratio" class="level3">
+<h3 class="anchored" data-anchor-id="the-odds-ratio">The odds ratio</h3>
+<p>It is useful to know about and use something called the <strong>odds ratio</strong>. The odds ratio compares the odds of an event happening in two situations. In our example, we can calculate the odds ratio for passing the test for children compared to adults.</p>
+<p>Let’s use the logit values we calculated above, which we have to exponentiate to transform back to odds:</p>
+<ul>
+<li>Odds for adults: exp(0.405)</li>
+<li>Odds for children: exp(1.265)</li>
+</ul>
+<p>The odds ratio (OR) for children compared to adults is:</p>
+<p><span class="math display">\[\exp(1.265) / \exp(0.405) = \exp(1.265 - 0.405) = \exp(0.860) = 2.363\]</span></p>
+<p>In the line above, notice the <span class="math inline">\(\exp(0.860)\)</span> term. The number 0.860 is exactly the coefficient for <code>age_groupchild</code> in the model output. So we can get the odds ratio directly from the model coefficients by exponentiating the coefficient for <code>age_groupchild</code>. Put another way, the coefficient for <code>age_groupchild</code> is the log-odds ratio for children compared to adults.</p>
+<p>This isn’t magic. Its just a straightforward consequence of how the logit link function works. In the following example of binomial regression, you will see how with a continuous explanatory variable, the coefficient (slope) corresponds to the change in log-odds for a one-unit increase in the explanatory variable, and exponentiating that coefficient gives the odds ratio for a one-unit increase.</p>
+</section>
+</section>
+<section id="beetle-mortality-and-insecticide-dose-aggregated-data" class="level2">
+<h2 class="anchored" data-anchor-id="beetle-mortality-and-insecticide-dose-aggregated-data">Beetle mortality and insecticide dose (aggregated data)</h2>
+<p>Let’s work though an example of binomial regression, with data in what we call <em>aggregated</em> format. This simply means that we have counts of successes and failures for groups of individuals, rather than individual-level 0/1 data.</p>
+<p>Eight groups of beetles were exposed to an insecticide dose for 5 hours. For each dose level, we know how many beetles were tested and how many died. This is <strong>binomial (aggregated)</strong> data.</p>
 <p>Read in the beetle dataset:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>beetle <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"datasets/beetle_mortality.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>beetle <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"datasets/beetle_mortality.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 8 Columns: 4
 ── Column specification ────────────────────────────────────────────────────────
@@ -527,7 +708,7 @@ dbl (4): Dose, Number_tested, Number_killed, Mortality_rate
 </div>
 <p>Here are the first few rows of the beetle dataset:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(beetle)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(beetle)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 4
    Dose Number_tested Number_killed Mortality_rate
@@ -546,7 +727,7 @@ dbl (4): Dose, Number_tested, Number_killed, Mortality_rate
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="9.1-GLM2-binary-data_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="9.1-GLM2-binary-data_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -560,17 +741,17 @@ dbl (4): Dose, Number_tested, Number_killed, Mortality_rate
 <section id="wrong-analysis-1-linear-regression-on-mortality-rate" class="level3">
 <h3 class="anchored" data-anchor-id="wrong-analysis-1-linear-regression-on-mortality-rate">Wrong analysis 1: linear regression on mortality rate</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>mod_beetle_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(Mortality_rate <span class="sc">~</span> Dose, <span class="at">data =</span> beetle)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>mod_beetle_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(Mortality_rate <span class="sc">~</span> Dose, <span class="at">data =</span> beetle)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>This can predict probabilities below 0 or above 1 and does not respect the mean–variance structure of binomial data.</p>
 <p>Check out the model assumptions:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_beetle_lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_beetle_lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="9.1-GLM2-binary-data_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="9.1-GLM2-binary-data_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -581,25 +762,28 @@ dbl (4): Dose, Number_tested, Number_killed, Mortality_rate
 <h3 class="anchored" data-anchor-id="wrong-analysis-2-poisson-regression-on-counts-killed">Wrong analysis 2: Poisson regression on counts killed</h3>
 <p>A Poisson model ignores the fact that deaths are bounded by the number tested at each dose.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>mod_beetle_pois <span class="ot">&lt;-</span> <span class="fu">glm</span>(Number_killed <span class="sc">~</span> Dose, <span class="at">data =</span> beetle, <span class="at">family =</span> poisson)</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_beetle_pois)<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>mod_beetle_pois <span class="ot">&lt;-</span> <span class="fu">glm</span>(Number_killed <span class="sc">~</span> Dose, <span class="at">data =</span> beetle, <span class="at">family =</span> poisson)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_beetle_pois)<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>               Estimate  Std. Error   z value     Pr(&gt;|z|)
 (Intercept) -0.77418056 0.494639994 -1.565139 1.175502e-01
 Dose         0.06678281 0.007240113  9.224002 2.862145e-20</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example of the "impossible" issue:</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>dose_example <span class="ot">&lt;-</span> <span class="fl">76.54</span></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>pred_killed <span class="ot">&lt;-</span> <span class="fu">predict</span>(mod_beetle_pois,</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>                       <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">Dose =</span> dose_example),</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>                       <span class="at">type =</span> <span class="st">"response"</span>)</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>pred_killed</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>One issue that can now happen is that we can get “impossible” predictions: predicted counts killed that exceed the number tested.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example of the "impossible" issue:</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>dose_example <span class="ot">&lt;-</span> <span class="fl">76.54</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>pred_killed <span class="ot">&lt;-</span> <span class="fu">predict</span>(mod_beetle_pois,</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>                       <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">Dose =</span> dose_example),</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>                       <span class="at">type =</span> <span class="st">"response"</span>)</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>pred_killed</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       1 
 76.50652 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>num_tested_example <span class="ot">&lt;-</span> beetle<span class="sc">$</span>Number_tested[beetle<span class="sc">$</span>Dose <span class="sc">==</span> dose_example]</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>num_tested_example</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>num_tested_example <span class="ot">&lt;-</span> beetle<span class="sc">$</span>Number_tested[beetle<span class="sc">$</span>Dose <span class="sc">==</span> dose_example]</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>num_tested_example</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 60</code></pre>
 </div>
@@ -617,89 +801,20 @@ Caution
 <div class="callout-body-container callout-body">
 <p><strong>Poisson vs binomial, when to use each</strong><br>
 Use a Poisson model when counts have <em>no known upper limit</em>.<br>
-Use a binomial model when counts are “<span class="math inline">\(k\)</span> successes out of <span class="math inline">\(n\)</span> trials”. Use a binomial model when each observation is a 0/1 response.</p>
+Use a binomial model when counts are “<span class="math inline">\(k\)</span> successes out of <span class="math inline">\(n\)</span> trials”. Use a binomial/binary model when each observation is a 0/1 response.</p>
 </div>
 </div>
 <!---
 **Think–Pair–Share (#a_probability_not_linear)** Why is it dangerous to model probabilities directly using a linear model?
 --->
 </section>
-</section>
-<section id="the-probability-model-bernoulli-and-binomial" class="level2">
-<h2 class="anchored" data-anchor-id="the-probability-model-bernoulli-and-binomial">The probability model: Bernoulli and binomial</h2>
-<section id="bernoulli-binary-data" class="level3">
-<h3 class="anchored" data-anchor-id="bernoulli-binary-data">Bernoulli (binary) data</h3>
-<p>For a single 0/1 observation:</p>
-<p><span class="math inline">\(Y \sim \text{Bernoulli}(\pi),\quad P(Y=1)=\pi,\quad P(Y=0)=1-\pi\)</span></p>
-<p>In words, this means that the probability of success (Y=1) is <span class="math inline">\(\pi\)</span>, and the probability of failure (Y=0) is <span class="math inline">\(1-\pi\)</span>. And that this probability is Bernoulli distributed. Bernoulli is a special case of the binomial distribution with <span class="math inline">\(n=1\)</span>.</p>
-<p>Mean and variance are:</p>
-<p><span class="math inline">\(E(Y)=\pi,\quad Var(Y)=\pi(1-\pi)\)</span></p>
-</section>
-<section id="binomial-aggregated-data" class="level3">
-<h3 class="anchored" data-anchor-id="binomial-aggregated-data">Binomial (aggregated) data</h3>
-<p>For <span class="math inline">\(k\)</span> successes out of <span class="math inline">\(n\)</span> trials:</p>
-<p><span class="math inline">\(Y \sim \text{Binomial}(n,\pi)\)</span></p>
-<p>This means that the number of successes <span class="math inline">\(Y\)</span> in <span class="math inline">\(n\)</span> independent Bernoulli trials, each with success probability <span class="math inline">\(\pi\)</span>, follows a binomial distribution.</p>
-<p>Mean and variance are:</p>
-<p><span class="math inline">\(E(Y)=n\pi,\quad Var(Y)=n\pi(1-\pi)\)</span></p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><strong>Key pattern</strong><br>
-For Bernoulli/binomial data, the variance is <em>determined by the mean</em>. This is one reason “constant variance” fails for linear models.</p>
-</div>
-</div>
-<!---
-**Think–Pair–Share** (#tps-binom-variance) For fixed $n$, at what value of $\pi$ is $Var(Y)=n\pi(1-\pi)$ largest? At what values of $\pi$ is it smallest?
---->
-</section>
-</section>
-<section id="logistic-regression-the-binomial-glm" class="level2">
-<h2 class="anchored" data-anchor-id="logistic-regression-the-binomial-glm">Logistic regression: the binomial GLM</h2>
-<p>We use the usual GLM structure:</p>
-<ol type="1">
-<li><strong>Linear predictor</strong></li>
-</ol>
-<p><span class="math inline">\(\eta_i = \beta_0 + \beta_1 x_i^{(1)} + \cdots + \beta_p x_i^{(p)}\)</span></p>
-<ol start="2" type="1">
-<li><p><strong>Family</strong>: binomial (Bernoulli is the special case <span class="math inline">\(n=1\)</span>)</p></li>
-<li><p><strong>Link</strong>: logit</p></li>
-</ol>
-<p><span class="math inline">\(\eta_i = \log\left(\frac{\pi_i}{1-\pi_i}\right)\)</span></p>
-<p>The inverse link (back-transformation) is the <strong>logistic function</strong>:</p>
-<p><span class="math inline">\(\pi_i = \frac{\exp(\eta_i)}{1+\exp(\eta_i)}\)</span></p>
-<div class="callout callout-style-default callout-important callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Important
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><strong>Why the logit link?</strong><br>
-It maps probabilities <span class="math inline">\((0,1)\)</span> to the whole real line <span class="math inline">\((-\infty,\infty)\)</span>, so the linear predictor can take any value while <span class="math inline">\(\pi_i\)</span> stays valid, i.e., [0,1].</p>
-</div>
-</div>
-<!---
-**Think–Pair–Share** (#tps-identity-link-binary) What would go wrong if we used the identity link $E(y_i)=\eta_i$ for a binary response variable? And which link function is this, by the way?
---->
-</section>
-<section id="fitting-logistic-regression-in-r-aggregated-binomial-data" class="level2">
-<h2 class="anchored" data-anchor-id="fitting-logistic-regression-in-r-aggregated-binomial-data">Fitting logistic regression in R (aggregated binomial data)</h2>
+<section id="doing-it-right" class="level3">
+<h3 class="anchored" data-anchor-id="doing-it-right">Doing it right!</h3>
 <p>For aggregated binomial data, we provide <strong>successes and failures</strong>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>beetle <span class="ot">&lt;-</span> beetle <span class="sc">|&gt;</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Number_survived =</span> Number_tested <span class="sc">-</span> Number_killed)</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(beetle)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>beetle <span class="ot">&lt;-</span> beetle <span class="sc">|&gt;</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Number_survived =</span> Number_tested <span class="sc">-</span> Number_killed)</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(beetle)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 5
    Dose Number_tested Number_killed Mortality_rate Number_survived
@@ -714,17 +829,17 @@ It maps probabilities <span class="math inline">\((0,1)\)</span> to the whole re
 </div>
 <p>Now we can fit the logistic regression model, being careful to specify <code>family = binomial</code> and to use <code>cbind(successes, failures)</code> for the response. Because we specify the response this way, R knows we are working with aggregated binomial data. And because we specify <code>family = binomial</code>, R knows to use the logit link (the default).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>beetle_glm <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(Number_killed, Number_survived) <span class="sc">~</span> Dose,</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">data =</span> beetle, <span class="at">family =</span> binomial)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>beetle_glm <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(Number_killed, Number_survived) <span class="sc">~</span> Dose,</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">data =</span> beetle, <span class="at">family =</span> binomial)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>And as usual we can check the model assumptions:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(beetle_glm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(beetle_glm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="9.1-GLM2-binary-data_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="9.1-GLM2-binary-data_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -750,16 +865,20 @@ Use <code>cbind(successes, failures)</code> in <code>glm(..., family = binomial)
 </div>
 </div>
 </section>
+</section>
 <section id="interpreting-coefficients-log-odds-odds-ratios-and-probabilities" class="level2">
-<h2 class="anchored" data-anchor-id="interpreting-coefficients-log-odds-odds-ratios-and-probabilities">Interpreting coefficients: log-odds, odds ratios, and probabilities**</h2>
+<h2 class="anchored" data-anchor-id="interpreting-coefficients-log-odds-odds-ratios-and-probabilities">Interpreting coefficients: log-odds, odds ratios, and probabilities</h2>
+<p>Recall that the linear predictor is on the logit scale:</p>
+<p><span class="math display">\[\eta_i = \log\left(\frac{\pi_i}{1-\pi_i}\right) = \beta_0 + \beta_1 x_i\]</span></p>
+<p>Another term for logit is <strong>log-odds</strong>.</p>
 <p>In logistic regression:</p>
 <ul>
 <li><span class="math inline">\(\beta_1\)</span> is a <strong>log odds ratio</strong> for a one-unit change in the linear predictor</li>
 <li><span class="math inline">\(\exp(\beta_1)\)</span> is the <strong>odds ratio</strong> (multiplicative change in odds)</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>beta1 <span class="ot">&lt;-</span> <span class="fu">coef</span>(beetle_glm)[[<span class="st">"Dose"</span>]]</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(beta1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>beta1 <span class="ot">&lt;-</span> <span class="fu">coef</span>(beetle_glm)[[<span class="st">"Dose"</span>]]</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(beta1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1.278311</code></pre>
 </div>
@@ -789,9 +908,9 @@ even if probabilities feel more intuitive?
 </section>
 <section id="analysis-of-deviance-likelihood-based-anova" class="level2">
 <h2 class="anchored" data-anchor-id="analysis-of-deviance-likelihood-based-anova">Analysis of deviance (likelihood-based ANOVA)</h2>
-<p>As for count-data GLMs, we use likelihood and deviance. Nested models can be compared with a <span class="math inline">\(\chi^2\)</span> test.</p>
+<p>As for count-data GLMs, the estimation of the coefficients is by maximum likelihood estimation (MLE). The measure of goodness-of-fit is the deviance. We can use an analysis of deviance table to see how much deviance is explained by dose.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(beetle_glm, <span class="at">test =</span> <span class="st">"Chisq"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(beetle_glm, <span class="at">test =</span> <span class="st">"Chisq"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Deviance Table
 
@@ -808,39 +927,40 @@ Dose  1   259.23         6      8.438 &lt; 2.2e-16 ***
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
-<p>As with the Poisson GLM, the model is fit using maximum likelihood estimation, and the deviance is used to assess goodness-of-fit. So we see a table quite similar to that for the Poisson GLM. In this case the Dose row shows a huge amount of the deviance is explained by dose, and so the <span class="math inline">\(p\)</span>-value is very small.</p>
+<p>We see a table quite similar to that for the Poisson GLM. In this case the Dose row shows a huge amount of the deviance (259.23 units) is explained by dose, and so the <span class="math inline">\(p\)</span>-value is very small.</p>
 </section>
 <section id="plotting-the-fitted-relationship" class="level2">
 <h2 class="anchored" data-anchor-id="plotting-the-fitted-relationship">Plotting the fitted relationship</h2>
 <p>We will plot <span class="math inline">\(P(Y=1)\)</span> (mortality probability) against dose using model predictions.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>dose_grid <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">Dose =</span> <span class="fu">seq</span>(<span class="fu">min</span>(beetle<span class="sc">$</span>Dose)<span class="sc">-</span><span class="dv">20</span>, <span class="fu">max</span>(beetle<span class="sc">$</span>Dose)<span class="sc">+</span><span class="dv">20</span>, <span class="at">length.out =</span> <span class="dv">400</span>))</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>preds <span class="ot">&lt;-</span> <span class="fu">predict</span>(beetle_glm, <span class="at">newdata =</span> dose_grid, <span class="at">se.fit =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">|&gt;</span></span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>         <span class="fu">mutate</span>(<span class="at">p_hat =</span> <span class="fu">exp</span>(fit) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(fit)),</span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">p_hat_upper_2se =</span> <span class="fu">exp</span>(fit <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>se.fit) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(fit <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>se.fit)),</span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">p_hat_lower_2se =</span> <span class="fu">exp</span>(fit <span class="sc">-</span> <span class="dv">2</span><span class="sc">*</span>se.fit) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(fit <span class="sc">-</span> <span class="dv">2</span><span class="sc">*</span>se.fit))</span>
-<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>       )</span>
-<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>dose_grid <span class="ot">&lt;-</span> <span class="fu">bind_cols</span>(dose_grid, preds)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>dose_grid <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">Dose =</span> <span class="fu">seq</span>(<span class="fu">min</span>(beetle<span class="sc">$</span>Dose)<span class="sc">-</span><span class="dv">20</span>, <span class="fu">max</span>(beetle<span class="sc">$</span>Dose)<span class="sc">+</span><span class="dv">20</span>, <span class="at">length.out =</span> <span class="dv">400</span>))</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>preds <span class="ot">&lt;-</span> <span class="fu">predict</span>(beetle_glm, <span class="at">newdata =</span> dose_grid, <span class="at">se.fit =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">|&gt;</span></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>         <span class="fu">mutate</span>(<span class="at">p_hat =</span> <span class="fu">exp</span>(fit) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(fit)),</span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">p_hat_upper_2se =</span> <span class="fu">exp</span>(fit <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>se.fit) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(fit <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>se.fit)),</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">p_hat_lower_2se =</span> <span class="fu">exp</span>(fit <span class="sc">-</span> <span class="dv">2</span><span class="sc">*</span>se.fit) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(fit <span class="sc">-</span> <span class="dv">2</span><span class="sc">*</span>se.fit))</span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>       )</span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>dose_grid <span class="ot">&lt;-</span> <span class="fu">bind_cols</span>(dose_grid, preds)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>And now the plot:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> beetle, <span class="fu">aes</span>(<span class="at">x =</span> Dose, <span class="at">y =</span> Mortality_rate)) <span class="sc">+</span></span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> dose_grid, <span class="fu">aes</span>(<span class="at">x =</span> Dose, <span class="at">y =</span> p_hat), <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="at">data =</span> dose_grid,</span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>              <span class="fu">aes</span>(<span class="at">x =</span> Dose, <span class="at">ymin =</span> p_hat_lower_2se, <span class="at">ymax =</span> p_hat_upper_2se),</span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">alpha =</span> <span class="fl">0.2</span>, <span class="at">fill =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Dose"</span>, <span class="at">y =</span> <span class="st">"Predicted mortality probability"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> beetle, <span class="fu">aes</span>(<span class="at">x =</span> Dose, <span class="at">y =</span> Mortality_rate)) <span class="sc">+</span></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> dose_grid, <span class="fu">aes</span>(<span class="at">x =</span> Dose, <span class="at">y =</span> p_hat), <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="at">data =</span> dose_grid,</span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>              <span class="fu">aes</span>(<span class="at">x =</span> Dose, <span class="at">ymin =</span> p_hat_lower_2se, <span class="at">ymax =</span> p_hat_upper_2se),</span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">alpha =</span> <span class="fl">0.2</span>, <span class="at">fill =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Dose"</span>, <span class="at">y =</span> <span class="st">"Predicted mortality probability"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="9.1-GLM2-binary-data_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="9.1-GLM2-binary-data_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>The plot is intentionally made to show what happens at very low and very high dose. At very low dose, the predicted mortality probability approaches 0, and at very high dose it approaches 1. This is a key feature of logistic regression: the predicted probabilities are always between 0 and 1. We also see that the standard errors are larger at intermediate doses, where the slope of the curve is steepest. And the standard errors are smaller at very low and very high doses, where the curve flattens out.</p>
+<p>The plot is intentionally made to show what happens at very low and very high dose. At very low dose, the predicted mortality probability approaches 0, and at very high dose it approaches 1. This is a key feature of binomial regression: the predicted probabilities are always between 0 and 1. No matter the value of the linear predictor, the inverse logit transformation always maps it to a probability between 0 and 1.</p>
+<p>We also see that the standard errors are larger at intermediate doses, where the slope of the curve is steepest. And the standard errors are smaller at very low and very high doses, where the curve flattens out.</p>
 <section id="reporting" class="level3">
 <h3 class="anchored" data-anchor-id="reporting">Reporting</h3>
 <p>When reporting results from a logistic regression, you might say something like:</p>
@@ -849,24 +969,25 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </section>
 <section id="overdispersion-in-aggregated-binomial-data" class="level2">
 <h2 class="anchored" data-anchor-id="overdispersion-in-aggregated-binomial-data">Overdispersion in aggregated binomial data</h2>
-<p>Overdispersion means the variability is larger than the binomial model expects. A quick (rough) check for aggregated binomial data is:</p>
+<p>Overdispersion means the variability is larger than the binomial model assumes. A quick (rough) check for aggregated binomial data is:</p>
 <p><span class="math inline">\(\text{Residual deviance} \approx \text{df}\)</span></p>
 <p>Values much larger than 1 for the ratio <span class="math inline">\(\frac{\text{Residual deviance}}{\text{df}}\)</span> suggest overdispersion. In practice we look for values above about 1.5 or 2.</p>
 <p>In the beetle mortality example:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">deviance</span>(beetle_glm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">deviance</span>(beetle_glm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 8.437898</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">df.residual</span>(beetle_glm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">df.residual</span>(beetle_glm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 6</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">deviance</span>(beetle_glm) <span class="sc">/</span> <span class="fu">df.residual</span>(beetle_glm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">deviance</span>(beetle_glm) <span class="sc">/</span> <span class="fu">df.residual</span>(beetle_glm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1.406316</code></pre>
 </div>
 </div>
+<p>The ratio is about 1.4, which is suggests some overdispersion, but is on the limit of what is usually considered acceptable.</p>
 <div class="callout callout-style-default callout-caution callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -885,8 +1006,8 @@ If there is overdispersion and we ignore it, standard errors are usually too sma
 <h3 class="anchored" data-anchor-id="quasibinomial-as-a-pragmatic-fix">Quasibinomial as a pragmatic fix</h3>
 <p>If we had found overdispersion, a simple fix is to use the <code>quasibinomial</code> family. This estimates an extra dispersion parameter from the data. For example:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>beetle_glm_q <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(Number_killed, Number_survived) <span class="sc">~</span> Dose,</span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">data =</span> beetle, <span class="at">family =</span> quasibinomial)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>beetle_glm_q <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(Number_killed, Number_survived) <span class="sc">~</span> Dose,</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">data =</span> beetle, <span class="at">family =</span> quasibinomial)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -915,7 +1036,7 @@ Note
 <p>Individuals with low ESR (ESR is erythrocyte sedimentation rate and is a measure of general inflammation and infection) are generally considered healthy; ESR &gt; 20 mm/hr indicates possible disease. We will model the probability of high ESR using fibrinogen and globulin concentration.</p>
 <p>Read in the plasma dataset:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>plasma <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"datasets/plasma_esr_original_HSAUR3.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>plasma <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"datasets/plasma_esr_original_HSAUR3.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 32 Columns: 4
 ── Column specification ────────────────────────────────────────────────────────
@@ -929,17 +1050,22 @@ dbl (3): fibrinogen, globulin, y
 </div>
 <p>Here are the first few rows of the data:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(plasma)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>plasma</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 6 × 4
-  fibrinogen globulin ESR          y
-       &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt;
-1       2.52       38 ESR &lt; 20     0
-2       2.56       31 ESR &lt; 20     0
-3       2.19       33 ESR &lt; 20     0
-4       2.18       31 ESR &lt; 20     0
-5       3.41       37 ESR &lt; 20     0
-6       2.46       36 ESR &lt; 20     0</code></pre>
+<pre><code># A tibble: 32 × 4
+   fibrinogen globulin ESR          y
+        &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt;
+ 1       2.52       38 ESR &lt; 20     0
+ 2       2.56       31 ESR &lt; 20     0
+ 3       2.19       33 ESR &lt; 20     0
+ 4       2.18       31 ESR &lt; 20     0
+ 5       3.41       37 ESR &lt; 20     0
+ 6       2.46       36 ESR &lt; 20     0
+ 7       3.22       38 ESR &lt; 20     0
+ 8       2.21       37 ESR &lt; 20     0
+ 9       3.15       39 ESR &lt; 20     0
+10       2.6        41 ESR &lt; 20     0
+# ℹ 22 more rows</code></pre>
 </div>
 </div>
 <p>The ESR response variable is in two variables. <code>ESR</code> is a factor with levels “low” and “high”. It is also present as a numeric variable <code>y</code>, coded 0 (low) and 1 (high). The explanatory variables are <code>fibrinogen</code> and <code>globulin</code>, both continuous.</p>
@@ -951,44 +1077,44 @@ dbl (3): fibrinogen, globulin, y
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="9.1-GLM2-binary-data_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid figure-img" width="576"></p>
+<p><img src="9.1-GLM2-binary-data_files/figure-html/unnamed-chunk-41-1.png" class="img-fluid figure-img" width="576"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>A more informative plot is a conditional density plot. This shows the proportion of 0s and 1s at each value of the explanatory variable.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cdplot</span>(<span class="fu">factor</span>(y) <span class="sc">~</span> fibrinogen, <span class="at">data =</span> plasma, <span class="at">xlab =</span> <span class="st">"Fibrinogen"</span>)</span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cdplot</span>(<span class="fu">factor</span>(y) <span class="sc">~</span> globulin, <span class="at">data =</span> plasma, <span class="at">xlab =</span> <span class="st">"Globulin"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cdplot</span>(<span class="fu">factor</span>(y) <span class="sc">~</span> fibrinogen, <span class="at">data =</span> plasma, <span class="at">xlab =</span> <span class="st">"Fibrinogen"</span>)</span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cdplot</span>(<span class="fu">factor</span>(y) <span class="sc">~</span> globulin, <span class="at">data =</span> plasma, <span class="at">xlab =</span> <span class="st">"Globulin"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="9.1-GLM2-binary-data_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid figure-img" width="576"></p>
+<p><img src="9.1-GLM2-binary-data_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid figure-img" width="576"></p>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>It looks like higher fibrinogen and higher globulin are associated with higher probability of high ESR. The pattern appears stronger for fibrinogen.</p>
 </section>
-<section id="fit-the-logistic-regression-model" class="level3">
-<h3 class="anchored" data-anchor-id="fit-the-logistic-regression-model">Fit the logistic regression model</h3>
+<section id="fit-the-binomial-regression-model" class="level3">
+<h3 class="anchored" data-anchor-id="fit-the-binomial-regression-model">Fit the binomial regression model</h3>
 <p>In the case of non-aggregated individual-level 0/1 data, we simply use <code>y</code> as the response variable. We have to remember to specify <code>family = binomial</code> in <code>glm()</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>plasma_glm <span class="ot">&lt;-</span> <span class="fu">glm</span>(y <span class="sc">~</span> fibrinogen <span class="sc">+</span> globulin, <span class="at">data =</span> plasma, <span class="at">family =</span> binomial)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>plasma_glm <span class="ot">&lt;-</span> <span class="fu">glm</span>(y <span class="sc">~</span> fibrinogen <span class="sc">+</span> globulin, <span class="at">data =</span> plasma, <span class="at">family =</span> binomial)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="complication-2-model-checking-and-dispersion" class="level3">
 <h3 class="anchored" data-anchor-id="complication-2-model-checking-and-dispersion">Complication 2: model checking and dispersion</h3>
 <p>Residual plots exist, but can be hard to interpret for 0/1 data:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(plasma_glm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(plasma_glm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="9.1-GLM2-binary-data_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="9.1-GLM2-binary-data_files/figure-html/unnamed-chunk-44-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -1031,7 +1157,7 @@ If your logistic regression produces enormous standard errors or warnings about 
 </section>
 <section id="probability-vs-odds-ratio-in-reporting" class="level3">
 <h3 class="anchored" data-anchor-id="probability-vs-odds-ratio-in-reporting">2. Probability vs odds ratio in reporting</h3>
-<p>Odds ratios are the default “native” scale of logistic regression, but probabilities are often easier to interpret. In practice, you may report odds ratios <strong>and</strong> translate to probabilities at meaningful explanatory variable values.</p>
+<p>Log odds ratios are the default “native” scale of the coefficients logistic regression, but probabilities are often easier to interpret. In practice, you may report odds ratios <strong>and</strong> translate to probabilities at meaningful explanatory variable values.</p>
 </section>
 </section>
 <section id="review" class="level2">

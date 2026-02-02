@@ -287,6 +287,7 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#the-odds-ratio" id="toc-the-odds-ratio" class="nav-link" data-scroll-target="#the-odds-ratio">The odds ratio</a></li>
   </ul></li>
+  <li><a href="#naming-models-logistic-regression" id="toc-naming-models-logistic-regression" class="nav-link" data-scroll-target="#naming-models-logistic-regression">Naming models (logistic regression)</a></li>
   <li><a href="#beetle-mortality-and-insecticide-dose-aggregated-data" id="toc-beetle-mortality-and-insecticide-dose-aggregated-data" class="nav-link" data-scroll-target="#beetle-mortality-and-insecticide-dose-aggregated-data">Beetle mortality and insecticide dose (aggregated data)</a></li>
   <li><a href="#two-tempting-but-wrong-analyses" id="toc-two-tempting-but-wrong-analyses" class="nav-link" data-scroll-target="#two-tempting-but-wrong-analyses">Two tempting but wrong analyses</a>
   <ul class="collapse">
@@ -294,7 +295,6 @@ window.Quarto = {
   <li><a href="#wrong-analysis-2-poisson-regression-on-counts-killed" id="toc-wrong-analysis-2-poisson-regression-on-counts-killed" class="nav-link" data-scroll-target="#wrong-analysis-2-poisson-regression-on-counts-killed">Wrong analysis 2: Poisson regression on counts killed</a></li>
   <li><a href="#doing-it-right" id="toc-doing-it-right" class="nav-link" data-scroll-target="#doing-it-right">Doing it right!</a></li>
   </ul></li>
-  <li><a href="#interpreting-coefficients-log-odds-odds-ratios-and-probabilities" id="toc-interpreting-coefficients-log-odds-odds-ratios-and-probabilities" class="nav-link" data-scroll-target="#interpreting-coefficients-log-odds-odds-ratios-and-probabilities">Interpreting coefficients: log-odds, odds ratios, and probabilities</a></li>
   <li><a href="#analysis-of-deviance-likelihood-based-anova" id="toc-analysis-of-deviance-likelihood-based-anova" class="nav-link" data-scroll-target="#analysis-of-deviance-likelihood-based-anova">Analysis of deviance (likelihood-based ANOVA)</a></li>
   <li><a href="#plotting-the-fitted-relationship" id="toc-plotting-the-fitted-relationship" class="nav-link" data-scroll-target="#plotting-the-fitted-relationship">Plotting the fitted relationship</a>
   <ul class="collapse">
@@ -316,6 +316,7 @@ window.Quarto = {
   <li><a href="#separation" id="toc-separation" class="nav-link" data-scroll-target="#separation">1. Separation</a></li>
   <li><a href="#probability-vs-odds-ratio-in-reporting" id="toc-probability-vs-odds-ratio-in-reporting" class="nav-link" data-scroll-target="#probability-vs-odds-ratio-in-reporting">2. Probability vs odds ratio in reporting</a></li>
   </ul></li>
+  <li><a href="#multiple-explanatory-variables" id="toc-multiple-explanatory-variables" class="nav-link" data-scroll-target="#multiple-explanatory-variables">Multiple explanatory variables</a></li>
   <li><a href="#review" id="toc-review" class="nav-link" data-scroll-target="#review">Review</a></li>
   <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading">Further reading</a></li>
   </ul>
@@ -566,6 +567,13 @@ Important
 <p>For example, when we see a coefficient (e.g., slope) close to zero, that means the log-odds ratio is close to zero, which means the odds ratio is close to 1, which means there is little difference in odds between the two groups.</p>
 </div>
 </div>
+<!---
+**Think–Pair–Share** (#tps-or-vs-probability) Why might a treatment have a "big" odds ratio, but only a "small" change in probability in one situation?
+--->
+<!---
+**Think–Pair–Share (#a_odds_vs_probability)** Why might odds be convenient mathematically,  
+even if probabilities feel more intuitive?
+--->
 </section>
 </section>
 <section id="a-simple-binomial-glm" class="level2">
@@ -688,6 +696,11 @@ age_groupchild 0.8602013  0.4470831 1.924030 0.05435084</code></pre>
 <p>In the line above, notice the <span class="math inline">\(\exp(0.860)\)</span> term. The number 0.860 is exactly the coefficient for <code>age_groupchild</code> in the model output. So we can get the odds ratio directly from the model coefficients by exponentiating the coefficient for <code>age_groupchild</code>. Put another way, the coefficient for <code>age_groupchild</code> is the log-odds ratio for children compared to adults.</p>
 <p>This isn’t magic. Its just a straightforward consequence of how the logit link function works. In the following example of binomial regression, you will see how with a continuous explanatory variable, the coefficient (slope) corresponds to the change in log-odds for a one-unit increase in the explanatory variable, and exponentiating that coefficient gives the odds ratio for a one-unit increase.</p>
 </section>
+</section>
+<section id="naming-models-logistic-regression" class="level2">
+<h2 class="anchored" data-anchor-id="naming-models-logistic-regression">Naming models (logistic regression)</h2>
+<p><strong>Logistic regression</strong> is a very important term. It is a binomial GLM with logit link. I.e., it is what we have just described above!</p>
+<p>The reason it (a binomial GLM with logit link) is called <strong>logistic regression</strong> is that the inverse of the logit function is called the logistic function. So logistic regression is just a special case of binomial GLM. The logistic function looks like a “squashed” S-shaped curve that maps the whole real line to the interval (0, 1). This is perfect for modelling probabilities.</p>
 </section>
 <section id="beetle-mortality-and-insecticide-dose-aggregated-data" class="level2">
 <h2 class="anchored" data-anchor-id="beetle-mortality-and-insecticide-dose-aggregated-data">Beetle mortality and insecticide dose (aggregated data)</h2>
@@ -866,51 +879,11 @@ Use <code>cbind(successes, failures)</code> in <code>glm(..., family = binomial)
 </div>
 </section>
 </section>
-<section id="interpreting-coefficients-log-odds-odds-ratios-and-probabilities" class="level2">
-<h2 class="anchored" data-anchor-id="interpreting-coefficients-log-odds-odds-ratios-and-probabilities">Interpreting coefficients: log-odds, odds ratios, and probabilities</h2>
-<p>Recall that the linear predictor is on the logit scale:</p>
-<p><span class="math display">\[\eta_i = \log\left(\frac{\pi_i}{1-\pi_i}\right) = \beta_0 + \beta_1 x_i\]</span></p>
-<p>Another term for logit is <strong>log-odds</strong>.</p>
-<p>In logistic regression:</p>
-<ul>
-<li><span class="math inline">\(\beta_1\)</span> is a <strong>log odds ratio</strong> for a one-unit change in the linear predictor</li>
-<li><span class="math inline">\(\exp(\beta_1)\)</span> is the <strong>odds ratio</strong> (multiplicative change in odds)</li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>beta1 <span class="ot">&lt;-</span> <span class="fu">coef</span>(beetle_glm)[[<span class="st">"Dose"</span>]]</span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(beta1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 1.278311</code></pre>
-</div>
-</div>
-<p>Interpretation: increasing dose by 1 unit multiplies the odds of death by <span class="math inline">\(\exp(\beta_1)\)</span>.</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><strong>Odds vs probability</strong><br>
-A constant odds ratio does <em>not</em> mean a constant change in probability. The probability change depends on where you start (e.g.&nbsp;<span class="math inline">\(\pi=0.05\)</span> vs <span class="math inline">\(\pi=0.80\)</span>).</p>
-</div>
-</div>
-<!---
-**Think–Pair–Share** (#tps-or-vs-probability) Why might a treatment have a "big" odds ratio, but only a "small" change in probability in one situation?
---->
-<!---
-**Think–Pair–Share (#a_odds_vs_probability)** Why might odds be convenient mathematically,  
-even if probabilities feel more intuitive?
---->
-</section>
 <section id="analysis-of-deviance-likelihood-based-anova" class="level2">
 <h2 class="anchored" data-anchor-id="analysis-of-deviance-likelihood-based-anova">Analysis of deviance (likelihood-based ANOVA)</h2>
 <p>As for count-data GLMs, the estimation of the coefficients is by maximum likelihood estimation (MLE). The measure of goodness-of-fit is the deviance. We can use an analysis of deviance table to see how much deviance is explained by dose.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(beetle_glm, <span class="at">test =</span> <span class="st">"Chisq"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(beetle_glm, <span class="at">test =</span> <span class="st">"Chisq"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Deviance Table
 
@@ -928,33 +901,34 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
 <p>We see a table quite similar to that for the Poisson GLM. In this case the Dose row shows a huge amount of the deviance (259.23 units) is explained by dose, and so the <span class="math inline">\(p\)</span>-value is very small.</p>
+<p>Recall that we already used a chi-squared test for the Poisson GLM. We do the same here for the binomial GLM, because we are working with models estimated by maximum likelihood. So just as with the Poisson GLM, we use a chi-squared test here because, under certain regularity conditions, the change in deviance between nested models follows a chi-squared distribution with degrees of freedom equal to the difference in the number of parameters. If you are interested in what this means, you can read more about it in more advanced statistics textbooks mentioned in the <em>Further reading</em> section at the end of this chapter.</p>
 </section>
 <section id="plotting-the-fitted-relationship" class="level2">
 <h2 class="anchored" data-anchor-id="plotting-the-fitted-relationship">Plotting the fitted relationship</h2>
 <p>We will plot <span class="math inline">\(P(Y=1)\)</span> (mortality probability) against dose using model predictions.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>dose_grid <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">Dose =</span> <span class="fu">seq</span>(<span class="fu">min</span>(beetle<span class="sc">$</span>Dose)<span class="sc">-</span><span class="dv">20</span>, <span class="fu">max</span>(beetle<span class="sc">$</span>Dose)<span class="sc">+</span><span class="dv">20</span>, <span class="at">length.out =</span> <span class="dv">400</span>))</span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>preds <span class="ot">&lt;-</span> <span class="fu">predict</span>(beetle_glm, <span class="at">newdata =</span> dose_grid, <span class="at">se.fit =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">|&gt;</span></span>
-<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>         <span class="fu">mutate</span>(<span class="at">p_hat =</span> <span class="fu">exp</span>(fit) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(fit)),</span>
-<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">p_hat_upper_2se =</span> <span class="fu">exp</span>(fit <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>se.fit) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(fit <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>se.fit)),</span>
-<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">p_hat_lower_2se =</span> <span class="fu">exp</span>(fit <span class="sc">-</span> <span class="dv">2</span><span class="sc">*</span>se.fit) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(fit <span class="sc">-</span> <span class="dv">2</span><span class="sc">*</span>se.fit))</span>
-<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>       )</span>
-<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>dose_grid <span class="ot">&lt;-</span> <span class="fu">bind_cols</span>(dose_grid, preds)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>dose_grid <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">Dose =</span> <span class="fu">seq</span>(<span class="fu">min</span>(beetle<span class="sc">$</span>Dose)<span class="sc">-</span><span class="dv">20</span>, <span class="fu">max</span>(beetle<span class="sc">$</span>Dose)<span class="sc">+</span><span class="dv">20</span>, <span class="at">length.out =</span> <span class="dv">400</span>))</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>preds <span class="ot">&lt;-</span> <span class="fu">predict</span>(beetle_glm, <span class="at">newdata =</span> dose_grid, <span class="at">se.fit =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">|&gt;</span></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>         <span class="fu">mutate</span>(<span class="at">p_hat =</span> <span class="fu">exp</span>(fit) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(fit)),</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">p_hat_upper_2se =</span> <span class="fu">exp</span>(fit <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>se.fit) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(fit <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>se.fit)),</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">p_hat_lower_2se =</span> <span class="fu">exp</span>(fit <span class="sc">-</span> <span class="dv">2</span><span class="sc">*</span>se.fit) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(fit <span class="sc">-</span> <span class="dv">2</span><span class="sc">*</span>se.fit))</span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>       )</span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>dose_grid <span class="ot">&lt;-</span> <span class="fu">bind_cols</span>(dose_grid, preds)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>And now the plot:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> beetle, <span class="fu">aes</span>(<span class="at">x =</span> Dose, <span class="at">y =</span> Mortality_rate)) <span class="sc">+</span></span>
-<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> dose_grid, <span class="fu">aes</span>(<span class="at">x =</span> Dose, <span class="at">y =</span> p_hat), <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
-<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="at">data =</span> dose_grid,</span>
-<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>              <span class="fu">aes</span>(<span class="at">x =</span> Dose, <span class="at">ymin =</span> p_hat_lower_2se, <span class="at">ymax =</span> p_hat_upper_2se),</span>
-<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">alpha =</span> <span class="fl">0.2</span>, <span class="at">fill =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
-<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Dose"</span>, <span class="at">y =</span> <span class="st">"Predicted mortality probability"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> beetle, <span class="fu">aes</span>(<span class="at">x =</span> Dose, <span class="at">y =</span> Mortality_rate)) <span class="sc">+</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> dose_grid, <span class="fu">aes</span>(<span class="at">x =</span> Dose, <span class="at">y =</span> p_hat), <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="at">data =</span> dose_grid,</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>              <span class="fu">aes</span>(<span class="at">x =</span> Dose, <span class="at">ymin =</span> p_hat_lower_2se, <span class="at">ymax =</span> p_hat_upper_2se),</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">alpha =</span> <span class="fl">0.2</span>, <span class="at">fill =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Dose"</span>, <span class="at">y =</span> <span class="st">"Predicted mortality probability"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="9.1-GLM2-binary-data_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="9.1-GLM2-binary-data_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -974,15 +948,15 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <p>Values much larger than 1 for the ratio <span class="math inline">\(\frac{\text{Residual deviance}}{\text{df}}\)</span> suggest overdispersion. In practice we look for values above about 1.5 or 2.</p>
 <p>In the beetle mortality example:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">deviance</span>(beetle_glm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">deviance</span>(beetle_glm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 8.437898</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">df.residual</span>(beetle_glm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">df.residual</span>(beetle_glm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 6</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">deviance</span>(beetle_glm) <span class="sc">/</span> <span class="fu">df.residual</span>(beetle_glm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">deviance</span>(beetle_glm) <span class="sc">/</span> <span class="fu">df.residual</span>(beetle_glm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1.406316</code></pre>
 </div>
@@ -1006,8 +980,8 @@ If there is overdispersion and we ignore it, standard errors are usually too sma
 <h3 class="anchored" data-anchor-id="quasibinomial-as-a-pragmatic-fix">Quasibinomial as a pragmatic fix</h3>
 <p>If we had found overdispersion, a simple fix is to use the <code>quasibinomial</code> family. This estimates an extra dispersion parameter from the data. For example:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>beetle_glm_q <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(Number_killed, Number_survived) <span class="sc">~</span> Dose,</span>
-<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">data =</span> beetle, <span class="at">family =</span> quasibinomial)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>beetle_glm_q <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(Number_killed, Number_survived) <span class="sc">~</span> Dose,</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">data =</span> beetle, <span class="at">family =</span> quasibinomial)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1036,7 +1010,7 @@ Note
 <p>Individuals with low ESR (ESR is erythrocyte sedimentation rate and is a measure of general inflammation and infection) are generally considered healthy; ESR &gt; 20 mm/hr indicates possible disease. We will model the probability of high ESR using fibrinogen and globulin concentration.</p>
 <p>Read in the plasma dataset:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>plasma <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"datasets/plasma_esr_original_HSAUR3.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>plasma <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"datasets/plasma_esr_original_HSAUR3.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 32 Columns: 4
 ── Column specification ────────────────────────────────────────────────────────
@@ -1050,7 +1024,7 @@ dbl (3): fibrinogen, globulin, y
 </div>
 <p>Here are the first few rows of the data:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>plasma</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>plasma</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 32 × 4
    fibrinogen globulin ESR          y
@@ -1077,24 +1051,24 @@ dbl (3): fibrinogen, globulin, y
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="9.1-GLM2-binary-data_files/figure-html/unnamed-chunk-41-1.png" class="img-fluid figure-img" width="576"></p>
+<p><img src="9.1-GLM2-binary-data_files/figure-html/unnamed-chunk-40-1.png" class="img-fluid figure-img" width="576"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>A more informative plot is a conditional density plot. This shows the proportion of 0s and 1s at each value of the explanatory variable.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
-<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cdplot</span>(<span class="fu">factor</span>(y) <span class="sc">~</span> fibrinogen, <span class="at">data =</span> plasma, <span class="at">xlab =</span> <span class="st">"Fibrinogen"</span>)</span>
-<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cdplot</span>(<span class="fu">factor</span>(y) <span class="sc">~</span> globulin, <span class="at">data =</span> plasma, <span class="at">xlab =</span> <span class="st">"Globulin"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cdplot</span>(<span class="fu">factor</span>(y) <span class="sc">~</span> fibrinogen, <span class="at">data =</span> plasma, <span class="at">xlab =</span> <span class="st">"Fibrinogen"</span>)</span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cdplot</span>(<span class="fu">factor</span>(y) <span class="sc">~</span> globulin, <span class="at">data =</span> plasma, <span class="at">xlab =</span> <span class="st">"Globulin"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="9.1-GLM2-binary-data_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid figure-img" width="576"></p>
+<p><img src="9.1-GLM2-binary-data_files/figure-html/unnamed-chunk-41-1.png" class="img-fluid figure-img" width="576"></p>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>It looks like higher fibrinogen and higher globulin are associated with higher probability of high ESR. The pattern appears stronger for fibrinogen.</p>
 </section>
@@ -1102,19 +1076,19 @@ dbl (3): fibrinogen, globulin, y
 <h3 class="anchored" data-anchor-id="fit-the-binomial-regression-model">Fit the binomial regression model</h3>
 <p>In the case of non-aggregated individual-level 0/1 data, we simply use <code>y</code> as the response variable. We have to remember to specify <code>family = binomial</code> in <code>glm()</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>plasma_glm <span class="ot">&lt;-</span> <span class="fu">glm</span>(y <span class="sc">~</span> fibrinogen <span class="sc">+</span> globulin, <span class="at">data =</span> plasma, <span class="at">family =</span> binomial)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>plasma_glm <span class="ot">&lt;-</span> <span class="fu">glm</span>(y <span class="sc">~</span> fibrinogen <span class="sc">+</span> globulin, <span class="at">data =</span> plasma, <span class="at">family =</span> binomial)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="complication-2-model-checking-and-dispersion" class="level3">
 <h3 class="anchored" data-anchor-id="complication-2-model-checking-and-dispersion">Complication 2: model checking and dispersion</h3>
 <p>Residual plots exist, but can be hard to interpret for 0/1 data:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
-<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(plasma_glm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(plasma_glm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="9.1-GLM2-binary-data_files/figure-html/unnamed-chunk-44-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="9.1-GLM2-binary-data_files/figure-html/unnamed-chunk-43-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -1159,6 +1133,16 @@ If your logistic regression produces enormous standard errors or warnings about 
 <h3 class="anchored" data-anchor-id="probability-vs-odds-ratio-in-reporting">2. Probability vs odds ratio in reporting</h3>
 <p>Log odds ratios are the default “native” scale of the coefficients logistic regression, but probabilities are often easier to interpret. In practice, you may report odds ratios <strong>and</strong> translate to probabilities at meaningful explanatory variable values.</p>
 </section>
+</section>
+<section id="multiple-explanatory-variables" class="level2">
+<h2 class="anchored" data-anchor-id="multiple-explanatory-variables">Multiple explanatory variables</h2>
+<p>Just as with linear models, and with Poisson GLMs, we can include multiple explanatory variables in a binomial GLM. The interpretation of coefficients is similar to that in linear models, but on the log-odds scale. We don’t always have well recognised names, like we do with linear models (e.g., ANCOVA, multiple regression). But the principles are the same.</p>
+<p>Because we don’t have well recognised names for different types of binomial GLM with multiple explanatory variables, we just call them “binomial GLMs” or “logistic regression models”, and then describe the explanatory variables included. For example:</p>
+<ul>
+<li>A logistic regression model with one continuous and one categorical explanatory variable.</li>
+<li>A logistic regression model with two continuous explanatory variables and their interaction.</li>
+<li>A logistic regression model with three categorical explanatory variables and all possible interactions (a full factorial model, analogous to a three-way ANOVA).</li>
+</ul>
 </section>
 <section id="review" class="level2">
 <h2 class="anchored" data-anchor-id="review">Review</h2>

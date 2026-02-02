@@ -636,6 +636,8 @@ In this chapter we have introduced Generalized Linear Models (GLMs) for count da
 - Overdispersion and zero inflation are common issues that need to be addressed.
 - GLMs can include multiple explanatory variables, just like linear models.
 
+
+
 With this foundation, you are now equipped to analyse count data using GLMs in R. In the next chapter, we will explore further extensions and applications of GLMs.
 
 

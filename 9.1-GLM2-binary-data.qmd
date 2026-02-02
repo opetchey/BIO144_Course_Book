@@ -217,6 +217,15 @@ For example, when we see a coefficient (e.g., slope) close to zero, that means t
 :::
 
 
+<!---
+**Think–Pair–Share** (#tps-or-vs-probability) Why might a treatment have a "big" odds ratio, but only a "small" change in probability in one situation?
+--->
+
+<!---
+**Think–Pair–Share (#a_odds_vs_probability)** Why might odds be convenient mathematically,  
+even if probabilities feel more intuitive?
+--->
+
 
 ## A simple binomial GLM
 
@@ -333,6 +342,13 @@ $$\exp(1.265) / \exp(0.405) = \exp(1.265 - 0.405) = \exp(0.860) = 2.363$$
 In the line above, notice the $\exp(0.860)$ term. The number 0.860 is exactly the coefficient for `age_groupchild` in the model output. So we can get the odds ratio directly from the model coefficients by exponentiating the coefficient for `age_groupchild`. Put another way, the coefficient for `age_groupchild` is the log-odds ratio for children compared to adults.
 
 This isn't magic. Its just a straightforward consequence of how the logit link function works. In the following example of binomial regression, you will see how with a continuous explanatory variable, the coefficient (slope) corresponds to the change in log-odds for a one-unit increase in the explanatory variable, and exponentiating that coefficient gives the odds ratio for a one-unit increase.
+
+
+## Naming models (logistic regression)
+
+**Logistic regression** is a very important term. It is a binomial GLM with logit link. I.e., it is what we have just described above!
+
+The reason it (a binomial GLM with logit link) is called **logistic regression** is that the inverse of the logit function is called the logistic function. So logistic regression is just a special case of binomial GLM. The logistic function looks like a "squashed" S-shaped curve that maps the whole real line to the interval (0, 1). This is perfect for modelling probabilities.
 
 
 ## Beetle mortality and insecticide dose (aggregated data)
@@ -468,44 +484,6 @@ Use `cbind(successes, failures)` in `glm(..., family = binomial)`.
 - failures: number of 0s
 :::
 
-## Interpreting coefficients: log-odds, odds ratios, and probabilities
-
-Recall that the linear predictor is on the logit scale:
-
-$$\eta_i = \log\left(\frac{\pi_i}{1-\pi_i}\right) = \beta_0 + \beta_1 x_i$$
-
-Another term for logit is **log-odds**. 
-
-
-
-In logistic regression:
-
-- $\beta_1$ is a **log odds ratio** for a one-unit change in the linear predictor
-- $\exp(\beta_1)$ is the **odds ratio** (multiplicative change in odds)
-
-```{r}
-beta1 <- coef(beetle_glm)[["Dose"]]
-exp(beta1)
-```
-
-Interpretation: increasing dose by 1 unit multiplies the odds of death by
-$\exp(\beta_1)$.
-
-::: {.callout-note}
-**Odds vs probability**  
-A constant odds ratio does *not* mean a constant change in probability.
-The probability change depends on where you start (e.g. $\pi=0.05$ vs
-$\pi=0.80$).
-:::
-
-<!---
-**Think–Pair–Share** (#tps-or-vs-probability) Why might a treatment have a "big" odds ratio, but only a "small" change in probability in one situation?
---->
-
-<!---
-**Think–Pair–Share (#a_odds_vs_probability)** Why might odds be convenient mathematically,  
-even if probabilities feel more intuitive?
---->
 
 ## Analysis of deviance (likelihood-based ANOVA)
 
@@ -516,6 +494,8 @@ anova(beetle_glm, test = "Chisq")
 ```
 
 We see a table quite similar to that for the Poisson GLM. In this case the Dose row shows a huge amount of the deviance (259.23 units) is explained by dose, and so the $p$-value is very small.
+
+Recall that we already used a chi-squared test for the Poisson GLM. We do the same here for the binomial GLM, because we are working with models estimated by maximum likelihood. So just as with the Poisson GLM, we use a chi-squared test here because, under certain regularity conditions, the change in deviance between nested models follows a chi-squared distribution with degrees of freedom equal to the difference in the number of parameters. If you are interested in what this means, you can read more about it in more advanced statistics textbooks mentioned in the *Further reading* section at the end of this chapter.
 
 
 ## Plotting the fitted relationship
@@ -701,6 +681,17 @@ include more data, simpler models, or penalized methods (advanced topic).
 Log odds ratios are the default "native" scale of the coefficients logistic regression, but
 probabilities are often easier to interpret. In practice, you may report
 odds ratios **and** translate to probabilities at meaningful explanatory variable values.
+
+
+## Multiple explanatory variables
+
+Just as with linear models, and with Poisson GLMs, we can include multiple explanatory variables in a binomial GLM. The interpretation of coefficients is similar to that in linear models, but on the log-odds scale. We don't always have well recognised names, like we do with linear models (e.g., ANCOVA, multiple regression). But the principles are the same.
+
+Because we don't have well recognised names for different types of binomial GLM with multiple explanatory variables, we just call them "binomial GLMs" or "logistic regression models", and then describe the explanatory variables included. For example:
+
+- A logistic regression model with one continuous and one categorical explanatory variable.
+- A logistic regression model with two continuous explanatory variables and their interaction.
+- A logistic regression model with three categorical explanatory variables and all possible interactions (a full factorial model, analogous to a three-way ANOVA).
 
 ## Review
 

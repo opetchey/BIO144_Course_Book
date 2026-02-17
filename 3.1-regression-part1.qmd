@@ -42,8 +42,7 @@ In this chapter / lesson we will not discuss the statistical significance of the
 
 There are lots of situations in which linear regression can be useful. For example, consider hypertension. Hypertension is a condition in which the blood pressure in the arteries is persistently elevated. Hypertension is a major risk factor for heart disease, stroke, and kidney disease. It is estimated that hypertension affects about 1 billion people worldwide. Hypertension is a complex condition that is influenced by many factors, including age. In fact, it is well known that blood pressure increases with age. But how much does blood pressure increase with age? This is a question that can be answered using linear regression.
 
-Here is an example of a study that used linear regression to answer this question:
-https://journals.lww.com/jhypertension/fulltext/2021/06000/association_of_age_and_blood_pressure_among_3_3.15.aspx
+Here is an example of a study that used linear regression to answer this question [Association of age and blood pressure among 3.3 million adults: insights from China PEACE million persons project (2021) *The China PEACE Collaborative Group*](https://journals.lww.com/jhypertension/fulltext/2021/06000/association_of_age_and_blood_pressure_among_3_3.15.aspx)
 
 In this study, the authors used linear regression to model the relationship between age and blood pressure. They found that systolic blood pressure increased by 0.28--0.85 mmHg/year. This is a small increase, but it is statistically significant. This means that the observed relationship between age and blood pressure is unlikely to be due to chance.
 

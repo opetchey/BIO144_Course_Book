@@ -243,7 +243,9 @@ Now, always open and ensure you're working within the R Project for your project
 
 ## Importing data 
 
-First, get some data sets for us to work with. **XYZ** You can download them from the course website or use your own data sets. Save the data files in a folder called `data` within your R Project directory.
+First, get some datasets for us to work with. The datasets used in this book are available for download as a zip file here: [course_book_datasets.zip](course_book_datasets.zip). You can download this file and unzip it to get all of the datasets used in the book. The datasets are in CSV format, which can be opened in R or other statistical software.
+
+Put the datasets in a `data`folder in your project folder.
 
 We will use the `readr` package to import data into R. The `readr` package provides functions to read data from various file formats, including CSV (comma-separated values) files, tab-separated values files, and others.
 
@@ -441,7 +443,7 @@ Other helpers include `starts_with()`, `ends_with()`, `matches()`, and `everythi
 
 
 
-### Filter: Getting particular rows of data [#filter-rows]
+### Filter: Getting particular rows of data 
 
 To get particular rows of data, we can use the `filter()` function. This function takes a *logical condition* as an argument and returns only the rows that meet that condition. For example, to get all rows where the Age is greater than 30:
 
@@ -462,7 +464,7 @@ my_data2 |>
 Other logical operators include `==` (equal to), `!=` (not equal to), `<=` (less than or equal to), and `>=` (greater than or equal to).
 
 
-### Slice: Getting rows by position [#slice-rows]
+### Slice: Getting rows by position
 
 The `slice()` function allows us to get rows by their position in the data frame. For example, to get the first two rows:
 
@@ -497,7 +499,7 @@ It's unusual to need the rows of a dataset to be arranged in a specific order, b
 Note that when you view the data in RStudio, it will always be arranged by the row number. In the viewer you can sort by clicking on the column headers.
 :::
 
-### Mutate: Adding new variables [#mutate-variables]
+### Mutate: Adding new variables 
 
 The `mutate()` function allows us to add new variables to a data frame. For example, to add a new variable called `Age_in_5_years` that is the Age plus 5:
 
@@ -598,7 +600,7 @@ Another use case is when we are making a linear model and want to specify the re
 
 There are many many many types of data visualisation. We will not explore them all in this course! In fact, we will use only a few basic types of visualisation, but we will use them well and critically. The three types of visualisation we will focus on are scatter plots, histograms, and box and whisker plots.
 
-### Three basic types of visualisation [#three-basic-visualisations]
+### Three basic types of visualisation 
 
 *Scatterplots* are used to visualise the relationship between two continuous variables. Here is an example of a scatterplot:
 
@@ -633,7 +635,7 @@ ggplot(my_data2, aes(x = factor(age_group), y = score)) +
   geom_boxplot()
 ```
 
-### Understanding ggplot2 syntax [#understanding-ggplot2]
+### Understanding ggplot2 syntax 
 
 We have used the `ggplot2` package to create visualisations. The `ggplot2` package is based on the grammar of graphics, which provides a consistent way to create visualisations. It is amazing, and when it was created it revolutionised data visualisation in R.
 
@@ -674,7 +676,7 @@ ggplot(my_data2, aes(x = age, y = score)) +
 
 There are a  million and one ways to customise visualisations in `ggplot2`. We will explore many of them during the course in a rather ad-hoc way. In this course we do not *assess* your skill and competence in making clear and beautiful visualisations. We will, however, be very happy to help you make beautiful and effective visualisations for your assignments and projects. And please be sure that making beautiful and effective visualisations is a skill that is very highly valued in the workplace.
 
-### Saving ggplot visualisations [#saving-ggplot]
+### Saving ggplot visualisations 
 
 Another feature that is very useful is to save ggplot visualisations to objects and then save to a file (for example a pdf). First, here is how we save a ggplot to an object:
 
@@ -728,7 +730,7 @@ There are a series of excellent cheat sheets for R and RStudio, and for packages
 
 ## Extras
 
-### Making reports directly using Quarto [#quarto-reports]
+### Making reports directly using Quarto 
 
 We don't explicitly ask you to make reports using Quarto in this course, but it is a very useful skill to have, and I highly recommend you explore it further in your own time. Here are a few basics to get you started.
 
@@ -744,7 +746,7 @@ If you have questions about Quarto, feel free to ask me or TAs during the practi
 
 Quarto reports are also covered in the *R for Data Science* book -- [Quarto](https://r4ds.hadley.nz/quarto.html).
 
-### Combining ggplots with patchwork [#combining-ggplots]
+### Combining ggplots with patchwork 
 
 We often make multiple ggplots in our analyses. Sometimes it is useful to combine multiple plots into a single figure for easier comparison or presentation. We can do with ggplots and the lovely add-on package called `patchwork`. The `patchwork` package allows us to combine multiple ggplots into a single plot layout. Here is an example of how to use `patchwork` to combine the three plots we made earlier (scatterplot, histogram, and boxplot):
 

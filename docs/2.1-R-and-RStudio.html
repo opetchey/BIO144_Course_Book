@@ -259,17 +259,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#clean-the-variable-names" id="toc-clean-the-variable-names" class="nav-link" data-scroll-target="#clean-the-variable-names">Clean the variable names</a></li>
   <li><a href="#manipulate-the-data-frame" id="toc-manipulate-the-data-frame" class="nav-link" data-scroll-target="#manipulate-the-data-frame">Manipulate the data frame</a></li>
   <li><a href="#select-columns" id="toc-select-columns" class="nav-link" data-scroll-target="#select-columns">Select columns</a></li>
-  <li><a href="#filter-getting-particular-rows-of-data-filter-rows" id="toc-filter-getting-particular-rows-of-data-filter-rows" class="nav-link" data-scroll-target="#filter-getting-particular-rows-of-data-filter-rows">Filter: Getting particular rows of data [#filter-rows]</a></li>
-  <li><a href="#slice-getting-rows-by-position-slice-rows" id="toc-slice-getting-rows-by-position-slice-rows" class="nav-link" data-scroll-target="#slice-getting-rows-by-position-slice-rows">Slice: Getting rows by position [#slice-rows]</a></li>
+  <li><a href="#filter-getting-particular-rows-of-data" id="toc-filter-getting-particular-rows-of-data" class="nav-link" data-scroll-target="#filter-getting-particular-rows-of-data">Filter: Getting particular rows of data</a></li>
+  <li><a href="#slice-getting-rows-by-position" id="toc-slice-getting-rows-by-position" class="nav-link" data-scroll-target="#slice-getting-rows-by-position">Slice: Getting rows by position</a></li>
   <li><a href="#arrange-reordering-rows" id="toc-arrange-reordering-rows" class="nav-link" data-scroll-target="#arrange-reordering-rows">Arrange: Reordering rows</a></li>
-  <li><a href="#mutate-adding-new-variables-mutate-variables" id="toc-mutate-adding-new-variables-mutate-variables" class="nav-link" data-scroll-target="#mutate-adding-new-variables-mutate-variables">Mutate: Adding new variables [#mutate-variables]</a></li>
+  <li><a href="#mutate-adding-new-variables" id="toc-mutate-adding-new-variables" class="nav-link" data-scroll-target="#mutate-adding-new-variables">Mutate: Adding new variables</a></li>
   <li><a href="#working-with-categorical-variables" id="toc-working-with-categorical-variables" class="nav-link" data-scroll-target="#working-with-categorical-variables">Working with categorical variables</a></li>
   </ul></li>
   <li><a href="#visualisation" id="toc-visualisation" class="nav-link" data-scroll-target="#visualisation">Visualisation</a>
   <ul class="collapse">
-  <li><a href="#three-basic-types-of-visualisation-three-basic-visualisations" id="toc-three-basic-types-of-visualisation-three-basic-visualisations" class="nav-link" data-scroll-target="#three-basic-types-of-visualisation-three-basic-visualisations">Three basic types of visualisation [#three-basic-visualisations]</a></li>
-  <li><a href="#understanding-ggplot2-syntax-understanding-ggplot2" id="toc-understanding-ggplot2-syntax-understanding-ggplot2" class="nav-link" data-scroll-target="#understanding-ggplot2-syntax-understanding-ggplot2">Understanding ggplot2 syntax [#understanding-ggplot2]</a></li>
-  <li><a href="#saving-ggplot-visualisations-saving-ggplot" id="toc-saving-ggplot-visualisations-saving-ggplot" class="nav-link" data-scroll-target="#saving-ggplot-visualisations-saving-ggplot">Saving ggplot visualisations [#saving-ggplot]</a></li>
+  <li><a href="#three-basic-types-of-visualisation" id="toc-three-basic-types-of-visualisation" class="nav-link" data-scroll-target="#three-basic-types-of-visualisation">Three basic types of visualisation</a></li>
+  <li><a href="#understanding-ggplot2-syntax" id="toc-understanding-ggplot2-syntax" class="nav-link" data-scroll-target="#understanding-ggplot2-syntax">Understanding ggplot2 syntax</a></li>
+  <li><a href="#saving-ggplot-visualisations" id="toc-saving-ggplot-visualisations" class="nav-link" data-scroll-target="#saving-ggplot-visualisations">Saving ggplot visualisations</a></li>
   </ul></li>
   <li><a href="#review" id="toc-review" class="nav-link" data-scroll-target="#review">Review</a></li>
   <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading">Further reading</a>
@@ -278,8 +278,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#extras" id="toc-extras" class="nav-link" data-scroll-target="#extras">Extras</a>
   <ul class="collapse">
-  <li><a href="#making-reports-directly-using-quarto-quarto-reports" id="toc-making-reports-directly-using-quarto-quarto-reports" class="nav-link" data-scroll-target="#making-reports-directly-using-quarto-quarto-reports">Making reports directly using Quarto [#quarto-reports]</a></li>
-  <li><a href="#combining-ggplots-with-patchwork-combining-ggplots" id="toc-combining-ggplots-with-patchwork-combining-ggplots" class="nav-link" data-scroll-target="#combining-ggplots-with-patchwork-combining-ggplots">Combining ggplots with patchwork [#combining-ggplots]</a></li>
+  <li><a href="#making-reports-directly-using-quarto" id="toc-making-reports-directly-using-quarto" class="nav-link" data-scroll-target="#making-reports-directly-using-quarto">Making reports directly using Quarto</a></li>
+  <li><a href="#combining-ggplots-with-patchwork" id="toc-combining-ggplots-with-patchwork" class="nav-link" data-scroll-target="#combining-ggplots-with-patchwork">Combining ggplots with patchwork</a></li>
   <li><a href="#setting-a-reference-level-in-a-linear-model" id="toc-setting-a-reference-level-in-a-linear-model" class="nav-link" data-scroll-target="#setting-a-reference-level-in-a-linear-model">Setting a reference level in a linear model</a></li>
   </ul></li>
   </ul>
@@ -559,7 +559,8 @@ Important
 </section>
 <section id="importing-data" class="level2">
 <h2 class="anchored" data-anchor-id="importing-data">Importing data</h2>
-<p>First, get some data sets for us to work with. <strong>XYZ</strong> You can download them from the course website or use your own data sets. Save the data files in a folder called <code>data</code> within your R Project directory.</p>
+<p>First, get some datasets for us to work with. The datasets used in this book are available for download as a zip file here: <a href="course_book_datasets.zip">course_book_datasets.zip</a>. You can download this file and unzip it to get all of the datasets used in the book. The datasets are in CSV format, which can be opened in R or other statistical software.</p>
+<p>Put the datasets in a <code>data</code>folder in your project folder.</p>
 <p>We will use the <code>readr</code> package to import data into R. The <code>readr</code> package provides functions to read data from various file formats, including CSV (comma-separated values) files, tab-separated values files, and others.</p>
 <p>To read a CSV file, we can use the <code>read_csv()</code> function from the <code>readr</code> package. For example, to read a CSV file called <code>my_data_file.csv</code>, we can use the following code:</p>
 <div class="cell">
@@ -820,8 +821,8 @@ Tip
 </div>
 <p>Other helpers include <code>starts_with()</code>, <code>ends_with()</code>, <code>matches()</code>, and <code>everything()</code>.</p>
 </section>
-<section id="filter-getting-particular-rows-of-data-filter-rows" class="level3">
-<h3 class="anchored" data-anchor-id="filter-getting-particular-rows-of-data-filter-rows">Filter: Getting particular rows of data [#filter-rows]</h3>
+<section id="filter-getting-particular-rows-of-data" class="level3">
+<h3 class="anchored" data-anchor-id="filter-getting-particular-rows-of-data">Filter: Getting particular rows of data</h3>
 <p>To get particular rows of data, we can use the <code>filter()</code> function. This function takes a <em>logical condition</em> as an argument and returns only the rows that meet that condition. For example, to get all rows where the Age is greater than 30:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>my_data2 <span class="sc">|&gt;</span> </span>
@@ -867,8 +868,8 @@ Tip
 </div>
 <p>Other logical operators include <code>==</code> (equal to), <code>!=</code> (not equal to), <code>&lt;=</code> (less than or equal to), and <code>&gt;=</code> (greater than or equal to).</p>
 </section>
-<section id="slice-getting-rows-by-position-slice-rows" class="level3">
-<h3 class="anchored" data-anchor-id="slice-getting-rows-by-position-slice-rows">Slice: Getting rows by position [#slice-rows]</h3>
+<section id="slice-getting-rows-by-position" class="level3">
+<h3 class="anchored" data-anchor-id="slice-getting-rows-by-position">Slice: Getting rows by position</h3>
 <p>The <code>slice()</code> function allows us to get rows by their position in the data frame. For example, to get the first two rows:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>my_data2 <span class="sc">|&gt;</span> </span>
@@ -942,8 +943,8 @@ Tip
 </div>
 </div>
 </section>
-<section id="mutate-adding-new-variables-mutate-variables" class="level3">
-<h3 class="anchored" data-anchor-id="mutate-adding-new-variables-mutate-variables">Mutate: Adding new variables [#mutate-variables]</h3>
+<section id="mutate-adding-new-variables" class="level3">
+<h3 class="anchored" data-anchor-id="mutate-adding-new-variables">Mutate: Adding new variables</h3>
 <p>The <code>mutate()</code> function allows us to add new variables to a data frame. For example, to add a new variable called <code>Age_in_5_years</code> that is the Age plus 5:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>my_data2 <span class="sc">|&gt;</span> </span>
@@ -1105,8 +1106,8 @@ Note
 <section id="visualisation" class="level2">
 <h2 class="anchored" data-anchor-id="visualisation">Visualisation</h2>
 <p>There are many many many types of data visualisation. We will not explore them all in this course! In fact, we will use only a few basic types of visualisation, but we will use them well and critically. The three types of visualisation we will focus on are scatter plots, histograms, and box and whisker plots.</p>
-<section id="three-basic-types-of-visualisation-three-basic-visualisations" class="level3">
-<h3 class="anchored" data-anchor-id="three-basic-types-of-visualisation-three-basic-visualisations">Three basic types of visualisation [#three-basic-visualisations]</h3>
+<section id="three-basic-types-of-visualisation" class="level3">
+<h3 class="anchored" data-anchor-id="three-basic-types-of-visualisation">Three basic types of visualisation</h3>
 <p><em>Scatterplots</em> are used to visualise the relationship between two continuous variables. Here is an example of a scatterplot:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
@@ -1154,8 +1155,8 @@ Note
 </div>
 </div>
 </section>
-<section id="understanding-ggplot2-syntax-understanding-ggplot2" class="level3">
-<h3 class="anchored" data-anchor-id="understanding-ggplot2-syntax-understanding-ggplot2">Understanding ggplot2 syntax [#understanding-ggplot2]</h3>
+<section id="understanding-ggplot2-syntax" class="level3">
+<h3 class="anchored" data-anchor-id="understanding-ggplot2-syntax">Understanding ggplot2 syntax</h3>
 <p>We have used the <code>ggplot2</code> package to create visualisations. The <code>ggplot2</code> package is based on the grammar of graphics, which provides a consistent way to create visualisations. It is amazing, and when it was created it revolutionised data visualisation in R.</p>
 <p>You can see that for each of the three visualisations, we use the <code>ggplot()</code> function to create the base plot, and then we add layers to the plot using the <code>+</code> operator.</p>
 <p>The first argument to the <code>ggplot()</code> function is the data frame that we want to visualise. The layers that we add to the plot each have two main components. The first component is the <em>aesthetic mappings</em>, which specify how the variables in the data frame are mapped to the visual properties of the plot (e.g., x-axis, y-axis, color, size). The second component is the <em>geometric object</em>, which defines how the data is represented in the plot (e.g., points, lines, bars).</p>
@@ -1199,8 +1200,8 @@ Note
 </div>
 <p>There are a million and one ways to customise visualisations in <code>ggplot2</code>. We will explore many of them during the course in a rather ad-hoc way. In this course we do not <em>assess</em> your skill and competence in making clear and beautiful visualisations. We will, however, be very happy to help you make beautiful and effective visualisations for your assignments and projects. And please be sure that making beautiful and effective visualisations is a skill that is very highly valued in the workplace.</p>
 </section>
-<section id="saving-ggplot-visualisations-saving-ggplot" class="level3">
-<h3 class="anchored" data-anchor-id="saving-ggplot-visualisations-saving-ggplot">Saving ggplot visualisations [#saving-ggplot]</h3>
+<section id="saving-ggplot-visualisations" class="level3">
+<h3 class="anchored" data-anchor-id="saving-ggplot-visualisations">Saving ggplot visualisations</h3>
 <p>Another feature that is very useful is to save ggplot visualisations to objects and then save to a file (for example a pdf). First, here is how we save a ggplot to an object:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>plot1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(my_data2, <span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> score)) <span class="sc">+</span></span>
@@ -1249,8 +1250,8 @@ Note
 </section>
 <section id="extras" class="level2">
 <h2 class="anchored" data-anchor-id="extras">Extras</h2>
-<section id="making-reports-directly-using-quarto-quarto-reports" class="level3">
-<h3 class="anchored" data-anchor-id="making-reports-directly-using-quarto-quarto-reports">Making reports directly using Quarto [#quarto-reports]</h3>
+<section id="making-reports-directly-using-quarto" class="level3">
+<h3 class="anchored" data-anchor-id="making-reports-directly-using-quarto">Making reports directly using Quarto</h3>
 <p>We don’t explicitly ask you to make reports using Quarto in this course, but it is a very useful skill to have, and I highly recommend you explore it further in your own time. Here are a few basics to get you started.</p>
 <p>One of the great features of R and RStudio is the ability to create reports that combine text, code, and visualisations. One of the most popular tools for this is Quarto (https://quarto.org/), which allows you to create documents in various formats (HTML, PDF, Word, etc.) using a combination of <em>Markdown</em> and R code.</p>
 <p>**Why is this so great???* If you want to show someone your analysis and visualisation, say a team member or supervisor, it is often good to prepare a report that explains what you did, perhaps shows the code you used, and presents the results (including visualisations). One way to go about this is to prepare a powerpoint presentation or a word document, and then copy and paste code and visualisations into the document. Its what I used to do. It works. But it is tedious, error prone, and when you change something in your code or data, you have to remember to go back and update the powerpoint or word document.</p>
@@ -1259,8 +1260,8 @@ Note
 <p>If you have questions about Quarto, feel free to ask me or TAs during the practicals, though note that any particular TAs may or may not be experienced with Quarto themselves.</p>
 <p>Quarto reports are also covered in the <em>R for Data Science</em> book – <a href="https://r4ds.hadley.nz/quarto.html">Quarto</a>.</p>
 </section>
-<section id="combining-ggplots-with-patchwork-combining-ggplots" class="level3">
-<h3 class="anchored" data-anchor-id="combining-ggplots-with-patchwork-combining-ggplots">Combining ggplots with patchwork [#combining-ggplots]</h3>
+<section id="combining-ggplots-with-patchwork" class="level3">
+<h3 class="anchored" data-anchor-id="combining-ggplots-with-patchwork">Combining ggplots with patchwork</h3>
 <p>We often make multiple ggplots in our analyses. Sometimes it is useful to combine multiple plots into a single figure for easier comparison or presentation. We can do with ggplots and the lovely add-on package called <code>patchwork</code>. The <code>patchwork</code> package allows us to combine multiple ggplots into a single plot layout. Here is an example of how to use <code>patchwork</code> to combine the three plots we made earlier (scatterplot, histogram, and boxplot):</p>
 <p>First, load the <code>patchwork</code> package:</p>
 <div class="cell">

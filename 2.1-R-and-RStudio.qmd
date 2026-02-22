@@ -518,6 +518,140 @@ my_data2 |>
   )
 ```
 
+
+
+### Grouping and summarising data
+
+The `group_by()` function allows us to add a grouping structure to a data frame, and the `summarise()` function allows us to summarise the data, respecting any grouping structure specified by `group_by()`.
+
+```{r}
+#| echo: false
+library(tidyverse)
+
+set.seed(144)
+
+# Study structure
+n_people <- 60
+visits <- 1:4
+
+# Person-level data
+people <- tibble(
+  id = 1:n_people,
+  sex = sample(c("Female", "Male"), n_people, replace = TRUE),
+  treatment = sample(c("Placebo", "Drug"), n_people, replace = TRUE),
+  exercise = sample(c("No", "Yes"), n_people, replace = TRUE),
+  age = round(rnorm(n_people, mean = 50, sd = 10))
+)
+
+# Expand to repeated measures
+bp_multifactor <- expand_grid(
+  people,
+  visit = visits
+) %>%
+  mutate(
+    # baseline blood pressure depends on age and sex
+    baseline = 110 + 
+      0.5 * age +
+      if_else(sex == "Male", 5, 0),
+    
+    # treatment lowers BP over time
+    treatment_effect = if_else(treatment == "Drug",
+                               -3 * visit,
+                               0),
+    
+    # exercise lowers BP slightly
+    exercise_effect = if_else(exercise == "Yes",
+                              -2,
+                              0),
+    
+    # random individual variation
+    random_intercept = rnorm(n_people)[id],
+    
+    # simulated systolic BP
+    systolic_bp = baseline +
+                  treatment_effect +
+                  exercise_effect +
+                  random_intercept +
+                  rnorm(n(), sd = 5)
+  ) %>%
+  select(id, sex, treatment, exercise, age, visit, systolic_bp)
+write_csv(bp_multifactor, "datasets/bp_multifactor.csv")
+```
+
+First let us read in a dataset to work with. The dataset is simulated about factors that could be associated with blood pressure
+
+Study design:
+
+* 60 individuals
+* Sex assigned at birth: Male / Female
+* Treatment: Placebo / Drug
+* Exercise program: Yes / No
+* Four visits (repeated measures per person)
+* Age varies between individuals
+* Outcome: systolic blood pressure (mmHg)
+
+Read in and view the data:
+
+```{r}
+bp_multifactor <- read_csv("datasets/bp_multifactor.csv")
+glimpse(bp_multifactor)
+```
+
+First, a simple summarise. We will get the mean blood pressure across all visits and all people:
+
+```{r}
+bp_multifactor |>
+  summarise(mean_bp = mean(systolic_bp))
+```
+
+How does this work? The `summarise()` function creates a new data frame with summary statistics. The argument `mean_bp = mean(systolic_bp)` calculates the mean of the `systolic_bp` variable and names it `mean_bp`. (The mean of all the observations is sometimes called the "grand mean".)
+
+Now let's get the mean blood pressure for each person. To do this, we need to tell the summarise to calculate the mean for each person. We can do this by **adding a grouping structure** to the data frame with the `group_by()` function:
+
+```{r}
+bp_multifactor |>
+  group_by(id) |>
+  summarise(mean_bp = mean(systolic_bp))
+```
+
+The `group_by(id)` function adds a grouping structure to the data frame based on the `id` variable. This tells the `summarise()` function to calculate the mean blood pressure for each person (i.e., for each unique value of `id`).
+
+We can see the grouping structure when we look at the output of the `group_by()` function:
+
+```{r}
+bp_multifactor |>
+  group_by(id)
+```
+
+The output has the line `# Groups: id [60]`, which indicates that the data frame is now grouped by the `id` variable, and there are 60 unique groups (i.e., 60 people).
+
+**It is that simple :)**
+
+We can simultaneously group by multiple variables. For example, to get the mean blood pressure for each combination of sex and treatment. Before we do this, we can check how many unique combinations we think we should have. We already know there are two sexes and two treatments (Placebo and Drug), so we should have four unique combinations, and therefore four means.
+
+```{r}
+bp_multifactor |>
+  group_by(sex, treatment) |>
+  summarise(mean_bp = mean(systolic_bp))
+```
+
+Perfect.
+
+We can also calculate multiple summary statistics at once. For example, to get the mean and standard deviation of blood pressure for each combination of sex and treatment:
+
+```{r}
+bp_multifactor |>
+  group_by(sex, treatment) |>
+  summarise(
+    mean_bp = mean(systolic_bp),
+    sd_bp = sd(systolic_bp)
+  )
+```
+
+
+
+
+
 ### Working with categorical variables 
 
 Variables in a data frame in R have a *type*. The most common types of variables are numeric and categorical. Numeric variables are variables that take on numerical values, such as age or score. Categorical variables are variables that take on a limited number of values, often representing categories or groups. In R, categorical variables are typically have *type* `<chr>` which is `character`. Or they can be of type `<fct>` which is `factor`.
@@ -729,6 +863,11 @@ A great place to consolidate your learning so far, and to learn more about the *
 There are a series of excellent cheat sheets for R and RStudio, and for packages in the *tidyverse*. They're pretty dense and packed with information, but they can be very useful as a quick reference. You can find them here: [RStudio Cheat Sheets](https://posit.co/resources/cheatsheets/).
 
 ## Extras
+
+### Joining data frames
+
+In this chapter we have only worked with one data frame at a time. However, in real life you will often have multiple data frames that you need to join together. For example, you might have one data frame with demographic information about people (e.g., age, sex, education level) and another data frame with information about their health outcomes (e.g., blood pressure, cholesterol levels). You can use the `dplyr` package to join these data frames together using functions like `left_join()`, `right_join()`, `inner_join()`, and `full_join()`. We won't cover these during the course, but you can read about them in the *R for Data Science* book -- [Joining data frames](https://r4ds.hadley.nz/joins.html).
+
 
 ### Making reports directly using Quarto 
 

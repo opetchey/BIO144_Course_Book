@@ -885,6 +885,20 @@ If you have questions about Quarto, feel free to ask me or TAs during the practi
 
 Quarto reports are also covered in the *R for Data Science* book -- [Quarto](https://r4ds.hadley.nz/quarto.html).
 
+
+### Mathematical notation in ggplot2 
+
+When creating visualisations with `ggplot2`, you may want to include mathematical notation in your titles, axis labels, or legends. This can be done using the `latex2exp` package, which allows you to use LaTeX syntax to create mathematical expressions in your plots. Here is an example of how to use `latex2exp` to include mathematical notation in a ggplot:
+
+```{r}
+ggplot(mapping = aes(x = 1, y = 1)) +
+  geom_point() +
+  labs(x = latex2exp::TeX("Movement speed ($µm$ $sec^{-1}$)"),
+       y = latex2exp::TeX("Distance moved ($µm$)"),
+       title = latex2exp::TeX("Relationship between movement speed and distance moved"))
+```
+
+
 ### Combining ggplots with patchwork 
 
 We often make multiple ggplots in our analyses. Sometimes it is useful to combine multiple plots into a single figure for easier comparison or presentation. We can do with ggplots and the lovely add-on package called `patchwork`. The `patchwork` package allows us to combine multiple ggplots into a single plot layout. Here is an example of how to use `patchwork` to combine the three plots we made earlier (scatterplot, histogram, and boxplot):

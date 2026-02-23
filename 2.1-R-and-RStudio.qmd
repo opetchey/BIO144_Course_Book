@@ -306,7 +306,7 @@ What do you expect the output of `duplicated(example_vector)` to be?
 A final check (though not the final one we could do--there are many others). Let us check for missing values and get a count of how many there are in each variable. We can do this with the following *tidyverse* code:
 
 ```{r}
-library(dplyr)
+library(tidyverse)
 my_data |> 
   summarise(across(everything(), ~ sum(is.na(.))))
 ```

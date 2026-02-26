@@ -1028,3 +1028,38 @@ summary(model2)
 The (Intercept) term now corresponds to the "Control" group, and the coefficients for "Aspirin" and "Ibuprofen" are relative to "Control". This makes interpretation of the model coefficients more intuitive.
 
 Also see the chapter about factors in the R for Data Science book -- [Factors](https://r4ds.hadley.nz/factors.html).
+
+### Finding observations with extreme values
+
+Imagine we have a dataset about people's ages and their blood pressure, so that the dataset has three variables: `id`, `age`, and `blood_pressure`. We might want to find the `id` of people with extreme values of blood pressure, or age. How can we do this? And do this using code?
+
+The first step is to define a criterion for what we consider to be an extreme value. For example, we might define an extreme value as being more than 3 standard deviations away from the mean. This is equivalent to saying that we define extreme value as ones with a z-score greater than 3 or less than -3. Here, a z-score is calculated as (value - mean) / standard deviation.
+
+Let's do this in code, and make the code as general (i.e., works for other datasets) as possible. Let's say our dataset is called `my_data`, and it has three variables: `ID`, and two other variables
+
+```{r}
+#| eval = FALSE
+my_data |> 
+  pivot_longer(cols = !matches("ID"),
+               names_to = "var_name",
+               values_to = "var_value") |> 
+  group_by(var_name) |> 
+  mutate(temp = var_value - mean(var_value),
+         z_val = temp / sd(temp)) |> 
+  filter(z_val < -3 | z_val > 3) |> 
+  pull(ID) |> 
+  unique()
+```
+
+How does this work?
+
+First, we use `pivot_longer()` to reshape the data from wide format to long format. This allows us to work with all the variables (except ID) in a consistent way. The `matches("ID")` function is used to specify that we want to keep the ID variable as is, and pivot the other variables.
+
+Second, we use `group_by(var_name)` to group the data by variable name. This allows us to calculate the mean and standard deviation for each variable separately.
+
+Third, we use `mutate()` to calculate the z-score for each value of each variable. We first calculate the difference between the value and the mean (temp), and then divide by the standard deviation to get the z-score (z_val).
+
+Fourth, we use `filter()` to keep only the rows where the z-score is less than -3 or greater than 3, which corresponds to our definition of extreme values.
+
+Finally, we use `pull(ID)` to extract the ID variable from the filtered data, and `unique()` to get the unique IDs of people with extreme values.
+

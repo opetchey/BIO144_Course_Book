@@ -289,7 +289,6 @@ In the linear regression model the dependent variable $Y$ is related to the inde
 $$Y = \beta_0 + \beta_1 x + \epsilon \ $$
 where
 
-* $\epsilon$ is the error term
 * $\beta_0$ is the intercept
 * $\beta_1$ is the slope
 * $\epsilon$ is the error term.

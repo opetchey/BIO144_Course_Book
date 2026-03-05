@@ -335,20 +335,20 @@ head(bp_age_data$Systolic_BP)
 To get the expected values, we need to find the intercept and slope of the linear model. We can do this using the `lm()` function in R.
 
 ```{r}
-lm1 <- lm(Systolic_BP ~ Age, data = bp_age_data)
+bp_age_model <- lm(Systolic_BP ~ Age, data = bp_age_data)
 ```
 
 And we can get the intercept and slope using the `coef()` function:
 
 ```{r}
-coef(lm1)
+coef(bp_age_model)
 ```
 
 We can then use the mutate function from the dplyr package to add the expected values to the dataset:
 
 ```{r}
 bp_age_data <- bp_age_data %>%
-  mutate(Expected_BP = coef(lm1)[1] + coef(lm1)[2] * Age)
+  mutate(Expected_BP = coef(bp_age_model)[1] + coef(bp_age_model)[2] * Age)
 ```
 
 And we can get the residuals by subtracting the expected values from the observed values:
@@ -363,8 +363,8 @@ We can also get the expected values and residuals directly from the `lm` object 
 
 ```{r}
 bp_age_data <- bp_age_data %>%
-  mutate(Expected_BP = fitted(lm1),
-         Residuals = residuals(lm1))
+  mutate(Expected_BP = fitted(bp_age_model),
+         Residuals = residuals(bp_age_model))
 ```
 :::
 

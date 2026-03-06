@@ -525,8 +525,7 @@ ggplot(f_density, aes(x = x, y = y)) +
 The F-distribution is skewed to the right and has a long tail. The area to the right of 3.89 is shaded in red. This area represents the probability of observing an F-statistic as or more extreme as 3.89, assuming the null hypothesis is true. This probability is the $p$-value of the hypothesis test.
 
 
-The $F$-statistic and $F$-test is briefly recaptured in 3.1.f) of the
-Stahel script, but see also Mat183 chapter 6.2.5. It uses the fact that
+The $F$-statistic and $F$-test uses the fact that:
 
 $$\frac{MSE_{model}}{MSE_{residual}} =  \frac{SSM/p}{SSE/(n-1-p)} \sim F_{p,n-1-p}$$
 

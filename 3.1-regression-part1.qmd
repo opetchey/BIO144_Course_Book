@@ -215,7 +215,6 @@ $$ \hat\sigma^2 = \frac{1}{n-2}\sum_{i=1}^n e_i^2 \quad \text{with residuals  } 
 
 is an unbiased estimate of the residual variance $\sigma^2$.
 
-(Derivations of the equations above are in the Stahel script 2.A b. Hint: differentiate, set to zero, solve.)
 
 ### Why division by $n-2$ ensures an unbiased estimator
 
@@ -1179,6 +1178,48 @@ There are many good books and online resources about regression models, fitting 
 
 
 ## Extras
+
+### Making a QQ plot
+
+With the quantile-quantile plot we are investigating the distribution of the residuals. We do this by comparing the quantiles of the residuals (the sample quantiles) to the quantiles of a normal distribution (the theoretical quantiles). If the residuals are normally distributed, then the points in the QQ-plot will approximately lie on a straight line.
+
+What are the sample quantiles? Let us assume a sample of 20 residuals. We can order these residuals from smallest to largest. The we can calculate the proportion of data points that are smaller than each of these residuals. For example, the smallest residual will have 0% of the data points smaller than it, the second smallest residual will have 5% of the data points smaller than it, and so on. The largest residual will have 100% of the data points smaller than it. These proportions are called the sample quantiles.
+
+Example for residuals sampled from a uniform distribution:
+
+```{r}
+set.seed(121)
+
+n <- 200
+residuals <- runif(n)
+residuals <- residuals - mean(residuals)
+
+ordered_residuals <- sort(residuals)
+
+# plotting positions
+p <- (1:n - 0.5) / n
+
+# theoretical normal quantiles
+theoretical_quantiles <- qnorm(p)
+
+plot(theoretical_quantiles, ordered_residuals,
+     xlab = "Theoretical normal quantiles",
+     ylab = "Ordered residuals")
+
+# --- replicate qqline() ---
+
+sample_q <- quantile(residuals, probs = c(0.25, 0.75))
+theoretical_q <- qnorm(c(0.25, 0.75))
+
+b <- diff(sample_q) / diff(theoretical_q)
+a <- sample_q[1] - b * theoretical_q[1]
+
+abline(a = a, b = b, col = "red", lwd = 2)
+
+#qqnorm(residuals)
+#qqline(residuals, col = "red", lwd = 2)
+```
+
 
 ### Tests for normality
 

@@ -206,14 +206,18 @@ For a given sample of data $(x_i,y_i), i=1,..,n$, with mean values $\overline{x}
 
 $$ \hat\beta_1 = \frac{\sum_{i=1}^n  (y_i - \overline{y}) (x_i - \overline{x})}{ \sum_{i=1}^n (x_i - \overline{x})^2 } = \frac{cov(x,y)}{var(x)}$$
 
+This formula for $\hat\beta_1$ can be interpreted as the ratio of the covariance between $x$ and $y$ to the variance of $x$. It captures how much $y$ changes on average for a one-unit change in $x$. The derivation of this formula involves calculus and the minimization of the sum of squared residuals, but the key point is that it provides a direct (analytical) way to calculate the slope of the best-fitting line.
+
+The intercept $\hat\beta_0$ can then be calculated using the formula:
+
 $$\hat\beta_0 = \overline{y} - \hat\beta_1 \overline{x}  $$
 
-Moreover,
+Moreover, we can also calculate a measure of the residual variance. This is a measure of how much variability is not explained by the model. The formula for the residual variance is:
 
 
 $$ \hat\sigma^2 = \frac{1}{n-2}\sum_{i=1}^n e_i^2 \quad \text{with residuals  } e_i = y_i - (\hat\beta_0 + \hat\beta_1 x_i) $$
 
-is an unbiased estimate of the residual variance $\sigma^2$.
+The division by $n-2$ (instead of $n$) is a correction for the fact that we have estimated two parameters ($\beta_0$ and $\beta_1$) from the data. This correction ensures that $\hat\sigma^2$ is an unbiased estimate of the residual variance $\sigma^2$.
 
 
 ### Why division by $n-2$ ensures an unbiased estimator

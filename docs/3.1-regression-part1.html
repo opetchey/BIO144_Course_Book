@@ -512,10 +512,12 @@ Note
 <p>With a linear model, we can calculate the least squares estimates of the parameters <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> directly using the following formulas.</p>
 <p>For a given sample of data <span class="math inline">\((x_i,y_i), i=1,..,n\)</span>, with mean values <span class="math inline">\(\overline{x}\)</span> and <span class="math inline">\(\overline{y}\)</span>, the least squares estimates <span class="math inline">\(\hat\beta_0\)</span> and <span class="math inline">\(\hat\beta_1\)</span> are computed as</p>
 <p><span class="math display">\[ \hat\beta_1 = \frac{\sum_{i=1}^n  (y_i - \overline{y}) (x_i - \overline{x})}{ \sum_{i=1}^n (x_i - \overline{x})^2 } = \frac{cov(x,y)}{var(x)}\]</span></p>
+<p>This formula for <span class="math inline">\(\hat\beta_1\)</span> can be interpreted as the ratio of the covariance between <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> to the variance of <span class="math inline">\(x\)</span>. It captures how much <span class="math inline">\(y\)</span> changes on average for a one-unit change in <span class="math inline">\(x\)</span>. The derivation of this formula involves calculus and the minimization of the sum of squared residuals, but the key point is that it provides a direct (analytical) way to calculate the slope of the best-fitting line.</p>
+<p>The intercept <span class="math inline">\(\hat\beta_0\)</span> can then be calculated using the formula:</p>
 <p><span class="math display">\[\hat\beta_0 = \overline{y} - \hat\beta_1 \overline{x}  \]</span></p>
-<p>Moreover,</p>
+<p>Moreover, we can also calculate a measure of the residual variance. This is a measure of how much variability is not explained by the model. The formula for the residual variance is:</p>
 <p><span class="math display">\[ \hat\sigma^2 = \frac{1}{n-2}\sum_{i=1}^n e_i^2 \quad \text{with residuals  } e_i = y_i - (\hat\beta_0 + \hat\beta_1 x_i) \]</span></p>
-<p>is an unbiased estimate of the residual variance <span class="math inline">\(\sigma^2\)</span>.</p>
+<p>The division by <span class="math inline">\(n-2\)</span> (instead of <span class="math inline">\(n\)</span>) is a correction for the fact that we have estimated two parameters (<span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span>) from the data. This correction ensures that <span class="math inline">\(\hat\sigma^2\)</span> is an unbiased estimate of the residual variance <span class="math inline">\(\sigma^2\)</span>.</p>
 </section>
 <section id="why-division-by-n-2-ensures-an-unbiased-estimator" class="level3">
 <h3 class="anchored" data-anchor-id="why-division-by-n-2-ensures-an-unbiased-estimator">Why division by <span class="math inline">\(n-2\)</span> ensures an unbiased estimator</h3>

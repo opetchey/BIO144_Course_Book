@@ -609,7 +609,18 @@ Given a fixed value of $x$, say $x_0$. The question is:
 Where does $\hat y_0 = \hat\beta_0 + \hat\beta_1 x_0$ lie with a certain confidence (i.e., 95%)? 
 
 
-This question is not trivial, because both $\hat\beta_0$ and $\hat\beta_1$ are estimates from the data and contain uncertainty. We will not go into the details here.
+The first step is to calculate the standard error of $\hat y_0$:
+
+$$\sigma^{(\hat y_0)} = \hat\sigma \sqrt{  \left( \frac{1}{n} + \frac{(x_0 - \bar x)^2}{\sum_{i=1}^n (x_i - \bar x)^2} \right) }$$
+
+where $\hat\sigma^2$ is the expected residual variance of the model, calculated as:
+
+$$\hat\sigma^2 = \frac{\sum_{i=1}^n (y_i - \hat y_i)^2}{n-2}$$
+
+Then, we can calculate the confidence interval of $\hat y_0$ as:
+
+$$\hat y_0 \pm t_{0.975} \cdot \sigma^{(\hat y_0)}$$
+
 
 Plotting the confidence interval around all $\hat y_0$ values one obtains the *confidence band* or *confidence band for the expected values* of $y$.
 
@@ -656,11 +667,22 @@ lty=8, cex=1,col=c(2),lwd=2)
 ```
 
 
+
+
+
 ## Calculations of the prediction band
 
 We can easily predicted an expected value of $y$ for a given $x$ value. But we can also ask w where does a *future observation* lie with a certain confidence (i.e., 95\%)?
 
-To answer this question, we have to *consider not only the uncertainty in the predicted value caused by uncertainty in the parameter estimates* $\hat y_0 =  \hat\beta_0 + \hat\beta_1 x_0$, but also the *error term* $\epsilon_i \sim N(0,\sigma^2)$}.  
+To answer this question, we have to *consider not only the uncertainty in the predicted value caused by uncertainty in the parameter estimates* $\hat y_0 =  \hat\beta_0 + \hat\beta_1 x_0$, but also the *error term* $\epsilon_i \sim N(0,\sigma^2)$}.
+
+The standard error of a future observation is given by:
+$$\sigma^{(y_0)} = \hat\sigma \sqrt{ 1 + \left( \frac{1}{n} + \frac{(x_0 - \bar x)^2}{\sum_{i=1}^n (x_i - \bar x)^2} \right) }$$
+
+This is the same as the standard error of the predicted value $\hat y_0$ but with an additional 1. This is because the standard error of a future observation is the standard error of the predicted value $\hat y_0$, and this includes the uncertainty in the parameter estimates, plus an additional term that accounts for the variability of future observations around the predicted value. This additional term is what makes the prediction band wider than the confidence band.
+
+The prediction interval of a future observation is then given by:
+$$\hat y_0 \pm t_{0.975} \cdot \sigma^{(y_0)}$$
 
 This is the reason why the **prediction band** is wider than the confidence band.
 

@@ -275,28 +275,35 @@ window.Quarto = {
    
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
-  <li><a href="#how-good-is-the-regression-model" id="toc-how-good-is-the-regression-model" class="nav-link" data-scroll-target="#how-good-is-the-regression-model">How good is the regression model?</a>
+  <li><a href="#how-good-is-the-regression-model-r2" id="toc-how-good-is-the-regression-model-r2" class="nav-link" data-scroll-target="#how-good-is-the-regression-model-r2">How good is the regression model (<span class="math inline">\(R^2\)</span>)?</a>
   <ul class="collapse">
   <li><a href="#sst" id="toc-sst" class="nav-link" data-scroll-target="#sst"><span class="math inline">\(SST\)</span></a></li>
   <li><a href="#ssm-and-sse" id="toc-ssm-and-sse" class="nav-link" data-scroll-target="#ssm-and-sse">SSM and SSE</a></li>
   <li><a href="#ssm" id="toc-ssm" class="nav-link" data-scroll-target="#ssm"><span class="math inline">\(SSM\)</span></a></li>
   <li><a href="#sse" id="toc-sse" class="nav-link" data-scroll-target="#sse"><span class="math inline">\(SSE\)</span></a></li>
   <li><a href="#r2" id="toc-r2" class="nav-link" data-scroll-target="#r2"><span class="math inline">\(R^2\)</span></a></li>
-  <li><a href="#is-my-r-squared-good" id="toc-is-my-r-squared-good" class="nav-link" data-scroll-target="#is-my-r-squared-good">Is my R squared good?</a></li>
+  <li><a href="#is-my-r-squared-high-or-low" id="toc-is-my-r-squared-high-or-low" class="nav-link" data-scroll-target="#is-my-r-squared-high-or-low">Is my R squared high (or low)?</a></li>
+  <li><a href="#where-is-the-r2-value-in-the-regression-output" id="toc-where-is-the-r2-value-in-the-regression-output" class="nav-link" data-scroll-target="#where-is-the-r2-value-in-the-regression-output">Where is the <span class="math inline">\(R^2\)</span> value in the regression output?</a></li>
   </ul></li>
-  <li><a href="#how-unlikey-is-the-observed-data-given-the-null-hypothesis" id="toc-how-unlikey-is-the-observed-data-given-the-null-hypothesis" class="nav-link" data-scroll-target="#how-unlikey-is-the-observed-data-given-the-null-hypothesis">How unlikey is the observed data given the null hypothesis?</a>
+  <li><a href="#is-the-relationship-statistically-significant" id="toc-is-the-relationship-statistically-significant" class="nav-link" data-scroll-target="#is-the-relationship-statistically-significant">Is the relationship <em>statistically significant</em>?</a>
   <ul class="collapse">
-  <li><a href="#recap-formal-definition-of-the-p-value" id="toc-recap-formal-definition-of-the-p-value" class="nav-link" data-scroll-target="#recap-formal-definition-of-the-p-value">Recap: Formal definition of the <span class="math inline">\(p\)</span>-value</a></li>
+  <li><a href="#the-null-hypothesis" id="toc-the-null-hypothesis" class="nav-link" data-scroll-target="#the-null-hypothesis">The null hypothesis</a></li>
+  <li><a href="#the-t-statistic" id="toc-the-t-statistic" class="nav-link" data-scroll-target="#the-t-statistic">The <span class="math inline">\(t\)</span>-statistic</a></li>
+  <li><a href="#the-p-value" id="toc-the-p-value" class="nav-link" data-scroll-target="#the-p-value">The p-value</a></li>
+  <li><a href="#where-is-the-p-value-in-the-regression-output" id="toc-where-is-the-p-value-in-the-regression-output" class="nav-link" data-scroll-target="#where-is-the-p-value-in-the-regression-output">Where is the <span class="math inline">\(p\)</span>-value in the regression output?</a></li>
   <li><a href="#a-cautionary-note-on-the-use-of-p-values" id="toc-a-cautionary-note-on-the-use-of-p-values" class="nav-link" data-scroll-target="#a-cautionary-note-on-the-use-of-p-values">A cautionary note on the use of <span class="math inline">\(p\)</span>-values</a></li>
   </ul></li>
-  <li><a href="#how-strong-is-the-relationship" id="toc-how-strong-is-the-relationship" class="nav-link" data-scroll-target="#how-strong-is-the-relationship">How strong is the relationship?</a></li>
-  <li><a href="#confidence-and-prediction-bands" id="toc-confidence-and-prediction-bands" class="nav-link" data-scroll-target="#confidence-and-prediction-bands">Confidence and Prediction Bands</a></li>
-  <li><a href="#calculation-of-the-confidence-band" id="toc-calculation-of-the-confidence-band" class="nav-link" data-scroll-target="#calculation-of-the-confidence-band">Calculation of the confidence band</a></li>
-  <li><a href="#calculations-of-the-prediction-band" id="toc-calculations-of-the-prediction-band" class="nav-link" data-scroll-target="#calculations-of-the-prediction-band">Calculations of the prediction band</a></li>
+  <li><a href="#confidence-interval-of-slope" id="toc-confidence-interval-of-slope" class="nav-link" data-scroll-target="#confidence-interval-of-slope">Confidence interval of slope</a></li>
+  <li><a href="#confidence-band" id="toc-confidence-band" class="nav-link" data-scroll-target="#confidence-band">Confidence band</a></li>
+  <li><a href="#prediction-band" id="toc-prediction-band" class="nav-link" data-scroll-target="#prediction-band">Prediction band</a></li>
+  <li><a href="#reporting" id="toc-reporting" class="nav-link" data-scroll-target="#reporting">Reporting</a></li>
+  <li><a href="#relationship-between-r2-and-the-p-value-of-the-slope" id="toc-relationship-between-r2-and-the-p-value-of-the-slope" class="nav-link" data-scroll-target="#relationship-between-r2-and-the-p-value-of-the-slope">Relationship between <span class="math inline">\(R^2\)</span> and the <span class="math inline">\(p\)</span>-value of the slope</a></li>
   <li><a href="#review" id="toc-review" class="nav-link" data-scroll-target="#review">Review</a></li>
   <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading">Further reading</a></li>
   <li><a href="#extras" id="toc-extras" class="nav-link" data-scroll-target="#extras">Extras</a>
   <ul class="collapse">
+  <li><a href="#calculation-of-confidence-bands" id="toc-calculation-of-confidence-bands" class="nav-link" data-scroll-target="#calculation-of-confidence-bands">Calculation of confidence bands</a></li>
+  <li><a href="#calculation-of-the-prediction-band" id="toc-calculation-of-the-prediction-band" class="nav-link" data-scroll-target="#calculation-of-the-prediction-band">Calculation of the prediction band</a></li>
   <li><a href="#randomisation-test-for-the-slope-of-a-regression-line" id="toc-randomisation-test-for-the-slope-of-a-regression-line" class="nav-link" data-scroll-target="#randomisation-test-for-the-slope-of-a-regression-line">Randomisation test for the slope of a regression line</a></li>
   <li><a href="#visualising-p-values-for-regression-slopes" id="toc-visualising-p-values-for-regression-slopes" class="nav-link" data-scroll-target="#visualising-p-values-for-regression-slopes">Visualising p-values for regression slopes</a></li>
   </ul></li>
@@ -325,21 +332,27 @@ window.Quarto = {
 </header>
 
 
-<p>This chapter builds on the previous chapter on simple linear regression. There we learned how to fit a regression model to data, and how to check if the assumptions of the regression model are met. In this chapter we will learn how to interpret the results of a regression model, and how to use the model to make inferences about the relationship between the dependent and independent variables.</p>
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>Now that we have a satisfactory model, we can start to use it. In the following material, you will learn:</p>
+<p>This chapter builds on the previous chapter on simple linear regression. There we learned how to fit a regression model to data, and how to check if the assumptions of the regression model are met. When we are satisfied that the assumptions of linear regression are adequately met, we can move on to the next stage: interpreting the model and using it to answer our biological question.</p>
+<p>Interpretation of the model means two main things in simple regression:</p>
 <ul>
-<li>How to measure how good is the regression (correlation and <span class="math inline">\(R^2\)</span>).</li>
-<li>How to test if the parameter estimates are compatible with some specific value (<span class="math inline">\(t\)</span>-test).</li>
-<li>How to find the range of parameters values are compatible with the data (confidence intervals).</li>
-<li>How to find the regression lines compatible with the data (confidence band).</li>
-<li>How to calculate plausible values of newly collected data (prediction band).</li>
+<li>Is there a statistically significant relationship between the response and explanatory variable?</li>
+<li>Does the model provide a good (or not so good) explanation of the variation in the response variable?</li>
+</ul>
+<p>And there are couple of tools useful for communicating and visualising the uncertainty in the regression model, such as <em>confidence interval</em>, <em>confidence bands</em>, and <em>prediction bands</em>.</p>
+<p>So, in this chapter, we cover:</p>
+<ul>
+<li>How to measure how good is the regression (<span class="math inline">\(R^2\)</span>).</li>
+<li>Testing if relationship is statistically significant (i.e., if the slope is significantly different from zero).</li>
+<li>What is the confidence interval of the slope.</li>
+<li>What is the the confidence band of the regression line.</li>
+<li>What is the prediction band of the regression line.</li>
 </ul>
 </section>
-<section id="how-good-is-the-regression-model" class="level2">
-<h2 class="anchored" data-anchor-id="how-good-is-the-regression-model">How good is the regression model?</h2>
-<p>What would a good regression model look like? What would a bad one look like? One could say that a good regression model is one that explains the dependent variable well. But what could we mean by “explains the data well”?</p>
+<section id="how-good-is-the-regression-model-r2" class="level2">
+<h2 class="anchored" data-anchor-id="how-good-is-the-regression-model-r2">How good is the regression model (<span class="math inline">\(R^2\)</span>)?</h2>
+<p>What would a good regression model look like? What would a bad one look like? One could say that a good regression model is one that explains a lot the variability in the response variable. But what could we mean by “variability in the response variable” and “explains a lot”?</p>
 <p>Take these two examples.</p>
 <div class="cell">
 <div class="cell-output-display">
@@ -353,23 +366,25 @@ window.Quarto = {
 <!---
 **Think-Pair-Share** (#tps-better-model) In which of these two would you say the model is better, and in which is it worse?
 --->
-<p>The first model seems to fit the data well, while the second one does not. But how can we quantify this?</p>
-<p>Let’s say that we will measure the goodness of the model by the amount of variability of the dependent variable that is explained by the independent variable. To do this we need to do the following:</p>
+<p>The left regression model seems to fit the data relatively well. The regression line is quite close to the data points.</p>
+<p>The right regression model does not fit the data well. The regression line is quite far from the data points.</p>
+<p>But how can we quantify this?</p>
+<p>Let’s say that we will measure the goodness of the model by the proportion of variability of the response variable that is explained by the explanatory variable. To do this we need to do the following:</p>
 <ol type="1">
-<li>Measure the total variability of the dependent variable (total sum of squares, <span class="math inline">\(SST\)</span>).</li>
-<li>Measure the amount of variability of the dependent variable that is explained by the independent variable (model sum of squares, <span class="math inline">\(SSM\)</span>).</li>
-<li>Measure the variability of the dependent variable that is not explained by the independent variable (error sum of squares, <span class="math inline">\(SSE\)</span>).</li>
-<li>Calculate the proportion of variability of the dependent variable that is explained by the independent variable (<span class="math inline">\(R^2\)</span>, pronounced as “r-squared”) (also known as the coefficient of determination) (<span class="math inline">\(R^2\)</span> = <span class="math inline">\(SSM/SST\)</span>).</li>
+<li>Measure the total variability of the response variable (total sum of squares, <span class="math inline">\(SST\)</span>).</li>
+<li>Measure the amount of variability of the response variable that is explained by the explanatory variable (model sum of squares, <span class="math inline">\(SSM\)</span>).</li>
+<li>Measure the variability of the response variable that is not explained by the explanatory variable (error sum of squares, <span class="math inline">\(SSE\)</span>).</li>
+<li>Calculate the proportion of variability of the response variable that is explained by the explanatory variable (<span class="math inline">\(R^2\)</span>, pronounced as “r-squared”) (also known as the coefficient of determination) (<span class="math inline">\(R^2\)</span> = <span class="math inline">\(SSM/SST\)</span>).</li>
 </ol>
 <p><strong>Importantly, note that we will calculate <span class="math inline">\(SSM\)</span> and <span class="math inline">\(SSE\)</span> so that they sum up to <span class="math inline">\(SST\)</span>. I.e., <span class="math inline">\(SST = SSM + SSE\)</span>. That is, the total variability is the sum of what is explained by the model and what remains unexplained.</strong></p>
 <p>Let’s take each in turn:</p>
 <section id="sst" class="level3">
 <h3 class="anchored" data-anchor-id="sst"><span class="math inline">\(SST\)</span></h3>
-<p><strong>1. The total variability of the dependent variable is the sum of the squared differences between the dependent variable and its mean. This is called the total sum of squares (<span class="math inline">\(SST\)</span>).</strong></p>
+<p><strong>1. The total variability of the response variable is the sum of the squared differences between the response variable and its mean. This is called the total sum of squares (<span class="math inline">\(SST\)</span>).</strong></p>
 <p><span class="math display">\[SST = \sum_{i=1}^{n} (y_i - \bar{y})^2\]</span></p>
-<p>where: <span class="math inline">\(y_i\)</span> is the dependent variable, <span class="math inline">\(\bar{y}\)</span> is the mean of the dependent variable, <span class="math inline">\(n\)</span> is the number of observations.</p>
+<p>where: <span class="math inline">\(y_i\)</span> is the response variable, <span class="math inline">\(\bar{y}\)</span> is the mean of the response variable, <span class="math inline">\(n\)</span> is the number of observations.</p>
 <p><strong>Note that sometimes <span class="math inline">\(SST\)</span> is referred to as <span class="math inline">\(SSY\)</span> (sum of squares of <span class="math inline">\(y\)</span>).</strong></p>
-<p>Graphically, this is the sum of the square of the blue residuals as shown in the following graph, where the horizontal dashed line is at the value of the mean of the dependent variable.</p>
+<p>Graphically, this is the sum of the square of the blue residuals as shown in the following graph, where the horizontal dashed line is at the value of the mean of the response variable.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -403,10 +418,10 @@ window.Quarto = {
 <section id="ssm" class="level3">
 <h3 class="anchored" data-anchor-id="ssm"><span class="math inline">\(SSM\)</span></h3>
 <p>Next we will do the second step, that is calculate the model sum of squares (<span class="math inline">\(SSM\)</span>).</p>
-<p><strong>2. The amount of variability of the dependent variable that is explained by the independent variable is called the model sum of squares (<span class="math inline">\(SSM\)</span>).</strong></p>
-<p>This is the difference between the predicted value of the dependent variable and the mean of the dependent variable, squared and summed:</p>
+<p><strong>2. The amount of variability of the response variable that is explained by the explanatory variable is called the model sum of squares (<span class="math inline">\(SSM\)</span>).</strong></p>
+<p>This is the difference between the predicted value of the response variable and the mean of the response variable, squared and summed:</p>
 <p><span class="math display">\[SSE = \sum_{i=1}^{n} (\hat{y}_i - \bar{y})^2\]</span></p>
-<p>where: <span class="math inline">\(\hat{y}_i\)</span> is the predicted value of the dependent variable,</p>
+<p>where: <span class="math inline">\(\hat{y}_i\)</span> is the predicted value of the response variable,</p>
 <p>In R, we calculate this as follows:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y1 <span class="sc">~</span> x)</span>
@@ -414,7 +429,7 @@ window.Quarto = {
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>SSM <span class="ot">&lt;-</span> <span class="fu">sum</span>((y1_predicted <span class="sc">-</span> <span class="fu">mean</span>(y1))<span class="sc">^</span><span class="dv">2</span>)</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>SSM</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 325.198</code></pre>
+<pre><code>[1] 283.6252</code></pre>
 </div>
 </div>
 </section>
@@ -426,7 +441,7 @@ window.Quarto = {
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>SSE <span class="ot">&lt;-</span> <span class="fu">sum</span>((y1 <span class="sc">-</span> y1_predicted)<span class="sc">^</span><span class="dv">2</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>SSE</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 10.76476</code></pre>
+<pre><code>[1] 1.165614</code></pre>
 </div>
 </div>
 <p>Or…</p>
@@ -434,25 +449,25 @@ window.Quarto = {
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>SSE <span class="ot">&lt;-</span> SST <span class="sc">-</span> SSM</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>SSE</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 10.76476</code></pre>
+<pre><code>[1] 1.165614</code></pre>
 </div>
 </div>
 </section>
 <section id="r2" class="level3">
 <h3 class="anchored" data-anchor-id="r2"><span class="math inline">\(R^2\)</span></h3>
-<p>Finally, we calculate the proportion of variability of the dependent variable that is explained by the independent variable (<span class="math inline">\(R^2\)</span>):</p>
+<p>Finally, we calculate the proportion of variability of the response variable that is explained by the explanatory variable (<span class="math inline">\(R^2\)</span>):</p>
 <p><span class="math display">\[R^2 = \frac{SSM}{SST}\]</span></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>R.squared <span class="ot">&lt;-</span> SSM<span class="sc">/</span>SST</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>R.squared</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.9679585</code></pre>
+<pre><code>[1] 0.9959071</code></pre>
 </div>
 </div>
 </section>
-<section id="is-my-r-squared-good" class="level3">
-<h3 class="anchored" data-anchor-id="is-my-r-squared-good">Is my R squared good?</h3>
-<p>What value of <span class="math inline">\(R^2\)</span> is considered good? In ecological research, <span class="math inline">\(R^2\)</span> values are often low (less than 0.3), because ecological systems are complex and many factors influence the dependent variable. However, in other fields, such as physiology, <span class="math inline">\(R^2\)</span> values are often higher. Therefore, the answer of what values of <span class="math inline">\(R^2\)</span> are good depends on the field of research.</p>
+<section id="is-my-r-squared-high-or-low" class="level3">
+<h3 class="anchored" data-anchor-id="is-my-r-squared-high-or-low">Is my R squared high (or low)?</h3>
+<p>What value of <span class="math inline">\(R^2\)</span> is considered good? In ecological research, <span class="math inline">\(R^2\)</span> values are often low (less than 0.3), because ecological systems are complex and many factors influence the response variable. However, in other fields, such as physiology, <span class="math inline">\(R^2\)</span> values are often higher. Therefore, the answer of what values of <span class="math inline">\(R^2\)</span> are good depends on the field of research.</p>
 <p>Here are the four examples and their r-squared.</p>
 <div class="cell">
 <div class="cell-output-display">
@@ -467,59 +482,80 @@ window.Quarto = {
 **Think-Pair-Share** (#tps-what-minimised) What is minimised when we fit a regression model? And therefore what is maximised?
 --->
 </section>
+<section id="where-is-the-r2-value-in-the-regression-output" class="level3">
+<h3 class="anchored" data-anchor-id="where-is-the-r2-value-in-the-regression-output">Where is the <span class="math inline">\(R^2\)</span> value in the regression output?</h3>
+<p>Using the blood pressure data, we can fit a regression model and look at the output. We use the <code>summary</code> function to get the regression output, and we can see that the <span class="math inline">\(R^2\)</span> value is given in the output. Look for “Multiple R-squared” in the output, which is the <span class="math inline">\(R^2\)</span> value of the model.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Systolic_BP ~ Age, data = bp_data)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-13.2195  -3.4434  -0.0808   3.1383  12.6025 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 98.96874    1.46102   67.74   &lt;2e-16 ***
+Age          0.82407    0.02771   29.74   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 4.971 on 98 degrees of freedom
+Multiple R-squared:  0.9002,    Adjusted R-squared:  0.8992 
+F-statistic: 884.4 on 1 and 98 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>The value is 0.9, which means that the model explains about 90% of the variability in the response variable (systolic blood pressure).</p>
 </section>
-<section id="how-unlikey-is-the-observed-data-given-the-null-hypothesis" class="level2">
-<h2 class="anchored" data-anchor-id="how-unlikey-is-the-observed-data-given-the-null-hypothesis">How unlikey is the observed data given the null hypothesis?</h2>
-<p>We often hear this expressed as “is the relationship significant?” And maybe we heard that the relationship is significant if the p-value is less than 0.05. But what does all this actually mean? In this section we’ll figure all this out. The first step to is to formulate a null hypothesis.</p>
+</section>
+<section id="is-the-relationship-statistically-significant" class="level2">
+<h2 class="anchored" data-anchor-id="is-the-relationship-statistically-significant">Is the relationship <em>statistically significant</em>?</h2>
+<p>A common question is “Is there a relationship between the response and explanatory variable?” Or, more formally, “Is the slope of the regression line significantly different from zero?”</p>
+<p>We often hear this expressed as “is the relationship statistically significant?” And maybe we heard that the relationship is significant if the p-value is less than 0.05. But what does all this actually mean? In this section we’ll figure all this out. The first step to is to formulate a null hypothesis.</p>
+<section id="the-null-hypothesis" class="level3">
+<h3 class="anchored" data-anchor-id="the-null-hypothesis">The null hypothesis</h3>
 <p>What is a meaningful null hypothesis for a regression model?</p>
-<p>As mentioned, often we’re interested in whether there is a relationship between the dependent (response) and independent (explanatory) variable. Therefore, the null hypothesis is that there is no relationship between the dependent and independent variable. This means that the null hypothesis is that the slope of the regression line is zero.</p>
+<p>As mentioned, often we’re interested in whether there is a relationship between the dependent (response) and independent (explanatory) variable. Therefore, the null hypothesis is that there is no relationship between the response and explanatory variable. This means that the null hypothesis is that the slope of the regression line is zero.</p>
 <p>Recall the regression model: <span class="math display">\[y = \beta_0 + \beta_1 x + \epsilon\]</span> <!---
 **Think-Pair-Share** (#tps-null-hypothesis) Write down the null hypothesis of no relationship between $x$ and $y$ in terms of a $\beta$ parameter.
 ---></p>
 <p>The null hypothesis is that the slope of the regression line is zero: <span class="math display">\[H_0: \beta_1 = 0\]</span></p>
 <p>What is the alternative hypothesis?</p>
 <p><span class="math display">\[H_1: \beta_1 \neq 0\]</span></p>
-<p>So, how do we test the null hypothesis? More precisely, we are going to calculate the probability of observing the data we have, given that the null hypothesis is true. If this probability is very low, then we can reject the null hypothesis.</p>
-<p>Does that make sense? Does it seem a bit convoluted? It is a bit!!!</p>
-<p>But this is how hypothesis testing works. We never prove the null hypothesis is true. Instead, we calculate the probability of observing our data given that the null hypothesis is true. If this probability is very low, we reject the null hypothesis.</p>
-<p>To make the calculation we can use the fact that the slope of the regression line is an estimate of the true slope. This estimate has uncertainty associated with it. We can use this uncertainty to calculate the probability of observing the data we have, given the null hypothesis is true.</p>
+<p>So, how do we test the null hypothesis? We are going to calculate the probability of observing the data we have, given that the null hypothesis is true. If this probability is very low, then we can reject the null hypothesis.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>We never prove the null hypothesis is true. Instead, we calculate the probability of observing our data given that the null hypothesis is true. If this probability is very low, we reject the null hypothesis.</p>
+</div>
+</div>
+<p>To calculation this probability we use the fact that the slope of the regression line is an estimate and this estimate has uncertainty associated with it.</p>
 <p>We can see that the slope estimate (the <span class="math inline">\(x\)</span> row) has uncertainty by looking at the regression output:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m1)<span class="sc">$</span>coefficients[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m1)<span class="sc">$</span>coefficients[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>              Estimate Std. Error
 (Intercept) -0.7638353  0.6652233
 x            2.1161160  0.1072104</code></pre>
 </div>
 </div>
-<p>The estimate is the mean of the distribution of the parameter (slope) and the standard error is a measure of the uncertainty of the estimate.</p>
+<p>We see the estimate of the parameter (slope) and a measure of uncertainty in the estimate: the standard error of the estimate.</p>
 <p>The standard error is calculated as:</p>
 <p><span class="math display">\[\sigma^{(\beta_1)} = \sqrt{ \frac{\hat\sigma^2}{\sum_{i=1}^n (x_i - \bar x)^2}}\]</span></p>
 <p>Where <span class="math inline">\(\hat\sigma^2\)</span> is the expected residual variance of the model. This is calculated as:</p>
 <p><span class="math display">\[\hat\sigma^2 = \frac{\sum_{i=1}^n (y_i - \hat y_i)^2}{n-2}\]</span></p>
-<p>Where <span class="math inline">\(\hat y_i\)</span> is the predicted value of <span class="math inline">\(y_i\)</span> from the regression model.</p>
+<p>Where <span class="math inline">\(\hat y_i\)</span> is the predicted value of <span class="math inline">\(y_i\)</span> from the regression model, and <span class="math inline">\(n\)</span> is the number of observations. We divide by <span class="math inline">\(n-2\)</span> because we have estimated two parameters (the intercept and the slope) from the data.</p>
 <p>OK, let’s take a look at this intuitively. We have the estimate of the slope and the standard error of the estimate.</p>
-<p>Here is a graph of the value of the slope estimate versus the standard error of the estimate:</p>
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="432"></p>
-</figure>
-</div>
-</div>
-</div>
-<!---
-**Think-Pair-Share** (#tps-chance-area) In what areas of the graph is the slope estimate more likely to have been observed by chance? And what regions is it less likely to have been observed by chance? Think about this before you look at the end of this chapter for an answer.
---->
-<p>When the slope estimate is larger, it is less likely to have been observed by chance. And when the standard error is larger, it is more likely to have been observed by chance. How can we put these together into a single measure?</p>
-<p>If we divide the slope estimate by the standard error, we get a measure of how many standard errors the slope estimate is from the null hypothesis slope of zero. This is the <span class="math inline">\(t\)</span>-statistic:</p>
-<p><span class="math display">\[t = \frac{\hat\beta_1 - \beta_{1,H_0}}{\sigma^{(\beta_1)}}\]</span></p>
-<p>Where <span class="math inline">\(\beta_{1,H_0}\)</span> is the null hypothesis value of the slope, usually zero, so that</p>
-<p><span class="math display">\[t = \frac{\hat\beta_1}{\sigma^{(\beta_1)}}\]</span></p>
-<p><strong>The <span class="math inline">\(t\)</span>-statistic is a measure of how many standard errors the slope estimate is from the null hypothesis value of the slope. The larger the <span class="math inline">\(t\)</span>-statistic, the less likely the slope estimate was observed by chance.</strong></p>
-<p>How can we transform the value of a <span class="math inline">\(t\)</span>-statistic into a p-value? We can use the <strong><span class="math inline">\(t\)</span>-distribution</strong>, which quantifies the probability of observing a value of the <span class="math inline">\(t\)</span>-statistic under the null hypothesis.</p>
-<p>But what is the <span class="math inline">\(t\)</span>-distribution? It is a distribution of the <span class="math inline">\(t\)</span>-statistic under the null hypothesis. It is a bell-shaped distribution that is centered on zero. The shape of the distribution is determined by the degrees of freedom, which is <span class="math inline">\(n-2\)</span> for a simple linear regression model.</p>
+<p>Here is an empty graph of the value of the slope estimate versus the standard error of the estimate:</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -529,7 +565,37 @@ x            2.1161160  0.1072104</code></pre>
 </div>
 </div>
 </div>
-<p>Note that the height of the line is the “density” and not a probability. The probability of observing a value of the <span class="math inline">\(t\)</span>-statistic in a given range is the area under the curve of the <span class="math inline">\(t\)</span>-distribution in that range. The area under the curve of the <span class="math inline">\(t\)</span>-distribution is equal to 1, which means that the total probability of observing a value of the <span class="math inline">\(t\)</span>-statistic is 1.</p>
+<!---
+**Think-Pair-Share** (#tps-chance-area) In what areas of the graph is the slope estimate more likely to have been observed by chance? And what regions is it less likely to have been observed by chance? Think about this before you look at the end of this chapter for an answer.
+--->
+<p>When the slope estimate is larger, it is less likely to have been observed by chance. And when the standard error is larger, it is more likely to have been observed by chance. How can we put these together into a single measure?</p>
+</section>
+<section id="the-t-statistic" class="level3">
+<h3 class="anchored" data-anchor-id="the-t-statistic">The <span class="math inline">\(t\)</span>-statistic</h3>
+<p>If we divide the slope estimate by the standard error, we get a measure of how many standard errors the slope estimate is from the null hypothesis slope of zero. This is the <span class="math inline">\(t\)</span>-statistic:</p>
+<p><span class="math display">\[t = \frac{\hat\beta_1 - \beta_{1,H_0}}{\sigma^{(\beta_1)}}\]</span></p>
+<p>Where <span class="math inline">\(\beta_{1,H_0}\)</span> is the null hypothesis value of the slope, usually zero, so that</p>
+<p><span class="math display">\[t = \frac{\hat\beta_1}{\sigma^{(\beta_1)}}\]</span></p>
+<p><strong>The <span class="math inline">\(t\)</span>-statistic is a measure of how many standard errors the slope estimate is from the null hypothesis value of the slope. The larger the <span class="math inline">\(t\)</span>-statistic, the less likely the slope estimate was observed by chance.</strong></p>
+</section>
+<section id="the-p-value" class="level3">
+<h3 class="anchored" data-anchor-id="the-p-value">The p-value</h3>
+<p><strong>Recap: Formal definition of the <span class="math inline">\(p\)</span>-value</strong></p>
+<p><em>The formal definition of <span class="math inline">\(p\)</span>-value is the probability to observe a data summary that is at least as extreme as the one observed, given that the null hypothesis is correct.</em></p>
+<p>When performing a <span class="math inline">\(t\)</span>-test, the data summary is the value of the <span class="math inline">\(t\)</span>-statistic. Therefore, the <span class="math inline">\(p\)</span>-value is the probability of observing a value of the <span class="math inline">\(t\)</span>-statistic at least as extreme as the one observed, given that the null hypothesis is correct.</p>
+<p>But how can we calculate the <span class="math inline">\(p\)</span>-value from the <span class="math inline">\(t\)</span>-statistic? The answer is to use the <strong><span class="math inline">\(t\)</span>-distribution</strong>, which quantifies the probability of observing a value of the <span class="math inline">\(t\)</span>-statistic under the null hypothesis.</p>
+<p>But what is the <span class="math inline">\(t\)</span>-distribution? It is a distribution of the <span class="math inline">\(t\)</span>-statistic under the null hypothesis. It is a bell-shaped distribution that is centered on zero. The shape of the distribution is determined by the degrees of freedom, which is <span class="math inline">\(n-2\)</span> for a simple linear regression model.</p>
+<p>Here is the distribution of <span class="math inline">\(t\)</span> values under the null hypothesis for a sample size of 100 (i.e., 98 degrees of freedom):</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="432"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The height of the line is the “density” and not a probability. The probability of observing a value of the <span class="math inline">\(t\)</span>-statistic in a given range is the area under the curve of the <span class="math inline">\(t\)</span>-distribution in that range. The area under the curve of the <span class="math inline">\(t\)</span>-distribution is equal to 1, which means that the total probability of observing a value of the <span class="math inline">\(t\)</span>-statistic is 1.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -544,148 +610,117 @@ Tip
 </div>
 </div>
 <p>Now, recall that the p-value is the probability of observing the value of the test statistic (so here the <span class="math inline">\(t\)</span>-statistic) at least as extreme as the one we have, given the null hypothesis is true. We can calculate this probability by integrating the <span class="math inline">\(t\)</span>-distribution from the observed <span class="math inline">\(t\)</span>-statistic to the tails of the distribution.</p>
-<p>Here is a graph of the <span class="math inline">\(t\)</span>-distribution with 100 degrees of freedom with the tails of the distribution shaded so that the area of the shaded region is 0.05 (i.e., 5% of the total area).</p>
+<p>Let’s see this graphically. Say we have an observed <span class="math inline">\(t\)</span>-statistic of 1.5. The p-value is the area under the curve of the <span class="math inline">\(t\)</span>-distribution in the tails beyond 1.5 and -1.5 (more extreme means both less than or greater than). Graphically this looks like:</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>And here’s a graph of the <span class="math inline">\(t\)</span>-distribution with 1000 degrees of freedom (blue line) and the normal distribution (green dashed line):</p>
+<p>This blue area is the <span class="math inline">\(p\)</span>-value, which is the probability of observing a value of the <span class="math inline">\(t\)</span>-statistic at least as extreme as 1.5, given that the null hypothesis is true.</p>
+<p>This area (p-value) can be calculated using the cumulative distribution function of the <span class="math inline">\(t\)</span>-distribution.</p>
 <div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="432"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>So, with a large number of observations, the <span class="math inline">\(t\)</span>-distribution approaches the normal distribution. For the normal distribution, the 95% area is between -1.96 and 1.96.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="do">## x value for 95% area of normal distribution</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>x_value <span class="ot">&lt;-</span> <span class="fu">qnorm</span>(<span class="fl">0.975</span>)</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>x_value</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>t_value <span class="ot">&lt;-</span> <span class="fl">1.5</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>p_value <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">pt</span>(<span class="sc">-</span><span class="fu">abs</span>(t_value), <span class="at">df =</span> n <span class="sc">-</span> <span class="dv">2</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>p_value</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 1.959964</code></pre>
+<pre><code>[1] 0.1368292</code></pre>
 </div>
 </div>
-<p><code>qnorm</code> is a function that calculates the <span class="math inline">\(x\)</span> value for a given quantile (probability) of the normal distribution. In simpler terms, it finds the value <span class="math inline">\(x\)</span> at which the area under the normal curve (up to <span class="math inline">\(x\)</span>) equals the given probability <span class="math inline">\(p\)</span> (0.975 in the example immediately above here).</p>
-<p>Let’s go back to the age - blood pressure data and calculate the p-value for the slope estimate.</p>
-<p>Read in the data:</p>
+<p>So, with a <span class="math inline">\(t\)</span>-statistic of 1.5, and 98 degrees of freedom, the p-value is 0.14, which means that there is a 0.14 probability of observing a value of the <span class="math inline">\(t\)</span>-statistic at least as extreme as 1.5, given that the null hypothesis is true.</p>
+<p>Often we say that there is “statistically significant evidence” for a relationship between the response and explanatory variable if the p-value is less than 0.05. This means that if the p-value is less than 0.05, we reject the null hypothesis of no relationship between the response and explanatory variable.</p>
+<p>Let’s do the same graph and calculation for a <span class="math inline">\(t\)</span>-statistic of 2.5:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>bp_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"datasets/Simulated_Blood_Pressure_and_Age_Data.csv"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Rows: 100 Columns: 2
-── Column specification ────────────────────────────────────────────────────────
-Delimiter: ","
-dbl (2): Age, Systolic_BP
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="432"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>With the larger <span class="math inline">\(t\)</span>-statistic the blue areas are smaller, which means that the p-value is smaller.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>t_value <span class="ot">&lt;-</span> <span class="fl">2.5</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>p_value <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">pt</span>(<span class="sc">-</span><span class="fu">abs</span>(t_value), <span class="at">df =</span> n <span class="sc">-</span> <span class="dv">2</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>p_value</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.01407976</code></pre>
+</div>
+</div>
+<p>The p-value is 0.01, which means that there is a 0.01 probability of observing a value of the <span class="math inline">\(t\)</span>-statistic at least as extreme as 2.5, given that the null hypothesis is true. Therefore, we reject the null hypothesis of no relationship between the response and explanatory variable.</p>
+</section>
+<section id="where-is-the-p-value-in-the-regression-output" class="level3">
+<h3 class="anchored" data-anchor-id="where-is-the-p-value-in-the-regression-output">Where is the <span class="math inline">\(p\)</span>-value in the regression output?</h3>
+<p>Using the blood pressure data again, we can fit a regression model and look at the output. We use the <code>summary</code> function to get the regression output.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Systolic_BP ~ Age, data = bp_data)
 
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-13.2195  -3.4434  -0.0808   3.1383  12.6025 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 98.96874    1.46102   67.74   &lt;2e-16 ***
+Age          0.82407    0.02771   29.74   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 4.971 on 98 degrees of freedom
+Multiple R-squared:  0.9002,    Adjusted R-squared:  0.8992 
+F-statistic: 884.4 on 1 and 98 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 </div>
-<p>Make a graph:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(bp_data, <span class="fu">aes</span>(<span class="at">x =</span> Age, <span class="at">y =</span> Systolic_BP)) <span class="sc">+</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">formula =</span> y <span class="sc">~</span> x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="432"></p>
-</figure>
+<p>In the coefficients table, look for the row corresponding to the slope (the second row, which is the “Age” row). In this row we see the estimate of the slope, the standard error of the slope, the <span class="math inline">\(t\)</span>-value for the slope,and in the last column “Pr(&gt;|t|)”. This means “the probability of observing a value of the <span class="math inline">\(t\)</span>-statistic at least as extreme as the one observed, given that the null hypothesis is true”.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
 </div>
 </div>
-</div>
-<p>Here’s the model:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>mod1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Systolic_BP <span class="sc">~</span> Age, <span class="at">data =</span> bp_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Here we calculate the <span class="math inline">\(t\)</span>-statistic for the slope estimate:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>t_stat <span class="ot">&lt;-</span> mod1<span class="sc">$</span>coefficients[<span class="dv">2</span>] <span class="sc">/</span> <span class="fu">summary</span>(mod1)<span class="sc">$</span>coefficients[<span class="dv">2</span>, <span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>And here we calculate the one-tailed and two-tailed <span class="math inline">\(p\)</span>-values:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>one_tailed_p_value <span class="ot">&lt;-</span> <span class="fu">pt</span>(<span class="sc">-</span><span class="fu">abs</span>(t_stat), <span class="at">df =</span> <span class="fu">nrow</span>(bp_data) <span class="sc">-</span> <span class="dv">2</span>)</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>two_tailed_p_value <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> one_tailed_p_value</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>one_tailed_p_value</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>         Age 
-3.746958e-51 </code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>two_tailed_p_value</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>         Age 
-7.493917e-51 </code></pre>
-</div>
-</div>
-<p>We can get the <span class="math inline">\(p\)</span>-value directly from the <code>summary</code> function:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod1)<span class="sc">$</span>coefficients[<span class="dv">2</span>, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>    Estimate   Std. Error      t value     Pr(&gt;|t|) 
-8.240678e-01 2.770955e-02 2.973948e+01 7.493917e-51 </code></pre>
+<div class="callout-body-container callout-body">
+<p>The vertical bars around <em>t</em> indicate that we are looking at the absolute value of the <span class="math inline">\(t\)</span>-statistic, which is what we use for a two-tailed test, which is the most common test for the slope of a regression line</p>
 </div>
 </div>
 <p>Conclusion: there is <strong>very strong evidence</strong> that the blood pressure is associated with age, because the <span class="math inline">\(p\)</span>-value is extremely small (thus it is very unlikely that the observed slope value or a large one would be seen if there was really no association). Thus, we can reject the null hypothesis that the slope is zero.</p>
-<p>This basically answers question 1: “Are the parameters compatible with some specific value?”</p>
-<section id="recap-formal-definition-of-the-p-value" class="level3">
-<h3 class="anchored" data-anchor-id="recap-formal-definition-of-the-p-value">Recap: Formal definition of the <span class="math inline">\(p\)</span>-value</h3>
-<p><strong>The formal definition of <span class="math inline">\(p\)</span>-value is the probability to observe a data summary (e.g., an average or a slope) that is at least as extreme as the one observed, given that the null hypothesis is correct.</strong></p>
-<p>Example (normal distribution): Assume that we calculated that <span class="math inline">\(t\)</span>-value = -1.96</p>
-<p><span class="math inline">\(\Rightarrow\)</span> <span class="math inline">\(Pr(|t|\geq 1.96)=0.05\)</span> (two-tailed) and <span class="math inline">\(Pr(t\leq-1.96)=0.025\)</span> (one-tailed).</p>
-<p>And here is a graph showing this:</p>
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" width="768"></p>
-</figure>
-</div>
-</div>
-</div>
 </section>
 <section id="a-cautionary-note-on-the-use-of-p-values" class="level3">
 <h3 class="anchored" data-anchor-id="a-cautionary-note-on-the-use-of-p-values">A cautionary note on the use of <span class="math inline">\(p\)</span>-values</h3>
 <p>Maybe you have seen that in statistical testing, often the criterion <span class="math inline">\(p\leq 0.05\)</span> is used to test whether <span class="math inline">\(H_0\)</span> should be rejected. This is often done in a black-or-white manner. However, we will put a lot of attention to a more reasonable and cautionary interpretation of <span class="math inline">\(p\)</span>-values in this course!</p>
 </section>
 </section>
-<section id="how-strong-is-the-relationship" class="level2">
-<h2 class="anchored" data-anchor-id="how-strong-is-the-relationship">How strong is the relationship?</h2>
-<p>The actual value of the slope has practical meaning. The slope of the regression line tells us how much the dependent variable changes when the independent variable changes by one unit. The slope is one measure of the strength of the relationship between the two variables.</p>
+<section id="confidence-interval-of-slope" class="level2">
+<h2 class="anchored" data-anchor-id="confidence-interval-of-slope">Confidence interval of slope</h2>
+<p>The actual value of the slope has practical meaning. The slope of the regression line tells us how much the response variable changes when the explanatory variable changes by one unit. The slope is one measure of the strength of the relationship between the two variables.</p>
 <p>We can ask what values of a parameter estimate are compatible with the data (confidence intervals)? To answer this question, we can determine the confidence intervals of the regression parameters.</p>
 <p>The confidence interval of a parameter estimate is defined as the interval that contains the true parameter value with a certain probability. So the 95% confidence interval of the slope is the interval that contains the true slope with a probability of 95%.</p>
 <p>We can then imagine two cases. The 95% confidence interval of the slope includes 0:</p>
 <div class="cell">
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: `geom_errobarh()` was deprecated in ggplot2 4.0.0.
-ℹ Please use the `orientation` argument of `geom_errorbar()` instead.</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>`height` was translated to `width`.</code></pre>
-</div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid figure-img" width="960"></p>
+<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="960"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Or where the confidence interval does not include zero:</p>
 <div class="cell">
-<div class="cell-output cell-output-stderr">
-<pre><code>`height` was translated to `width`.</code></pre>
-</div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid figure-img" width="960"></p>
+<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -699,19 +734,19 @@ dbl (2): Age, Systolic_BP
 <p><span class="math display">\[\hat\beta_1 \pm t_{0.975} \cdot \hat\sigma^{(\beta_1)}\]</span></p>
 <p>In our blood pressure example the estimated slope is 0.8240678 and the standard error of the slope is 0.0277096. We can calculate the 95% confidence interval of the slope in <em>R</em> as follows:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>t_0975 <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, <span class="at">df =</span> n <span class="sc">-</span> <span class="dv">2</span>)</span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>half_interval <span class="ot">&lt;-</span> t_0975 <span class="sc">*</span> <span class="fu">summary</span>(mod1)<span class="sc">$</span>coef[<span class="dv">2</span>,<span class="dv">2</span>]</span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>lower_limit <span class="ot">&lt;-</span> <span class="fu">coef</span>(mod1)[<span class="dv">2</span>] <span class="sc">-</span> half_interval</span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>upper_limit <span class="ot">&lt;-</span> <span class="fu">coef</span>(mod1)[<span class="dv">2</span>] <span class="sc">+</span> half_interval</span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>ci_slope <span class="ot">&lt;-</span> <span class="fu">c</span>(lower_limit, upper_limit)</span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>slope <span class="ot">&lt;-</span> <span class="fu">coef</span>(mod1)[<span class="dv">2</span>]</span>
-<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>slope</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>t_0975 <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, <span class="at">df =</span> n <span class="sc">-</span> <span class="dv">2</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>half_interval <span class="ot">&lt;-</span> t_0975 <span class="sc">*</span> <span class="fu">summary</span>(mod1)<span class="sc">$</span>coef[<span class="dv">2</span>,<span class="dv">2</span>]</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>lower_limit <span class="ot">&lt;-</span> <span class="fu">coef</span>(mod1)[<span class="dv">2</span>] <span class="sc">-</span> half_interval</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>upper_limit <span class="ot">&lt;-</span> <span class="fu">coef</span>(mod1)[<span class="dv">2</span>] <span class="sc">+</span> half_interval</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>ci_slope <span class="ot">&lt;-</span> <span class="fu">c</span>(lower_limit, upper_limit)</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>slope <span class="ot">&lt;-</span> <span class="fu">coef</span>(mod1)[<span class="dv">2</span>]</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>slope</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      Age 
 0.8240678 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>ci_slope</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>ci_slope</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      Age       Age 
 0.7690791 0.8790565 </code></pre>
@@ -719,9 +754,9 @@ dbl (2): Age, Systolic_BP
 </div>
 <p>Or, using the <code>confint</code> function:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="do">## 95% confidence interval of the slope of mod1</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>ci_slope_2 <span class="ot">&lt;-</span> <span class="fu">confint</span>(mod1, <span class="at">level=</span><span class="fu">c</span>(<span class="fl">0.95</span>))[<span class="dv">2</span>,]</span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>ci_slope_2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="do">## 95% confidence interval of the slope of mod1</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>ci_slope_2 <span class="ot">&lt;-</span> <span class="fu">confint</span>(mod1, <span class="at">level=</span><span class="fu">c</span>(<span class="fl">0.95</span>))[<span class="dv">2</span>,]</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>ci_slope_2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    2.5 %    97.5 % 
 0.7690791 0.8790565 </code></pre>
@@ -729,66 +764,57 @@ dbl (2): Age, Systolic_BP
 </div>
 <p>Or we can do it using values from the coefficients table:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>coefs <span class="ot">&lt;-</span> <span class="fu">summary</span>(mod1)<span class="sc">$</span>coef</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">&lt;-</span> coefs[<span class="dv">2</span>,<span class="dv">1</span>]</span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>sdbeta <span class="ot">&lt;-</span> coefs[<span class="dv">2</span>,<span class="dv">2</span>] </span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>beta <span class="sc">+</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>) <span class="sc">*</span> <span class="fu">qt</span>(<span class="fl">0.975</span>,<span class="dv">241</span>) <span class="sc">*</span> sdbeta </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>coefs <span class="ot">&lt;-</span> <span class="fu">summary</span>(mod1)<span class="sc">$</span>coef</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">&lt;-</span> coefs[<span class="dv">2</span>,<span class="dv">1</span>]</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>sdbeta <span class="ot">&lt;-</span> coefs[<span class="dv">2</span>,<span class="dv">2</span>] </span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>beta <span class="sc">+</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>) <span class="sc">*</span> <span class="fu">qt</span>(<span class="fl">0.975</span>,<span class="dv">241</span>) <span class="sc">*</span> sdbeta </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.7694840 0.8786516</code></pre>
 </div>
 </div>
 <p><em>Interpretation</em>: for an increase in the age by one year, roughly 0.82 mmHg increase in blood pressure is expected, and all true values for <span class="math inline">\(\beta_1\)</span> between 0.77 and 0.88 are compatible with the observed data.</p>
 </section>
-<section id="confidence-and-prediction-bands" class="level2">
-<h2 class="anchored" data-anchor-id="confidence-and-prediction-bands">Confidence and Prediction Bands</h2>
-<ul>
-<li><p>Remember: If another sample from the same population was taken, the regression line would look slightly different.</p></li>
-<li><p>There are two questions to be asked:</p></li>
-</ul>
-<ol type="1">
-<li><p>Which other regression lines are compatible with the observed data? This leads to the <em>confidence band</em>.</p></li>
-<li><p>Where do future observations (<span class="math inline">\(y\)</span>) with a given <span class="math inline">\(x\)</span> coordinate lie? This leads to the <em>prediction band</em>.</p></li>
-</ol>
-<p>Note: The prediction band is much broader than the confidence band.</p>
-</section>
-<section id="calculation-of-the-confidence-band" class="level2">
-<h2 class="anchored" data-anchor-id="calculation-of-the-confidence-band">Calculation of the confidence band</h2>
-<p>Given a fixed value of <span class="math inline">\(x\)</span>, say <span class="math inline">\(x_0\)</span>. The question is:</p>
-<p>Where does <span class="math inline">\(\hat y_0 = \hat\beta_0 + \hat\beta_1 x_0\)</span> lie with a certain confidence (i.e., 95%)?</p>
-<p>The first step is to calculate the standard error of <span class="math inline">\(\hat y_0\)</span>:</p>
-<p><span class="math display">\[\sigma^{(\hat y_0)} = \hat\sigma \sqrt{  \left( \frac{1}{n} + \frac{(x_0 - \bar x)^2}{\sum_{i=1}^n (x_i - \bar x)^2} \right) }\]</span></p>
-<p>where <span class="math inline">\(\hat\sigma^2\)</span> is the expected residual variance of the model, calculated as:</p>
-<p><span class="math display">\[\hat\sigma^2 = \frac{\sum_{i=1}^n (y_i - \hat y_i)^2}{n-2}\]</span></p>
-<p>Then, we can calculate the confidence interval of <span class="math inline">\(\hat y_0\)</span> as:</p>
-<p><span class="math display">\[\hat y_0 \pm t_{0.975} \cdot \sigma^{(\hat y_0)}\]</span></p>
-<p>Plotting the confidence interval around all <span class="math inline">\(\hat y_0\)</span> values one obtains the <em>confidence band</em> or <em>confidence band for the expected values</em> of <span class="math inline">\(y\)</span>.</p>
-<p>Note: For the confidence band, only the uncertainty in the estimates <span class="math inline">\(\hat\beta_0\)</span> and <span class="math inline">\(\hat\beta_1\)</span> matters.</p>
-<p>Here is the confidence band for the blood pressure data:</p>
+<section id="confidence-band" class="level2">
+<h2 class="anchored" data-anchor-id="confidence-band">Confidence band</h2>
+<p>If another sample from the same population was taken, the regression line would look slightly different. But how different? And where could we expect the regression line to be if we took another sample from the same population? The <em>confidence band</em> is an illustration of the region in which the regression line could lie if we took another sample from the same population. A confidence band is always specified with a confidence level, such as 95%.</p>
+<p>Lets look at this in a graph of our blood pressure data. The black line is the regression line fitted to the data. The purple line is the confidence band for the expected values of <span class="math inline">\(y\)</span> (systolic blood pressure) for each value of <span class="math inline">\(x\)</span> (age). The shaded area around the purple line is the 95% confidence band for the expected values of <span class="math inline">\(y\)</span>.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>Very narrow confidence bands indicate that the estimates are very precise. In this case the estimated intercept and slope are precise because the sample size is large and the data points are close to the regression line.</p>
-</section>
-<section id="calculations-of-the-prediction-band" class="level2">
-<h2 class="anchored" data-anchor-id="calculations-of-the-prediction-band">Calculations of the prediction band</h2>
-<p>We can easily predicted an expected value of <span class="math inline">\(y\)</span> for a given <span class="math inline">\(x\)</span> value. But we can also ask w where does a <em>future observation</em> lie with a certain confidence (i.e., 95%)?</p>
-<p>To answer this question, we have to <em>consider not only the uncertainty in the predicted value caused by uncertainty in the parameter estimates</em> <span class="math inline">\(\hat y_0 =  \hat\beta_0 + \hat\beta_1 x_0\)</span>, but also the <em>error term</em> <span class="math inline">\(\epsilon_i \sim N(0,\sigma^2)\)</span>}.</p>
-<p>The standard error of a future observation is given by: <span class="math display">\[\sigma^{(y_0)} = \hat\sigma \sqrt{ 1 + \left( \frac{1}{n} + \frac{(x_0 - \bar x)^2}{\sum_{i=1}^n (x_i - \bar x)^2} \right) }\]</span></p>
-<p>This is the same as the standard error of the predicted value <span class="math inline">\(\hat y_0\)</span> but with an additional 1. This is because the standard error of a future observation is the standard error of the predicted value <span class="math inline">\(\hat y_0\)</span>, and this includes the uncertainty in the parameter estimates, plus an additional term that accounts for the variability of future observations around the predicted value. This additional term is what makes the prediction band wider than the confidence band.</p>
-<p>The prediction interval of a future observation is then given by: <span class="math display">\[\hat y_0 \pm t_{0.975} \cdot \sigma^{(y_0)}\]</span></p>
-<p>This is the reason why the <strong>prediction band</strong> is wider than the confidence band.</p>
-<p>Here’s a graph showing the prediction band for the blood pressure data:</p>
+<p>The confidence band is narrow here because the estimates of the slope and intercept are precise (the standard errors of the slope and intercept are small). The confidence band is (slightly) wider at the edges of the graph because there are fewer data points at the edges, which means that the estimates of the slope and intercept are less precise at the edges.</p>
+<p>We can view this in a different way. Let us plot regression lines that are consistent with the estimated slope and intercept, given their standard errors.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid figure-img" width="432"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>None of these lines has a slope any where near zero! And all are closely grouped around the estimated regression line. Note that this is a different way of visualising the confidence in the slope, and is not commonly used. Most people would just plot the 95% confidence band.</p>
+<p>The details of how to calculate a confidence band are not required for this course. If you would like to see them, please look in the <em>Extras</em> section below.</p>
+<p>Note: For the confidence band, only the uncertainty in the estimates <span class="math inline">\(\hat\beta_0\)</span> and <span class="math inline">\(\hat\beta_1\)</span> matters.</p>
+</section>
+<section id="prediction-band" class="level2">
+<h2 class="anchored" data-anchor-id="prediction-band">Prediction band</h2>
+<p>The prediction band is rarely used, but it is important to understand the difference between a confidence band and a prediction band. As seen above, the confidence band is where expected values of <span class="math inline">\(y\)</span> lie. This means that we only account for the uncertainty in the estimates of the slope and intercept.</p>
+<p>The prediction band is where future observations of <span class="math inline">\(y\)</span> lie. This means that we have to account for both the uncertainty in the estimates of the slope and intercept, and the variability of future observations around the predicted value.</p>
+<p>That is, we have to <em>consider not only the uncertainty in the predicted value caused by uncertainty in the parameter estimates</em> <span class="math inline">\(\hat y_0 =  \hat\beta_0 + \hat\beta_1 x_0\)</span>, but also the <em>error term</em> <span class="math inline">\(\epsilon_i \sim N(0,\sigma^2)\)</span>}.</p>
+<p>If you’d like to learn how to calculate the prediction band, the details are given in the <em>Extras</em> section below. These details are not necessary parts of this course.</p>
+<p>The key point is that the standard error of a future observation is larger than the standard error of the predicted value <span class="math inline">\(\hat y_0\)</span> because it includes an additional term that accounts for the variability of future observations around the predicted value.</p>
+<p>Here’s a graph showing the prediction band in green for the blood pressure data (with the confidence band in purple):</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -797,6 +823,65 @@ dbl (2): Age, Systolic_BP
 <!---
 **Think–Pair–Share** (#a_prediction_vs_estimation) Which interval answers: "What is the mean response?" Which answers: "What might a new observation look like?"
 --->
+</section>
+<section id="reporting" class="level2">
+<h2 class="anchored" data-anchor-id="reporting">Reporting</h2>
+<p>A figure is very important part of reporting the results of a regression analysis. A good figure can help to understand the relationship between the response and explanatory variable, and can also help to understand the uncertainty in the estimates of the slope and intercept.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="432"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>In scientific reports we usually don’t give a graph a title, but rather make a caption that describes the figure. The caption should be informative and should describe what the figure shows. For example, a caption for the above figure could be:</p>
+<p><em>Figure 1. The relationship of systolic blood pressure (mmHg) against age (years) with a fitted regression line (blue) and 95% confidence band for the regression (grey band).</em></p>
+<p>Then in the text of the Results section we would report the results of the regression analysis. For example:</p>
+<p><em>Systolic blood pressure was positively associated with age (slope = 0.82 mmHg per year, 95% confidence interval [0.77, 0.88], degrees of freedom = 98, <span class="math inline">\(t\)</span> = 29.7, <span class="math inline">\(p &lt; 0.001\)</span>). The regression model explained 90% of the variability in systolic blood pressure.</em></p>
+<p>We <em>DO NOT</em> report like this:</p>
+<p><em>There was a statistically significant relationship between age and systolic blood pressure (<span class="math inline">\(p &lt; 0.001\)</span>).</em></p>
+</section>
+<section id="relationship-between-r2-and-the-p-value-of-the-slope" class="level2">
+<h2 class="anchored" data-anchor-id="relationship-between-r2-and-the-p-value-of-the-slope">Relationship between <span class="math inline">\(R^2\)</span> and the <span class="math inline">\(p\)</span>-value of the slope</h2>
+<p>Do you think a small <span class="math inline">\(R^2\)</span> value can be associated with a small <span class="math inline">\(p\)</span>-value for the slope? Or do you think a large <span class="math inline">\(R^2\)</span> value can be associated with a large <span class="math inline">\(p\)</span>-value for the slope?</p>
+<p>Actually, we can get a very small <span class="math inline">\(p\)</span>-value for the slope even when <span class="math inline">\(R^2\)</span> is very small. This can happen when the sample size is large, because with a large sample size we can get a precise estimate of the slope, which means that the standard error of the slope is small, which means that the <span class="math inline">\(t\)</span>-statistic is large, which means that the <span class="math inline">\(p\)</span>-value is small.</p>
+<p>Here is an example of a dataset with a very small <span class="math inline">\(R^2\)</span> value but a very small <span class="math inline">\(p\)</span>-value for the slope:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="432"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = y ~ x)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-278.540  -60.288    0.443   61.720  301.762 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 0.364568   4.029273   0.090 0.927915    
+x           0.012271   0.003488   3.518 0.000445 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 90.06 on 1998 degrees of freedom
+Multiple R-squared:  0.006156,  Adjusted R-squared:  0.005658 
+F-statistic: 12.38 on 1 and 1998 DF,  p-value: 0.0004447</code></pre>
+</div>
+</div>
+<p>The <span class="math inline">\(R^2\)</span> value is about 0.006, which means that the regression model explains less than only 1% of the variability in <span class="math inline">\(y\)</span>. However, the <span class="math inline">\(p\)</span>-value for the slope is very small (<span class="math inline">\(p &lt; 0.001\)</span>), which means that there is strong evidence for a relationship between <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>!!!</p>
+<p>This is because with a large sample size we can get a precise estimate of the slope, which means that the standard error of the slope is small, which means that the <span class="math inline">\(t\)</span>-statistic is large, which means that the <span class="math inline">\(p\)</span>-value is small.</p>
+<p><strong>So, beware of interpreting a small <span class="math inline">\(p\)</span>-value for the slope as evidence of a strong relationship between the response and explanatory variable. A small <span class="math inline">\(p\)</span>-value for the slope can be observed even when the relationship is very weak (i.e., when <span class="math inline">\(R^2\)</span> is very small).</strong></p>
 </section>
 <section id="review" class="level2">
 <h2 class="anchored" data-anchor-id="review">Review</h2>
@@ -817,8 +902,9 @@ dbl (2): Age, Systolic_BP
 <li>Hypothesis testing in regression</li>
 <li>Null and alternative hypotheses</li>
 <li>t-statistic and p-values</li>
-<li>Tests and confidence intervals</li>
+<li>Confidence intervals</li>
 <li>Confidence and prediction bands</li>
+<li>Reporting</li>
 </ul>
 </section>
 <section id="further-reading" class="level2">
@@ -831,27 +917,48 @@ dbl (2): Age, Systolic_BP
 </section>
 <section id="extras" class="level2">
 <h2 class="anchored" data-anchor-id="extras">Extras</h2>
+<section id="calculation-of-confidence-bands" class="level3">
+<h3 class="anchored" data-anchor-id="calculation-of-confidence-bands">Calculation of confidence bands</h3>
+<p>Given a fixed value of <span class="math inline">\(x\)</span>, say <span class="math inline">\(x_0\)</span>. The question is:</p>
+<p>Where does <span class="math inline">\(\hat y_0 = \hat\beta_0 + \hat\beta_1 x_0\)</span> lie with a certain confidence (i.e., 95%)?</p>
+<p>The first step is to calculate the standard error of <span class="math inline">\(\hat y_0\)</span>:</p>
+<p><span class="math display">\[\sigma^{(\hat y_0)} = \hat\sigma \sqrt{  \left( \frac{1}{n} + \frac{(x_0 - \bar x)^2}{\sum_{i=1}^n (x_i - \bar x)^2} \right) }\]</span></p>
+<p>where <span class="math inline">\(\hat\sigma^2\)</span> is the expected residual variance of the model, calculated as:</p>
+<p><span class="math display">\[\hat\sigma^2 = \frac{\sum_{i=1}^n (y_i - \hat y_i)^2}{n-2}\]</span></p>
+<p>Then, we can calculate the confidence interval of <span class="math inline">\(\hat y_0\)</span> as:</p>
+<p><span class="math display">\[\hat y_0 \pm t_{0.975} \cdot \sigma^{(\hat y_0)}\]</span></p>
+<p>Plotting the confidence interval around all <span class="math inline">\(\hat y_0\)</span> values one obtains the <em>confidence band</em> or <em>confidence band for the expected values</em> of <span class="math inline">\(y\)</span>.</p>
+</section>
+<section id="calculation-of-the-prediction-band" class="level3">
+<h3 class="anchored" data-anchor-id="calculation-of-the-prediction-band">Calculation of the prediction band</h3>
+<p>The standard error of a future observation is given by:</p>
+<p><span class="math display">\[\sigma^{(y_0)} = \hat\sigma \sqrt{ 1 + \left( \frac{1}{n} + \frac{(x_0 - \bar x)^2}{\sum_{i=1}^n (x_i - \bar x)^2} \right) }\]</span></p>
+<p>This is the same as the standard error of the predicted value <span class="math inline">\(\hat y_0\)</span> but with an additional 1. This is because the standard error of a future observation is the standard error of the predicted value <span class="math inline">\(\hat y_0\)</span>, and this includes the uncertainty in the parameter estimates, plus an additional term that accounts for the variability of future observations around the predicted value. This additional term is what makes the prediction band wider than the confidence band.</p>
+<p>The prediction interval of a future observation is then given by:</p>
+<p><span class="math display">\[\hat y_0 \pm t_{0.975} \cdot \sigma^{(y_0)}\]</span></p>
+<p>This is the reason why the <strong>prediction band</strong> is wider than the confidence band.</p>
+</section>
 <section id="randomisation-test-for-the-slope-of-a-regression-line" class="level3">
 <h3 class="anchored" data-anchor-id="randomisation-test-for-the-slope-of-a-regression-line">Randomisation test for the slope of a regression line</h3>
 <p>Let’s use randomisation as another method to understand how likely we are to observe the data we have, given the null hypothesis is true.</p>
 <p>If the null hypothesis is true, we expect no relationship between <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>. Therefore, we can shuffle the <span class="math inline">\(y\)</span> values and fit a regression model to the shuffled data. We can repeat this many times and calculate the slope of the regression line each time. This will give us a distribution of slopes we would expect to observe if the null hypothesis is true.</p>
 <p>First, we’ll make some data and get the slope of the regression line. Here is the observed slope and relationship:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span></span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span>n</span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fl">0.1</span><span class="sc">*</span>x <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, <span class="dv">10</span>)</span>
-<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x)</span>
-<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(m)[<span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span>n</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fl">0.1</span><span class="sc">*</span>x <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, <span class="dv">10</span>)</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x)</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(m)[<span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>        x 
 0.1251108 </code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">x =</span> x, <span class="at">y =</span> y), <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span></span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">formula =</span> y <span class="sc">~</span> x) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">x =</span> x, <span class="at">y =</span> y), <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">formula =</span> y <span class="sc">~</span> x) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -862,13 +969,13 @@ dbl (2): Age, Systolic_BP
 </div>
 <p>Now we’ll use randomisation to test the null hypothesis. We can create lots of examples where the relationship is expected to have a slope of zero by shuffling randomly the <span class="math inline">\(y\)</span> values. Here are 20:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">4</span>))</span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>) {</span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  y_rand <span class="ot">&lt;-</span> <span class="fu">sample</span>(y)</span>
-<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  m_rand <span class="ot">&lt;-</span> <span class="fu">lm</span>(y_rand <span class="sc">~</span> x)</span>
-<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(x, y_rand, <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">"Slope = "</span>, <span class="fu">round</span>(<span class="fu">coef</span>(m_rand)[<span class="dv">2</span>], <span class="dv">2</span>)))</span>
-<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(m_rand)</span>
-<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">4</span>))</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>) {</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  y_rand <span class="ot">&lt;-</span> <span class="fu">sample</span>(y)</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  m_rand <span class="ot">&lt;-</span> <span class="fu">lm</span>(y_rand <span class="sc">~</span> x)</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(x, y_rand, <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">"Slope = "</span>, <span class="fu">round</span>(<span class="fu">coef</span>(m_rand)[<span class="dv">2</span>], <span class="dv">2</span>)))</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(m_rand)</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -900,17 +1007,17 @@ dbl (2): Age, Systolic_BP
 <p>Now its less clear which is the real data. We can use this idea to test the null hypothesis.</p>
 <p>We do the same procedure of but instead of just looking at the graphs, we calculate the slope of the regression line each time. This gives us a distribution of slopes we would expect to observe if the null hypothesis is true. We can then see where the observed slope lies in this distribution of null hypothesis slopes.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># repeat 10000 time a randomisation test</span></span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fl">0.15</span><span class="sc">*</span>x <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, <span class="dv">15</span>)</span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>rand_slopes <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">10000</span>, {</span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  y_rand <span class="ot">&lt;-</span> <span class="fu">sample</span>(y)</span>
-<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>  m_rand <span class="ot">&lt;-</span> <span class="fu">lm</span>(y_rand <span class="sc">~</span> x)</span>
-<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coef</span>(m_rand)[<span class="dv">2</span>]</span>
-<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">slopes =</span> rand_slopes), <span class="fu">aes</span>(<span class="at">x =</span> slopes)) <span class="sc">+</span></span>
-<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">50</span>) <span class="sc">+</span></span>
-<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">coef</span>(m)[<span class="dv">2</span>], <span class="at">color =</span> <span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># repeat 10000 time a randomisation test</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fl">0.15</span><span class="sc">*</span>x <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, <span class="dv">15</span>)</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>rand_slopes <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">10000</span>, {</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  y_rand <span class="ot">&lt;-</span> <span class="fu">sample</span>(y)</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>  m_rand <span class="ot">&lt;-</span> <span class="fu">lm</span>(y_rand <span class="sc">~</span> x)</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coef</span>(m_rand)[<span class="dv">2</span>]</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">slopes =</span> rand_slopes), <span class="fu">aes</span>(<span class="at">x =</span> slopes)) <span class="sc">+</span></span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">50</span>) <span class="sc">+</span></span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">coef</span>(m)[<span class="dv">2</span>], <span class="at">color =</span> <span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -921,8 +1028,8 @@ dbl (2): Age, Systolic_BP
 </div>
 <p>We can now calculate the probability of observing the data we have, given the null hypothesis is true.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>p_value <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">abs</span>(rand_slopes) <span class="sc">&gt;=</span> <span class="fu">abs</span>(<span class="fu">coef</span>(m)[<span class="dv">2</span>]))</span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>p_value</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>p_value <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">abs</span>(rand_slopes) <span class="sc">&gt;=</span> <span class="fu">abs</span>(<span class="fu">coef</span>(m)[<span class="dv">2</span>]))</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>p_value</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.0172</code></pre>
 </div>

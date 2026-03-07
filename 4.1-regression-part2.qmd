@@ -6,23 +6,31 @@ source("_common.R")
 
 # Regression Part 2 (L4) {.unnumbered}
 
-This chapter builds on the previous chapter on simple linear regression. There we learned how to fit a regression model to data, and how to check if the assumptions of the regression model are met. In this chapter we will learn how to interpret the results of a regression model, and how to use the model to make inferences about the relationship between the dependent and independent variables.
-
 ## Introduction
 
-Now that we have a satisfactory model, we can start to use it. In the following material, you will learn:
+This chapter builds on the previous chapter on simple linear regression. There we learned how to fit a regression model to data, and how to check if the assumptions of the regression model are met. When we are satisfied that the assumptions of linear regression are adequately met, we can move on to the next stage: interpreting the model and using it to answer our biological question.
 
-* How to measure how good is the regression (correlation and $R^2$).
-* How to test if the parameter estimates are compatible with some specific value ($t$-test).
-* How to find the range of parameters values are compatible with the data (confidence intervals).
-* How to find the regression lines compatible with the data (confidence band).
-* How to calculate plausible values of newly collected data (prediction band).
+Interpretation of the model means two main things in simple regression:
+
+* Is there a statistically significant relationship between the response and explanatory variable?
+* Does the model provide a good (or not so good) explanation of the variation in the response variable?
+
+And there are couple of tools useful for communicating and visualising the uncertainty in the regression model, such as *confidence interval*, *confidence bands*, and *prediction bands*.
+
+So, in this chapter, we cover:
+
+* How to measure how good is the regression ($R^2$).
+* Testing if relationship is statistically significant (i.e., if the slope is significantly different from zero).
+* What is the confidence interval of the slope.
+* What is the the confidence band of the regression line.
+* What is the prediction band of the regression line.
 
 
 
-## How good is the regression model?
+## How good is the regression model ($R^2$)?
 
-What would a good regression model look like? What would a bad one look like? One could say that a good regression model is one that explains the dependent variable well. But what could we mean by "explains the data well"?
+What would a good regression model look like? What would a bad one look like? One could say that a good regression model is one that explains a lot the variability in the response variable. But what could we mean by "variability in the response variable" and "explains a lot"?
+
 
 Take these two examples.
 
@@ -51,14 +59,18 @@ p1 + p2
 --->
 
 
-The first model seems to fit the data well, while the second one does not. But how can we quantify this?
+The left regression model seems to fit the data relatively well. The regression line is quite close to the data points.
 
-Let's say that we will measure the goodness of the model by the amount of variability of the dependent variable that is explained by the independent variable. To do this we need to do the following:
+The right regression model does not fit the data well. The regression line is quite far from the data points.
 
-1. Measure the total variability of the dependent variable (total sum of squares, $SST$).
-2. Measure the amount of variability of the dependent variable that is explained by the independent variable (model sum of squares, $SSM$).
-3. Measure the variability of the dependent variable that is not explained by the independent variable (error sum of squares, $SSE$).
-4. Calculate the proportion of variability of the dependent variable that is explained by the independent variable ($R^2$, pronounced as "r-squared") (also known as the coefficient of determination) ($R^2$ = $SSM/SST$).
+But how can we quantify this?
+
+Let's say that we will measure the goodness of the model by the proportion of variability of the response variable that is explained by the explanatory variable. To do this we need to do the following:
+
+1. Measure the total variability of the response variable (total sum of squares, $SST$).
+2. Measure the amount of variability of the response variable that is explained by the explanatory variable (model sum of squares, $SSM$).
+3. Measure the variability of the response variable that is not explained by the explanatory variable (error sum of squares, $SSE$).
+4. Calculate the proportion of variability of the response variable that is explained by the explanatory variable ($R^2$, pronounced as "r-squared") (also known as the coefficient of determination) ($R^2$ = $SSM/SST$).
 
 **Importantly, note that we will calculate $SSM$ and $SSE$ so that they sum up to $SST$. I.e., $SST = SSM + SSE$. That is, the total variability is the sum of what is explained by the model and what remains unexplained.**
 
@@ -66,18 +78,18 @@ Let's take each in turn:
 
 ### $SST$
 
-**1. The total variability of the dependent variable is the sum of the squared differences between the dependent variable and its mean. This is called the total sum of squares ($SST$).**
+**1. The total variability of the response variable is the sum of the squared differences between the response variable and its mean. This is called the total sum of squares ($SST$).**
 
 $$SST = \sum_{i=1}^{n} (y_i - \bar{y})^2$$
 
 where:
-$y_i$ is the dependent variable,
-$\bar{y}$ is the mean of the dependent variable,
+$y_i$ is the response variable,
+$\bar{y}$ is the mean of the response variable,
 $n$ is the number of observations.
 
 **Note that sometimes $SST$ is referred to as $SSY$ (sum of squares of $y$).**
 
-Graphically, this is the sum of the square of the blue residuals as shown in the following graph, where the horizontal dashed line is at the value of the mean of the dependent variable.
+Graphically, this is the sum of the square of the blue residuals as shown in the following graph, where the horizontal dashed line is at the value of the mean of the response variable.
 
 ```{r}
 #| echo: false
@@ -120,14 +132,14 @@ In a better model the length of the green lines will be **longer** (the square o
 
 Next we will do the second step, that is calculate the model sum of squares ($SSM$).
 
-**2. The amount of variability of the dependent variable that is explained by the independent variable is called the model sum of squares ($SSM$).**
+**2. The amount of variability of the response variable that is explained by the explanatory variable is called the model sum of squares ($SSM$).**
 
-This is the difference between the predicted value of the dependent variable and the mean of the dependent variable, squared and summed:
+This is the difference between the predicted value of the response variable and the mean of the response variable, squared and summed:
 
 $$SSE = \sum_{i=1}^{n} (\hat{y}_i - \bar{y})^2$$
 
 where:
-$\hat{y}_i$ is the predicted value of the dependent variable,
+$\hat{y}_i$ is the predicted value of the response variable,
 
 In R, we calculate this as follows:
 
@@ -162,7 +174,7 @@ SSE
 
 ### $R^2$
 
-Finally, we calculate the proportion of variability of the dependent variable that is explained by the independent variable ($R^2$):    
+Finally, we calculate the proportion of variability of the response variable that is explained by the explanatory variable ($R^2$):    
 
 $$R^2 = \frac{SSM}{SST}$$
 
@@ -171,9 +183,9 @@ R.squared <- SSM/SST
 R.squared
 ```
 
-### Is my R squared good?
+### Is my R squared high (or low)?
 
-What value of $R^2$ is considered good? In ecological research, $R^2$ values are often low (less than 0.3), because ecological systems are complex and many factors influence the dependent variable. However, in other fields, such as physiology, $R^2$ values are often higher. Therefore, the answer of what values of $R^2$ are good depends on the field of research.
+What value of $R^2$ is considered good? In ecological research, $R^2$ values are often low (less than 0.3), because ecological systems are complex and many factors influence the response variable. However, in other fields, such as physiology, $R^2$ values are often higher. Therefore, the answer of what values of $R^2$ are good depends on the field of research.
 
 Here are the four examples and their r-squared.
 
@@ -222,13 +234,32 @@ p4 <- ggplot(data.frame(x = x, y4 = y4), aes(x = x, y = y4)) +
 **Think-Pair-Share** (#tps-what-minimised) What is minimised when we fit a regression model? And therefore what is maximised?
 --->
 
-## How unlikey is the observed data given the null hypothesis?
+### Where is the $R^2$ value in the regression output?
 
-We often hear this expressed as "is the relationship significant?" And maybe we heard that the relationship is significant if the p-value is less than 0.05. But what does all this actually mean? In this section we'll figure all this out. The first step to is to formulate a null hypothesis.
+Using the blood pressure data, we can fit a regression model and look at the output. We use the `summary` function to get the regression output, and we can see that the $R^2$ value is given in the output. Look for "Multiple R-squared" in the output, which is the $R^2$ value of the model. 
+```{r}
+#| echo: false
+bp_data <- suppressMessages(read_csv(here::here("datasets/Simulated_Blood_Pressure_and_Age_Data.csv")))
+mod1 <- lm(Systolic_BP ~ Age, data = bp_data)
+summary(mod1)
+```
+
+The value is `r round(summary(mod1)$r.squared, 3)`, which means that the model explains about `r round(summary(mod1)$r.squared * 100, 1)`% of the variability in the response variable (systolic blood pressure).
+
+
+
+
+## Is the relationship *statistically significant*?
+
+A common question is "Is there a relationship between the response and explanatory variable?" Or, more formally, "Is the slope of the regression line significantly different from zero?"
+
+We often hear this expressed as "is the relationship statistically significant?" And maybe we heard that the relationship is significant if the p-value is less than 0.05. But what does all this actually mean? In this section we'll figure all this out. The first step to is to formulate a null hypothesis.
+
+### The null hypothesis
 
 What is a meaningful null hypothesis for a regression model?
 
-As mentioned, often we're interested in whether there is a relationship between the dependent (response) and independent (explanatory) variable. Therefore, the null hypothesis is that there is no relationship between the dependent and independent variable. This means that the null hypothesis is that the slope of the regression line is zero.
+As mentioned, often we're interested in whether there is a relationship between the dependent (response) and independent (explanatory) variable. Therefore, the null hypothesis is that there is no relationship between the response and explanatory variable. This means that the null hypothesis is that the slope of the regression line is zero.
 
 Recall the regression model:
 $$y = \beta_0 + \beta_1 x + \epsilon$$
@@ -243,13 +274,13 @@ What is the alternative hypothesis?
 
 $$H_1: \beta_1 \neq 0$$
 
-So, how do we test the null hypothesis? More precisely, we are going to calculate the probability of observing the data we have, given that the null hypothesis is true. If this probability is very low, then we can reject the null hypothesis.
+So, how do we test the null hypothesis? We are going to calculate the probability of observing the data we have, given that the null hypothesis is true. If this probability is very low, then we can reject the null hypothesis.
 
-Does that make sense? Does it seem a bit convoluted? It is a bit!!!
+::: {.callout-note}
+We never prove the null hypothesis is true. Instead, we calculate the probability of observing our data given that the null hypothesis is true. If this probability is very low, we reject the null hypothesis.
+:::
 
-But this is how hypothesis testing works. We never prove the null hypothesis is true. Instead, we calculate the probability of observing our data given that the null hypothesis is true. If this probability is very low, we reject the null hypothesis.
-
-To make the calculation we can use the fact that the slope of the regression line is an estimate of the true slope. This estimate has uncertainty associated with it. We can use this uncertainty to calculate the probability of observing the data we have, given the null hypothesis is true.
+To calculation this probability we use the fact that the slope of the regression line is an estimate and this estimate has uncertainty associated with it.
 
 We can see that the slope estimate (the $x$ row) has uncertainty by looking at the regression output:
 
@@ -257,7 +288,7 @@ We can see that the slope estimate (the $x$ row) has uncertainty by looking at t
 summary(m1)$coefficients[1:2, 1:2]
 ```
 
-The estimate is the mean of the distribution of the parameter (slope) and the standard error is a measure of the uncertainty of the estimate.
+We see the estimate of the parameter (slope) and a measure of uncertainty in the estimate: the standard error of the estimate.
 
 The standard error is calculated as:
 
@@ -267,11 +298,11 @@ Where $\hat\sigma^2$ is the expected residual variance of the model. This is cal
 
 $$\hat\sigma^2 = \frac{\sum_{i=1}^n (y_i - \hat y_i)^2}{n-2}$$
 
-Where $\hat y_i$ is the predicted value of $y_i$ from the regression model.
+Where $\hat y_i$ is the predicted value of $y_i$ from the regression model, and $n$ is the number of observations. We divide by $n-2$ because we have estimated two parameters (the intercept and the slope) from the data.
 
 OK, let's take a look at this intuitively. We have the estimate of the slope and the standard error of the estimate.
 
-Here is a graph of the value of the slope estimate versus the standard error of the estimate:
+Here is an empty graph of the value of the slope estimate versus the standard error of the estimate:
 
 ```{r}
 #| echo: false
@@ -289,9 +320,9 @@ ggplot(data.frame(slope_estimate = slope_estimate_value,
 **Think-Pair-Share** (#tps-chance-area) In what areas of the graph is the slope estimate more likely to have been observed by chance? And what regions is it less likely to have been observed by chance? Think about this before you look at the end of this chapter for an answer.
 --->
 
-
-
 When the slope estimate is larger, it is less likely to have been observed by chance. And when the standard error is larger, it is more likely to have been observed by chance. How can we put these together into a single measure?
+
+### The $t$-statistic
 
 If we divide the slope estimate by the standard error, we get a measure of how many standard errors the slope estimate is from the null hypothesis slope of zero. This is the $t$-statistic:
 
@@ -303,152 +334,17 @@ $$t = \frac{\hat\beta_1}{\sigma^{(\beta_1)}}$$
 
 **The $t$-statistic is a measure of how many standard errors the slope estimate is from the null hypothesis value of the slope. The larger the $t$-statistic, the less likely the slope estimate was observed by chance.**
 
-How can we transform the value of a $t$-statistic into a p-value? We can use the **$t$-distribution**, which quantifies the probability of observing a value of the $t$-statistic under the null hypothesis.
+### The p-value
 
-But what is the $t$-distribution? It is a distribution of the $t$-statistic under the null hypothesis. It is a bell-shaped distribution that is centered on zero. The shape of the distribution is determined by the degrees of freedom, which is $n-2$ for a simple linear regression model.
+**Recap: Formal definition of the $p$-value**
 
-```{r}
-#| echo: false
-ggplot(data.frame(t_val = seq(-4, 4, 0.01)), aes(x = t_val)) +
-  stat_function(fun = dt, args = list(df = 98)) +
-  labs(title = "t-distribution with 98 degrees of freedom",
-       x = "t-value", y = "density")
-```
-
-Note that the height of the line is the "density" and not a probability. The probability of observing a value of the $t$-statistic in a given range is the area under the curve of the $t$-distribution in that range. The area under the curve of the $t$-distribution is equal to 1, which means that the total probability of observing a value of the $t$-statistic is 1.
-
-::: {.callout-tip}
-By the way, it is named the $t$-distribution by it's developer, William Sealy Gosset, who worked for the Guinness brewery in Dublin, Ireland. In his 1908 paper, Gosset introduced the $t$-distribution but he didn't explicitly explain his choice of the letter $t$. The choice of the letter $t$ could be to indicate "Test", as the $t$-distribution was developed specifically for hypothesis testing.
-:::
-
-Now, recall that the p-value is the probability of observing the value of the test statistic (so here the $t$-statistic) at least as extreme as the one we have, given the null hypothesis is true. We can calculate this probability by integrating the $t$-distribution from the observed $t$-statistic to the tails of the distribution.
-
-Here is a graph of the $t$-distribution with 100 degrees of freedom with the tails of the distribution shaded so that the area of the shaded region is 0.05 (i.e., 5% of the total area).
-
-
-
-```{r}
-#| echo: false
-n <- 100
-t_95perc <- qt(0.975, df = n)
-df <- data.frame(x = seq(-4, 4, 0.01), 
-                dt = dt(seq(-4, 4, 0.01), df = n-2))
-df_95perc_lower <- df[df$x < -t_95perc, ]
-df_95perc_upper <- df[df$x > t_95perc, ]
-ggplot(df, aes(x = x, y = dt)) +
-  geom_line(data = df, mapping = aes(x = x, y = dt)) +
-  geom_area(data = df_95perc_lower,
-            mapping = aes(x = x, y = dt),
-            fill = "lightblue") +
-  geom_area(data = df_95perc_upper,
-            mapping = aes(x = x, y = dt),
-            fill = "lightblue") +
-  labs(title = "t-distribution with 100 degrees of freedom",
-       x = "t-value", y = "density")
-```
-
-And here's a graph of the $t$-distribution with 1000 degrees of freedom (blue line) and the normal distribution (green dashed line):
-
-```{r}
-#| echo: false
-n <- 1000
-ggplot(data.frame(x = seq(-4, 4, 0.01)), aes(x = x)) +
-  stat_function(fun = dt, args = list(df = n-2),
-                lwd = 1.5, lty = "solid", col = "blue") +
-  stat_function(fun = dnorm, args = list(mean = 0, sd = 1),
-                lwd = 1.3, lty = "solid", col = "darkorange") +
-  labs(title = "t-distribution with 1000 degrees of freedom (blue) and normal distribution (orange)",
-       x = "t-value", y = "density")
-```
-
-
-So, with a large number of observations, the $t$-distribution approaches the normal distribution. For the normal distribution, the 95% area is between -1.96 and 1.96.
-
-```{r}
-#| echo: true
-## x value for 95% area of normal distribution
-x_value <- qnorm(0.975)
-x_value
-```
-
-`qnorm` is a function that calculates the $x$ value for a given quantile (probability) of the normal distribution. In simpler terms, it finds the value $x$ at which the area under the normal curve (up to $x$) equals the given probability 
-$p$ (0.975 in the example immediately above here).
-
-```{r}
-#| eval: false
-#| echo: false
-ggplot(data.frame(x = seq(-4, 4, 0.01)), aes(x = x)) +
-  stat_function(fun = dnorm, args = list(mean = 0, sd = 1)) +
-  geom_vline(xintercept = x_value, linetype = "dashed")
-```
-
-
-
-
-
-Let's go back to the age - blood pressure data and calculate the p-value for the slope estimate.
-
-Read in the data:
-
-```{r}
-bp_data <- read_csv(here::here("datasets/Simulated_Blood_Pressure_and_Age_Data.csv"))
-```
-
-Make a graph:
-
-```{r}
-ggplot(bp_data, aes(x = Age, y = Systolic_BP)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = FALSE, formula = y ~ x)
-```
-
-Here's the model:
-
-```{r}
-#| echo: true
-mod1 <- lm(Systolic_BP ~ Age, data = bp_data)
-```
-
-Here we calculate the $t$-statistic for the slope estimate:
-
-```{r}
-t_stat <- mod1$coefficients[2] / summary(mod1)$coefficients[2, 2]
-```
-
-And here we calculate the one-tailed and two-tailed $p$-values:
-
-```{r}
-one_tailed_p_value <- pt(-abs(t_stat), df = nrow(bp_data) - 2)
-two_tailed_p_value <- 2 * one_tailed_p_value
-one_tailed_p_value
-two_tailed_p_value
-```
-
-We can get the $p$-value directly from the `summary` function:
-
-```{r}
-summary(mod1)$coefficients[2, ]
-```
-
-
-Conclusion: there is __very strong evidence__ that the blood pressure is associated with age, because the $p$-value is extremely small (thus it is very unlikely that the observed slope value or a large one would be seen if there was really no association). Thus, we can reject the null hypothesis that the slope is zero.
-
-This basically answers question 1: "Are the parameters compatible with some specific value?"
-
-### Recap: Formal definition of the $p$-value
-
-
-**The formal definition of $p$-value is the probability to observe a data summary (e.g., an average or a slope) that is at least as extreme as the one observed, given that the null hypothesis is correct.**
+*The formal definition of $p$-value is the probability to observe a data summary that is at least as extreme as the one observed, given that the null hypothesis is correct.*
  
-
-Example (normal distribution): Assume that we calculated that $t$-value = -1.96  
-
-$\Rightarrow$ $Pr(|t|\geq 1.96)=0.05$ (two-tailed) and $Pr(t\leq-1.96)=0.025$ (one-tailed).
-
-And here is a graph showing this:
+When performing a $t$-test, the data summary is the value of the $t$-statistic. Therefore, the $p$-value is the probability of observing a value of the $t$-statistic at least as extreme as the one observed, given that the null hypothesis is correct.
 
 ```{r fig.width=8, fig.height=4}
 #| echo: false
+#| eval: false
 par(mfrow=c(1,2))
 
 zz1 <- qnorm(0.025)
@@ -476,6 +372,119 @@ text(-3,0.05,labels="2.5%")
 ```
 
 
+But how can we calculate the $p$-value from the $t$-statistic? The answer is to use the **$t$-distribution**, which quantifies the probability of observing a value of the $t$-statistic under the null hypothesis.
+
+But what is the $t$-distribution? It is a distribution of the $t$-statistic under the null hypothesis. It is a bell-shaped distribution that is centered on zero. The shape of the distribution is determined by the degrees of freedom, which is $n-2$ for a simple linear regression model.
+
+Here is the distribution of $t$ values under the null hypothesis for a sample size of 100 (i.e., 98 degrees of freedom):
+
+```{r}
+#| echo: false
+ggplot(data.frame(t_val = seq(-4, 4, 0.01)), aes(x = t_val)) +
+  stat_function(fun = dt, args = list(df = 98)) +
+  labs(title = "t-distribution with 98 degrees of freedom",
+       x = "t-value", y = "density")
+```
+
+The height of the line is the "density" and not a probability. The probability of observing a value of the $t$-statistic in a given range is the area under the curve of the $t$-distribution in that range. The area under the curve of the $t$-distribution is equal to 1, which means that the total probability of observing a value of the $t$-statistic is 1.
+
+::: {.callout-tip}
+By the way, it is named the $t$-distribution by it's developer, William Sealy Gosset, who worked for the Guinness brewery in Dublin, Ireland. In his 1908 paper, Gosset introduced the $t$-distribution but he didn't explicitly explain his choice of the letter $t$. The choice of the letter $t$ could be to indicate "Test", as the $t$-distribution was developed specifically for hypothesis testing.
+:::
+
+Now, recall that the p-value is the probability of observing the value of the test statistic (so here the $t$-statistic) at least as extreme as the one we have, given the null hypothesis is true. We can calculate this probability by integrating the $t$-distribution from the observed $t$-statistic to the tails of the distribution.
+
+Let's see this graphically. Say we have an observed $t$-statistic of 1.5. The p-value is the area under the curve of the $t$-distribution in the tails beyond 1.5 and -1.5 (more extreme means both less than or greater than). Graphically this looks like:
+
+
+```{r}
+#| echo: false
+n <- 100
+t_obs <- 1.5
+df <- data.frame(x = seq(-4, 4, 0.01), 
+                dt = dt(seq(-4, 4, 0.01), df = n-2))
+df_95perc_lower <- df[df$x < -t_obs, ]
+df_95perc_upper <- df[df$x > t_obs, ]
+ggplot(df, aes(x = x, y = dt)) +
+  geom_line(data = df, mapping = aes(x = x, y = dt)) +
+  geom_area(data = df_95perc_lower,
+            mapping = aes(x = x, y = dt),
+            fill = "lightblue") +
+  geom_area(data = df_95perc_upper,
+            mapping = aes(x = x, y = dt),
+            fill = "lightblue") +
+  labs(title = "t-distribution with 100 degrees of freedom",
+       x = "t-value", y = "density")
+```
+
+
+This blue area is the $p$-value, which is the probability of observing a value of the $t$-statistic at least as extreme as 1.5, given that the null hypothesis is true.
+
+This area (p-value) can be calculated using the cumulative distribution function of the $t$-distribution.
+
+```{r}
+#| echo: true
+t_value <- 1.5
+p_value <- 2 * pt(-abs(t_value), df = n - 2)
+p_value
+```
+
+So, with a $t$-statistic of 1.5, and 98 degrees of freedom, the p-value is 0.14, which means that there is a 0.14 probability of observing a value of the $t$-statistic at least as extreme as 1.5, given that the null hypothesis is true.
+
+Often we say that there is "statistically significant evidence" for a relationship between the response and explanatory variable if the p-value is less than 0.05. This means that if the p-value is less than 0.05, we reject the null hypothesis of no relationship between the response and explanatory variable.
+
+Let's do the same graph and calculation for a $t$-statistic of 2.5:
+
+```{r}
+#| echo: false
+n <- 100
+t_obs <- 2.5
+df <- data.frame(x = seq(-4, 4, 0.01), 
+                dt = dt(seq(-4, 4, 0.01), df = n-2))
+df_95perc_lower <- df[df$x < -t_obs, ]
+df_95perc_upper <- df[df$x > t_obs, ]
+ggplot(df, aes(x = x, y = dt)) +
+  geom_line(data = df, mapping = aes(x = x, y = dt)) +
+  geom_area(data = df_95perc_lower,
+            mapping = aes(x = x, y = dt),
+            fill = "lightblue") +
+  geom_area(data = df_95perc_upper,
+            mapping = aes(x = x, y = dt),
+            fill = "lightblue") +
+  labs(title = "t-distribution with 100 degrees of freedom",
+       x = "t-value", y = "density")
+```
+
+With the larger $t$-statistic the blue areas are smaller, which means that the p-value is smaller.
+
+```{r}
+#| echo: true
+t_value <- 2.5
+p_value <- 2 * pt(-abs(t_value), df = n - 2)
+p_value
+```
+
+The p-value is 0.01, which means that there is a 0.01 probability of observing a value of the $t$-statistic at least as extreme as 2.5, given that the null hypothesis is true. Therefore, we reject the null hypothesis of no relationship between the response and explanatory variable.
+
+
+### Where is the $p$-value in the regression output?
+
+Using the blood pressure data again, we can fit a regression model and look at the output. We use the `summary` function to get the regression output.
+
+```{r}
+#| echo: true
+summary(mod1)
+```
+
+In the coefficients table, look for the row corresponding to the slope (the second row, which is the "Age" row). In this row we see the estimate of the slope, the standard error of the slope, the $t$-value for the slope,and in the last column "Pr(>|t|)". This means "the probability of observing a value of the $t$-statistic at least as extreme as the one observed, given that the null hypothesis is true".
+
+::: {.callout-note}
+The vertical bars around *t* indicate that we are looking at the absolute value of the $t$-statistic, which is what we use for a two-tailed test, which is the most common test for the slope of a regression line 
+:::
+
+Conclusion: there is **very strong evidence** that the blood pressure is associated with age, because the $p$-value is extremely small (thus it is very unlikely that the observed slope value or a large one would be seen if there was really no association). Thus, we can reject the null hypothesis that the slope is zero.
+
+
 
 ### A cautionary note on the use of $p$-values
 
@@ -483,9 +492,9 @@ Maybe you have seen that in statistical testing, often the criterion $p\leq 0.05
 
 
 
-## How strong is the relationship?
+## Confidence interval of slope
 
-The actual value of the slope has practical meaning. The slope of the regression line tells us how much the dependent variable changes when the independent variable changes by one unit. The slope is one measure of the strength of the relationship between the two variables.
+The actual value of the slope has practical meaning. The slope of the regression line tells us how much the response variable changes when the explanatory variable changes by one unit. The slope is one measure of the strength of the relationship between the two variables.
 
 We can ask what values of a parameter estimate are compatible with the data (confidence intervals)? To answer this question, we can determine the confidence intervals of the regression parameters.
 
@@ -501,7 +510,8 @@ x <- seq(-1, 1, 0.01)
 y <- rep(0, length(x))
 ggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +
   geom_line(lty = "dotted") +
-  geom_errorbarh(aes(y = 0, xmin = -0.1, xmax = 0.5), height = 0.05) +
+  geom_errorbar(aes(y = 0, xmin = -0.1, xmax = 0.5),
+                width = 0.05, orientation = "y") +
   theme(axis.title.y = element_blank(),
         axis.text.y = element_blank(),
         axis.ticks.y = element_blank()) +
@@ -524,7 +534,8 @@ x <- seq(-1, 1, 0.01)
 y <- rep(0, length(x))
 ggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +
   geom_line(lty = "dotted") +
-  geom_errorbarh(aes(y = 0, xmin = 0.1, xmax = 0.7), height = 0.05) +
+  geom_errorbar(aes(y = 0, xmin = 0.1, xmax = 0.7),
+                width = 0.05, orientation = "y") +
   theme(axis.title.y = element_blank(),
         axis.text.y = element_blank(),
         axis.ticks.y = element_blank()) +
@@ -588,45 +599,12 @@ beta + c(-1,1) * qt(0.975,241) * sdbeta
 
 *Interpretation*: for an increase in the age by one year, roughly 0.82 mmHg increase in blood pressure is expected, and all true values for $\beta_1$ between 0.77 and 0.88 are compatible with the observed data.
 
-## Confidence and Prediction Bands
 
-* Remember: If another sample from the same population was taken, the regression line would look slightly different.  
+## Confidence band
 
-* There are two questions to be asked:  
+If another sample from the same population was taken, the regression line would look slightly different. But how different? And where could we expect the regression line to be if we took another sample from the same population? The *confidence band* is an illustration of the region in which the regression line could lie if we took another sample from the same population. A confidence band is always specified with a confidence level, such as 95%.
 
-1. Which other regression lines are compatible with the observed data? This leads to the *confidence band*.
- 
-2. Where do future observations ($y$)  with a given $x$ coordinate lie? This leads to the *prediction band*.
-
-
-Note: The prediction band is much broader than the confidence band.
-
-## Calculation of the confidence band
-
-Given a fixed value of $x$, say $x_0$. The question is: 
-
-
-Where does $\hat y_0 = \hat\beta_0 + \hat\beta_1 x_0$ lie with a certain confidence (i.e., 95%)? 
-
-
-The first step is to calculate the standard error of $\hat y_0$:
-
-$$\sigma^{(\hat y_0)} = \hat\sigma \sqrt{  \left( \frac{1}{n} + \frac{(x_0 - \bar x)^2}{\sum_{i=1}^n (x_i - \bar x)^2} \right) }$$
-
-where $\hat\sigma^2$ is the expected residual variance of the model, calculated as:
-
-$$\hat\sigma^2 = \frac{\sum_{i=1}^n (y_i - \hat y_i)^2}{n-2}$$
-
-Then, we can calculate the confidence interval of $\hat y_0$ as:
-
-$$\hat y_0 \pm t_{0.975} \cdot \sigma^{(\hat y_0)}$$
-
-
-Plotting the confidence interval around all $\hat y_0$ values one obtains the *confidence band* or *confidence band for the expected values* of $y$.
-
-Note: For the confidence band, only the uncertainty in the estimates $\hat\beta_0$ and $\hat\beta_1$ matters.
-
-Here is the confidence band for the blood pressure data:
+Lets look at this in a graph of our blood pressure data. The black line is the regression line fitted to the data. The purple line is the confidence band for the expected values of $y$ (systolic blood pressure) for each value of $x$ (age). The shaded area around the purple line is the 95% confidence band for the expected values of $y$.
 
 ```{r}
 #| echo: false
@@ -641,52 +619,58 @@ ggplot(bp_data, aes(x = Age, y = Systolic_BP)) +
   labs(title = "Confidence band for the expected values of y",
        subtitle = "95% confidence band",
        x = "Age", y = "Systolic BP")
-  
 ```
 
-Very narrow confidence bands indicate that the estimates are very precise. In this case the estimated intercept and slope are precise because the sample size is large and the data points are close to the regression line.
+The confidence band is narrow here because the estimates of the slope and intercept are precise (the standard errors of the slope and intercept are small). The confidence band is (slightly) wider at the edges of the graph because there are fewer data points at the edges, which means that the estimates of the slope and intercept are less precise at the edges.
 
+We can view this in a different way. Let us plot regression lines that are consistent with the estimated slope and intercept, given their standard errors.
 
-
-
-
-
-```{r eval=FALSE, fig.width=5,fig.height=5, out.width='7cm', echo = FALSE, fig.align='center'}
-t.range <- range(bp_data$Systolic_BP)
-t.xwerte <- seq(t.range[1]-1,t.range[2]+1,by=1)
-t.vert <- predict(mod1,se.fit=T,newdata=data.frame(bmi=t.xwerte),
-interval ="confidence")$fit
-t.vorh <- predict(mod1,se.fit=T,newdata=data.frame(bmi=t.xwerte),
-interval ="prediction")$fit
-plot(bp_data$Systolic_BP,d.bodyfat$bodyfat,main="Confidence band",xlab="BMI",ylab="bodyfat",xlim=range(t.xwerte),ylim=c(-5,50),cex=0.8)
-abline(mod1,lwd=2)
-lines(x=t.xwerte,y=t.vert[,2],lty=8,lwd=2,col=2)
-lines(x=t.xwerte,y=t.vert[,3],lty=8,lwd=2,col=2)
-legend("bottomright", c("confidence band (95%)"),
-lty=8, cex=1,col=c(2),lwd=2)
+```{r}
+#| echo: false
+## create some regression lines that could be observed with 95% confidence
+set.seed(123)
+n_lines <- 100
+lines_data <- data.frame(Age = seq(20, 80, by = 1))
+for (i in 1:n_lines) {
+  # sample the slope and intercept from their confidence intervals
+  slope_i <- rnorm(1, mean = coef(mod1)[2], sd = summary(mod1)$coef[2,2])
+  intercept_i <- rnorm(1, mean = coef(mod1)[1], sd = summary(mod1)$coef[1,2])
+  lines_data[[paste0("line_", i)]] <- intercept_i + slope_i * lines_data$Age
+}
+lines_data_long <- lines_data %>%
+  pivot_longer(cols = starts_with("line_"), names_to = "line", values_to = "Systolic_BP")
+ggplot(bp_data, aes(x = Age, y = Systolic_BP)) +
+  geom_point() +
+  geom_line(aes(y = fit), data = conf_band, color = "black", lwd = 1) +
+  geom_line(data = lines_data_long, aes(x = Age, y = Systolic_BP, group = line), color = "purple", alpha = 0.1) +
+  labs(title = "Regression lines that could be observed with 95% confidence",
+       x = "Age", y = "Systolic BP")
 ```
 
+None of these lines has a slope any where near zero! And all are closely grouped around the estimated regression line. Note that this is a different way of visualising the confidence in the slope, and is not commonly used. Most people would just plot the 95% confidence band.
+
+The details of how to calculate a confidence band are not required for this course. If you would like to see them, please look in the *Extras* section below.
+
+
+Note: For the confidence band, only the uncertainty in the estimates $\hat\beta_0$ and $\hat\beta_1$ matters.
 
 
 
+## Prediction band
 
-## Calculations of the prediction band
+The prediction band is rarely used, but it is important to understand the difference between a confidence band and a prediction band. As seen above, the confidence band is where expected values of $y$ lie. This means that we only account for the uncertainty in the estimates of the slope and intercept.
 
-We can easily predicted an expected value of $y$ for a given $x$ value. But we can also ask w where does a *future observation* lie with a certain confidence (i.e., 95\%)?
+The prediction band is where future observations of $y$ lie. This means that we have to account for both the uncertainty in the estimates of the slope and intercept, and the variability of future observations around the predicted value.
 
-To answer this question, we have to *consider not only the uncertainty in the predicted value caused by uncertainty in the parameter estimates* $\hat y_0 =  \hat\beta_0 + \hat\beta_1 x_0$, but also the *error term* $\epsilon_i \sim N(0,\sigma^2)$}.
+That is, we have to *consider not only the uncertainty in the predicted value caused by uncertainty in the parameter estimates* $\hat y_0 =  \hat\beta_0 + \hat\beta_1 x_0$, but also the *error term* $\epsilon_i \sim N(0,\sigma^2)$}.
 
-The standard error of a future observation is given by:
-$$\sigma^{(y_0)} = \hat\sigma \sqrt{ 1 + \left( \frac{1}{n} + \frac{(x_0 - \bar x)^2}{\sum_{i=1}^n (x_i - \bar x)^2} \right) }$$
+If you'd like to learn how to calculate the prediction band, the details are given in the *Extras* section below. These details are not necessary parts of this course.
 
-This is the same as the standard error of the predicted value $\hat y_0$ but with an additional 1. This is because the standard error of a future observation is the standard error of the predicted value $\hat y_0$, and this includes the uncertainty in the parameter estimates, plus an additional term that accounts for the variability of future observations around the predicted value. This additional term is what makes the prediction band wider than the confidence band.
+The key point is that the standard error of a future observation is larger than the standard error of the predicted value $\hat y_0$ because it includes an additional term that accounts for the variability of future observations around the predicted value.
 
-The prediction interval of a future observation is then given by:
-$$\hat y_0 \pm t_{0.975} \cdot \sigma^{(y_0)}$$
 
-This is the reason why the **prediction band** is wider than the confidence band.
 
-Here's a graph showing the prediction band for the blood pressure data:
+Here's a graph showing the prediction band in green for the blood pressure data (with the confidence band in purple):
 
 ```{r}
 #| echo: false
@@ -708,6 +692,72 @@ Another way to think of the 95% confidence band is that it is where we would exp
 **Think–Pair–Share** (#a_prediction_vs_estimation) Which interval answers: "What is the mean response?" Which answers: "What might a new observation look like?"
 --->
 
+
+
+## Reporting
+
+A figure is very important part of reporting the results of a regression analysis. A good figure can help to understand the relationship between the response and explanatory variable, and can also help to understand the uncertainty in the estimates of the slope and intercept.
+
+```{r}
+#| echo: false
+#| message: false
+ggplot(bp_data, aes(x = Age, y = Systolic_BP)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = TRUE, level = 0.95) +
+  labs(x = "Age (years)", y = "Systolic BP (mmHg)")
+```
+
+In scientific reports we usually don't give a graph a title, but rather make a caption that describes the figure. The caption should be informative and should describe what the figure shows. For example, a caption for the above figure could be:
+
+*Figure 1. The relationship of systolic blood pressure (mmHg) against age (years) with a fitted regression line (blue) and 95% confidence band for the regression (grey band).*
+
+Then in the text of the Results section we would report the results of the regression analysis. For example:
+
+*Systolic blood pressure was positively associated with age (slope = 0.82 mmHg per year, 95% confidence interval [0.77, 0.88], degrees of freedom = 98, $t$ = 29.7, $p < 0.001$). The regression model explained 90% of the variability in systolic blood pressure.*
+
+We *DO NOT* report like this:
+
+*There was a statistically significant relationship between age and systolic blood pressure ($p < 0.001$).*
+
+
+## Relationship between $R^2$ and the $p$-value of the slope
+
+Do you think a small $R^2$ value can be associated with a small $p$-value for the slope? Or do you think a large $R^2$ value can be associated with a large $p$-value for the slope?
+
+Actually, we can get a very small $p$-value for the slope even when $R^2$ is very small. This can happen when the sample size is large, because with a large sample size we can get a precise estimate of the slope, which means that the standard error of the slope is small, which means that the $t$-statistic is large, which means that the $p$-value is small.
+
+Here is an example of a dataset with a very small $R^2$ value but a very small $p$-value for the slope:
+
+```{r}
+#| echo: false
+set.seed(123)
+n <- 2000
+x <- 1:n
+y <- 0.01*x + rnorm(n, 0, 90)
+m <- lm(y ~ x)
+```
+
+
+```{r}
+#| echo: false
+ggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, formula = y ~ x)
+```
+
+```{r}
+#| echo: false
+summary(m)
+```
+
+
+
+The $R^2$ value is about 0.006, which means that the regression model explains less than only 1% of the variability in $y$. However, the $p$-value for the slope is very small ($p < 0.001$), which means that there is strong evidence for a relationship between $x$ and $y$!!!
+
+This is because with a large sample size we can get a precise estimate of the slope, which means that the standard error of the slope is small, which means that the $t$-statistic is large, which means that the $p$-value is small.
+
+**So, beware of interpreting a small $p$-value for the slope as evidence of a strong relationship between the response and explanatory variable. A small $p$-value for the slope can be observed even when the relationship is very weak (i.e., when $R^2$ is very small).**
+
 ## Review
 
 That is regression done (at least for our current purposes). Here is a summary of what we have covered:
@@ -728,8 +778,9 @@ This chapter:
 * Hypothesis testing in regression
 * Null and alternative hypotheses
 * t-statistic and p-values
-* Tests and confidence intervals
+* Confidence intervals
 * Confidence and prediction bands
+* Reporting
 
 
 ## Further reading
@@ -742,6 +793,45 @@ Again, there are many good books and online resources about regression models. T
 
 
 ## Extras
+
+### Calculation of confidence bands
+
+Given a fixed value of $x$, say $x_0$. The question is: 
+
+Where does $\hat y_0 = \hat\beta_0 + \hat\beta_1 x_0$ lie with a certain confidence (i.e., 95%)? 
+
+
+The first step is to calculate the standard error of $\hat y_0$:
+
+$$\sigma^{(\hat y_0)} = \hat\sigma \sqrt{  \left( \frac{1}{n} + \frac{(x_0 - \bar x)^2}{\sum_{i=1}^n (x_i - \bar x)^2} \right) }$$
+
+where $\hat\sigma^2$ is the expected residual variance of the model, calculated as:
+
+$$\hat\sigma^2 = \frac{\sum_{i=1}^n (y_i - \hat y_i)^2}{n-2}$$
+
+Then, we can calculate the confidence interval of $\hat y_0$ as:
+
+$$\hat y_0 \pm t_{0.975} \cdot \sigma^{(\hat y_0)}$$
+
+Plotting the confidence interval around all $\hat y_0$ values one obtains the *confidence band* or *confidence band for the expected values* of $y$.
+
+
+### Calculation of the prediction band
+
+
+The standard error of a future observation is given by:
+
+$$\sigma^{(y_0)} = \hat\sigma \sqrt{ 1 + \left( \frac{1}{n} + \frac{(x_0 - \bar x)^2}{\sum_{i=1}^n (x_i - \bar x)^2} \right) }$$
+
+This is the same as the standard error of the predicted value $\hat y_0$ but with an additional 1. This is because the standard error of a future observation is the standard error of the predicted value $\hat y_0$, and this includes the uncertainty in the parameter estimates, plus an additional term that accounts for the variability of future observations around the predicted value. This additional term is what makes the prediction band wider than the confidence band.
+
+The prediction interval of a future observation is then given by:
+
+$$\hat y_0 \pm t_{0.975} \cdot \sigma^{(y_0)}$$
+
+This is the reason why the **prediction band** is wider than the confidence band.
+
+
 
 ### Randomisation test for the slope of a regression line
 

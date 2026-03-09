@@ -569,11 +569,18 @@ fit <- lm(bp ~ diet, data = bp_data_diet)
 As with linear regression, we check the assumptions are not too badly broken by looking at model checking plots:
 
 ```{r}
-par(mfrow = c(2, 2))
-plot(fit, add.smooth = FALSE)
+autoplot(fit, which = 1:4, add.smooth = FALSE)
 ```
 
-Nothing looks too bad.
+The Q-Q plot (top right) looks pretty good, indicating that the residuals are approximately normally distributed.
+
+The residuals vs fitted plot (top left) does not show any clear pattern, which is good (though since there is no continuous explanatory variable, we would not expect to see a pattern in this plot).
+
+The scale-location plot (bottom left) does not show any clear pattern, which is good. This suggests that the residual variance is not different in different groups, i.e., that there is little if any heteroscedasticity.
+
+The residuals vs leverage plot (bottom right) does not show any clear pattern, which is good. Note that there is no measurement of the leverage of the data points in the plot above. This is because there are no continuous explanatory variables in the model. The leverage of a data point is a measure of how much that data point influences the fitted values of the model. In a linear regression model with continuous explanatory variables, the leverage of a data point can be calculated based on its distance from the mean of the explanatory variables. However, in an ANOVA model with only categorical explanatory variables, the leverage of each data point is determined solely by its group membership and is not influenced by any continuous variables. Therefore, there is no need to calculate or display leverage in this case.
+
+There are a few residuals that might be a bit extreme. These might be worth investigating, but we will ignore them for now.
 
 <!---
 **Think-pair-share**: Which of the four plots above would you use to check each of the three assumptions listed above?

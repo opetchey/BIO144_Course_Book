@@ -333,7 +333,10 @@ To find the mean squares, we need to calculate the within and the between group 
 
 ### Calculating the sums of squares
 
-First we get the total sum of squares (SST), which quantifies the total variability in the data. This is then split into the explained variability (SSM), and the residual variability (SSE).
+First we get the total sum of squares (SST), which quantifies the total variability in the data. This is then split into two parts:
+
+1. The explained variability, which is known as the between group sum of squares ($SS_{between}$) or sum of squares of the model (SSM).
+2. The residual variability, which is known as the within group sum of squares ($SS_{within}$) or sum of squares of error / residuals (SSE).
 
 **Total variability:** SST = $\sum_{i=1}^k \sum_{j=1}^{n_i} (y_{ij}-\overline{y})^2$
 
@@ -344,13 +347,13 @@ where:
 * $n_i$ is the number of individuals in group $i$
 * $k$ is the number of groups
 
-**Explained variability (between group variability)**: = SSM = $\sum_{i=1}^k n_i (\overline{y}_{i} - \overline{y})^2$
+**Explained variability (between group variability)**: = $SS_{between}$$ = SSM = $\sum_{i=1}^k n_i (\overline{y}_{i} - \overline{y})^2$
 
 where:
 
 * $\overline{y}_{i}$ is the mean blood pressure of group $i$
 
-**Residual variability (within group variability)**: = SSE = $\sum_{i=1}^k \sum_{j=1}^{n_i}  (y_{ij} - \overline{y}_{i} )^2$
+**Residual variability (within group variability)**: = $SS_{within}$ = SSE = $\sum_{i=1}^k \sum_{j=1}^{n_i}  (y_{ij} - \overline{y}_{i} )^2$
 
 ### Calculating the degrees of freedom
 
@@ -569,8 +572,18 @@ fit <- lm(bp ~ diet, data = bp_data_diet)
 As with linear regression, we check the assumptions are not too badly broken by looking at model checking plots:
 
 ```{r}
+#| eval: false
 autoplot(fit, which = 1:4, add.smooth = FALSE)
 ```
+
+
+```{r}
+#| echo: false
+suppressWarnings(autoplot(fit, which = 1:4, add.smooth = FALSE))
+```
+
+
+
 
 The Q-Q plot (top right) looks pretty good, indicating that the residuals are approximately normally distributed.
 
@@ -605,36 +618,62 @@ A suitable sentence to report our findings would be: "Diet has a significant eff
 *Think-pair-share*: You know that the $R^2$ value is a measure of how much variance in the response variable is explained by the model. How would you calculate the $R^2$ value from the ANOVA table above?
 --->
 
+
+
+
+
 ## Difference between pairs of groups
 
-"*ANOVA does not tell you which groups differ."*
+If, and only if the $F$-test is significant, we can conclude that there is a significant difference between the groups. But this does not tell us which groups differ from each other.
 
-Recall that the $F$ test is a global test. It tests the null hypothesis that all group means are equal. It does not tell us which groups are different from each other. It just tells us that at least one group mean is different. Sometimes researchers are interested in more specific questions such as:
+If we'd like to know which pairs of groups differ, we have a few issues to contend with.
 
-1. finding the actual group(s) that deviate(s) from the others.
-2. in estimates of the pairwise differences.
+1. ANOVA does not tell us this!
+2. Controlling error rates.
 
-The summary table in R provides some of these comparison, specifically it contains the estimates for $\beta_1$, $\beta_2$, $\beta_3$ (while the reference was set to $\beta_0 = 0$).
+Let's first look at error rates.
 
-For example, here is the summary table for our diet data:
+### Error-rates
 
-```{r}
-summary(fit)
-```
+Imagine a fire alarm that goes off when there is a fire. The alarm can make two types of errors:
 
-In this table we have the intercept ($\beta_0$) and the three $\beta$ values for the diet groups: "dietMeat", "dietVegetarian", and "dietVegan". The Estimate column shows the estimated coefficients for each group. The intercept ($\beta_0$) represents the mean blood pressure for the reference group (in this case, the "meat" diet group). The other three coefficients represent *the difference* in mean blood pressure between each diet group and the reference group.
+1. Type I error: The alarm goes off when there is no fire (false positive).
+2. Type II error: The alarm does not go off when there is a fire (false negative).
 
-All well and good up to a point. But there are two issues with using the results from this table:
+In the context of hypothesis testing, a Type I error occurs when we reject the null hypothesis when it is actually true. A Type II error occurs when we fail to reject the null hypothesis when it is actually false.
 
-1. The greater the number of individual tests, the more likely one will be significant just by chance. This is called the problem of multiple comparisons. Many test can result in a type-I error: rejecting the null hypothesis when it is actually true. The more tests one does, the more likely one is to make a type-I error.
+When we decide that p < 0.05 is the threshold for "significance", we are essentially saying that we are willing to accept a 5% chance of making a Type I error. That is, we are willing to accept a 5% chance of rejecting the null hypothesis when it is actually true.
 
-<!---
-**Think-pair-share**: Imagine that when our threshold p-value each individual test is 0.05 (5%) so that if it is less than 0.05 we call it "significant" and if it is greater than 0.05 we call it "not significant" (this is the standard practice in many fields). When we make 20 hypothesis tests, how many would we expect to be "significant" just by chance (i.e., when we assume that all null hypotheses is true.)
---->
+So when we do one test, e.g., and F-test, and use 0.05 as the threshold $p$ for significance, we are setting a **per test error rate** of 0.05.
 
-2. The summary table does not provide all the possible pairwise comparisons. It does not, for example, provide the comparison between the "vegan" and the "vegetarian" group.
+What happens is we do multiple tests, each with an 0.05 threshold (i.e., 0.05 type 1 error rate)? The more tests we do, the more likely we are to make at least one Type I error. This is known as the problem of multiple comparisons / tests.
 
-Several methods to circumvent the problem of too many "significant" test results (type-I error) have been proposed. The most prominent ones are:
+To illustrate this, imagine that we have a fire alarm that goes off 5% of the time when there is no fire (i.e., it has a 5% false positive rate). Imagine that we test the alarm 100 times when there is no fire. On average, we would expect the alarm to go off 5 times (5% of 100) just by chance, even though there is no fire in any test. This illustrates the problem of doing multiple tests: the more tests we do, the more likely we are to get a false positive just by chance.
+
+To illustrate this in the context of ANOVA, imagine that we have 10 groups, and we want to test if any pairs of groups differ from each other. This would involve making 45 pairwise comparisons (since there are $\binom{10}{2} = 45$ pairs of groups). If we use a significance threshold of 0.05 for each individual test, we would expect to get about 2.25 false positives just by chance (5% of 45). This means that even if there were no true differences between the groups, we would still expect to find just over two significantly different pairs, even when there really is no significant difference.
+
+Going a little further, we can calculate something called the *family-wise error rate* (FWER), which is the probability of making at least one Type I error across all the tests. The FWER can be calculated as:
+
+$$FWER = 1 - (1 - \alpha)^m$$
+
+where $\alpha$ is the per test error rate (e.g., 0.05) and $m$ is the number of tests (e.g., 45). In our example, the FWER would be:
+
+$$FWER = 1 - (1 - 0.05)^{45} \approx 0.90$$
+
+Yes, you read that right! In this example, with 45 pairwise comparisons and a per test error rate of 0.05, the family-wise error rate is about 90%. This means that there is a 90% chance of making at least one Type I error across all 45 tests, even if there are no true differences between the groups. **It is almost certain that we will find at significant difference even though there is no real difference!**
+
+So, when we want to find which pairs of groups differ, we cannot just do lots of $t$-tests and look for significant results. We need to use a method that takes into account the problem of multiple comparisons.
+
+
+### ANOVA doesn't compare pairs
+
+The second issue is that ANOVA does not itself compare any pairs of groups. Rather, it works by doing an $F$ test. This tests the null hypothesis that all group means are equal. It does not tell us which groups are different from each other. It just tells us that fitting group means explains a significant amount of variance in the data. 
+
+In fact, we can find a significant $F$-statistic even when none of the pairs of groups are significantly different (e.g., when tested with a $t$-test). And we can find the opposite, a non-significant $F$-statistic even when one of the pairs of groups is significantly different by $t$-test.
+
+### Comparing pairs of groups
+
+The solution to both issues is to use a method that allows us to compare pairs of groups while controlling for the problem of multiple comparisons. There are several methods to do this. The most prominent ones are:
 
 * Bonferroni correction
 * Tukey **H**onest **S**ignificant **D**ifferences (HSD) approach
@@ -644,12 +683,28 @@ The second two when implemented in R also provide all possible pairwise comparis
 
 ### Bonferroni correction
 
-**Idea:** If a total of $m$ tests are carried out, simply divide the
-type-I error level $\alpha_0$ (often 5%) such that
+If we find a significant $F$-statistic, we can then proceed to compare pairs of groups while controlling for the problem of multiple comparisons. One method to do this is the Bonferroni correction.
+
+The idea here is to control the family-wise error rate by adjusting the per test error rate. The Bonferroni correction is a simple method to control the family-wise error rate when performing multiple comparisons. It works by adjusting the significance threshold for each individual test to account for the number of tests being performed.
+
+If a total of $m$ tests are carried out, simply divide the per test type-I error level $\alpha_0$ (often 5%) by the number of tests:
 
 $$\alpha = \alpha_0 / m \ .$$
+This gives the FWER as: 
 
-But this still leaves the problem of how to efficiently get all of the possible pairwise comparisons. We can do this using the `pairwise.t.test` function in R:
+$$FWER = 1 - (1 - \alpha)^m = 1 - (1 - \alpha_0 / m)^m$$
+
+With the previous example of 45 pairwise comparisons and a per test error rate of 0.05, the Bonferroni correction would adjust the per test error rate to:
+
+$$\alpha = 0.05 / 45 \approx 0.0011$$
+
+And the FWER would be:
+
+$$FWER = 1 - (1 - 0.0011)^{45} \approx 0.05$$
+
+Note that an equivalent method to control the family-wise error rate is to adjust the p-values of the individual tests instead of adjusting the significance threshold. The Bonferroni correction can also be applied by multiplying the p-values of the individual tests by the number of tests. If the adjusted p-value is less than the original significance threshold (e.g., 0.05), then we reject the null hypothesis for that test.
+
+We can quickly get all the pairwise comparisons with the Bonferroni correction by using the `pairwise.t.test` function in R. This function performs pairwise t-tests between groups and applies the specified p-value adjustment method to control for multiple comparisons.
 
 ```{r}
 #| echo: true
@@ -658,14 +713,27 @@ pairwise.t.test(bp_data_diet$bp,
                 p.adjust.method = "bonferroni")
 ```
 
-Here we can see that all pairwise comparisons have a p-value less than 0.05, except for the comparison of vegan versus vegetarian, which has a p-value that rounds to 1.0000.
+There are six pairwise comparisons (since there are four groups, and $\binom{4}{2} = 6$ pairs of groups). The output shows the p-values for each pairwise comparison after applying the Bonferroni correction. We can see that all pairwise comparisons have a p-value less than 0.05, except for the comparison of vegan versus vegetarian, which has a p-value that rounds to 1.0000.
 
-We also see in the output the note that "P value adjustment method: bonferroni", indicating that the Bonferroni correction has been applied to the p-values.
+Let's check our understanding of the Bonferroni adjustment to the p-values. The adjusted p-value for the Mediterranean versus vegetarian comparison is 0.0239. There are six tests in total. So the unadjusted p-value for this comparison would be $0.0239 / 6 \approx 0.0040$. Let's check this by asking for the unadjusted p-values:
+
+```{r}
+#| echo: true
+pairwise.t.test(bp_data_diet$bp,
+                bp_data_diet$diet,
+                p.adjust.method = "none")
+```
+
+Yes, the unadjusted p-value for the Mediterranean versus vegetarian comparison is 0.004, which matches our calculation. The Bonferroni correction has adjusted this p-value to 0.0239 to control for the family-wise error rate across all six comparisons.
+
 
 ### Tukey HSD approach
 
-**Idea:** Take into account the distribution of \emph{ranges} (max-min)
-and design a new test.
+Another approach to comparing group means after ANOVA is Tukey’s Honest Significant Difference (HSD) method. In this approach, we first perform the ANOVA F-test. Only if the F-test is significant do we proceed to compare pairs of group means.
+
+Instead of adjusting each test separately, it treats all pairwise comparisons as one set of comparisons and calculates a single threshold for differences between group means that keeps the overall false-positive rate at the chosen level. In practice, this means Tukey HSD determines how large a difference between two means must be before we consider it significant, given the number of groups being compared.
+
+In short, Bonferroni adjusts the significance threshold for each test, while Tukey HSD directly determines the minimum difference between group means needed to declare a significant pairwise difference while controlling the overall error rate.
 
 In R we can use the `multcomp` package to do Tukey HSD tests:
 
@@ -686,7 +754,13 @@ Again, all pairwise comparisons have a p-value less than 0.05, except for the co
 
 ### Fisher's LSD approach
 
-**Idea:** Adjust the idea of a two-sample test, but use a larger variance (namely the pooled variance of all groups).
+Another approach to comparing group means after ANOVA is Fisher’s Least Significant Difference (LSD) method. In this approach, we first perform the ANOVA F-test. Only if the F-test is significant do we proceed to compare pairs of group means.
+
+In the Fisher LSD approach, we use a two-sample test, but use a larger variance (namely the pooled variance of all groups) that we would use in a two-sample test. This is because we are using the same variance estimate for all pairwise comparisons, which is the mean square error from the ANOVA.
+
+### Which method to use?
+
+The Bonferroni correction is more conservative than Tukey HSD, which is more conservative than Fisher LSD. The Bonferroni correction is less powerful than Tukey HSD, which is less powerful than Fisher LSD. So if we want to be more confident that we are not making any false positives, we can use the Bonferroni correction. If we want to be more confident that we are not missing any true positives, we can use the Fisher LSD approach. The Tukey HSD approach is a good middle ground between the two.
 
 ### Other contrasts
 
@@ -721,6 +795,31 @@ anova(fit, fit_mnm)
 We see the residual sum of squares of the model with meat or no meat is over 9'000, while that of the four diet model is less than 4'000. That is, the four diet model explains much more variance in the data than the two diet model. The $F$-test is highly significant, so we reject the null hypothesis that the two models are equally good at explaining the data. And we conclude that its not just whether people eat meat or not, but rather what kind of diet they eat that affects their blood pressure.
 
 Ideally we do not make a lot of contrasts after we have collected and looked at our data. Rather, we would specify the contrasts we are interested in before we collect the data. This is called a priori contrasts. But sometimes we do exploratory data analysis and then we can make post hoc contrasts. In this case we should be careful to adjust for multiple comparisons.
+
+
+## Review
+
+Here are the key points from this chapter:
+
+* ANOVA is just another linear model.
+* It is used when we have categorical explanatory variables.
+* We use $F$-tests to test the null hypothesis of no difference among the means of the groups (categories).
+* We can use contrasts and post-hoc tests to test specific hypotheses about the means of the groups.
+
+<!---
+**Think–Pair–Share** (#a_anova_is_regression) What changes when we move from regression to ANOVA? What stays exactly the same?
+--->
+
+## Further reading
+
+If you'd like some further reading on ANOVA and ANOVA in R, here are some good resources. There is lots of overlap among them, however, and with the material in this chapter. I suggest to look at them mostly for different perspectives and examples. And only if you'd like to solidify your understanding.
+
+* Chapter 5, Section 5.6, of *Getting Started with R* by Beckerman et al. This section is about 10 pages.
+* Chapter 11 of *The New Statistics with R* by Hector, not including the section on two-way ANOVA. This chapter is about 10 pages.
+* Chapter 14 of *Linear Models with R* by Faraway. This chapter is eight pages.
+* Chapter 9 of **Statistics. An Introduction using R** by Crawley, up to the section *Factorial experiments*. This section is about 16 pages.
+
+## Extras
 
 ### Choosing the reference category
 
@@ -778,29 +877,6 @@ ggplot(bp_data_diet, aes(x = diet, y = bp)) +
 
 There are many many plotting styles and preferences. The important thing is to clearly communicate the results, and to not mislead the reader. I find that plotting the individual data points is often a good idea, especially when the sample size is not too large.
 
-## Review
-
-Here are the key points from this chapter:
-
-* ANOVA is just another linear model.
-* It is used when we have categorical explanatory variables.
-* We use $F$-tests to test the null hypothesis of no difference among the means of the groups (categories).
-* We can use contrasts and post-hoc tests to test specific hypotheses about the means of the groups.
-
-<!---
-**Think–Pair–Share** (#a_anova_is_regression) What changes when we move from regression to ANOVA? What stays exactly the same?
---->
-
-## Further reading
-
-If you'd like some further reading on ANOVA and ANOVA in R, here are some good resources. There is lots of overlap among them, however, and with the material in this chapter. I suggest to look at them mostly for different perspectives and examples. And only if you'd like to solidify your understanding.
-
-* Chapter 5, Section 5.6, of *Getting Started with R* by Beckerman et al. This section is about 10 pages.
-* Chapter 11 of *The New Statistics with R* by Hector, not including the section on two-way ANOVA. This chapter is about 10 pages.
-* Chapter 14 of *Linear Models with R* by Faraway. This chapter is eight pages.
-* Chapter 9 of **Statistics. An Introduction using R** by Crawley, up to the section *Factorial experiments*. This section is about 16 pages.
-
-## Extras
 
 ### ANOVA and experimental design
 

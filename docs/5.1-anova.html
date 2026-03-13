@@ -293,16 +293,22 @@ window.Quarto = {
   <li><a href="#doing-anova-in-r" id="toc-doing-anova-in-r" class="nav-link" data-scroll-target="#doing-anova-in-r">Doing ANOVA in R</a></li>
   <li><a href="#difference-between-pairs-of-groups" id="toc-difference-between-pairs-of-groups" class="nav-link" data-scroll-target="#difference-between-pairs-of-groups">Difference between pairs of groups</a>
   <ul class="collapse">
+  <li><a href="#error-rates" id="toc-error-rates" class="nav-link" data-scroll-target="#error-rates">Error-rates</a></li>
+  <li><a href="#anova-doesnt-compare-pairs" id="toc-anova-doesnt-compare-pairs" class="nav-link" data-scroll-target="#anova-doesnt-compare-pairs">ANOVA doesn’t compare pairs</a></li>
+  <li><a href="#comparing-pairs-of-groups" id="toc-comparing-pairs-of-groups" class="nav-link" data-scroll-target="#comparing-pairs-of-groups">Comparing pairs of groups</a></li>
   <li><a href="#bonferroni-correction" id="toc-bonferroni-correction" class="nav-link" data-scroll-target="#bonferroni-correction">Bonferroni correction</a></li>
   <li><a href="#tukey-hsd-approach" id="toc-tukey-hsd-approach" class="nav-link" data-scroll-target="#tukey-hsd-approach">Tukey HSD approach</a></li>
   <li><a href="#fishers-lsd-approach" id="toc-fishers-lsd-approach" class="nav-link" data-scroll-target="#fishers-lsd-approach">Fisher’s LSD approach</a></li>
+  <li><a href="#which-method-to-use" id="toc-which-method-to-use" class="nav-link" data-scroll-target="#which-method-to-use">Which method to use?</a></li>
   <li><a href="#other-contrasts" id="toc-other-contrasts" class="nav-link" data-scroll-target="#other-contrasts">Other contrasts</a></li>
-  <li><a href="#choosing-the-reference-category" id="toc-choosing-the-reference-category" class="nav-link" data-scroll-target="#choosing-the-reference-category">Choosing the reference category</a></li>
   </ul></li>
-  <li><a href="#communicating-the-results-of-anova" id="toc-communicating-the-results-of-anova" class="nav-link" data-scroll-target="#communicating-the-results-of-anova">Communicating the results of ANOVA</a></li>
   <li><a href="#review" id="toc-review" class="nav-link" data-scroll-target="#review">Review</a></li>
   <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading">Further reading</a></li>
   <li><a href="#extras" id="toc-extras" class="nav-link" data-scroll-target="#extras">Extras</a>
+  <ul class="collapse">
+  <li><a href="#choosing-the-reference-category" id="toc-choosing-the-reference-category" class="nav-link" data-scroll-target="#choosing-the-reference-category">Choosing the reference category</a></li>
+  </ul></li>
+  <li><a href="#communicating-the-results-of-anova" id="toc-communicating-the-results-of-anova" class="nav-link" data-scroll-target="#communicating-the-results-of-anova">Communicating the results of ANOVA</a>
   <ul class="collapse">
   <li><a href="#anova-and-experimental-design" id="toc-anova-and-experimental-design" class="nav-link" data-scroll-target="#anova-and-experimental-design">ANOVA and experimental design</a></li>
   </ul></li>
@@ -569,7 +575,11 @@ Note
 </section>
 <section id="calculating-the-sums-of-squares" class="level3">
 <h3 class="anchored" data-anchor-id="calculating-the-sums-of-squares">Calculating the sums of squares</h3>
-<p>First we get the total sum of squares (SST), which quantifies the total variability in the data. This is then split into the explained variability (SSM), and the residual variability (SSE).</p>
+<p>First we get the total sum of squares (SST), which quantifies the total variability in the data. This is then split into two parts:</p>
+<ol type="1">
+<li>The explained variability, which is known as the between group sum of squares (<span class="math inline">\(SS_{between}\)</span>) or sum of squares of the model (SSM).</li>
+<li>The residual variability, which is known as the within group sum of squares (<span class="math inline">\(SS_{within}\)</span>) or sum of squares of error / residuals (SSE).</li>
+</ol>
 <p><strong>Total variability:</strong> SST = <span class="math inline">\(\sum_{i=1}^k \sum_{j=1}^{n_i} (y_{ij}-\overline{y})^2\)</span></p>
 <p>where:</p>
 <ul>
@@ -578,12 +588,12 @@ Note
 <li><span class="math inline">\(n_i\)</span> is the number of individuals in group <span class="math inline">\(i\)</span></li>
 <li><span class="math inline">\(k\)</span> is the number of groups</li>
 </ul>
-<p><strong>Explained variability (between group variability)</strong>: = SSM = <span class="math inline">\(\sum_{i=1}^k n_i (\overline{y}_{i} - \overline{y})^2\)</span></p>
+<p><strong>Explained variability (between group variability)</strong>: = <span class="math inline">\(SS_{between}\)</span>$ = SSM = <span class="math inline">\(\sum_{i=1}^k n_i (\overline{y}_{i} - \overline{y})^2\)</span></p>
 <p>where:</p>
 <ul>
 <li><span class="math inline">\(\overline{y}_{i}\)</span> is the mean blood pressure of group <span class="math inline">\(i\)</span></li>
 </ul>
-<p><strong>Residual variability (within group variability)</strong>: = SSE = <span class="math inline">\(\sum_{i=1}^k \sum_{j=1}^{n_i}  (y_{ij} - \overline{y}_{i} )^2\)</span></p>
+<p><strong>Residual variability (within group variability)</strong>: = <span class="math inline">\(SS_{within}\)</span> = SSE = <span class="math inline">\(\sum_{i=1}^k \sum_{j=1}^{n_i}  (y_{ij} - \overline{y}_{i} )^2\)</span></p>
 </section>
 <section id="calculating-the-degrees-of-freedom" class="level3">
 <h3 class="anchored" data-anchor-id="calculating-the-degrees-of-freedom">Calculating the degrees of freedom</h3>
@@ -787,29 +797,12 @@ Note
 <p>As with linear regression, we check the assumptions are not too badly broken by looking at model checking plots:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(fit, <span class="at">which =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="at">add.smooth =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: `fortify(&lt;lm&gt;)` was deprecated in ggplot2 3.6.0.
-ℹ Please use `broom::augment(&lt;lm&gt;)` instead.
-ℹ The deprecated feature was likely used in the ggfortify package.
-  Please report the issue at &lt;https://github.com/sinhrks/ggfortify/issues&gt;.</code></pre>
 </div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: `aes_string()` was deprecated in ggplot2 3.0.0.
-ℹ Please use tidy evaluation idioms with `aes()`.
-ℹ See also `vignette("ggplot2-in-packages")` for more information.
-ℹ The deprecated feature was likely used in the ggfortify package.
-  Please report the issue at &lt;https://github.com/sinhrks/ggfortify/issues&gt;.</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
-ℹ Please use `linewidth` instead.
-ℹ The deprecated feature was likely used in the ggfortify package.
-  Please report the issue at &lt;https://github.com/sinhrks/ggfortify/issues&gt;.</code></pre>
-</div>
+<div class="cell">
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="5.1-anova_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="5.1-anova_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -827,7 +820,7 @@ Note
 --->
 <p>Now we can look at the ANOVA table:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Variance Table
 
@@ -847,66 +840,65 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </section>
 <section id="difference-between-pairs-of-groups" class="level2">
 <h2 class="anchored" data-anchor-id="difference-between-pairs-of-groups">Difference between pairs of groups</h2>
-<p>“<em>ANOVA does not tell you which groups differ.”</em></p>
-<p>Recall that the <span class="math inline">\(F\)</span> test is a global test. It tests the null hypothesis that all group means are equal. It does not tell us which groups are different from each other. It just tells us that at least one group mean is different. Sometimes researchers are interested in more specific questions such as:</p>
+<p>If, and only if the <span class="math inline">\(F\)</span>-test is significant, we can conclude that there is a significant difference between the groups. But this does not tell us which groups differ from each other.</p>
+<p>If we’d like to know which pairs of groups differ, we have a few issues to contend with.</p>
 <ol type="1">
-<li>finding the actual group(s) that deviate(s) from the others.</li>
-<li>in estimates of the pairwise differences.</li>
+<li>ANOVA does not tell us this!</li>
+<li>Controlling error rates.</li>
 </ol>
-<p>The summary table in R provides some of these comparison, specifically it contains the estimates for <span class="math inline">\(\beta_1\)</span>, <span class="math inline">\(\beta_2\)</span>, <span class="math inline">\(\beta_3\)</span> (while the reference was set to <span class="math inline">\(\beta_0 = 0\)</span>).</p>
-<p>For example, here is the summary table for our diet data:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-lm(formula = bp ~ diet, data = bp_data_diet)
-
-Residuals:
-     Min       1Q   Median       3Q      Max 
--17.9375  -5.9174  -0.4286   5.2969  22.3750 
-
-Coefficients:
-                  Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)        122.625      2.302  53.260  &lt; 2e-16 ***
-dietMediterranean  -12.688      3.256  -3.897 0.000314 ***
-dietvegan          -26.768      4.173  -6.414 6.92e-08 ***
-dietvegetarian     -23.625      3.607  -6.549 4.33e-08 ***
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Residual standard error: 9.21 on 46 degrees of freedom
-Multiple R-squared:  0.5748,    Adjusted R-squared:  0.5471 
-F-statistic: 20.73 on 3 and 46 DF,  p-value: 1.214e-08</code></pre>
-</div>
-</div>
-<p>In this table we have the intercept (<span class="math inline">\(\beta_0\)</span>) and the three <span class="math inline">\(\beta\)</span> values for the diet groups: “dietMeat”, “dietVegetarian”, and “dietVegan”. The Estimate column shows the estimated coefficients for each group. The intercept (<span class="math inline">\(\beta_0\)</span>) represents the mean blood pressure for the reference group (in this case, the “meat” diet group). The other three coefficients represent <em>the difference</em> in mean blood pressure between each diet group and the reference group.</p>
-<p>All well and good up to a point. But there are two issues with using the results from this table:</p>
+<p>Let’s first look at error rates.</p>
+<section id="error-rates" class="level3">
+<h3 class="anchored" data-anchor-id="error-rates">Error-rates</h3>
+<p>Imagine a fire alarm that goes off when there is a fire. The alarm can make two types of errors:</p>
 <ol type="1">
-<li>The greater the number of individual tests, the more likely one will be significant just by chance. This is called the problem of multiple comparisons. Many test can result in a type-I error: rejecting the null hypothesis when it is actually true. The more tests one does, the more likely one is to make a type-I error.</li>
+<li>Type I error: The alarm goes off when there is no fire (false positive).</li>
+<li>Type II error: The alarm does not go off when there is a fire (false negative).</li>
 </ol>
-<!---
-**Think-pair-share**: Imagine that when our threshold p-value each individual test is 0.05 (5%) so that if it is less than 0.05 we call it "significant" and if it is greater than 0.05 we call it "not significant" (this is the standard practice in many fields). When we make 20 hypothesis tests, how many would we expect to be "significant" just by chance (i.e., when we assume that all null hypotheses is true.)
---->
-<ol start="2" type="1">
-<li>The summary table does not provide all the possible pairwise comparisons. It does not, for example, provide the comparison between the “vegan” and the “vegetarian” group.</li>
-</ol>
-<p>Several methods to circumvent the problem of too many “significant” test results (type-I error) have been proposed. The most prominent ones are:</p>
+<p>In the context of hypothesis testing, a Type I error occurs when we reject the null hypothesis when it is actually true. A Type II error occurs when we fail to reject the null hypothesis when it is actually false.</p>
+<p>When we decide that p &lt; 0.05 is the threshold for “significance”, we are essentially saying that we are willing to accept a 5% chance of making a Type I error. That is, we are willing to accept a 5% chance of rejecting the null hypothesis when it is actually true.</p>
+<p>So when we do one test, e.g., and F-test, and use 0.05 as the threshold <span class="math inline">\(p\)</span> for significance, we are setting a <strong>per test error rate</strong> of 0.05.</p>
+<p>What happens is we do multiple tests, each with an 0.05 threshold (i.e., 0.05 type 1 error rate)? The more tests we do, the more likely we are to make at least one Type I error. This is known as the problem of multiple comparisons / tests.</p>
+<p>To illustrate this, imagine that we have a fire alarm that goes off 5% of the time when there is no fire (i.e., it has a 5% false positive rate). Imagine that we test the alarm 100 times when there is no fire. On average, we would expect the alarm to go off 5 times (5% of 100) just by chance, even though there is no fire in any test. This illustrates the problem of doing multiple tests: the more tests we do, the more likely we are to get a false positive just by chance.</p>
+<p>To illustrate this in the context of ANOVA, imagine that we have 10 groups, and we want to test if any pairs of groups differ from each other. This would involve making 45 pairwise comparisons (since there are <span class="math inline">\(\binom{10}{2} = 45\)</span> pairs of groups). If we use a significance threshold of 0.05 for each individual test, we would expect to get about 2.25 false positives just by chance (5% of 45). This means that even if there were no true differences between the groups, we would still expect to find just over two significantly different pairs, even when there really is no significant difference.</p>
+<p>Going a little further, we can calculate something called the <em>family-wise error rate</em> (FWER), which is the probability of making at least one Type I error across all the tests. The FWER can be calculated as:</p>
+<p><span class="math display">\[FWER = 1 - (1 - \alpha)^m\]</span></p>
+<p>where <span class="math inline">\(\alpha\)</span> is the per test error rate (e.g., 0.05) and <span class="math inline">\(m\)</span> is the number of tests (e.g., 45). In our example, the FWER would be:</p>
+<p><span class="math display">\[FWER = 1 - (1 - 0.05)^{45} \approx 0.90\]</span></p>
+<p>Yes, you read that right! In this example, with 45 pairwise comparisons and a per test error rate of 0.05, the family-wise error rate is about 90%. This means that there is a 90% chance of making at least one Type I error across all 45 tests, even if there are no true differences between the groups. <strong>It is almost certain that we will find at significant difference even though there is no real difference!</strong></p>
+<p>So, when we want to find which pairs of groups differ, we cannot just do lots of <span class="math inline">\(t\)</span>-tests and look for significant results. We need to use a method that takes into account the problem of multiple comparisons.</p>
+</section>
+<section id="anova-doesnt-compare-pairs" class="level3">
+<h3 class="anchored" data-anchor-id="anova-doesnt-compare-pairs">ANOVA doesn’t compare pairs</h3>
+<p>The second issue is that ANOVA does not itself compare any pairs of groups. Rather, it works by doing an <span class="math inline">\(F\)</span> test. This tests the null hypothesis that all group means are equal. It does not tell us which groups are different from each other. It just tells us that fitting group means explains a significant amount of variance in the data.</p>
+<p>In fact, we can find a significant <span class="math inline">\(F\)</span>-statistic even when none of the pairs of groups are significantly different (e.g., when tested with a <span class="math inline">\(t\)</span>-test). And we can find the opposite, a non-significant <span class="math inline">\(F\)</span>-statistic even when one of the pairs of groups is significantly different by <span class="math inline">\(t\)</span>-test.</p>
+</section>
+<section id="comparing-pairs-of-groups" class="level3">
+<h3 class="anchored" data-anchor-id="comparing-pairs-of-groups">Comparing pairs of groups</h3>
+<p>The solution to both issues is to use a method that allows us to compare pairs of groups while controlling for the problem of multiple comparisons. There are several methods to do this. The most prominent ones are:</p>
 <ul>
 <li>Bonferroni correction</li>
 <li>Tukey <strong>H</strong>onest <strong>S</strong>ignificant <strong>D</strong>ifferences (HSD) approach</li>
 <li>Fisher <strong>L</strong>east <strong>S</strong>ignificant <strong>D</strong>ifferences (LSD) approach</li>
 </ul>
 <p>The second two when implemented in R also provide all possible pairwise comparisons.</p>
+</section>
 <section id="bonferroni-correction" class="level3">
 <h3 class="anchored" data-anchor-id="bonferroni-correction">Bonferroni correction</h3>
-<p><strong>Idea:</strong> If a total of <span class="math inline">\(m\)</span> tests are carried out, simply divide the type-I error level <span class="math inline">\(\alpha_0\)</span> (often 5%) such that</p>
-<p><span class="math display">\[\alpha = \alpha_0 / m \ .\]</span></p>
-<p>But this still leaves the problem of how to efficiently get all of the possible pairwise comparisons. We can do this using the <code>pairwise.t.test</code> function in R:</p>
+<p>If we find a significant <span class="math inline">\(F\)</span>-statistic, we can then proceed to compare pairs of groups while controlling for the problem of multiple comparisons. One method to do this is the Bonferroni correction.</p>
+<p>The idea here is to control the family-wise error rate by adjusting the per test error rate. The Bonferroni correction is a simple method to control the family-wise error rate when performing multiple comparisons. It works by adjusting the significance threshold for each individual test to account for the number of tests being performed.</p>
+<p>If a total of <span class="math inline">\(m\)</span> tests are carried out, simply divide the per test type-I error level <span class="math inline">\(\alpha_0\)</span> (often 5%) by the number of tests:</p>
+<p><span class="math display">\[\alpha = \alpha_0 / m \ .\]</span> This gives the FWER as:</p>
+<p><span class="math display">\[FWER = 1 - (1 - \alpha)^m = 1 - (1 - \alpha_0 / m)^m\]</span></p>
+<p>With the previous example of 45 pairwise comparisons and a per test error rate of 0.05, the Bonferroni correction would adjust the per test error rate to:</p>
+<p><span class="math display">\[\alpha = 0.05 / 45 \approx 0.0011\]</span></p>
+<p>And the FWER would be:</p>
+<p><span class="math display">\[FWER = 1 - (1 - 0.0011)^{45} \approx 0.05\]</span></p>
+<p>Note that an equivalent method to control the family-wise error rate is to adjust the p-values of the individual tests instead of adjusting the significance threshold. The Bonferroni correction can also be applied by multiplying the p-values of the individual tests by the number of tests. If the adjusted p-value is less than the original significance threshold (e.g., 0.05), then we reject the null hypothesis for that test.</p>
+<p>We can quickly get all the pairwise comparisons with the Bonferroni correction by using the <code>pairwise.t.test</code> function in R. This function performs pairwise t-tests between groups and applies the specified p-value adjustment method to control for multiple comparisons.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairwise.t.test</span>(bp_data_diet<span class="sc">$</span>bp,</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>                bp_data_diet<span class="sc">$</span>diet,</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">p.adjust.method =</span> <span class="st">"bonferroni"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairwise.t.test</span>(bp_data_diet<span class="sc">$</span>bp,</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>                bp_data_diet<span class="sc">$</span>diet,</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">p.adjust.method =</span> <span class="st">"bonferroni"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Pairwise comparisons using t tests with pooled SD 
@@ -921,20 +913,41 @@ vegetarian    2.6e-07    0.0239        1.0000
 P value adjustment method: bonferroni </code></pre>
 </div>
 </div>
-<p>Here we can see that all pairwise comparisons have a p-value less than 0.05, except for the comparison of vegan versus vegetarian, which has a p-value that rounds to 1.0000.</p>
-<p>We also see in the output the note that “P value adjustment method: bonferroni”, indicating that the Bonferroni correction has been applied to the p-values.</p>
+<p>There are six pairwise comparisons (since there are four groups, and <span class="math inline">\(\binom{4}{2} = 6\)</span> pairs of groups). The output shows the p-values for each pairwise comparison after applying the Bonferroni correction. We can see that all pairwise comparisons have a p-value less than 0.05, except for the comparison of vegan versus vegetarian, which has a p-value that rounds to 1.0000.</p>
+<p>Let’s check our understanding of the Bonferroni adjustment to the p-values. The adjusted p-value for the Mediterranean versus vegetarian comparison is 0.0239. There are six tests in total. So the unadjusted p-value for this comparison would be <span class="math inline">\(0.0239 / 6 \approx 0.0040\)</span>. Let’s check this by asking for the unadjusted p-values:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairwise.t.test</span>(bp_data_diet<span class="sc">$</span>bp,</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>                bp_data_diet<span class="sc">$</span>diet,</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">p.adjust.method =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Pairwise comparisons using t tests with pooled SD 
+
+data:  bp_data_diet$bp and bp_data_diet$diet 
+
+              meat heavy Mediterranean vegan  
+Mediterranean 0.00031    -             -      
+vegan         6.9e-08    0.00151       -      
+vegetarian    4.3e-08    0.00398       0.48386
+
+P value adjustment method: none </code></pre>
+</div>
+</div>
+<p>Yes, the unadjusted p-value for the Mediterranean versus vegetarian comparison is 0.004, which matches our calculation. The Bonferroni correction has adjusted this p-value to 0.0239 to control for the family-wise error rate across all six comparisons.</p>
 </section>
 <section id="tukey-hsd-approach" class="level3">
 <h3 class="anchored" data-anchor-id="tukey-hsd-approach">Tukey HSD approach</h3>
-<p><strong>Idea:</strong> Take into account the distribution of (max-min) and design a new test.</p>
+<p>Another approach to comparing group means after ANOVA is Tukey’s Honest Significant Difference (HSD) method. In this approach, we first perform the ANOVA F-test. Only if the F-test is significant do we proceed to compare pairs of group means.</p>
+<p>Instead of adjusting each test separately, it treats all pairwise comparisons as one set of comparisons and calculates a single threshold for differences between group means that keeps the overall false-positive rate at the chosen level. In practice, this means Tukey HSD determines how large a difference between two means must be before we consider it significant, given the number of groups being compared.</p>
+<p>In short, Bonferroni adjusts the significance threshold for each test, while Tukey HSD directly determines the minimum difference between group means needed to declare a significant pairwise difference while controlling the overall error rate.</p>
 <p>In R we can use the <code>multcomp</code> package to do Tukey HSD tests:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>bp_data_diet <span class="ot">&lt;-</span> bp_data_diet <span class="sc">%&gt;%</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">diet =</span> <span class="fu">as.factor</span>(diet))</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(bp <span class="sc">~</span> diet, <span class="at">data =</span> bp_data_diet)</span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressMessages</span>(<span class="fu">library</span>(multcomp))</span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>tukey_test <span class="ot">&lt;-</span> <span class="fu">glht</span>(fit, <span class="at">linfct =</span> <span class="fu">mcp</span>(<span class="at">diet =</span> <span class="st">"Tukey"</span>))</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(tukey_test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>bp_data_diet <span class="ot">&lt;-</span> bp_data_diet <span class="sc">%&gt;%</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">diet =</span> <span class="fu">as.factor</span>(diet))</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(bp <span class="sc">~</span> diet, <span class="at">data =</span> bp_data_diet)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressMessages</span>(<span class="fu">library</span>(multcomp))</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>tukey_test <span class="ot">&lt;-</span> <span class="fu">glht</span>(fit, <span class="at">linfct =</span> <span class="fu">mcp</span>(<span class="at">diet =</span> <span class="st">"Tukey"</span>))</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(tukey_test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
      Simultaneous Tests for General Linear Hypotheses
@@ -962,17 +975,22 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 </section>
 <section id="fishers-lsd-approach" class="level3">
 <h3 class="anchored" data-anchor-id="fishers-lsd-approach">Fisher’s LSD approach</h3>
-<p><strong>Idea:</strong> Adjust the idea of a two-sample test, but use a larger variance (namely the pooled variance of all groups).</p>
+<p>Another approach to comparing group means after ANOVA is Fisher’s Least Significant Difference (LSD) method. In this approach, we first perform the ANOVA F-test. Only if the F-test is significant do we proceed to compare pairs of group means.</p>
+<p>In the Fisher LSD approach, we use a two-sample test, but use a larger variance (namely the pooled variance of all groups) that we would use in a two-sample test. This is because we are using the same variance estimate for all pairwise comparisons, which is the mean square error from the ANOVA.</p>
+</section>
+<section id="which-method-to-use" class="level3">
+<h3 class="anchored" data-anchor-id="which-method-to-use">Which method to use?</h3>
+<p>The Bonferroni correction is more conservative than Tukey HSD, which is more conservative than Fisher LSD. The Bonferroni correction is less powerful than Tukey HSD, which is less powerful than Fisher LSD. So if we want to be more confident that we are not making any false positives, we can use the Bonferroni correction. If we want to be more confident that we are not missing any true positives, we can use the Fisher LSD approach. The Tukey HSD approach is a good middle ground between the two.</p>
 </section>
 <section id="other-contrasts" class="level3">
 <h3 class="anchored" data-anchor-id="other-contrasts">Other contrasts</h3>
 <p>A contrast is a specific comparison between groups. So far we have only considered pairwise contrasts (i.e., comparing two groups at a time). But we can also design more complex contrasts. For example: are diets that contain meat different from diets that do not contain meat?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>bp_data_diet <span class="ot">&lt;-</span> <span class="fu">mutate</span>(bp_data_diet,</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">meat_or_no_meat =</span> <span class="fu">ifelse</span>(diet <span class="sc">==</span> <span class="st">"meat"</span> <span class="sc">|</span></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>                                                diet <span class="sc">==</span> <span class="st">"Mediterranean"</span>,</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>                                                <span class="st">"meat"</span>, <span class="st">"no meat"</span>))</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(bp_data_diet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>bp_data_diet <span class="ot">&lt;-</span> <span class="fu">mutate</span>(bp_data_diet,</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">meat_or_no_meat =</span> <span class="fu">ifelse</span>(diet <span class="sc">==</span> <span class="st">"meat"</span> <span class="sc">|</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>                                                diet <span class="sc">==</span> <span class="st">"Mediterranean"</span>,</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>                                                <span class="st">"meat"</span>, <span class="st">"no meat"</span>))</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(bp_data_diet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 4
      bp diet          person_ID meat_or_no_meat
@@ -987,13 +1005,13 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 </div>
 <p>Here we defined a new explanatory variable that groups the meat heavy and Mediterranean diet together into a single “meat” group and vegetarian and vegan into a single “no meat” group. We then fit a model with this explanatory variable:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>fit_mnm <span class="ot">&lt;-</span> <span class="fu">lm</span>(bp <span class="sc">~</span> meat_or_no_meat, <span class="at">data =</span> bp_data_diet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>fit_mnm <span class="ot">&lt;-</span> <span class="fu">lm</span>(bp <span class="sc">~</span> meat_or_no_meat, <span class="at">data =</span> bp_data_diet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>(We should not look at model checking plots here, before using the model. But let us continue as if the assumptions are sufficiently met.)</p>
 <p>We now do something a bit more complicated: we compare the variance explained by the model with four diets to the model with two diets. This is done by comparing the two models using an <span class="math inline">\(F\)</span>-test. We are testing the null hypothesis that the two models are equally good at explaining the data, in which case the two diet model will explain as much variance as the four diet model.</p>
 <p>Let’s look at the ANOVA table of the model comparison:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(fit, fit_mnm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(fit, fit_mnm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Variance Table
 
@@ -1009,6 +1027,32 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <p>We see the residual sum of squares of the model with meat or no meat is over 9’000, while that of the four diet model is less than 4’000. That is, the four diet model explains much more variance in the data than the two diet model. The <span class="math inline">\(F\)</span>-test is highly significant, so we reject the null hypothesis that the two models are equally good at explaining the data. And we conclude that its not just whether people eat meat or not, but rather what kind of diet they eat that affects their blood pressure.</p>
 <p>Ideally we do not make a lot of contrasts after we have collected and looked at our data. Rather, we would specify the contrasts we are interested in before we collect the data. This is called a priori contrasts. But sometimes we do exploratory data analysis and then we can make post hoc contrasts. In this case we should be careful to adjust for multiple comparisons.</p>
 </section>
+</section>
+<section id="review" class="level2">
+<h2 class="anchored" data-anchor-id="review">Review</h2>
+<p>Here are the key points from this chapter:</p>
+<ul>
+<li>ANOVA is just another linear model.</li>
+<li>It is used when we have categorical explanatory variables.</li>
+<li>We use <span class="math inline">\(F\)</span>-tests to test the null hypothesis of no difference among the means of the groups (categories).</li>
+<li>We can use contrasts and post-hoc tests to test specific hypotheses about the means of the groups.</li>
+</ul>
+<!---
+**Think–Pair–Share** (#a_anova_is_regression) What changes when we move from regression to ANOVA? What stays exactly the same?
+--->
+</section>
+<section id="further-reading" class="level2">
+<h2 class="anchored" data-anchor-id="further-reading">Further reading</h2>
+<p>If you’d like some further reading on ANOVA and ANOVA in R, here are some good resources. There is lots of overlap among them, however, and with the material in this chapter. I suggest to look at them mostly for different perspectives and examples. And only if you’d like to solidify your understanding.</p>
+<ul>
+<li>Chapter 5, Section 5.6, of <em>Getting Started with R</em> by Beckerman et al.&nbsp;This section is about 10 pages.</li>
+<li>Chapter 11 of <em>The New Statistics with R</em> by Hector, not including the section on two-way ANOVA. This chapter is about 10 pages.</li>
+<li>Chapter 14 of <em>Linear Models with R</em> by Faraway. This chapter is eight pages.</li>
+<li>Chapter 9 of <strong>Statistics. An Introduction using R</strong> by Crawley, up to the section <em>Factorial experiments</em>. This section is about 16 pages.</li>
+</ul>
+</section>
+<section id="extras" class="level2">
+<h2 class="anchored" data-anchor-id="extras">Extras</h2>
 <section id="choosing-the-reference-category" class="level3">
 <h3 class="anchored" data-anchor-id="choosing-the-reference-category">Choosing the reference category</h3>
 <p><strong>Question</strong>: Why was the “heavy meat” diet chosen as the reference (intercept) category?</p>
@@ -1016,12 +1060,12 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <p>Sometimes we may want to override this, for example if we have a treatment that is experimentally the control, then it will usually be useful to set this as the reference / intercept level.</p>
 <p>In R we can set the reference level using the <code>relevel</code> function:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>bp_data_diet<span class="sc">$</span>diet <span class="ot">&lt;-</span> <span class="fu">relevel</span>(<span class="fu">factor</span>(bp_data_diet<span class="sc">$</span>diet), <span class="at">ref =</span> <span class="st">"vegan"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>bp_data_diet<span class="sc">$</span>diet <span class="ot">&lt;-</span> <span class="fu">relevel</span>(<span class="fu">factor</span>(bp_data_diet<span class="sc">$</span>diet), <span class="at">ref =</span> <span class="st">"vegan"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>And now make the model and look at the estimated coefficients:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>fit_vegan_ref <span class="ot">&lt;-</span> <span class="fu">lm</span>(bp <span class="sc">~</span> diet, <span class="at">data =</span> bp_data_diet)</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_vegan_ref)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>fit_vegan_ref <span class="ot">&lt;-</span> <span class="fu">lm</span>(bp <span class="sc">~</span> diet, <span class="at">data =</span> bp_data_diet)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_vegan_ref)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -1056,29 +1100,12 @@ F-statistic: 20.73 on 3 and 46 DF,  p-value: 1.214e-08</code></pre>
 </blockquote>
 <p>And we would make a nice graph, in this case showing each individual observation since there are not too many to cause overplotting. We can also add the estimated means of each group if we like:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(bp_data_diet, <span class="fu">aes</span>(<span class="at">x =</span> diet, <span class="at">y =</span> bp)) <span class="sc">+</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.1</span>, <span class="at">height =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"point"</span>, <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Blood Pressure by Diet"</span>,</span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Diet"</span>,</span>
-<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Blood Pressure (mmHg)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="5.1-anova_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="432"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Some people like to see error bars as well, for example showing the 95% confidence intervals of the means:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(bp_data_diet, <span class="fu">aes</span>(<span class="at">x =</span> diet, <span class="at">y =</span> bp)) <span class="sc">+</span></span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.1</span>, <span class="at">height =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">"grey"</span>) <span class="sc">+</span></span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"point"</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun.data =</span> mean_cl_normal, <span class="at">geom =</span> <span class="st">"errorbar"</span>, <span class="at">width =</span> <span class="fl">0.2</span>, <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Blood Pressure by Diet</span><span class="sc">\n</span><span class="st">Black points and error bars show mean ± 95% CI"</span>,</span>
-<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Diet"</span>,</span>
-<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Blood Pressure (mmHg)"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(bp_data_diet, <span class="fu">aes</span>(<span class="at">x =</span> diet, <span class="at">y =</span> bp)) <span class="sc">+</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.1</span>, <span class="at">height =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"point"</span>, <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Blood Pressure by Diet"</span>,</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Diet"</span>,</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Blood Pressure (mmHg)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1087,33 +1114,24 @@ F-statistic: 20.73 on 3 and 46 DF,  p-value: 1.214e-08</code></pre>
 </div>
 </div>
 </div>
+<p>Some people like to see error bars as well, for example showing the 95% confidence intervals of the means:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(bp_data_diet, <span class="fu">aes</span>(<span class="at">x =</span> diet, <span class="at">y =</span> bp)) <span class="sc">+</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.1</span>, <span class="at">height =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">"grey"</span>) <span class="sc">+</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"point"</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun.data =</span> mean_cl_normal, <span class="at">geom =</span> <span class="st">"errorbar"</span>, <span class="at">width =</span> <span class="fl">0.2</span>, <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Blood Pressure by Diet</span><span class="sc">\n</span><span class="st">Black points and error bars show mean ± 95% CI"</span>,</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Diet"</span>,</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Blood Pressure (mmHg)"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="5.1-anova_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="432"></p>
+</figure>
+</div>
+</div>
+</div>
 <p>There are many many plotting styles and preferences. The important thing is to clearly communicate the results, and to not mislead the reader. I find that plotting the individual data points is often a good idea, especially when the sample size is not too large.</p>
-</section>
-<section id="review" class="level2">
-<h2 class="anchored" data-anchor-id="review">Review</h2>
-<p>Here are the key points from this chapter:</p>
-<ul>
-<li>ANOVA is just another linear model.</li>
-<li>It is used when we have categorical explanatory variables.</li>
-<li>We use <span class="math inline">\(F\)</span>-tests to test the null hypothesis of no difference among the means of the groups (categories).</li>
-<li>We can use contrasts and post-hoc tests to test specific hypotheses about the means of the groups.</li>
-</ul>
-<!---
-**Think–Pair–Share** (#a_anova_is_regression) What changes when we move from regression to ANOVA? What stays exactly the same?
---->
-</section>
-<section id="further-reading" class="level2">
-<h2 class="anchored" data-anchor-id="further-reading">Further reading</h2>
-<p>If you’d like some further reading on ANOVA and ANOVA in R, here are some good resources. There is lots of overlap among them, however, and with the material in this chapter. I suggest to look at them mostly for different perspectives and examples. And only if you’d like to solidify your understanding.</p>
-<ul>
-<li>Chapter 5, Section 5.6, of <em>Getting Started with R</em> by Beckerman et al.&nbsp;This section is about 10 pages.</li>
-<li>Chapter 11 of <em>The New Statistics with R</em> by Hector, not including the section on two-way ANOVA. This chapter is about 10 pages.</li>
-<li>Chapter 14 of <em>Linear Models with R</em> by Faraway. This chapter is eight pages.</li>
-<li>Chapter 9 of <strong>Statistics. An Introduction using R</strong> by Crawley, up to the section <em>Factorial experiments</em>. This section is about 16 pages.</li>
-</ul>
-</section>
-<section id="extras" class="level2">
-<h2 class="anchored" data-anchor-id="extras">Extras</h2>
 <section id="anova-and-experimental-design" class="level3">
 <h3 class="anchored" data-anchor-id="anova-and-experimental-design">ANOVA and experimental design</h3>
 <p>This is not a course about experimental design (this is much too large a subject to cover). You may have noticed, however, that all of the example datasets and questions in your reading about ANOVA have been experiments, where researchers had various treatment groups containing the experimental subjects. That is, the researchers manipulated something to be different among the groups, and looked for any evidence of resulting differences.</p>

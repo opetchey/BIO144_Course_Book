@@ -300,7 +300,7 @@ $$\hat\sigma^2 = \frac{\sum_{i=1}^n (y_i - \hat y_i)^2}{n-2}$$
 
 Where $\hat y_i$ is the predicted value of $y_i$ from the regression model, and $n$ is the number of observations. We divide by $n-2$ because we have estimated two parameters (the intercept and the slope) from the data.
 
-OK, let's take a look at this intuitively. We have the estimate of the slope and the standard error of the estimate.
+OK, let's take a look at this intuitively. We have the estimate of the slope and the standard error of the estimate of the slope (when this standard error is larger, we are less certain about the estimate).
 
 Here is an empty graph of the value of the slope estimate versus the standard error of the estimate:
 
@@ -313,7 +313,7 @@ ggplot(data.frame(slope_estimate = slope_estimate_value,
        aes(x = slope_estimate, y = standard_error)) 
 ```
 
-
+Have a careful think about what combinations of slope estimate value and standard error value are more likely to have been observed by chance, and which combinations are less likely to have been observed by chance. Draw a copy of the graph and label areas where the slope estimate is more likely to have been observed by chance, and areas where it is less likely to have been observed by chance. (The answer is at the end of this chapter, so think about it before you look at the answer).
 
 
 <!---

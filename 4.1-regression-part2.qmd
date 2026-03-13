@@ -123,7 +123,7 @@ ggplot() +
     geom_point(aes(x=x,y=y1), size = 5) 
 ```
 
-In this graph, the square of the length of the green lines is the model sum of squares ($SST$). The square of the length of the red lines is the error sum of squares ($SSE$).
+In this graph, the square of the length of the green lines is the model sum of squares ($SSM$). The square of the length of the red lines is the error sum of squares ($SSE$).
 
 In a better model the length of the green lines will be **longer** (the square of these gives the $SMM$, the variability explained by the model). And the length of the red lines will be **shorter** (the square of these gives the $SSE$, the variability not explained by the model).
 

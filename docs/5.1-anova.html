@@ -446,7 +446,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <p>where:</p>
 <ul>
 <li><span class="math inline">\(y_{ij}\)</span> = Blood pressure of individual <span class="math inline">\(i\)</span> with diet <span class="math inline">\(j\)</span></li>
-<li><span class="math inline">\(\mu_i\)</span> = Mean blood pressure of an individual with diet <span class="math inline">\(j\)</span></li>
+<li><span class="math inline">\(\mu_j\)</span> = Mean blood pressure of an individual with diet <span class="math inline">\(j\)</span></li>
 <li><span class="math inline">\(\epsilon_{i}\sim N(0,\sigma^2)\)</span> is an independent error term.</li>
 </ul>
 <p>Graphically, with the blood pressure and diet data, this looks like:</p>
@@ -745,14 +745,14 @@ Note
 </div>
 <p>The F-distribution is skewed to the right and has a long tail. The area to the right of 3.89 is shaded in red. This area represents the probability of observing an F-statistic as or more extreme as 3.89, assuming the null hypothesis is true. This probability is the <span class="math inline">\(p\)</span>-value of the hypothesis test.</p>
 <p>The <span class="math inline">\(F\)</span>-statistic and <span class="math inline">\(F\)</span>-test uses the fact that:</p>
-<p><span class="math display">\[\frac{MSE_{model}}{MSE_{residual}} =  \frac{SSM/p}{SSE/(n-1-p)} \sim F_{p,n-1-p}\]</span></p>
-<p>follows an <span class="math inline">\(F\)</span>-distribution with <span class="math inline">\(p\)</span> and <span class="math inline">\((n-1-p)\)</span> degrees of freedom, where <span class="math inline">\(p\)</span> are the number of continuous variables, <span class="math inline">\(n\)</span> the number of data points.</p>
+<p><span class="math display">\[\frac{MSE_{model}}{MSE_{residual}} =  \frac{SSM/(k-1)}{SSE/(n-k))} \sim F_{k-1,n-k)}\]</span></p>
+<p>follows an <span class="math inline">\(F\)</span>-distribution with <span class="math inline">\(k-1\)</span> and <span class="math inline">\(n-k\)</span> degrees of freedom, where <span class="math inline">\(k\)</span> is the number of groups in the categorical variable, and <span class="math inline">\(n\)</span> the number of data points.</p>
 <ul>
 <li><span class="math inline">\(SSE=\sum_{i=1} ^n(y_i-\hat{y}_i)^2\)</span> is the residual sum of squares</li>
 <li><span class="math inline">\(SSM = SST - SSE\)</span> is the sum of squares of the model</li>
 <li><span class="math inline">\(SST=\sum_{i=1}^n(y_i-\overline{y})^2\)</span> is the total sum of squares</li>
 <li><span class="math inline">\(n\)</span> is the number of data points</li>
-<li><span class="math inline">\(p\)</span> is the number of explanatory variables in the regression model</li>
+<li><span class="math inline">\(k\)</span> is the number of groups in the categorical variable</li>
 </ul>
 <p>Well, that is ANOVA conceptually. But how does it actually look like in R?</p>
 </section>

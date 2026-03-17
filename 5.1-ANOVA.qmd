@@ -123,7 +123,7 @@ $$y_{ij} = \mu_j + \epsilon_{i}$$
 where:
 
 -   $y_{ij}$ = Blood pressure of individual $i$ with diet $j$
--   $\mu_i$ = Mean blood pressure of an individual with diet $j$
+-   $\mu_j$ = Mean blood pressure of an individual with diet $j$
 -   $\epsilon_{i}\sim N(0,\sigma^2)$ is an independent error term.
 
 Graphically, with the blood pressure and diet data, this looks like:
@@ -530,16 +530,16 @@ The F-distribution is skewed to the right and has a long tail. The area to the r
 
 The $F$-statistic and $F$-test uses the fact that:
 
-$$\frac{MSE_{model}}{MSE_{residual}} =  \frac{SSM/p}{SSE/(n-1-p)} \sim F_{p,n-1-p}$$
+$$\frac{MSE_{model}}{MSE_{residual}} =  \frac{SSM/(k-1)}{SSE/(n-k))} \sim F_{k-1,n-k)}$$
 
-follows an $F$-distribution with $p$ and $(n-1-p)$ degrees of freedom,
-where $p$ are the number of continuous variables, $n$ the number of data points.
+follows an $F$-distribution with $k-1$ and $n-k$ degrees of freedom,
+where $k$ is the number of groups in the categorical variable, and $n$ the number of data points.
 
 * $SSE=\sum_{i=1} ^n(y_i-\hat{y}_i)^2$ is the residual sum of squares
 * $SSM = SST - SSE$ is the sum of squares of the model
 * $SST=\sum_{i=1}^n(y_i-\overline{y})^2$ is the total sum of squares
 * $n$ is the number of data points
-* $p$ is the number of explanatory variables in the regression model
+* $k$ is the number of groups in the categorical variable
 
 Well, that is ANOVA conceptually. But how does it actually look like in R?
 

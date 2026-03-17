@@ -944,7 +944,7 @@ where $RSS_1$ and $RSS_2$ are the residual sum of squares for Model 1 and Model 
 
 Put another way, the numerator is the mean square difference between the two models, and the denominator is the mean square error for the full model.
 
-In our example data, the numbers are: `r round(anova(m_reduced, m_full)$"RSS"[1],1 )` - `r round(anova(m_reduced, m_full)$"RSS"[2],1 )` = `r round(anova(m_reduced, m_full)$"Sum of Sq"[2],1 )` divided by `r anova(m_reduced, m_full)$"Res.df"[1]` - `r anova(m_reduced, m_full)$"Res.Df"[2]` = `r anova(m_reduced, m_full)$"Df"[2]` for the numerator.
+In our example data, the numbers are: `r round(anova(m_reduced, m_full)$"RSS"[1],1 )` - `r round(anova(m_reduced, m_full)$"RSS"[2],1 )` = `r round(anova(m_reduced, m_full)$"Sum of Sq"[2],1 )` divided by `r anova(m_reduced, m_full)$"Res.Df"[1]` - `r anova(m_reduced, m_full)$"Res.Df"[2]` = `r anova(m_reduced, m_full)$"Df"[2]` for the numerator.
 
 And for the denominator: `r round(anova(m_reduced, m_full)$"RSS"[2],1 )` divided by `r anova(m_reduced, m_full)$"Res.Df"[2]`.
 

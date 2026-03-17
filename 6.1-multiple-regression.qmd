@@ -697,10 +697,27 @@ x2 <- rnorm(n)
 x3 <- 2 * x1 + 3 * x2 + rnorm(n, 0, 5)
 y <- 5 + 1.5 * x1 - 2 * x2 + 0.5 * x3 + rnorm(n, 0, 1)
 data_collinear <- data.frame(x1 = x1, x2 = x2, x3 = x3, y = y)
+```
+
+```{r}
+#| echo: false
+write_csv(data_collinear, "datasets/data_collinear.csv")
+```
+
+
+This dataset is available to load as `data_collinear`, in the book dataset collection:
+
+```{r}
+data_collinear <- read_csv("datasets/data_collinear.csv")
+```
+
+Look at the correlations between the variables in the dataset:
+
+```{r}
 cor(data_collinear)
 ```
 
-We see that there is not strong correlation between any pair of the explanatory variables, but there is still collinearity because $x_3$ is predictable from $x_1$ and $x_2$.
+We see that there is some correlation between pairs of the explanatory variables, and we know there is collinearity because $x_3$ is predictable from $x_1$ and $x_2$.
 
 Let's look for evidence of instability of the coefficients. First, we fit the multiple linear regression model with all three explanatory variables included:
 

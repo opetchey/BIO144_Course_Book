@@ -6,7 +6,7 @@ source("_common.R")
 
 # Interactions (L7) {.unnumbered}
 
-## Thought for the week:
+## Thought for the week
 
 "*You should arrive at answers on your own, and not rely upon what you get from someone else. Answers from others are nothing more than stopgap measures, they're of no value.*"
 
@@ -20,7 +20,9 @@ When we mentor, ask questions that encourage others to think for themselves, rat
 
 In the previous chapters we have looked at models with a special type of simplicity: the effect of each explanatory variable on the response variable is independent of the other explanatory variables. This is special because it means that we can understand the effect of each explanatory variable on the response variable separately, without considering the other explanatory variables. Nevertheless, this is often not the case in real life. The effect of one explanatory variable on the response variable may depend on the value of another explanatory variable. This is called an interaction effect, or simply an interaction.
 
-Interactions are some of the most interesting phenomena in science, including biology. We are not talking about interactions between species, like predation, though these are also very interesting. We are talking about effects of one thing, like diet, depending on another thing, like exercise. Let's break that down a bit...
+Interactions are some of the most interesting phenomena in science, including biology. We are not talking about interactions between species, like predation, though these are also very interesting. We are talking about effects of one thing, like diet, depending on another thing, like exercise. Let's break that down a bit with an example.
+
+### Example 1 (1 cat, 1 cont)
 
 Imagine we make a study of the effect of exercise (minutes per week) on blood pressure for people with a meat heavy diet. 
 
@@ -150,7 +152,7 @@ As we will see later in this chapter, the same holds true for statistical tests 
 It is harder and is not recommended to make a separate regression for each level of the second variable (diet) and then compare the slopes of the regression lines (it is possible, just not at all efficient).
 
 
-## Parallel and non-parallel effects
+### Parallel and non-parallel effects
 
 In the example above, the effect of exercise on blood pressure was stronger for people with a meat heavy diet than for people with a vegetarian diet. That is, the slope of the regression line was steeper for the meat heavy diet than for the vegetarian diet. Put another way, the regression lines are not parallel.
 
@@ -164,7 +166,7 @@ That was an example of an interaction between a continuous explanatory variable 
 **Think–Pair–Share** (#a_when_lines_cross) What does it mean biologically when lines cross in an interaction plot? What does it mean when they are parallel?
 --->
 
-## Two cats
+### Example 2 (2 categorical)
 
 Two categorical explanatory variables: diet (meat heavy or vegetarian) and exercise (low or high), and one continuous response variable (blood pressure).
 
@@ -228,7 +230,7 @@ Indeed, the lines connecting the means are not parallel, which is evidence of an
 **Think-Pair-Share** (#tps-express-int) Express the nature of the interaction in words.
 --->
 
-## Two continuous
+### Example 3 (two continuous)
 
 Two continuous explanatory variables (age and exercise minutes) and one continuous response variable (blood pressure).
 
@@ -354,9 +356,9 @@ ggplot(bp_2cont, aes(x=age, y=bp, col = mins_per_week_class)) +
 **There is only one interaction** We made two graphs of the same data, one with age as a categorical variable and one with minutes of exercise as a categorical variable. In both graphs we see an interaction. This is not us seeing two separate interactions, however. There is only one interaction here, namely that the effect of age on blood pressure depends on minutes of exercise, and equivalently, that the effect of minutes of exercise on blood pressure depends on age. The two graphs just look at the same interaction from different perspectives.
 :::
 
-## Other perspectives
+### Other perspectives
 
-### Interactions and additivity of effects
+#### Interactions and additivity of effects
 
 Another way of thinking about interactions is from the perspective of additivity or non-additivity of effects. Imagine we made two separate studies, one of the effect of diet on blood pressure, and one of the effect of exercise on blood pressure. In the first study we only varied diet, and in the second study we only varied exercise. In the first study we found an effect size of diet on blood pressure of say 10 mmHg (e.g., difference between meat heavy and vegetarian). And in the second study we found an effect size of exercise on blood pressure of 15 mmHg (e.g., difference between low and high exercise).
 
@@ -370,7 +372,7 @@ Another way of thinking about interactions is from the perspective of additivity
 
 If the effects are non-additive, we would expect the effect size to be different from additive. For example, if we found the combined effect of diet and exercise on blood pressure to be 40, we would say that the effects are non-additive. Their combined effect is more than the sum of their individual effects. This example is of a synergistic interaction because the combined effect (40) is greater than the sum of the individual effects (25).
 
-### Drug interactions
+#### Drug interactions
 
 When a doctor is considering giving us a particular medication, we are asked if we are taking any other medications. This is because the effects of drugs can interact. For example, if we take two drugs that both lower blood pressure and they interfere with each other, the combined effect might be less than the sum of their individual effects. This is an antagonistic interaction. It could be worse than that though, the interaction might actually be harmful, which is why doctors are so careful about drug interactions.
 
@@ -378,9 +380,11 @@ When a doctor is considering giving us a particular medication, we are asked if 
 **Think-Pair-Share** (#tps-other-int-examples) Can you think of any other examples of interactions in biology or medicine?
 --->
 
-## The maths bit
+## Implementing interactions
 
-Let us return to the example of the effects of number of minutes of exercise and diet on blood pressure:
+### The mathematical model
+
+Let us return to Example 1 (1 categorical explanatory variable, and 1 continuous explanatory variable), of the effects of number of minutes of exercise and diet on blood pressure:
 
 ```{r}
 #| echo: false
@@ -402,6 +406,7 @@ We have one continuous explanatory variable (minutes of exercise) and one binary
 **Think-Pair-Share** (#tps-without-interaction) What would a linear model without an interaction term be?
 --->
 
+A linear model without interaction would look like this:
 
 $$y_i = \beta_0 + \beta_1 x_{i}^{(1)} + \beta_2 x_{i}^{(2)} + \epsilon_i$$
 
@@ -409,20 +414,19 @@ where:
 
 * $y_i$ is the blood pressure of the $i$th participant
 * $x_i^{(1)} is the number of minutes of exercise of the $i$th participant
-* $x_i^{(2)}$ is the diet of the $i$th participant
+* $x_i^{(2)}$ is the diet of the $i$th participant, coded as 0 for "meat heavy" and 1 for "vegetarian"
 * $\beta_0$ is the intercept
 * $\beta_1$ is the effect of exercise on blood pressure
 * $\beta_2$ is the effect of diet on blood pressure
 * $\epsilon_i$ is the error term for the $i$th participant.
 
-This model is a multiple regression model in which one of the explanatory variables is binary.
 
 
 <!---
 **Think-Pair-Share** (#tps-with-interaction) What might the model look like if we wanted to include an interaction between diet and exercise?
 --->
 
-
+And here is the model with an interaction term added:
 
 $$y_i = \beta_0 + \beta_1 x_{i}^{(1)} + \beta_2 x_{i}^{(2)} + \beta_3 (x_{i}^{(1)} x_{i}^{(2)}) + \epsilon_i$$
 
@@ -439,8 +443,8 @@ where:
 
 * $x_{i}^{(3)} = x_{i}^{(1)} x_{i}^{(2)}$
 
-This is again a multiple regression model, but now with three explanatory variables.
 
+In this model, the $\beta_3$ coefficient represents the interaction effect between diet and exercise on blood pressure. If $\beta_3$ is significantly different from 0, we would conclude that there is an interaction between diet and exercise on blood pressure.
 
 
 <!---
@@ -449,7 +453,7 @@ This is again a multiple regression model, but now with three explanatory variab
 
 
 
-## Hypothesis testing
+### Hypothesis testing
 
 If we want to test whether the effect of minutes of exercise on blood pressure is different for people with different diets, we need a null hypothesis to test.
 
@@ -461,8 +465,11 @@ The null hypothesis is that the effect of minutes of exercise on blood pressure 
 
 If we reject the null hypothesis, we conclude that the effect of minutes of exercise on blood pressure is different for people with different diets. This is a non-additive effect.
 
+We can also use the ANOVA table to get an F-test for each of the terms in the model. When our model includes an explanatory variable with an interaction term, the ANOVA table will have a row for the main effect of the variable, a row for the interaction term, and a row for the residuals. The F-test for the interaction term tests the null hypothesis that there is no interaction between the two variables.
 
-## Doing it in R
+If we have one or more explanatory variables with more than two groups (e.g., diet with three levels: meat heavy, vegetarian, vegan), then we need to use the F-test in the ANOVA table rather than the t-test for the coefficients in the model. This is because, just like with ANOVA, the t-test for the coefficients in the model only tests whether the effect of one group is different from the reference group (e.g., vegetarian vs meat heavy), but does not test whether the effects of all groups are different from each other (e.g., vegetarian vs meat heavy vs vegan). The F-test in the ANOVA table tests whether there is a significant difference between any of the groups, which is what we want to know when we have more than two groups.
+
+### Doing it in R
 
 Let us fit the model with the interaction term in R. There are two methods to do this and they are equivalent:
 
@@ -490,7 +497,7 @@ anova(mod2)
 
 In the ANOVA table we see four rows. The first row is for the main effect of minutes of exercise, the second row is for the main effect of diet, the third row is for the interaction effect between diet and minutes of exercise, and the fourth row is for the residuals. As always, an interaction term in the R output is shown with a colon `:` between the two variables (here it looks like `mins_per_week:diet`). 
 
-In this example, the F-statistic for the interaction term is quite large (`r round(anova(mod2)[3,4],2)`), and the p-value is very small (`r signif(anova(mod2)[3,5],2)`). This means that we reject the null hypothesis that there is no interaction between diet and minutes of exercise on blood pressure. We conclude that the effect of minutes of exercise on blood pressure is different for people with different diets.
+In this example, the F-statistic for the interaction term is quite large (`r round(anova(mod2)[3,4],2)`), and the p-value is small (`r signif(anova(mod2)[3,5],2)`). This means that we reject the null hypothesis that there is no interaction between diet and minutes of exercise on blood pressure. We conclude that the effect of minutes of exercise on blood pressure is different for people with different diets.
 
 
 If we like (and we don't have to), we can look at the coefficients of the model:
@@ -513,7 +520,7 @@ The fourth is the interaction term `mins_per_week:dietvegetarian`, which is the 
 **Think-Pair-Share** (#tps-two-equations) Write two equations, one for each of the two diets. They would look something like this: $y_i = 0.1 - 0.1 x_{i}^{(1)}$, but will have other numbers.
 --->
 
-## Reporting our findings
+### Reporting our findings
 
 Of course a nice graph is always helpful. We already have quite a nice one:
 
@@ -576,25 +583,13 @@ We also might use a sentence like this to report the results: "The effect of min
 **Think–Pair–Share (#a_interaction_vs_main_effect)** How does an interaction change the meaning of a "main effect"? Can a main effect be misleading when an interaction is present?
 --->
 
-## Multiple regression vs. many single regressions
 
-Question: Why not just fit a separate simple regression model and then test whether the slopes are the same (i.e., if they are parallel)? That is, why not fit the two models:
 
-$$y_i = \beta_{0,veg} + \beta_{1,veg} x_i^{(1)} + \epsilon_i$$ 
+## Three models
 
-$$y_i = \beta_{0,meat} + \beta_{1,meat} x_i^{(2)} + \epsilon_i$$
+### 1. ANCOVA
 
-and compare the estimate of $\beta_{1,veg}$ to the estimate of $\beta_{1,meat}$?
-
-Well, you could do that, and could probably find a way to test for whether the difference in the slopes is different from 0. This would be a test of the null hypothesis that the effect of minutes of exercise on blood pressure is the same for people with different diets. But, this would be a more complicated way to do it, and would not be as general as the model with the interaction term. The model with the interaction term is more general, more flexible, and more elegant.
-
-::: {.callout-note}
-It is usually better model the whole dataset to test a single hypothesis, rather dividing up the dataset into smaller parts, fitting a model to each part, and then comparing the results of the models. The latter approach is less efficient and less elegant. **One hypothesis = one model.**
-:::
-
-## ANCOVA
-
-The example we just worked through was with one continuous explanatory variable (minutes of exercise) and one categorical explanatory variable (diet). This is an example of an analysis of covariance (ANCOVA). ANCOVA is a type of linear model in which there are both continuous and categorical explanatory variables.
+The example we just worked through (Example 1) was with one continuous explanatory variable (minutes of exercise) and one categorical explanatory variable (diet). This is an example of an analysis of covariance (ANCOVA). ANCOVA is a type of linear model in which there are both continuous and categorical explanatory variables.
 
 ANCOVA is often used in two main ways.
 
@@ -605,9 +600,9 @@ Second, ANCOVA can be used to test whether covariate effects differ between grou
 An important distinction is that the first use assumes the covariate has the same effect in all groups (parallel slopes), while the second explicitly tests whether this assumption is valid.
 
 
-## Two-way ANOVA
+### 2. Two-way ANOVA
 
-Above we had an example with two categorical explanatory variables (diet [levels: meat heavy or vegetarian] and exercise [levels: low or high]) and one continuous response variable (blood pressure). This is an example of a two-way ANOVA. Two-way ANOVA is used to test for effects of two categorical explanatory variables, as well as their interaction effect on a continuous response variable.
+Above we had an example (Example 2) with two categorical explanatory variables (diet [levels: meat heavy or vegetarian] and exercise [levels: low or high]) and one continuous response variable (blood pressure). This is an example of a two-way ANOVA. Two-way ANOVA is used to test for effects of two categorical explanatory variables, as well as their interaction effect on a continuous response variable.
 
 Here are the first few rows of the data again:
 
@@ -672,7 +667,7 @@ In this example, the F-statistic for the interaction term is quite large (`r rou
 **Reporting two-way ANOVA results** When reporting the results of a two-way ANOVA, it is important to focus on the biological interpretation of the results, rather than the statistical details. Include statistics in parentheses, in support of your statements. For example, you might say something like: "The effect of exercise was different for people on different diets, with a stronger effect for those on a vegetarian diet compared to those on a meat heavy diet (F(1, 36) = 13.77, p < 0.001)."
 :::
 
-### More than two levels
+#### More than two levels
 
 What if we had a categorical explanatory variable with more than two levels? For example, what if diet had three levels: meat heavy, vegetarian, and vegan?
 
@@ -787,9 +782,9 @@ Don't worry if this is a bit confusing at first. It will become clearer with pra
 
 
 
-## Multiple regression with interaction term
+### 3. Multiple regression with interaction term
 
-Above we had the example of two continuous explanatory variables (age and minutes of exercise) and one continuous response variable (blood pressure). We saw evidence of an interaction between age and minutes of exercise on blood pressure.
+Above we had the example (Example 3) of two continuous explanatory variables (age and minutes of exercise) and one continuous response variable (blood pressure). We saw evidence of an interaction between age and minutes of exercise on blood pressure.
 
 Here are the first few rows of the data again:
 
@@ -836,8 +831,26 @@ anova(mod_2cont)
 
 The F-statistic for the interaction term is very large (`r round(anova(mod_2cont)[3, "F value"],2)`) and the corresponding p-value is very small (`r signif(anova(mod_2cont)[3, "Pr(>F)"],2)`). Hence, we conclude that there is very strong evidence of an interaction between minutes of exercise and age on blood pressure. The effect of minutes of exercise on blood pressure depends on age, with a stronger effect for younger people compared to older people.
 
+## General points
 
-## Intepreting main effects and interaction effects
+### Multiple regression vs. many single regressions
+
+Question: Why not just fit a separate simple regression model and then test whether the slopes are the same (i.e., if they are parallel)? That is, why not fit the two models:
+
+$$y_i = \beta_{0,veg} + \beta_{1,veg} x_i^{(1)} + \epsilon_i$$ 
+
+$$y_i = \beta_{0,meat} + \beta_{1,meat} x_i^{(2)} + \epsilon_i$$
+
+and compare the estimate of $\beta_{1,veg}$ to the estimate of $\beta_{1,meat}$?
+
+Well, you could do that, and could probably find a way to test for whether the difference in the slopes is different from 0. This would be a test of the null hypothesis that the effect of minutes of exercise on blood pressure is the same for people with different diets. But, this would be a more complicated way to do it, and would not be as general as the model with the interaction term. The model with the interaction term is more general, more flexible, and more elegant.
+
+::: {.callout-note}
+It is usually better model the whole dataset to test a single hypothesis, rather dividing up the dataset into smaller parts, fitting a model to each part, and then comparing the results of the models. The latter approach is less efficient and less elegant. **One hypothesis = one model.**
+:::
+
+
+### Intepreting main effects and interaction effects
 
 The term *main effect* refers to the individual effect of each categorical explanatory variable on the response variable, ignoring the other variable. For example, the main effect of diet would be the difference in blood pressure between meat heavy and vegetarian diets, averaged over both levels of exercise.
 
@@ -897,7 +910,7 @@ Here there is no main effect of diet on blood pressure, as the average blood pre
 
 **Take home**: Interactions are very interesting, but also will require careful and nuanced interpretation.
 
-## More than two explanatory variables
+### More than two explanatory variables
 
 All the examples above had two explanatory variables. What if we have more than two explanatory variables? The principles are the same, but the models and interpretations become more complex. For example, if we have three categorical explanatory variables (A, B, C), we can fit a model with main effects of A, B, and C, as well as all possible interaction effects (A:B, A:C, B:C, A:B:C). The ANOVA table will have one row for each main effect, one row for each two-way interaction effect, one row for the three-way interaction effect, and one row for the residuals.
 

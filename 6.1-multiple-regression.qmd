@@ -36,6 +36,7 @@ Blood pressure is again the response variable, with age and lifestyle as two exp
 
 ```{r}
 #| echo: false
+set.seed(1234123)
 bp_data_multreg <- tibble(age = ceiling(runif(100, 20, 80)),
                        mins_exercise = ceiling(runif(100, 0, 300)))
 bp_data_multreg$bp <- ceiling(90 + 0.5 * bp_data_multreg$age - 0.1 * bp_data_multreg$mins_exercise + rnorm(100, 0, 10))

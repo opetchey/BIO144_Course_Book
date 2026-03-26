@@ -806,11 +806,38 @@ This increase in variance caused by collinearity is known as the **variance infl
 
 Collinearity also affects the interpretation of the $R^2$ values. Collinearity will cause the collinear explanatory variables to share some of the explained variance. The $R^2$ value of the multiple regression will then be less than the sum of the $R^2$ values of the individual regressions of the response variable on each of the explanatory variables separately.
 
+Let's use a version of the blood pressure age data with strong (but not perfect) collinearity between age and minutes of exercise:
+
 ```{r}
 #| echo: false
-m2_age <- lm(bp ~ age, data = bp_data_multreg)
-m2_mins_exercise <- lm(bp ~ mins_exercise, data = bp_data_multreg)
-m2_both <- lm(bp ~ age + mins_exercise, data = bp_data_multreg)
+set.seed(123)
+n <- 100
+age <- ceiling(runif(n, 20, 80))
+mins_exercise <- 100 - age + rnorm(n, 0, 5)
+bp <- 100 + 0.5 * age + rnorm(n, 0, 15)
+data_collinear_strong <- data.frame(age = age,
+                                    mins_exercise = mins_exercise,
+                                    bp = bp)
+write_csv(data_collinear_strong, "datasets/data_collinear_strong.csv")
+```
+
+Read in the data:
+```{r}
+data_collinear_strong <- read_csv("datasets/data_collinear_strong.csv")
+```
+
+Look at correlations:
+
+```{r}
+cor(data_collinear_strong)
+pairs(data_collinear_strong)
+```
+
+```{r}
+#| echo: false
+m2_age <- lm(bp ~ age, data = data_collinear_strong)
+m2_mins_exercise <- lm(bp ~ mins_exercise, data = data_collinear_strong)
+m2_both <- lm(bp ~ age + mins_exercise, data = data_collinear_strong)
 ```
 
 $R^2$ of the age only model:

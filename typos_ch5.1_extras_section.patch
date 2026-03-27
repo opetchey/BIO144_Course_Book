@@ -1,0 +1,12 @@
+diff --git a/5.1-ANOVA.qmd b/5.1-ANOVA.qmd
+index b68abd4..35fb264 100644
+--- a/5.1-ANOVA.qmd
++++ b/5.1-ANOVA.qmd
+@@ -884,6 +884,6 @@ This is not a course about experimental design (this is much too large a subject
+ 
+ This might lead you to wonder if we analyse experiments with ANOVA, and analyse observations (involving no manipulations) with regression. The answer is no, we can use either for either. It just happens that manipulations in experiments are often of the categorical nature: type of food, parasite species, light level (high or low), and so on. Of course some experiments contain manipulations that are continuous (e.g. a range of temperatures or drug concentrations) and these are analysed with regression. And some studies include a manipulation (e.g., drug concentration) and observed variables like gender.
+ 
+-So there isn't necessarily and association between type of explanatory variable (continuous or categorical) and whether an study is experimental or observational. Important, no essential, is for the researcher to clearly be aware of which variables are manipulation and which are observations. Because only the manipulations can be used to infer causation.
++So there isn't necessarily an association between type of explanatory variable (continuous or categorical) and whether a study is experimental or observational. Important, not essential, is for the researcher to clearly be aware of which variables are manipulation and which are observations. Because only the manipulations can be used to infer causation.
+ 
+ 

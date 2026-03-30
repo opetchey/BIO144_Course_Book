@@ -86,8 +86,9 @@ mod_soay_lm <- lm(fitness ~ body.size, data = soay)
 The model checking plots show clear violations of linear regression assumptions:
 
 ```{r}
-par(mfrow = c(2, 2))
-plot(mod_soay_lm, which = 1:4, add.smooth = TRUE)
+#| warning: false
+#par(mfrow = c(2, 2))
+autoplot(mod_soay_lm, which = 1:4, add.smooth = TRUE)
 ```
 
 The qq-plot looks ok-ish, though the larger residuals show a tendency to be larger than expected. The scale-location plot shows that variance increases with fitted values, violating homoscedasticity. Also, there is a clear non-linear pattern in the residuals vs fitted plot, suggesting that the linear model is not capturing the relationship well.
@@ -341,8 +342,9 @@ Specifying `family = poisson` tells R to use the Poisson distribution with a log
 As always, we should check model assumptions:
 
 ```{r}
-par(mfrow = c(2, 2))
-plot(soay_glm, which = 1:4, add.smooth = TRUE)
+#| warning: false
+#par(mfrow = c(2, 2))
+autoplot(soay_glm, which = 1:4, add.smooth = TRUE)
 ```
 
 The QQ-plot is rather concerning. However, QQ-plots in GLMs are not testing normality of residuals in the same way as for linear models, so their interpretation differs. The *deviance residuals* should approximately follow a normal distribution if the model fits well. Here, there are some deviations from normality, which could be somewhat concerning, but for now we will focus on the other plots. (If you're interested in what are deviance residuals, please see the *Extras* section at the end of this chapter.)
@@ -609,8 +611,9 @@ soay_glm2 <- glm(fitness ~ body.size + parasite.load, data = soay, family = pois
 
 As always we check model assumptions:
 ```{r}
-par(mfrow = c(2, 2))
-plot(soay_glm2, which = 1:4, add.smooth = TRUE)
+#| warning: false
+#par(mfrow = c(2, 2))
+autoplot(soay_glm2, which = 1:4, add.smooth = TRUE)
 ```
 
 The model checking plots look good. We can summarise the model:

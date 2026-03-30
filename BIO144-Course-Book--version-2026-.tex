@@ -234,7 +234,7 @@
 
 \title{BIO144 Course Book (version 2026)}
 \author{Owen Petchey}
-\date{2026-03-27}
+\date{2026-03-30}
 \begin{document}
 \frontmatter
 \maketitle
@@ -5694,7 +5694,7 @@ In R, we calculate this as follows:
 \end{Shaded}
 
 \begin{verbatim}
-[1] 373.1164
+[1] 359.6242
 \end{verbatim}
 
 \subsection*{\texorpdfstring{\(SSE\)}{SSE}}\label{sse}
@@ -5716,7 +5716,7 @@ this in R uses both approaches:
 \end{Shaded}
 
 \begin{verbatim}
-[1] 6.371638
+[1] 9.540501
 \end{verbatim}
 
 Or\ldots{}
@@ -5729,7 +5729,7 @@ Or\ldots{}
 \end{Shaded}
 
 \begin{verbatim}
-[1] 6.371638
+[1] 9.540501
 \end{verbatim}
 
 \subsection*{\texorpdfstring{\(R^2\)}{R\^{}2}}\label{r2}
@@ -5748,7 +5748,7 @@ variable that is explained by the explanatory variable (\(R^2\)):
 \end{Shaded}
 
 \begin{verbatim}
-[1] 0.9832099
+[1] 0.9741565
 \end{verbatim}
 
 \subsection*{Is my R squared high (or
@@ -11608,8 +11608,8 @@ assumptions:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{))}
-\FunctionTok{plot}\NormalTok{(mod\_soay\_lm, }\AttributeTok{which =} \DecValTok{1}\SpecialCharTok{:}\DecValTok{4}\NormalTok{, }\AttributeTok{add.smooth =} \ConstantTok{TRUE}\NormalTok{)}
+\CommentTok{\#par(mfrow = c(2, 2))}
+\FunctionTok{autoplot}\NormalTok{(mod\_soay\_lm, }\AttributeTok{which =} \DecValTok{1}\SpecialCharTok{:}\DecValTok{4}\NormalTok{, }\AttributeTok{add.smooth =} \ConstantTok{TRUE}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -12049,8 +12049,8 @@ As always, we should check model assumptions:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{))}
-\FunctionTok{plot}\NormalTok{(soay\_glm, }\AttributeTok{which =} \DecValTok{1}\SpecialCharTok{:}\DecValTok{4}\NormalTok{, }\AttributeTok{add.smooth =} \ConstantTok{TRUE}\NormalTok{)}
+\CommentTok{\#par(mfrow = c(2, 2))}
+\FunctionTok{autoplot}\NormalTok{(soay\_glm, }\AttributeTok{which =} \DecValTok{1}\SpecialCharTok{:}\DecValTok{4}\NormalTok{, }\AttributeTok{add.smooth =} \ConstantTok{TRUE}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -12532,8 +12532,8 @@ As always we check model assumptions:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{))}
-\FunctionTok{plot}\NormalTok{(soay\_glm2, }\AttributeTok{which =} \DecValTok{1}\SpecialCharTok{:}\DecValTok{4}\NormalTok{, }\AttributeTok{add.smooth =} \ConstantTok{TRUE}\NormalTok{)}
+\CommentTok{\#par(mfrow = c(2, 2))}
+\FunctionTok{autoplot}\NormalTok{(soay\_glm2, }\AttributeTok{which =} \DecValTok{1}\SpecialCharTok{:}\DecValTok{4}\NormalTok{, }\AttributeTok{add.smooth =} \ConstantTok{TRUE}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 

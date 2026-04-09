@@ -234,7 +234,7 @@
 
 \title{BIO144 Course Book (version 2026)}
 \author{Owen Petchey}
-\date{2026-03-30}
+\date{2026-04-09}
 \begin{document}
 \frontmatter
 \maketitle
@@ -382,6 +382,10 @@ helps write code and text.
 \addcontentsline{toc}{chapter}{Introduction (L1)}
 
 \markboth{Introduction (L1)}{Introduction (L1)}
+
+\begin{verbatim}
+Warning: package 'broom' was built under R version 4.4.3
+\end{verbatim}
 
 The first lecture of the course introduces it, gives some important
 information, and sets the stage for the rest of the course. Some of the
@@ -1269,6 +1273,10 @@ tools in data analysis.
 \addcontentsline{toc}{chapter}{R and RStudio (L2)}
 
 \markboth{R and RStudio (L2)}{R and RStudio (L2)}
+
+\begin{verbatim}
+Warning: package 'broom' was built under R version 4.4.3
+\end{verbatim}
 
 \section*{Getting R and RStudio}\label{getting-r-and-rstudio}
 \addcontentsline{toc}{section}{Getting R and RStudio}
@@ -2623,8 +2631,12 @@ therefore four means.
 \end{Shaded}
 
 \begin{verbatim}
-`summarise()` has grouped output by 'sex'. You can override using the `.groups`
-argument.
+`summarise()` has regrouped the output.
+i Summaries were computed grouped by sex and treatment.
+i Output is grouped by sex.
+i Use `summarise(.groups = "drop_last")` to silence this message.
+i Use `summarise(.by = c(sex, treatment))` for per-operation grouping
+  (`?dplyr::dplyr_by`) instead.
 \end{verbatim}
 
 \begin{verbatim}
@@ -2656,8 +2668,12 @@ combination of sex and treatment:
 \end{Shaded}
 
 \begin{verbatim}
-`summarise()` has grouped output by 'sex'. You can override using the `.groups`
-argument.
+`summarise()` has regrouped the output.
+i Summaries were computed grouped by sex and treatment.
+i Output is grouped by sex.
+i Use `summarise(.groups = "drop_last")` to silence this message.
+i Use `summarise(.by = c(sex, treatment))` for per-operation grouping
+  (`?dplyr::dplyr_by`) instead.
 \end{verbatim}
 
 \begin{verbatim}
@@ -3508,6 +3524,10 @@ with extreme values.
 \addcontentsline{toc}{chapter}{Regression Part 1 (L3)}
 
 \markboth{Regression Part 1 (L3)}{Regression Part 1 (L3)}
+
+\begin{verbatim}
+Warning: package 'broom' was built under R version 4.4.3
+\end{verbatim}
 
 \section*{Introduction}\label{introduction}
 \addcontentsline{toc}{section}{Introduction}
@@ -4408,7 +4428,7 @@ change with the value of the independent variable.
 The blood pressure data seems to be linear:
 
 \begin{verbatim}
-Warning: `fortify(<lm>)` was deprecated in ggplot2 3.6.0.
+Warning: `fortify(<lm>)` was deprecated in ggplot2 4.0.0.
 i Please use `broom::augment(<lm>)` instead.
 i The deprecated feature was likely used in the ggplot2 package.
   Please report the issue at <https://github.com/tidyverse/ggplot2/issues>.
@@ -5512,6 +5532,10 @@ Here is the code to make the graph, using some example data:
 
 \markboth{Regression Part 2 (L4)}{Regression Part 2 (L4)}
 
+\begin{verbatim}
+Warning: package 'broom' was built under R version 4.4.3
+\end{verbatim}
+
 \section*{Introduction}\label{introduction-1}
 \addcontentsline{toc}{section}{Introduction}
 
@@ -5694,7 +5718,7 @@ In R, we calculate this as follows:
 \end{Shaded}
 
 \begin{verbatim}
-[1] 359.6242
+[1] 358.2082
 \end{verbatim}
 
 \subsection*{\texorpdfstring{\(SSE\)}{SSE}}\label{sse}
@@ -5716,7 +5740,7 @@ this in R uses both approaches:
 \end{Shaded}
 
 \begin{verbatim}
-[1] 9.540501
+[1] 4.644339
 \end{verbatim}
 
 Or\ldots{}
@@ -5729,7 +5753,7 @@ Or\ldots{}
 \end{Shaded}
 
 \begin{verbatim}
-[1] 9.540501
+[1] 4.644339
 \end{verbatim}
 
 \subsection*{\texorpdfstring{\(R^2\)}{R\^{}2}}\label{r2}
@@ -5748,7 +5772,7 @@ variable that is explained by the explanatory variable (\(R^2\)):
 \end{Shaded}
 
 \begin{verbatim}
-[1] 0.9741565
+[1] 0.9872005
 \end{verbatim}
 
 \subsection*{Is my R squared high (or
@@ -6661,6 +6685,10 @@ slopes}
 \addcontentsline{toc}{chapter}{Analysis of variance (L5)}
 
 \markboth{Analysis of variance (L5)}{Analysis of variance (L5)}
+
+\begin{verbatim}
+Warning: package 'broom' was built under R version 4.4.3
+\end{verbatim}
 
 The previous two chapters were about linear regression. \emph{Linear
 regression} is a type of \emph{linear model} -- recall that in \emph{R}
@@ -8213,6 +8241,10 @@ only the manipulations can be used to infer causation.
 \addcontentsline{toc}{chapter}{Multiple regression (L6)}
 
 \markboth{Multiple regression (L6)}{Multiple regression (L6)}
+
+\begin{verbatim}
+Warning: package 'broom' was built under R version 4.4.3
+\end{verbatim}
 
 \section*{Introduction}\label{introduction-3}
 \addcontentsline{toc}{section}{Introduction}
@@ -10195,6 +10227,10 @@ the multiple linear regression model.
 
 \markboth{Interactions (L7)}{Interactions (L7)}
 
+\begin{verbatim}
+Warning: package 'broom' was built under R version 4.4.3
+\end{verbatim}
+
 \section*{Thought for the week}\label{thought-for-the-week}
 \addcontentsline{toc}{section}{Thought for the week}
 
@@ -11499,6 +11535,10 @@ in R:
 
 \markboth{Count data (L8)}{Count data (L8)}
 
+\begin{verbatim}
+Warning: package 'broom' was built under R version 4.4.3
+\end{verbatim}
+
 In all the previous chapters, we have focused on \textbf{linear models}.
 These are suitable for continuous response variables that can,
 mathematically, take negative values. However, response variables can be
@@ -12741,6 +12781,10 @@ start working with count data in R using Poisson regression.
 
 \markboth{Binomial data (L9)}{Binomial data (L9)}
 
+\begin{verbatim}
+Warning: package 'broom' was built under R version 4.4.3
+\end{verbatim}
+
 \section*{Introduction}\label{introduction-6}
 \addcontentsline{toc}{section}{Introduction}
 
@@ -12773,10 +12817,8 @@ The central question is therefore:
 \textbf{Which explanatory variables influence the probability of the
 event happening.}
 
-\section*{Overview}\label{overview}
-\addcontentsline{toc}{section}{Overview}
-
-\markright{Overview}
+\subsection*{Overview}\label{overview}
+\addcontentsline{toc}{subsection}{Overview}
 
 In this chapter we will cover:
 
@@ -12971,15 +13013,13 @@ at about 0.3. But it is still the most likely outcome.
 
 \end{tcolorbox}
 
-\section*{Probabilities, odds, log-odds, and odds
+\subsection*{Probabilities, odds, log-odds, and odds
 ratios}\label{probabilities-odds-log-odds-and-odds-ratios}
-\addcontentsline{toc}{section}{Probabilities, odds, log-odds, and odds
-ratios}
+\addcontentsline{toc}{subsection}{Probabilities, odds, log-odds, and
+odds ratios}
 
-\markright{Probabilities, odds, log-odds, and odds ratios}
-
-\subsection*{Odds}\label{odds}
-\addcontentsline{toc}{subsection}{Odds}
+\subsubsection*{Odds}\label{odds}
+\addcontentsline{toc}{subsubsection}{Odds}
 
 OK, so we know that when we analyse binary/binomial data, we are
 interested in the \textbf{probability} of an event happening, denoted by
@@ -13023,8 +13063,8 @@ and odds on the \(y\)-axis:
 So, when we transform probabilities to odds, we go from a bounded scale
 (0 to 1) to an unbounded scale (0 to infinity).
 
-\subsection*{Log-odds (logit)}\label{log-odds-logit}
-\addcontentsline{toc}{subsection}{Log-odds (logit)}
+\subsubsection*{Log-odds (logit)}\label{log-odds-logit}
+\addcontentsline{toc}{subsubsection}{Log-odds (logit)}
 
 Another useful transformation is the \textbf{log-odds}, also known as
 the \textbf{logit}:
@@ -13060,8 +13100,8 @@ scales. The logit does this perfectly.
 
 \end{tcolorbox}
 
-\subsection*{Odds ratio}\label{odds-ratio}
-\addcontentsline{toc}{subsection}{Odds ratio}
+\subsubsection*{Odds ratio}\label{odds-ratio}
+\addcontentsline{toc}{subsubsection}{Odds ratio}
 
 Finally, we often want to compare the odds of an event happening in two
 different groups. Say we have two groups, group 1 and group 2, with
@@ -13357,28 +13397,10 @@ coefficient (slope) corresponds to the change in log-odds for a one-unit
 increase in the explanatory variable, and exponentiating that
 coefficient gives the odds ratio for a one-unit increase.
 
-\section*{Naming models (logistic
-regression)}\label{naming-models-logistic-regression}
-\addcontentsline{toc}{section}{Naming models (logistic regression)}
+\section*{Aggregated binomial data}\label{aggregated-binomial-data}
+\addcontentsline{toc}{section}{Aggregated binomial data}
 
-\markright{Naming models (logistic regression)}
-
-\textbf{Logistic regression} is a very important term. It is a binomial
-GLM with logit link. I.e., it is what we have just described above!
-
-The reason it (a binomial GLM with logit link) is called
-\textbf{logistic regression} is that the inverse of the logit function
-is called the logistic function. So logistic regression is just a
-special case of binomial GLM. The logistic function looks like a
-``squashed'' S-shaped curve that maps the whole real line to the
-interval (0, 1). This is perfect for modelling probabilities.
-
-\section*{Beetle mortality and insecticide dose (aggregated
-data)}\label{beetle-mortality-and-insecticide-dose-aggregated-data}
-\addcontentsline{toc}{section}{Beetle mortality and insecticide dose
-(aggregated data)}
-
-\markright{Beetle mortality and insecticide dose (aggregated data)}
+\markright{Aggregated binomial data}
 
 Let's work though an example of binomial regression, with data in what
 we call \emph{aggregated} format. This simply means that we have counts
@@ -13436,12 +13458,6 @@ As always, start with a graph.
 
 \pandocbounded{\includegraphics[keepaspectratio]{9.1-GLM2-binary-data_files/figure-pdf/unnamed-chunk-24-1.pdf}}
 
-\section*{Two tempting but wrong
-analyses}\label{two-tempting-but-wrong-analyses}
-\addcontentsline{toc}{section}{Two tempting but wrong analyses}
-
-\markright{Two tempting but wrong analyses}
-
 \subsection*{Wrong analysis 1: linear regression on mortality
 rate}\label{wrong-analysis-1-linear-regression-on-mortality-rate}
 \addcontentsline{toc}{subsection}{Wrong analysis 1: linear regression on
@@ -13460,10 +13476,33 @@ Check out the model assumptions:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{))}
-\FunctionTok{plot}\NormalTok{(mod\_beetle\_lm)}
+\CommentTok{\#par(mfrow = c(2, 2))}
+\CommentTok{\#plot(mod\_beetle\_lm)}
+\FunctionTok{autoplot}\NormalTok{(mod\_beetle\_lm)}
 \end{Highlighting}
 \end{Shaded}
+
+\begin{verbatim}
+Warning: `fortify(<lm>)` was deprecated in ggplot2 4.0.0.
+i Please use `broom::augment(<lm>)` instead.
+i The deprecated feature was likely used in the ggfortify package.
+  Please report the issue at <https://github.com/sinhrks/ggfortify/issues>.
+\end{verbatim}
+
+\begin{verbatim}
+Warning: `aes_string()` was deprecated in ggplot2 3.0.0.
+i Please use tidy evaluation idioms with `aes()`.
+i See also `vignette("ggplot2-in-packages")` for more information.
+i The deprecated feature was likely used in the ggfortify package.
+  Please report the issue at <https://github.com/sinhrks/ggfortify/issues>.
+\end{verbatim}
+
+\begin{verbatim}
+Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+i Please use `linewidth` instead.
+i The deprecated feature was likely used in the ggfortify package.
+  Please report the issue at <https://github.com/sinhrks/ggfortify/issues>.
+\end{verbatim}
 
 \pandocbounded{\includegraphics[keepaspectratio]{9.1-GLM2-binary-data_files/figure-pdf/unnamed-chunk-26-1.pdf}}
 
@@ -13581,8 +13620,9 @@ And as usual we can check the model assumptions:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{))}
-\FunctionTok{plot}\NormalTok{(beetle\_glm)}
+\CommentTok{\#par(mfrow = c(2, 2))}
+\CommentTok{\#plot(beetle\_glm)}
+\FunctionTok{autoplot}\NormalTok{(beetle\_glm)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -13607,12 +13647,10 @@ Use \texttt{cbind(successes,\ failures)} in
 
 \end{tcolorbox}
 
-\section*{Analysis of deviance (likelihood-based
+\subsection*{Analysis of deviance (likelihood-based
 ANOVA)}\label{analysis-of-deviance-likelihood-based-anova}
-\addcontentsline{toc}{section}{Analysis of deviance (likelihood-based
+\addcontentsline{toc}{subsection}{Analysis of deviance (likelihood-based
 ANOVA)}
-
-\markright{Analysis of deviance (likelihood-based ANOVA)}
 
 As for count-data GLMs, the estimation of the coefficients is by maximum
 likelihood estimation (MLE). The measure of goodness-of-fit is the
@@ -13656,11 +13694,9 @@ you can read more about it in more advanced statistics textbooks
 mentioned in the \emph{Further reading} section at the end of this
 chapter.
 
-\section*{Plotting the fitted
+\subsection*{Plotting the fitted
 relationship}\label{plotting-the-fitted-relationship}
-\addcontentsline{toc}{section}{Plotting the fitted relationship}
-
-\markright{Plotting the fitted relationship}
+\addcontentsline{toc}{subsection}{Plotting the fitted relationship}
 
 We will plot \(P(Y=1)\) (mortality probability) against dose using model
 predictions.
@@ -13721,12 +13757,10 @@ of mortality is approximately 0.09 (95\% CI: -2.34, -2.26 transformed to
 probability scale). The model explained a significant amount of deviance
 (Deviance = 8.4, df = 6, \(\chi^2\) p \textless{} 0.001).''
 
-\section*{Overdispersion in aggregated binomial
+\subsection*{Overdispersion in aggregated binomial
 data}\label{overdispersion-in-aggregated-binomial-data}
-\addcontentsline{toc}{section}{Overdispersion in aggregated binomial
+\addcontentsline{toc}{subsection}{Overdispersion in aggregated binomial
 data}
-
-\markright{Overdispersion in aggregated binomial data}
 
 Overdispersion means the variability is larger than the binomial model
 assumes. A quick (rough) check for aggregated binomial data is:
@@ -13938,8 +13972,9 @@ Residual plots exist, but can be hard to interpret for 0/1 data:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{))}
-\FunctionTok{plot}\NormalTok{(plasma\_glm)}
+\CommentTok{\#par(mfrow = c(2, 2))}
+\CommentTok{\#plot(plasma\_glm)}
+\FunctionTok{autoplot}\NormalTok{(plasma\_glm)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -13989,11 +14024,21 @@ logistic regression, but probabilities are often easier to interpret. In
 practice, you may report odds ratios \textbf{and} translate to
 probabilities at meaningful explanatory variable values.
 
-\section*{Multiple explanatory
-variables}\label{multiple-explanatory-variables-1}
-\addcontentsline{toc}{section}{Multiple explanatory variables}
+\section*{Naming models (logistic
+regression)}\label{naming-models-logistic-regression}
+\addcontentsline{toc}{section}{Naming models (logistic regression)}
 
-\markright{Multiple explanatory variables}
+\markright{Naming models (logistic regression)}
+
+\textbf{Logistic regression} is a very important term. It is a binomial
+GLM with logit link. I.e., it is what we have just described above!
+
+The reason it (a binomial GLM with logit link) is called
+\textbf{logistic regression} is that the inverse of the logit function
+is called the logistic function. So logistic regression is just a
+special case of binomial GLM. The logistic function looks like a
+``squashed'' S-shaped curve that maps the whole real line to the
+interval (0, 1). This is perfect for modelling probabilities.
 
 Just as with linear models, and with Poisson GLMs, we can include
 multiple explanatory variables in a binomial GLM. The interpretation of
@@ -14076,6 +14121,10 @@ are all above. To summarize the main points:
 \addcontentsline{toc}{chapter}{Ordination (L10)}
 
 \markboth{Ordination (L10)}{Ordination (L10)}
+
+\begin{verbatim}
+Warning: package 'broom' was built under R version 4.4.3
+\end{verbatim}
 
 \section*{Introduction}\label{introduction-7}
 \addcontentsline{toc}{section}{Introduction}
@@ -15183,6 +15232,10 @@ Ecological Data: A Primer on Classification and Ordination}
 \addcontentsline{toc}{chapter}{Mixed models (L11-1)}
 
 \markboth{Mixed models (L11-1)}{Mixed models (L11-1)}
+
+\begin{verbatim}
+Warning: package 'broom' was built under R version 4.4.3
+\end{verbatim}
 
 \section*{Introduction}\label{introduction-8}
 \addcontentsline{toc}{section}{Introduction}

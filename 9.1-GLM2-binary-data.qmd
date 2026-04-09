@@ -26,7 +26,7 @@ The central question is therefore:
 **Think–Pair–Share** (#tps-binary-examples) Name three response variables in biology, ecology, or medicine that are naturally binary (0/1). Why would a linear model be risky for each?
 --->
 
-## Overview
+### Overview
 
 In this chapter we will cover:
 
@@ -128,9 +128,9 @@ You should now understand two important things:
 * That the binomial distribution is appropriate for modelling both binary and binomial data. Hint: in a GLM, we will therefore use the `binomial` family.
 :::
 
-## Probabilities, odds, log-odds, and odds ratios
+### Probabilities, odds, log-odds, and odds ratios
 
-### Odds
+#### Odds
 
 OK, so we know that when we analyse binary/binomial data, we are interested in the **probability** of an event happening, denoted by $\pi$.
 
@@ -154,7 +154,7 @@ ggplot(mapping = aes(x = prob_seq, y = odds_seq)) +
 
 So, when we transform probabilities to odds, we go from a bounded scale (0 to 1) to an unbounded scale (0 to infinity).
 
-### Log-odds (logit)
+#### Log-odds (logit)
 
 Another useful transformation is the **log-odds**, also known as the **logit**:
 
@@ -177,7 +177,7 @@ The reason why the logit is useful is that it maps probabilities (0 to 1) to the
 
 
 
-### Odds ratio
+#### Odds ratio
 
 Finally, we often want to compare the odds of an event happening in two different groups. Say we have two groups, group 1 and group 2, with probabilities $\pi_1$ and $\pi_2$. The odds in each group are:
 
@@ -344,14 +344,9 @@ In the line above, notice the $\exp(0.860)$ term. The number 0.860 is exactly th
 This isn't magic. Its just a straightforward consequence of how the logit link function works. In the following example of binomial regression, you will see how with a continuous explanatory variable, the coefficient (slope) corresponds to the change in log-odds for a one-unit increase in the explanatory variable, and exponentiating that coefficient gives the odds ratio for a one-unit increase.
 
 
-## Naming models (logistic regression)
-
-**Logistic regression** is a very important term. It is a binomial GLM with logit link. I.e., it is what we have just described above!
-
-The reason it (a binomial GLM with logit link) is called **logistic regression** is that the inverse of the logit function is called the logistic function. So logistic regression is just a special case of binomial GLM. The logistic function looks like a "squashed" S-shaped curve that maps the whole real line to the interval (0, 1). This is perfect for modelling probabilities.
 
 
-## Beetle mortality and insecticide dose (aggregated data)
+## Aggregated binomial data
 
 Let's work though an example of binomial regression, with data in what we call *aggregated* format. This simply means that we have counts of successes and failures for groups of individuals, rather than individual-level 0/1 data.
 
@@ -392,8 +387,6 @@ ggplot(beetle, aes(x = Dose, y = Mortality_rate)) +
 **Think–Pair–Share** (#tps-why-lm-wrong) What goes wrong if we fit a linear regression to a probability (mortality rate)? Name at least two problems.
 --->
 
-## Two tempting but wrong analyses
-
 ### Wrong analysis 1: linear regression on mortality rate
 
 ```{r}
@@ -406,8 +399,9 @@ the mean–variance structure of binomial data.
 Check out the model assumptions:
 
 ```{r}
-par(mfrow = c(2, 2))
-plot(mod_beetle_lm)
+#par(mfrow = c(2, 2))
+#plot(mod_beetle_lm)
+autoplot(mod_beetle_lm)
 ```
 
 We don't have so many data points here, but the residuals vs fitted indicating non-linearity and the Q-Q plot indicating non-normality are both concerning. Also the scale-location plot suggests non-constant variance.
@@ -470,8 +464,9 @@ beetle_glm <- glm(cbind(Number_killed, Number_survived) ~ Dose,
 And as usual we can check the model assumptions:
 
 ```{r}
-par(mfrow = c(2, 2))
-plot(beetle_glm)
+#par(mfrow = c(2, 2))
+#plot(beetle_glm)
+autoplot(beetle_glm)
 ```
 
 Not great, but again we have only 8 dose levels. Let us continue in any case and look at the ANOVA table and the coefficients.
@@ -485,7 +480,7 @@ Use `cbind(successes, failures)` in `glm(..., family = binomial)`.
 :::
 
 
-## Analysis of deviance (likelihood-based ANOVA)
+### Analysis of deviance (likelihood-based ANOVA)
 
 As for count-data GLMs, the estimation of the coefficients is by maximum likelihood estimation (MLE). The measure of goodness-of-fit is the deviance. We can use an analysis of deviance table to see how much deviance is explained by dose.
 
@@ -498,7 +493,7 @@ We see a table quite similar to that for the Poisson GLM. In this case the Dose 
 Recall that we already used a chi-squared test for the Poisson GLM. We do the same here for the binomial GLM, because we are working with models estimated by maximum likelihood. So just as with the Poisson GLM, we use a chi-squared test here because, under certain regularity conditions, the change in deviance between nested models follows a chi-squared distribution with degrees of freedom equal to the difference in the number of parameters. If you are interested in what this means, you can read more about it in more advanced statistics textbooks mentioned in the *Further reading* section at the end of this chapter.
 
 
-## Plotting the fitted relationship
+### Plotting the fitted relationship
 
 We will plot $P(Y=1)$ (mortality probability) against dose using model predictions.
 
@@ -537,7 +532,7 @@ When reporting results from a logistic regression, you might say something like:
 
 
 
-## Overdispersion in aggregated binomial data
+### Overdispersion in aggregated binomial data
 
 Overdispersion means the variability is larger than the binomial model assumes. A quick (rough) check for aggregated binomial data is:
 
@@ -651,8 +646,9 @@ plasma_glm <- glm(y ~ fibrinogen + globulin, data = plasma, family = binomial)
 Residual plots exist, but can be hard to interpret for 0/1 data:
 
 ```{r}
-par(mfrow = c(2, 2))
-plot(plasma_glm)
+#par(mfrow = c(2, 2))
+#plot(plasma_glm)
+autoplot(plasma_glm)
 ```
 
 ::: {.callout-important}
@@ -683,7 +679,12 @@ probabilities are often easier to interpret. In practice, you may report
 odds ratios **and** translate to probabilities at meaningful explanatory variable values.
 
 
-## Multiple explanatory variables
+## Naming models (logistic regression)
+
+
+**Logistic regression** is a very important term. It is a binomial GLM with logit link. I.e., it is what we have just described above!
+
+The reason it (a binomial GLM with logit link) is called **logistic regression** is that the inverse of the logit function is called the logistic function. So logistic regression is just a special case of binomial GLM. The logistic function looks like a "squashed" S-shaped curve that maps the whole real line to the interval (0, 1). This is perfect for modelling probabilities.
 
 Just as with linear models, and with Poisson GLMs, we can include multiple explanatory variables in a binomial GLM. The interpretation of coefficients is similar to that in linear models, but on the log-odds scale. We don't always have well recognised names, like we do with linear models (e.g., ANCOVA, multiple regression). But the principles are the same.
 

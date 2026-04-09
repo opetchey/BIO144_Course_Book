@@ -1,17 +1,17 @@
-suppressMessages(library(ggplot2))
-suppressMessages(library(tidyverse))
-suppressMessages(library(patchwork))
-suppressMessages(library(gtsummary))
-suppressMessages(library(here))
-suppressMessages(library(kableExtra))
-suppressMessages(library(ggfortify))
-suppressMessages(library(AICcmodavg)) 
-suppressMessages(library(HSAUR3)) # A couple of datasets
-suppressMessages(library(vegan))  # ordination + PERMANOVA tools
-suppressMessages(library(car))    # Anova tools
-suppressMessages(library(broom))
-suppressMessages(library(knitr))
-suppressMessages(library(gtsummary))
-suppressMessages(library(plotly))
-suppressMessages(library(lme4))       # mixed models
-suppressMessages(library(lmerTest)) # optional: p-values for fixed effects (advanced)
+suppressWarnings(suppressPackageStartupMessages(library(ggplot2)))
+suppressWarnings(suppressPackageStartupMessages(library(tidyverse)))
+suppressMessages(suppressPackageStartupMessages(library(patchwork)))
+suppressMessages(suppressPackageStartupMessages(library(gtsummary)))
+suppressMessages(suppressPackageStartupMessages(library(here)))
+suppressMessages(suppressPackageStartupMessages(library(kableExtra)))
+suppressMessages(suppressPackageStartupMessages(library(ggfortify)))
+suppressMessages(suppressPackageStartupMessages(library(AICcmodavg)) )
+suppressMessages(suppressPackageStartupMessages(library(HSAUR3))) # A couple of datasets
+suppressMessages(suppressPackageStartupMessages(library(vegan)))  # ordination + PERMANOVA tools
+suppressMessages(suppressPackageStartupMessages(library(car)) )   # Anova tools
+suppressMessages(suppressPackageStartupMessages(library(broom)))
+suppressMessages(suppressPackageStartupMessages(library(knitr)))
+suppressMessages(suppressPackageStartupMessages(library(gtsummary)))
+suppressMessages(suppressPackageStartupMessages(library(plotly)))
+suppressMessages(suppressPackageStartupMessages(library(lme4))  )     # mixed models
+suppressMessages(suppressPackageStartupMessages(library(lmerTest)))# optional: p-values for fixed effects (advanced)

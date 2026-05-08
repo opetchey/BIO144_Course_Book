@@ -234,7 +234,7 @@
 
 \title{BIO144 Course Book (version 2026)}
 \author{Owen Petchey}
-\date{2026-04-09}
+\date{2026-05-08}
 \begin{document}
 \frontmatter
 \maketitle
@@ -382,10 +382,6 @@ helps write code and text.
 \addcontentsline{toc}{chapter}{Introduction (L1)}
 
 \markboth{Introduction (L1)}{Introduction (L1)}
-
-\begin{verbatim}
-Warning: package 'broom' was built under R version 4.4.3
-\end{verbatim}
 
 The first lecture of the course introduces it, gives some important
 information, and sets the stage for the rest of the course. Some of the
@@ -1273,10 +1269,6 @@ tools in data analysis.
 \addcontentsline{toc}{chapter}{R and RStudio (L2)}
 
 \markboth{R and RStudio (L2)}{R and RStudio (L2)}
-
-\begin{verbatim}
-Warning: package 'broom' was built under R version 4.4.3
-\end{verbatim}
 
 \section*{Getting R and RStudio}\label{getting-r-and-rstudio}
 \addcontentsline{toc}{section}{Getting R and RStudio}
@@ -3525,10 +3517,6 @@ with extreme values.
 
 \markboth{Regression Part 1 (L3)}{Regression Part 1 (L3)}
 
-\begin{verbatim}
-Warning: package 'broom' was built under R version 4.4.3
-\end{verbatim}
-
 \section*{Introduction}\label{introduction}
 \addcontentsline{toc}{section}{Introduction}
 
@@ -5532,10 +5520,6 @@ Here is the code to make the graph, using some example data:
 
 \markboth{Regression Part 2 (L4)}{Regression Part 2 (L4)}
 
-\begin{verbatim}
-Warning: package 'broom' was built under R version 4.4.3
-\end{verbatim}
-
 \section*{Introduction}\label{introduction-1}
 \addcontentsline{toc}{section}{Introduction}
 
@@ -5718,7 +5702,7 @@ In R, we calculate this as follows:
 \end{Shaded}
 
 \begin{verbatim}
-[1] 358.2082
+[1] 295.2496
 \end{verbatim}
 
 \subsection*{\texorpdfstring{\(SSE\)}{SSE}}\label{sse}
@@ -5740,7 +5724,7 @@ this in R uses both approaches:
 \end{Shaded}
 
 \begin{verbatim}
-[1] 4.644339
+[1] 16.9143
 \end{verbatim}
 
 Or\ldots{}
@@ -5753,7 +5737,7 @@ Or\ldots{}
 \end{Shaded}
 
 \begin{verbatim}
-[1] 4.644339
+[1] 16.9143
 \end{verbatim}
 
 \subsection*{\texorpdfstring{\(R^2\)}{R\^{}2}}\label{r2}
@@ -5772,7 +5756,7 @@ variable that is explained by the explanatory variable (\(R^2\)):
 \end{Shaded}
 
 \begin{verbatim}
-[1] 0.9872005
+[1] 0.945816
 \end{verbatim}
 
 \subsection*{Is my R squared high (or
@@ -6685,10 +6669,6 @@ slopes}
 \addcontentsline{toc}{chapter}{Analysis of variance (L5)}
 
 \markboth{Analysis of variance (L5)}{Analysis of variance (L5)}
-
-\begin{verbatim}
-Warning: package 'broom' was built under R version 4.4.3
-\end{verbatim}
 
 The previous two chapters were about linear regression. \emph{Linear
 regression} is a type of \emph{linear model} -- recall that in \emph{R}
@@ -8241,10 +8221,6 @@ only the manipulations can be used to infer causation.
 \addcontentsline{toc}{chapter}{Multiple regression (L6)}
 
 \markboth{Multiple regression (L6)}{Multiple regression (L6)}
-
-\begin{verbatim}
-Warning: package 'broom' was built under R version 4.4.3
-\end{verbatim}
 
 \section*{Introduction}\label{introduction-3}
 \addcontentsline{toc}{section}{Introduction}
@@ -10227,10 +10203,6 @@ the multiple linear regression model.
 
 \markboth{Interactions (L7)}{Interactions (L7)}
 
-\begin{verbatim}
-Warning: package 'broom' was built under R version 4.4.3
-\end{verbatim}
-
 \section*{Thought for the week}\label{thought-for-the-week}
 \addcontentsline{toc}{section}{Thought for the week}
 
@@ -11535,10 +11507,6 @@ in R:
 
 \markboth{Count data (L8)}{Count data (L8)}
 
-\begin{verbatim}
-Warning: package 'broom' was built under R version 4.4.3
-\end{verbatim}
-
 In all the previous chapters, we have focused on \textbf{linear models}.
 These are suitable for continuous response variables that can,
 mathematically, take negative values. However, response variables can be
@@ -12780,10 +12748,6 @@ start working with count data in R using Poisson regression.
 \addcontentsline{toc}{chapter}{Binomial data (L9)}
 
 \markboth{Binomial data (L9)}{Binomial data (L9)}
-
-\begin{verbatim}
-Warning: package 'broom' was built under R version 4.4.3
-\end{verbatim}
 
 \section*{Introduction}\label{introduction-6}
 \addcontentsline{toc}{section}{Introduction}
@@ -14122,10 +14086,6 @@ are all above. To summarize the main points:
 
 \markboth{Ordination (L10)}{Ordination (L10)}
 
-\begin{verbatim}
-Warning: package 'broom' was built under R version 4.4.3
-\end{verbatim}
-
 \section*{Introduction}\label{introduction-7}
 \addcontentsline{toc}{section}{Introduction}
 
@@ -14709,6 +14669,8 @@ distances:
 
 \begin{Shaded}
 \begin{Highlighting}[]
+\NormalTok{X }\OtherTok{\textless{}{-}}\NormalTok{ skull }\SpecialCharTok{|\textgreater{}}
+\NormalTok{  dplyr}\SpecialCharTok{::}\FunctionTok{select}\NormalTok{(max.breadth, basi.height, basi.length, nasal.height)}
 \NormalTok{X\_scaled }\OtherTok{\textless{}{-}} \FunctionTok{scale}\NormalTok{(X)}
 \NormalTok{D }\OtherTok{\textless{}{-}} \FunctionTok{dist}\NormalTok{(X\_scaled, }\AttributeTok{method =} \StringTok{"euclidean"}\NormalTok{)}
 \CommentTok{\#D}
@@ -15233,10 +15195,6 @@ Ecological Data: A Primer on Classification and Ordination}
 
 \markboth{Mixed models (L11-1)}{Mixed models (L11-1)}
 
-\begin{verbatim}
-Warning: package 'broom' was built under R version 4.4.3
-\end{verbatim}
-
 \section*{Introduction}\label{introduction-8}
 \addcontentsline{toc}{section}{Introduction}
 
@@ -15278,9 +15236,9 @@ p-values). Mixed models are one standard way to handle this.
 
 \begin{tcolorbox}[enhanced jigsaw, arc=.35mm, bottomrule=.15mm, bottomtitle=1mm, breakable, colback=white, colbacktitle=quarto-callout-important-color!10!white, colframe=quarto-callout-important-color-frame, coltitle=black, left=2mm, leftrule=.75mm, opacityback=0, opacitybacktitle=0.6, rightrule=.15mm, title=\textcolor{quarto-callout-important-color}{\faExclamation}\hspace{0.5em}{Important}, titlerule=0mm, toprule=.15mm, toptitle=1mm]
 
-\textbf{Core idea} A \emph{mixed model} extends regression by adding
-\textbf{random effects} that represent grouping structure (clusters) in
-the data.
+\textbf{Core idea} A \emph{mixed model} extends over all our previous
+models by adding \textbf{random effects} that represent grouping
+structure (clusters) in the data.
 
 \begin{itemize}
 \tightlist
@@ -15725,13 +15683,11 @@ Now let's fit a mixed model with plant identity as a random effect:
 \end{Shaded}
 
 \begin{verbatim}
-Type III Analysis of Variance Table with Satterthwaite's method
-          Sum Sq Mean Sq NumDF  DenDF   F value    Pr(>F)    
-week      4478.8  4478.8     1 207.00 3264.1929 < 2.2e-16 ***
-temp        21.6    10.8     2  46.37    7.8666  0.001144 ** 
-week:temp   46.9    23.4     2 207.00   17.0806 1.362e-07 ***
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Analysis of Variance Table
+          npar Sum Sq Mean Sq  F value
+week         1 4478.8  4478.8 3264.193
+temp         2   80.3    40.1   29.258
+week:temp    2   46.9    23.4   17.081
 \end{verbatim}
 
 In the anova table, note that there are no degrees of freedom and no
@@ -15868,8 +15824,7 @@ boundary (singular) fit: see help('isSingular')
 \end{Shaded}
 
 \begin{verbatim}
-Linear mixed model fit by REML. t-tests use Satterthwaite's method [
-lmerModLmerTest]
+Linear mixed model fit by REML ['lmerMod']
 Formula: height ~ week * temp + (1 + week | plant_id)
    Data: dat
 
@@ -15887,15 +15842,13 @@ Random effects:
 Number of obs: 240, groups:  plant_id, 30
 
 Fixed effects:
-             Estimate Std. Error        df t value Pr(>|t|)    
-(Intercept)   8.12308    0.38358  29.45344  21.177  < 2e-16 ***
-week          1.69948    0.05767 158.78156  29.469  < 2e-16 ***
-temp15        1.45872    0.54247  29.45344   2.689 0.011676 *  
-temp20        2.24843    0.54247  29.45344   4.145 0.000263 ***
-week:temp15   0.10592    0.08156 158.78156   1.299 0.195916    
-week:temp20   0.45169    0.08156 158.78156   5.538 1.24e-07 ***
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+            Estimate Std. Error t value
+(Intercept)  8.12308    0.38358  21.177
+week         1.69948    0.05767  29.469
+temp15       1.45872    0.54247   2.689
+temp20       2.24843    0.54247   4.145
+week:temp15  0.10592    0.08156   1.299
+week:temp20  0.45169    0.08156   5.538
 
 Correlation of Fixed Effects:
             (Intr) week   temp15 temp20 wk:t15
@@ -15967,6 +15920,29 @@ the degrees of freedom.
 Neverthless, we can get p-values for terms using the \texttt{lmerTest}
 package (optional). This changes the \texttt{lmer()} function to provide
 p-values using Satterthwaite's method for degrees of freedom.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(lmerTest)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+
+Attaching package: 'lmerTest'
+\end{verbatim}
+
+\begin{verbatim}
+The following object is masked from 'package:lme4':
+
+    lmer
+\end{verbatim}
+
+\begin{verbatim}
+The following object is masked from 'package:stats':
+
+    step
+\end{verbatim}
 
 \begin{Shaded}
 \begin{Highlighting}[]

@@ -494,6 +494,8 @@ Here our variables are numeric, so Euclidean distance is a reasonable default.
 We will scale first (so variables contribute comparably), then compute distances:
 
 ```{r}
+X <- skull |>
+  dplyr::select(max.breadth, basi.height, basi.length, nasal.height)
 X_scaled <- scale(X)
 D <- dist(X_scaled, method = "euclidean")
 #D

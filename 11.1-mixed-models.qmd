@@ -24,7 +24,7 @@ But many biological datasets violate independence because observations come in *
 In these cases, treating all rows as independent often leads to **false confidence** (too-small standard errors, too-small p-values). Mixed models are one standard way to handle this.
 
 ::: {.callout-important}
-**Core idea** A *mixed model* extends regression by adding **random effects** that represent grouping structure (clusters) in the data.
+**Core idea** A *mixed model* extends over all our previous models by adding **random effects** that represent grouping structure (clusters) in the data.
 
 * **fixed effects**: effects you want to estimate explicitly (treatments, temperature, time, …)
 * **random effects**: variation among groups (individuals, sites, years, …) that induces correlation within groups
@@ -441,6 +441,7 @@ Calculating p-values for fixed effects in mixed models is complicated, and there
 Neverthless, we can get p-values for terms using the `lmerTest` package (optional). This changes the `lmer()` function to provide p-values using Satterthwaite's method for degrees of freedom.
 
 ```{r}
+library(lmerTest)
 m_lmm1 <- lmer(height ~ week * temp + (1 | plant_id), data = dat)
 anova(m_lmm1)
 ```

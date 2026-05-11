@@ -417,8 +417,7 @@ Note
 <h3 class="anchored" data-anchor-id="random-intercept-idea">Random intercept idea</h3>
 <p>Suppose we measure a response <span class="math inline">\(y\)</span> (e.g.&nbsp;growth) for individuals <span class="math inline">\(j\)</span> at observations <span class="math inline">\(i\)</span>. And that we measure each individual more than once. And that we have some treatment, such as temperature <span class="math inline">\(x\)</span>.</p>
 <p>This means that our data have a <strong>grouping structure</strong>: observations are grouped by individual. If we want to calculate the mean growth, we should account for this grouping.</p>
-<p>Let’s make an example dataset to illustrate:</p>
-<p>Read in the data:</p>
+<p>Let’s read in the illustrative data:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>dat_example <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"datasets/mixed_model_example.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
@@ -537,7 +536,7 @@ Caution
 <h3 class="anchored" data-anchor-id="an-example-dataset">An example dataset</h3>
 <p>Read in the data:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>dat_example <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"datasets/plant_growth_repeated.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"datasets/plant_growth_repeated.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 240 Columns: 4
 ── Column specification ────────────────────────────────────────────────────────
@@ -553,14 +552,14 @@ dbl (3): temp, week, height
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dat)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 4
-  plant_id temp   week height
-  &lt;fct&gt;    &lt;fct&gt; &lt;int&gt;  &lt;dbl&gt;
-1 P01      10        0   6.79
-2 P01      10        1   8.59
-3 P01      10        2  12.1 
-4 P01      10        3  11.0 
-5 P01      10        4  13.5 
-6 P01      10        5  16.7 </code></pre>
+  plant_id  temp  week height
+  &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
+1 P01         10     0   6.79
+2 P01         10     1   8.59
+3 P01         10     2  12.1 
+4 P01         10     3  11.0 
+5 P01         10     4  13.5 
+6 P01         10     5  16.7 </code></pre>
 </div>
 </div>
 </section>
@@ -589,11 +588,11 @@ dbl (3): temp, week, height
 <pre><code>Analysis of Variance Table
 
 Response: height
-           Df Sum Sq Mean Sq   F value    Pr(&gt;F)    
-week        1 4478.8  4478.8 1888.8551 &lt; 2.2e-16 ***
-temp        2  586.9   293.5  123.7678 &lt; 2.2e-16 ***
-week:temp   2   46.9    23.4    9.8838 7.572e-05 ***
-Residuals 234  554.8     2.4                        
+           Df Sum Sq Mean Sq F value    Pr(&gt;F)    
+week        1 4478.8  4478.8 1889.96 &lt; 2.2e-16 ***
+temp        1  586.6   586.6  247.52 &lt; 2.2e-16 ***
+week:temp   1   42.8    42.8   18.08 3.053e-05 ***
+Residuals 236  559.3     2.4                      
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
@@ -610,9 +609,9 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Variance Table
           npar Sum Sq Mean Sq  F value
-week         1 4478.8  4478.8 3264.193
-temp         2   80.3    40.1   29.258
-week:temp    2   46.9    23.4   17.081</code></pre>
+week         1 4478.8  4478.8 3234.109
+temp         1   83.9    83.9   60.556
+week:temp    1   42.8    42.8   30.939</code></pre>
 </div>
 </div>
 <p>In the anova table, note that there are no degrees of freedom and no p-values for fixed effects. This is because calculating these in mixed models is complicated and there are multiple methods. We will look at this more later in this chapter.</p>
@@ -715,35 +714,31 @@ In mixed models, inference depends on how you handle degrees of freedom and unce
 Formula: height ~ week * temp + (1 + week | plant_id)
    Data: dat
 
-REML criterion at convergence: 822.6
+REML criterion at convergence: 831.3
 
 Scaled residuals: 
      Min       1Q   Median       3Q      Max 
--2.43220 -0.64862  0.04439  0.63469  2.31852 
+-2.39049 -0.63013  0.04646  0.65238  2.39351 
 
 Random effects:
  Groups   Name        Variance  Std.Dev. Corr
- plant_id (Intercept) 0.9012460 0.94934      
-          week        0.0006804 0.02608  1.00
- Residual             1.3682645 1.16973      
+ plant_id (Intercept) 0.8469435 0.92030      
+          week        0.0007977 0.02824  1.00
+ Residual             1.3802111 1.17482      
 Number of obs: 240, groups:  plant_id, 30
 
 Fixed effects:
             Estimate Std. Error t value
-(Intercept)  8.12308    0.38358  21.177
-week         1.69948    0.05767  29.469
-temp15       1.45872    0.54247   2.689
-temp20       2.24843    0.54247   4.145
-week:temp15  0.10592    0.08156   1.299
-week:temp20  0.45169    0.08156   5.538
+(Intercept) 5.986151   0.829045   7.221
+week        1.207819   0.127550   9.469
+temp        0.224843   0.053330   4.216
+week:temp   0.045169   0.008205   5.505
 
 Correlation of Fixed Effects:
-            (Intr) week   temp15 temp20 wk:t15
-week        -0.404                            
-temp15      -0.707  0.285                     
-temp20      -0.707  0.285  0.500              
-week:temp15  0.285 -0.707 -0.404 -0.202       
-week:temp20  0.285 -0.707 -0.202 -0.404  0.500
+          (Intr) week   temp  
+week      -0.407              
+temp      -0.965  0.393       
+week:temp  0.393 -0.965 -0.407
 optimizer (nloptwrap) convergence code: 0 (OK)
 boundary (singular) fit: see help('isSingular')</code></pre>
 </div>
@@ -759,9 +754,9 @@ boundary (singular) fit: see help('isSingular')</code></pre>
 Models:
 m_lmm1: height ~ week * temp + (1 | plant_id)
 m_lmm2: height ~ week * temp + (1 + week | plant_id)
-       npar    AIC    BIC  logLik deviance  Chisq Df Pr(&gt;Chisq)
-m_lmm1    8 826.51 854.35 -405.25   810.51                     
-m_lmm2   10 830.01 864.82 -405.00   810.01 0.4974  2     0.7798</code></pre>
+       npar    AIC    BIC  logLik deviance Chisq Df Pr(&gt;Chisq)
+m_lmm1    6 825.51 846.39 -406.75   813.51                    
+m_lmm2    8 828.92 856.76 -406.46   812.92 0.591  2     0.7441</code></pre>
 </div>
 </div>
 <p>There is little evidence that adding random slopes improves the model here (p = 0.77). But in other datasets it might.</p>
@@ -817,10 +812,10 @@ Attaching package: 'lmerTest'</code></pre>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(m_lmm1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Type III Analysis of Variance Table with Satterthwaite's method
-          Sum Sq Mean Sq NumDF  DenDF   F value    Pr(&gt;F)    
-week      4478.8  4478.8     1 207.00 3264.1929 &lt; 2.2e-16 ***
-temp        21.6    10.8     2  46.37    7.8666  0.001144 ** 
-week:temp   46.9    23.4     2 207.00   17.0806 1.362e-07 ***
+           Sum Sq Mean Sq NumDF   DenDF F value    Pr(&gt;F)    
+week      126.767 126.767     1 208.000  91.538 &lt; 2.2e-16 ***
+temp       21.679  21.679     1  49.063  15.655 0.0002447 ***
+week:temp  42.845  42.845     1 208.000  30.939 8.131e-08 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>

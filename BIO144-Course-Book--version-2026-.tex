@@ -234,7 +234,7 @@
 
 \title{BIO144 Course Book (version 2026)}
 \author{Owen Petchey}
-\date{2026-05-08}
+\date{2026-05-11}
 \begin{document}
 \frontmatter
 \maketitle
@@ -5702,7 +5702,7 @@ In R, we calculate this as follows:
 \end{Shaded}
 
 \begin{verbatim}
-[1] 295.2496
+[1] 304.2386
 \end{verbatim}
 
 \subsection*{\texorpdfstring{\(SSE\)}{SSE}}\label{sse}
@@ -5724,7 +5724,7 @@ this in R uses both approaches:
 \end{Shaded}
 
 \begin{verbatim}
-[1] 16.9143
+[1] 9.978811
 \end{verbatim}
 
 Or\ldots{}
@@ -5737,7 +5737,7 @@ Or\ldots{}
 \end{Shaded}
 
 \begin{verbatim}
-[1] 16.9143
+[1] 9.978811
 \end{verbatim}
 
 \subsection*{\texorpdfstring{\(R^2\)}{R\^{}2}}\label{r2}
@@ -5756,7 +5756,7 @@ variable that is explained by the explanatory variable (\(R^2\)):
 \end{Shaded}
 
 \begin{verbatim}
-[1] 0.945816
+[1] 0.9682423
 \end{verbatim}
 
 \subsection*{Is my R squared high (or
@@ -15345,9 +15345,7 @@ This means that our data have a \textbf{grouping structure}:
 observations are grouped by individual. If we want to calculate the mean
 growth, we should account for this grouping.
 
-Let's make an example dataset to illustrate:
-
-Read in the data:
+Let's read in the illustrative data:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -15584,7 +15582,7 @@ Read in the data:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{dat\_example }\OtherTok{\textless{}{-}} \FunctionTok{read\_csv}\NormalTok{(}\StringTok{"datasets/plant\_growth\_repeated.csv"}\NormalTok{)}
+\NormalTok{dat }\OtherTok{\textless{}{-}} \FunctionTok{read\_csv}\NormalTok{(}\StringTok{"datasets/plant\_growth\_repeated.csv"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -15607,14 +15605,14 @@ i Specify the column types or set `show_col_types = FALSE` to quiet this message
 
 \begin{verbatim}
 # A tibble: 6 x 4
-  plant_id temp   week height
-  <fct>    <fct> <int>  <dbl>
-1 P01      10        0   6.79
-2 P01      10        1   8.59
-3 P01      10        2  12.1 
-4 P01      10        3  11.0 
-5 P01      10        4  13.5 
-6 P01      10        5  16.7 
+  plant_id  temp  week height
+  <chr>    <dbl> <dbl>  <dbl>
+1 P01         10     0   6.79
+2 P01         10     1   8.59
+3 P01         10     2  12.1 
+4 P01         10     3  11.0 
+5 P01         10     4  13.5 
+6 P01         10     5  16.7 
 \end{verbatim}
 
 \subsection*{Explore the data}\label{explore-the-data}
@@ -15650,11 +15648,11 @@ independent}
 Analysis of Variance Table
 
 Response: height
-           Df Sum Sq Mean Sq   F value    Pr(>F)    
-week        1 4478.8  4478.8 1888.8551 < 2.2e-16 ***
-temp        2  586.9   293.5  123.7678 < 2.2e-16 ***
-week:temp   2   46.9    23.4    9.8838 7.572e-05 ***
-Residuals 234  554.8     2.4                        
+           Df Sum Sq Mean Sq F value    Pr(>F)    
+week        1 4478.8  4478.8 1889.96 < 2.2e-16 ***
+temp        1  586.6   586.6  247.52 < 2.2e-16 ***
+week:temp   1   42.8    42.8   18.08 3.053e-05 ***
+Residuals 236  559.3     2.4                      
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 \end{verbatim}
@@ -15685,9 +15683,9 @@ Now let's fit a mixed model with plant identity as a random effect:
 \begin{verbatim}
 Analysis of Variance Table
           npar Sum Sq Mean Sq  F value
-week         1 4478.8  4478.8 3264.193
-temp         2   80.3    40.1   29.258
-week:temp    2   46.9    23.4   17.081
+week         1 4478.8  4478.8 3234.109
+temp         1   83.9    83.9   60.556
+week:temp    1   42.8    42.8   30.939
 \end{verbatim}
 
 In the anova table, note that there are no degrees of freedom and no
@@ -15828,35 +15826,31 @@ Linear mixed model fit by REML ['lmerMod']
 Formula: height ~ week * temp + (1 + week | plant_id)
    Data: dat
 
-REML criterion at convergence: 822.6
+REML criterion at convergence: 831.3
 
 Scaled residuals: 
      Min       1Q   Median       3Q      Max 
--2.43220 -0.64862  0.04439  0.63469  2.31852 
+-2.39049 -0.63013  0.04646  0.65238  2.39351 
 
 Random effects:
  Groups   Name        Variance  Std.Dev. Corr
- plant_id (Intercept) 0.9012460 0.94934      
-          week        0.0006804 0.02608  1.00
- Residual             1.3682645 1.16973      
+ plant_id (Intercept) 0.8469435 0.92030      
+          week        0.0007977 0.02824  1.00
+ Residual             1.3802111 1.17482      
 Number of obs: 240, groups:  plant_id, 30
 
 Fixed effects:
             Estimate Std. Error t value
-(Intercept)  8.12308    0.38358  21.177
-week         1.69948    0.05767  29.469
-temp15       1.45872    0.54247   2.689
-temp20       2.24843    0.54247   4.145
-week:temp15  0.10592    0.08156   1.299
-week:temp20  0.45169    0.08156   5.538
+(Intercept) 5.986151   0.829045   7.221
+week        1.207819   0.127550   9.469
+temp        0.224843   0.053330   4.216
+week:temp   0.045169   0.008205   5.505
 
 Correlation of Fixed Effects:
-            (Intr) week   temp15 temp20 wk:t15
-week        -0.404                            
-temp15      -0.707  0.285                     
-temp20      -0.707  0.285  0.500              
-week:temp15  0.285 -0.707 -0.404 -0.202       
-week:temp20  0.285 -0.707 -0.202 -0.404  0.500
+          (Intr) week   temp  
+week      -0.407              
+temp      -0.965  0.393       
+week:temp  0.393 -0.965 -0.407
 optimizer (nloptwrap) convergence code: 0 (OK)
 boundary (singular) fit: see help('isSingular')
 \end{verbatim}
@@ -15878,9 +15872,9 @@ Data: dat
 Models:
 m_lmm1: height ~ week * temp + (1 | plant_id)
 m_lmm2: height ~ week * temp + (1 + week | plant_id)
-       npar    AIC    BIC  logLik deviance  Chisq Df Pr(>Chisq)
-m_lmm1    8 826.51 854.35 -405.25   810.51                     
-m_lmm2   10 830.01 864.82 -405.00   810.01 0.4974  2     0.7798
+       npar    AIC    BIC  logLik deviance Chisq Df Pr(>Chisq)
+m_lmm1    6 825.51 846.39 -406.75   813.51                    
+m_lmm2    8 828.92 856.76 -406.46   812.92 0.591  2     0.7441
 \end{verbatim}
 
 There is little evidence that adding random slopes improves the model
@@ -15953,10 +15947,10 @@ The following object is masked from 'package:stats':
 
 \begin{verbatim}
 Type III Analysis of Variance Table with Satterthwaite's method
-          Sum Sq Mean Sq NumDF  DenDF   F value    Pr(>F)    
-week      4478.8  4478.8     1 207.00 3264.1929 < 2.2e-16 ***
-temp        21.6    10.8     2  46.37    7.8666  0.001144 ** 
-week:temp   46.9    23.4     2 207.00   17.0806 1.362e-07 ***
+           Sum Sq Mean Sq NumDF   DenDF F value    Pr(>F)    
+week      126.767 126.767     1 208.000  91.538 < 2.2e-16 ***
+temp       21.679  21.679     1  49.063  15.655 0.0002447 ***
+week:temp  42.845  42.845     1 208.000  30.939 8.131e-08 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 \end{verbatim}

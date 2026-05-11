@@ -81,8 +81,6 @@ Suppose we measure a response $y$ (e.g. growth) for individuals $j$ at observati
 
 This means that our data have a **grouping structure**: observations are grouped by individual. If we want to calculate the mean growth, we should account for this grouping.
 
-Let's make an example dataset to illustrate:
-
 ```{r}
 #| echo: false
 set.seed(42)
@@ -108,7 +106,7 @@ dat_example <- expand_grid(
 write_csv(dat_example, here("datasets", "mixed_model_example.csv"))
 ```
 
-Read in the data:
+Let's read in the illustrative data:
 
 ```{r}
 dat_example <- read_csv("datasets/mixed_model_example.csv")
@@ -267,7 +265,7 @@ write_csv(dat, here("datasets", "plant_growth_repeated.csv"))
 Read in the data:
 
 ```{r}
-dat_example <- read_csv("datasets/plant_growth_repeated.csv")
+dat <- read_csv("datasets/plant_growth_repeated.csv")
 ```
 
 

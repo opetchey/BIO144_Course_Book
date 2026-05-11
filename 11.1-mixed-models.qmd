@@ -267,7 +267,7 @@ write_csv(dat, here("datasets", "plant_growth_repeated.csv"))
 Read in the data:
 
 ```{r}
-dat_example <- read_csv("datasets/plant_growth_repeated.csv")
+dat <- read_csv("datasets/plant_growth_repeated.csv")
 ```
 
 

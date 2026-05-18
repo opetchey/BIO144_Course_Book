@@ -1,38 +1,845 @@
-# Review (L12) {.unnumbered}
+```{r}
+#| echo: false
+source("_common.R")
+```
 
-**You need to prepare in advance for this lecture.**
 
-In the final lecture of the course, we will review and repeat any of the content that you find challenging. Please write in the Forum which topics you would like to revisit, so that we can focus on those during the session. There may also be chances to ask during the lecture time questions on topics that you find difficult.
+# Review: planning and implementing statistical analyses (L12) {.unnumbered}
 
-So the preparation for this lecture is to think about which topics you would like to discuss again, and to post these in the Forum.
+## Introduction
 
-Here are some ideas of topics that you might want to revisit or learn about:
+In earlier chapters we learned many different statistical tools:
 
-* Types of study designs in biology.
-* Framing research questions.
-* Observational studies.
-* Experimental studies.
-* Key modeling concepts: interactions, overfitting, degrees of freedom, variance explained, hypothesis testing, null hypothesis  
-* Parametric vs non-parametric approaches: what they mean and when to use them.
-* Going through any of the practical exercises in the course.
-* AI Assistant prompt creation... how much can we make it do, and how much can we trust it?
+- linear regression
+- ANOVA
+- multiple regression
+- interactions
+- Poisson GLMs for count data
+- binomial GLMs for binary data
+- ordination
+- mixed models
+
+This final chapter pulls those ideas together. The aim is not to memorize a list of tests. The aim is to move carefully from a **biological question** to a **planned model**, and then from a fitted model to a checked, interpreted, plotted, and reported result.
+
+::: {.callout-important}
+**Core idea**  
+Do not start with "Which test do I use?" Start with the biological question, sketch the expected figure, identify the response variable and data structure, then choose the model.
+:::
+
+The chapter has two parts:
+
+1. **Planning**: what to decide before collecting or analyzing data.
+2. **Implementation**: what to do once the data exist.
+
+## Part 1: Planning the analysis
+
+Statistics does not begin after data collection. In a good study, the statistical plan is part of the study design.
+
+Before collecting data, we should already be able to say:
+
+> Here is my biological question.  
+> Here is the figure I expect to make.  
+> Here is the response variable.  
+> Here is the model I plan to fit.  
+> Here is roughly how many observations I need, and how many residual degrees of freedom I expect.
+
+This does not mean the plan can never change. Real data can surprise us. But without a plan, we often discover too late that the design does not answer the question.
+
+### The planning workflow
+
+```text
+Biological question
+        |
+        v
+Sketch expected figure
+        |
+        v
+Define response variable
+        |
+        +-- Continuous -> LM / Gaussian model
+        +-- Binary / proportion -> binomial GLM
+        +-- Count -> Poisson/count GLM
+        +-- Multivariate -> ordination / multivariate methods
+        |
+        v
+Check data structure
+        |
+        +-- independent observations -> ordinary LM / GLM
+        +-- grouped / repeated / blocked / nested -> mixed model / random effects
+        |
+        v
+Define explanatory variables
+        |
+        +-- categorical -> group differences
+        +-- continuous -> slopes
+        +-- categorical + continuous -> ANCOVA-style model
+        +-- multiple predictors -> multiple model
+        +-- interactions -> one effect depends on another
+        |
+        v
+Planned statistical model
+        |
+        v
+Plan sample size and expected residual df
+```
+
+Traditional names like ANOVA, regression, and ANCOVA are useful, but they are not the deepest decision. They are mostly different fixed-effect structures inside the linear model.
+
+The deeper questions are:
+
+1. What kind of response variable do I have?
+2. Are the observations independent, or is there grouping/repeated structure?
+3. What kind of explanatory variables do I have?
+
+### The planning sentence
+
+A useful planning sentence is:
+
+> We will test whether **X** affects (or is related with) **Y** using **model Z**, because **Y** is [response type], **X** is [predictor type], and the observations are [independent/grouped]. We plan to collect **n = ...** observations, giving **n minus the number of estimated parameters** residual degrees of freedom.
+
+This sentence is not just a reporting sentence. It is a design sentence. If you cannot complete it, the study plan (including question) is probably not clear enough yet.
+
+::: {.callout-note}
+Residual degrees of freedom are not magic numbers that appear later in R. They are already implied by the design and the model.
+:::
+
+### Example 1: Comparing treatment means
+
+Biological question:
+
+> Does fertilizer treatment affect plant biomass?
+
+| Planning step | Decision |
+|---|---|
+| Expected figure | Biomass on the y-axis, fertilizer treatment on the x-axis; probably a boxplot, dot plot, or means with confidence intervals |
+| Response variable | Plant biomass, continuous |
+| Data structure | Each plant is measured once and plants are independent |
+| Explanatory variables | Fertilizer treatment, categorical: control, low fertilizer, high fertilizer |
+| Planned model | Gaussian linear model with biomass as the response and fertilizer treatment as the explanatory variable |
+| Traditional name | One-way ANOVA, also understood as a linear model with one categorical predictor |
+
+Example model:
+
+```r
+m1 <- lm(biomass ~ fertilizer, data = plants)
+```
+
+Suppose we plan 20 plants per treatment and 3 treatments. That gives $n = 60$ observations.
+
+The model estimates 3 treatment means, so the expected residual df is approximately:
+
+```text
+60 - 3 = 57
+```
+
+Planning sentence:
+
+> We will test whether fertilizer treatment affects plant biomass using a Gaussian linear model, because biomass is continuous, fertilizer treatment is categorical, and each plant is measured independently. We plan to collect 60 observations, 20 per treatment, giving an expected residual df of about 57.
+
+### Example 2: A continuous predictor
+
+Biological question:
+
+> Does temperature affect growth rate?
+
+| Planning step | Decision |
+|---|---|
+| Expected figure | Growth rate on the y-axis, temperature on the x-axis; a scatterplot with a fitted line and uncertainty band |
+| Response variable | Growth rate, continuous |
+| Data structure | Each experimental unit is measured once and observations are independent |
+| Explanatory variables | Temperature, continuous |
+| Planned model | Gaussian linear model with a continuous predictor |
+| Traditional name | Linear regression |
+
+Example model:
+
+```r
+m1 <- lm(growth_rate ~ temperature, data = growth)
+```
+
+Suppose we plan $n = 50$ observations across the temperature gradient.
+
+The model estimates an intercept and a slope, so the expected residual df is:
+
+```text
+50 - 2 = 48
+```
+
+Planning sentence:
+
+> We will test whether temperature affects growth rate using a Gaussian linear model, because growth rate is continuous, temperature is continuous, and observations are independent. We plan to collect 50 observations, giving an expected residual df of about 48.
+
+The expected figure helps clarify the model. If the figure is a scatterplot with one fitted line, the model is probably a regression-type model.
+
+### Example 3: Grouping structure and random effects
+
+Biological question:
+
+> Does a drug treatment affect heart rate when each animal is measured repeatedly over time?
+
+| Planning step | Decision |
+|---|---|
+| Expected figure | Heart rate on the y-axis, time or treatment on the x-axis, with repeated measurements connected or grouped by animal |
+| Response variable | Heart rate, continuous |
+| Data structure | Observations are not independent, because each animal contributes multiple measurements |
+| Explanatory variables | Treatment is categorical; time may be continuous or categorical, depending on the design |
+| Planned model | Mixed model, because repeated measurements are grouped within animals |
+| Random effect | Animal identity, because measurements are repeated within animal |
+
+Example model:
+
+```r
+m1 <- lmer(heart_rate ~ treatment + time + (1 | animal_id), data = heart)
+```
+
+If the biological question is whether the treatment changes the trajectory through time, then plan an interaction:
+
+```r
+m2 <- lmer(heart_rate ~ treatment * time + (1 | animal_id), data = heart)
+```
+
+Here we need to plan both the number of animals and the number of measurements per animal. For example, 20 animals measured 5 times each gives 100 observations, but those 100 observations are not equivalent to 100 independent animals.
+
+Planning sentence:
+
+> We will test whether drug treatment affects heart rate over time using a mixed model, because heart rate is continuous, treatment and time are explanatory variables, and repeated measurements are grouped within animals. We plan to measure 20 animals 5 times each, giving 100 total observations, while accounting for animal identity as a random effect.
+
+::: {.callout-caution}
+The random-effects question comes early. Before asking "ANOVA or regression?", ask whether the observations are independent.
+:::
+
+### Example 4: Binary response
+
+Biological question:
+
+> Does habitat type affect whether individuals are infected?
+
+| Planning step | Decision |
+|---|---|
+| Expected figure | Infection probability on the y-axis and habitat type on the x-axis, perhaps shown as proportions with confidence intervals |
+| Response variable | Infection status: infected or not infected, binary |
+| Data structure | Each individual is sampled once and observations are independent |
+| Explanatory variables | Habitat type, categorical |
+| Planned model | Binomial GLM |
+
+Example model:
+
+```r
+m1 <- glm(infected ~ habitat, family = binomial, data = infection)
+```
+
+Suppose we plan 50 individuals in each of two habitats, giving $n = 100$ observations. With two habitat groups, the expected residual df is roughly:
+
+```text
+100 - 2 = 98
+```
+
+Planning sentence:
+
+> We will test whether infection probability differs between habitats using a binomial GLM, because infection status is binary, habitat is categorical, and individuals are independent. We plan to sample 100 individuals, 50 per habitat, giving an expected residual df of about 98.
+
+The explanatory variable could be categorical or continuous, just as in a linear model. What changes the model class is the response variable.
+
+<!---
+**Think–Pair–Share** (#tps-planning-sentence) Write a planning sentence for a study you might do in your own area of biology.
+--->
+
+## Part 2: Implementing the analysis
+
+Once we have the data, the key implementation question is:
+
+> Did the model behave well enough that we can interpret it?
+
+The workflow is:
+
+```text
+Fit planned model
+        |
+        v
+Check model assumptions / diagnostics
+        |
+        +-- okay -> interpret model output
+        +-- not okay -> revise model / family / structure
+        |
+        v
+Interpret output
+        |
+        v
+Make explicit predictions
+        |
+        v
+Plot data + model predictions
+        |
+        v
+Report statistical and biological conclusion
+```
+
+::: {.callout-important}
+The order matters. We do not fit a model, look for a small p-value, and only then check whether the model was reasonable. We check first, then interpret.
+:::
+
+Good practice is to make predictions explicitly from the fitted model and then plot those predictions. The figure should show the model you fitted, not a model quietly fitted by the plotting function.
+
+## Example 1: Linear model with an interaction
+
+Biological question:
+
+> Does body size affect metabolic rate, and does this body-size effect differ among three species?
+
+This example connects several ideas from the course:
+
+- regression
+- treatment groups
+- interactions
+- diagnostic plots
+- reading model output
+- degrees of freedom
+- explicit prediction and plotting
+
+### Planning recap
+
+| Planning step | Decision |
+|---|---|
+| Expected figure | Scatterplot of metabolic rate against body size, with separate fitted lines for each species |
+| Response variable | `metabolic_rate`, continuous |
+| Data structure | Independent observations, assuming each individual is measured once |
+| Explanatory variables | `body_size`, continuous; `species`, categorical |
+| Planned model | Gaussian linear model with a species-by-body-size interaction |
+| Approximate residual df | Number of observations minus number of estimated parameters |
+
+Planning sentence:
+
+> We will test whether body size affects metabolic rate differently among species using a Gaussian linear model with a species-by-body-size interaction, because metabolic rate is continuous, body size is continuous, species is categorical, and observations are independent.
+
+### An example dataset
 
 ```{r}
 #| echo: false
-# path to the folder you want to compress
-folder_path <- "datasets"
+set.seed(12026)
+n_per_species <- 45
 
-# name (or full path) of the output zip file
+metabolism <- tibble(
+  species = rep(c("species_A", "species_B", "species_C"), each = n_per_species),
+  body_size = runif(3 * n_per_species, 5, 30)
+) |>
+  mutate(
+    metabolic_rate = 3 +
+      0.22 * body_size +
+      case_when(
+        species == "species_B" ~ 1.3,
+        species == "species_C" ~ -0.7,
+        TRUE ~ 0
+      ) +
+      case_when(
+        species == "species_B" ~ 0.14 * body_size,
+        species == "species_C" ~ -0.08 * body_size,
+        TRUE ~ 0
+      ) +
+      rnorm(n(), mean = 0, sd = 1.4)
+  )
+```
+
+```{r}
+#| echo: false
+write_csv(metabolism, "datasets/metabolism_species_body_size.csv")
+```
+
+Reading in the dataset:
+
+```{r}
+metabolism <- read_csv("datasets/metabolism_species_body_size.csv")
+```
+
+Here are the first few rows of the dataset:
+
+```{r}
+metabolism |> 
+  slice_head(n = 6)
+```
+
+Planned figure:
+
+```{r}
+ggplot(metabolism, aes(body_size, metabolic_rate, colour = species)) +
+  geom_point() +
+  labs(
+    x = "Body size",
+    y = "Metabolic rate",
+    colour = "Species"
+  ) +
+  theme_classic()
+```
+
+### Fit the planned model
+
+The planned model has:
+
+- a continuous response: `metabolic_rate`
+- one continuous explanatory variable: `body_size`
+- one categorical explanatory variable: `species`
+- an interaction: `body_size:species`
+
+```{r}
+m_metabolism <- lm(metabolic_rate ~ species * body_size, data = metabolism)
+```
+
+The model formula:
+
+```text
+metabolic_rate ~ species * body_size
+```
+
+means:
+
+```text
+metabolic_rate ~ species + body_size + species:body_size
+```
+
+The `*` means main effects plus the interaction. We use it when the biological question is whether the effect of one predictor depends on another predictor.
+
+### Check the model before interpreting
+
+For a linear model, the common diagnostic questions are:
+
+| Diagnostic plot | Question |
+|---|---|
+| Residuals vs fitted | Is there obvious nonlinearity or unequal variance? |
+| QQ plot | Are residuals approximately normal? |
+| Scale-location | Does residual spread change with fitted values? |
+| Residuals vs leverage | Are a few observations dominating the model? |
+
+```{r}
+autoplot(m_metabolism)
+```
+
+We are not looking for perfect plots. We are looking for obvious problems that would make the model inappropriate.
+
+Possible actions if diagnostics look bad:
+
+- reconsider whether the response should be transformed
+- reconsider whether the relationship is nonlinear
+- check for influential observations
+- check whether important grouping structure was ignored
+- for non-continuous responses, consider a GLM family instead of an LM
+
+### Interpret the output
+
+```{r}
+summary(m_metabolism)
+```
+
+```{r}
+anova(m_metabolism)
+```
+
+Use this table to orient yourself:
+
+| Question level | Model/output | Common test statistic | What it asks |
+|---|---|---|---|
+| Model / term level | ANOVA table for LM | `F` | Does this explanatory variable or term explain variation in the response? |
+| Model / term level | Deviance comparison for GLM | Deviance / chi-square-like test | Does adding/removing this term improve the model? |
+| Coefficient level | Linear model coefficients | `t` | Is this estimated coefficient different from zero? |
+| Coefficient level | Binomial/Poisson GLM coefficients | `z` | Is this estimated coefficient different from zero on the link scale? |
+| Coefficient level | Confidence interval | CI | What range of effect sizes is compatible with the data/model? |
+
+`summary()` often gives coefficient-level tests. `anova()` often gives term-level tests. These are related, but they are not always asking exactly the same question.
+
+Residual degrees of freedom:
+
+```{r}
+df.residual(m_metabolism)
+```
+
+Residual degrees of freedom are the amount of information left for estimating error after fitting the model. Here they are roughly the number of observations minus the number of estimated parameters.
+
+```{r}
+nrow(metabolism)
+length(coef(m_metabolism))
+nrow(metabolism) - length(coef(m_metabolism))
+```
+
+### Make explicit predictions
+
+Do not use `geom_smooth()` as the model.
+
+Instead:
+
+1. fit the model
+2. create new data containing the predictor values we want predictions for
+3. use `predict()`
+4. plot the observed data and model predictions
+
+```{r}
+new_metabolism <- expand_grid(
+  species = c("species_A", "species_B", "species_C"),
+  body_size = seq(5, 30, length.out = 100)
+)
+
+pred_metabolism <- predict(
+  m_metabolism,
+  newdata = new_metabolism,
+  interval = "confidence"
+)
+
+plot_metabolism <- bind_cols(
+  new_metabolism,
+  as_tibble(pred_metabolism)
+)
+
+plot_metabolism |> 
+  slice_head(n = 6)
+```
+
+```{r}
+ggplot(metabolism, aes(body_size, metabolic_rate, colour = species)) +
+  geom_point(alpha = 0.65) +
+  geom_ribbon(
+    data = plot_metabolism,
+    aes(x = body_size, ymin = lwr, ymax = upr, fill = species),
+    alpha = 0.18,
+    colour = NA,
+    inherit.aes = FALSE
+  ) +
+  geom_line(data = plot_metabolism, aes(y = fit), linewidth = 1) +
+  labs(
+    x = "Body size",
+    y = "Metabolic rate",
+    colour = "Species",
+    fill = "Species"
+  ) +
+  theme_classic()
+```
+
+The model and the figure now match. The lines and ribbons come from `m_metabolism`, the model we fitted and checked.
+
+### Report
+
+Example structure:
+
+> We fitted a Gaussian linear model testing whether metabolic rate depended on body size, species, and their interaction. Diagnostic plots did not show major violations of model assumptions. Metabolic rate changed with body size, but the slope differed among species: the relationship was strongest in species B and weakest in species C. This indicates that species changed the relationship between body size and metabolism.
+
+If giving formal results, add the relevant coefficient or term-level test from the output.
+
+## Example 2: Binomial GLM
+
+Biological question:
+
+> Does habitat type affect whether individuals are infected?
+
+### Planning recap
+
+| Planning step | Decision |
+|---|---|
+| Expected figure | Infection probability or observed proportion infected by habitat |
+| Response variable | `infected`, binary: 0 = not infected, 1 = infected |
+| Data structure | Independent observations, assuming each individual is sampled once |
+| Explanatory variables | `habitat`, categorical |
+| Planned model | Binomial GLM |
+| Approximate residual df | Number of observations minus number of estimated habitat probabilities |
+
+Planning sentence:
+
+> We will test whether infection probability differs between habitats using a binomial GLM, because infection status is binary, habitat is categorical, and observations are independent.
+
+### An example dataset
+
+```{r}
+#| echo: false
+set.seed(12026)
+n_per_habitat <- 80
+
+infection <- tibble(
+  habitat = rep(c("forest", "grassland"), each = n_per_habitat)
+) |>
+  mutate(
+    p_infected = case_when(
+      habitat == "forest" ~ 0.28,
+      habitat == "grassland" ~ 0.55
+    ),
+    infected = rbinom(n(), size = 1, prob = p_infected)
+  ) |>
+  select(habitat, infected)
+```
+
+```{r}
+#| echo: false
+write_csv(infection, "datasets/infection_habitat.csv")
+```
+
+Reading in the dataset:
+
+```{r}
+infection <- read_csv("datasets/infection_habitat.csv")
+```
+
+Here are the first few rows of the dataset:
+
+```{r}
+infection |> 
+  slice_head(n = 6)
+```
+
+Planned figure:
+
+```{r}
+infection_summary <- infection |>
+  group_by(habitat) |>
+  summarise(
+    infected = mean(infected),
+    .groups = "drop"
+  )
+
+ggplot(infection_summary, aes(habitat, infected)) +
+  geom_col(fill = "grey70", colour = "grey25") +
+  labs(
+    x = "Habitat",
+    y = "Observed proportion infected"
+  ) +
+  theme_classic()
+```
+
+### Fit the planned model
+
+```{r}
+m_infection <- glm(
+  infected ~ habitat,
+  family = binomial,
+  data = infection
+)
+```
+
+### Check before interpreting
+
+For a binomial GLM, ask:
+
+- Did I use the correct response type and family?
+- Are observations independent?
+- Are there obvious influential observations?
+- Is there overdispersion, especially for grouped/binomial count data?
+
+A simple overdispersion check:
+
+```{r}
+deviance(m_infection) / df.residual(m_infection)
+```
+
+A ratio much larger than 1 can suggest overdispersion. This is a warning sign that the model may be underestimating uncertainty.
+
+### Interpret the output
+
+```{r}
+summary(m_infection)
+```
+
+In a binomial GLM, coefficients are on the log-odds scale by default. That scale is useful for the model, but not always intuitive biologically.
+
+Predicted probabilities are often easier to interpret.
+
+### Make explicit predictions
+
+```{r}
+new_infection <- tibble(
+  habitat = c("forest", "grassland")
+) |>
+  mutate(
+    predicted_probability = predict(
+      m_infection,
+      newdata = pick(everything()),
+      type = "response"
+    )
+  )
+
+new_infection
+```
+
+```{r}
+ggplot(infection, aes(habitat, infected)) +
+  geom_jitter(width = 0.08, height = 0.03, alpha = 0.25) +
+  geom_point(
+    data = new_infection,
+    aes(y = predicted_probability),
+    size = 4,
+    colour = "firebrick"
+  ) +
+  labs(
+    x = "Habitat",
+    y = "Infection status / predicted probability"
+  ) +
+  theme_classic()
+```
+
+For GLMs, `type = "response"` gives predictions on the biological scale. For a binomial GLM, that means predicted probabilities.
+
+### Report
+
+Example structure:
+
+> We fitted a binomial GLM testing whether infection probability differed between habitats. The model used infection status as a binary response and habitat as a categorical explanatory variable. After checking model fit, we interpreted the model on the probability scale: predicted infection probability was higher in grassland than forest.
+
+## Example 3: Count GLM
+
+Biological question:
+
+> Does food availability affect the number of offspring produced?
+
+### Planning recap
+
+| Planning step | Decision |
+|---|---|
+| Expected figure | Scatterplot of offspring number against food availability, with a fitted prediction line |
+| Response variable | `n_offspring`, count |
+| Data structure | Independent observations, assuming each individual or reproductive unit is measured once |
+| Explanatory variables | `food`, continuous |
+| Planned model | Poisson GLM, with overdispersion checked after fitting |
+| Approximate residual df | Number of observations minus number of estimated parameters |
+
+Planning sentence:
+
+> We will test whether food availability affects offspring number using a Poisson GLM, because offspring number is a count, food availability is continuous, and observations are independent.
+
+### An example dataset
+
+```{r}
+#| echo: false
+set.seed(12026)
+n_count <- 90
+
+offspring <- tibble(
+  food = runif(n_count, 0, 10)
+) |>
+  mutate(
+    expected_count = exp(0.6 + 0.18 * food),
+    n_offspring = rpois(n(), lambda = expected_count)
+  ) |>
+  select(food, n_offspring)
+```
+
+```{r}
+#| echo: false
+write_csv(offspring, "datasets/offspring_food.csv")
+```
+
+Reading in the dataset:
+
+```{r}
+offspring <- read_csv("datasets/offspring_food.csv")
+```
+
+Here are the first few rows of the dataset:
+
+```{r}
+offspring |> 
+  slice_head(n = 6)
+```
+
+Planned figure:
+
+```{r}
+ggplot(offspring, aes(food, n_offspring)) +
+  geom_point(alpha = 0.7) +
+  labs(
+    x = "Food availability",
+    y = "Number of offspring"
+  ) +
+  theme_classic()
+```
+
+### Fit the planned model
+
+```{r}
+m_offspring <- glm(
+  n_offspring ~ food,
+  family = poisson,
+  data = offspring
+)
+```
+
+### Check before interpreting
+
+```{r}
+deviance(m_offspring) / df.residual(m_offspring)
+```
+
+For count models, overdispersion is a common issue. If the residual deviance is much larger than the residual df, the Poisson model may be too simple.
+
+### Interpret the output
+
+```{r}
+summary(m_offspring)
+```
+
+In a Poisson GLM, coefficients are on the log scale. A positive coefficient means the expected count increases as the predictor increases.
+
+### Make explicit predictions
+
+```{r}
+new_offspring <- tibble(
+  food = seq(0, 10, length.out = 100)
+) |>
+  mutate(
+    predicted_count = predict(
+      m_offspring,
+      newdata = pick(everything()),
+      type = "response"
+    )
+  )
+```
+
+```{r}
+ggplot(offspring, aes(food, n_offspring)) +
+  geom_point(alpha = 0.6) +
+  geom_line(
+    data = new_offspring,
+    aes(y = predicted_count),
+    colour = "firebrick",
+    linewidth = 1
+  ) +
+  labs(
+    x = "Food availability",
+    y = "Number of offspring"
+  ) +
+  theme_classic()
+```
+
+### Report
+
+Example structure:
+
+> We fitted a Poisson GLM testing whether offspring number changed with food availability. Model checks did not suggest major overdispersion. Predicted offspring number increased with food availability, suggesting that food availability was positively associated with reproductive output.
+
+## Final checklist
+
+Planning checklist:
+
+1. What is the biological question?
+2. What would the figure look like?
+3. What is the response variable?
+4. Are observations independent, grouped, repeated, blocked, or nested?
+5. What are the explanatory variables?
+6. What model follows from those choices?
+7. How many observations will we collect?
+8. What residual degrees of freedom do we expect?
+
+Implementation checklist:
+
+1. Did I fit the model I planned?
+2. Did I check assumptions or diagnostics before interpretation?
+3. Am I reading the correct output for my question?
+4. Am I asking a model/term-level question or a coefficient-level question?
+5. Did I make explicit predictions from the fitted model?
+6. Does my plot show the model I actually fitted?
+7. Does my report include both the statistical result and the biological meaning?
+
+The goal is not to memorize every possible test. The goal is to move carefully from biological question to planned model, and then from fitted model to checked, interpreted, plotted, and reported result.
+
+```{r}
+#| echo: false
+folder_path <- "datasets"
 zip_file <- "course_book_datasets.zip"
 
-# list all files in the folder
 files <- list.files(folder_path, full.names = TRUE)
-
-# safety check: exclude the zip file itself if it is in the same folder
 zip_file_full <- normalizePath(zip_file, mustWork = FALSE)
 files <- files[normalizePath(files, mustWork = FALSE) != zip_file_full]
 
-# create zip archive
 zip(zipfile = zip_file, files = files)
 ```
-

@@ -234,7 +234,7 @@
 
 \title{BIO144 Course Book (version 2026)}
 \author{Owen Petchey}
-\date{2026-05-11}
+\date{2026-05-18}
 \begin{document}
 \frontmatter
 \maketitle
@@ -5702,7 +5702,7 @@ In R, we calculate this as follows:
 \end{Shaded}
 
 \begin{verbatim}
-[1] 304.2386
+[1] 347.0045
 \end{verbatim}
 
 \subsection*{\texorpdfstring{\(SSE\)}{SSE}}\label{sse}
@@ -5724,7 +5724,7 @@ this in R uses both approaches:
 \end{Shaded}
 
 \begin{verbatim}
-[1] 9.978811
+[1] 4.527874
 \end{verbatim}
 
 Or\ldots{}
@@ -5737,7 +5737,7 @@ Or\ldots{}
 \end{Shaded}
 
 \begin{verbatim}
-[1] 9.978811
+[1] 4.527874
 \end{verbatim}
 
 \subsection*{\texorpdfstring{\(R^2\)}{R\^{}2}}\label{r2}
@@ -5756,7 +5756,7 @@ variable that is explained by the explanatory variable (\(R^2\)):
 \end{Shaded}
 
 \begin{verbatim}
-[1] 0.9682423
+[1] 0.9871196
 \end{verbatim}
 
 \subsection*{Is my R squared high (or
@@ -16153,47 +16153,1538 @@ world around us. Let your questions guide your learning journey!
 
 \bookmarksetup{startatroot}
 
-\chapter*{Review (L12)}\label{review-l12}
-\addcontentsline{toc}{chapter}{Review (L12)}
+\chapter*{Review: planning and implementing statistical analyses
+(L12)}\label{review-planning-and-implementing-statistical-analyses-l12}
+\addcontentsline{toc}{chapter}{Review: planning and implementing
+statistical analyses (L12)}
 
-\markboth{Review (L12)}{Review (L12)}
+\markboth{Review: planning and implementing statistical analyses
+(L12)}{Review: planning and implementing statistical analyses (L12)}
 
-\textbf{You need to prepare in advance for this lecture.}
+\section*{Introduction}\label{introduction-9}
+\addcontentsline{toc}{section}{Introduction}
 
-In the final lecture of the course, we will review and repeat any of the
-content that you find challenging. Please write in the Forum which
-topics you would like to revisit, so that we can focus on those during
-the session. There may also be chances to ask during the lecture time
-questions on topics that you find difficult.
+\markright{Introduction}
 
-So the preparation for this lecture is to think about which topics you
-would like to discuss again, and to post these in the Forum.
-
-Here are some ideas of topics that you might want to revisit or learn
-about:
+In earlier chapters we learned many different statistical tools:
 
 \begin{itemize}
 \tightlist
 \item
-  Types of study designs in biology.
+  linear regression
 \item
-  Framing research questions.
+  ANOVA
 \item
-  Observational studies.
+  multiple regression
 \item
-  Experimental studies.
+  interactions
 \item
-  Key modeling concepts: interactions, overfitting, degrees of freedom,
-  variance explained, hypothesis testing, null hypothesis\\
+  Poisson GLMs for count data
 \item
-  Parametric vs non-parametric approaches: what they mean and when to
-  use them.
+  binomial GLMs for binary data
 \item
-  Going through any of the practical exercises in the course.
+  ordination
 \item
-  AI Assistant prompt creation\ldots{} how much can we make it do, and
-  how much can we trust it?
+  mixed models
 \end{itemize}
+
+This final chapter pulls those ideas together. The aim is not to
+memorize a list of tests. The aim is to move carefully from a
+\textbf{biological question} to a \textbf{planned model}, and then from
+a fitted model to a checked, interpreted, plotted, and reported result.
+
+\begin{tcolorbox}[enhanced jigsaw, arc=.35mm, bottomrule=.15mm, bottomtitle=1mm, breakable, colback=white, colbacktitle=quarto-callout-important-color!10!white, colframe=quarto-callout-important-color-frame, coltitle=black, left=2mm, leftrule=.75mm, opacityback=0, opacitybacktitle=0.6, rightrule=.15mm, title=\textcolor{quarto-callout-important-color}{\faExclamation}\hspace{0.5em}{Important}, titlerule=0mm, toprule=.15mm, toptitle=1mm]
+
+\textbf{Core idea}\\
+Do not start with ``Which test do I use?'' Start with the biological
+question, sketch the expected figure, identify the response variable and
+data structure, then choose the model.
+
+\end{tcolorbox}
+
+The chapter has two parts:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Planning}: what to decide before collecting or analyzing data.
+\item
+  \textbf{Implementation}: what to do once the data exist.
+\end{enumerate}
+
+\section*{Part 1: Planning the
+analysis}\label{part-1-planning-the-analysis}
+\addcontentsline{toc}{section}{Part 1: Planning the analysis}
+
+\markright{Part 1: Planning the analysis}
+
+Statistics does not begin after data collection. In a good study, the
+statistical plan is part of the study design.
+
+Before collecting data, we should already be able to say:
+
+\begin{quote}
+Here is my biological question.\\
+Here is the figure I expect to make.\\
+Here is the response variable.\\
+Here is the model I plan to fit.\\
+Here is roughly how many observations I need, and how many residual
+degrees of freedom I expect.
+\end{quote}
+
+This does not mean the plan can never change. Real data can surprise us.
+But without a plan, we often discover too late that the design does not
+answer the question.
+
+\subsection*{The planning workflow}\label{the-planning-workflow}
+\addcontentsline{toc}{subsection}{The planning workflow}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Biological question}
+\NormalTok{        |}
+\NormalTok{        v}
+\NormalTok{Sketch expected figure}
+\NormalTok{        |}
+\NormalTok{        v}
+\NormalTok{Define response variable}
+\NormalTok{        |}
+\NormalTok{        +{-}{-} Continuous {-}\textgreater{} LM / Gaussian model}
+\NormalTok{        +{-}{-} Binary / proportion {-}\textgreater{} binomial GLM}
+\NormalTok{        +{-}{-} Count {-}\textgreater{} Poisson/count GLM}
+\NormalTok{        +{-}{-} Multivariate {-}\textgreater{} ordination / multivariate methods}
+\NormalTok{        |}
+\NormalTok{        v}
+\NormalTok{Check data structure}
+\NormalTok{        |}
+\NormalTok{        +{-}{-} independent observations {-}\textgreater{} ordinary LM / GLM}
+\NormalTok{        +{-}{-} grouped / repeated / blocked / nested {-}\textgreater{} mixed model / random effects}
+\NormalTok{        |}
+\NormalTok{        v}
+\NormalTok{Define explanatory variables}
+\NormalTok{        |}
+\NormalTok{        +{-}{-} categorical {-}\textgreater{} group differences}
+\NormalTok{        +{-}{-} continuous {-}\textgreater{} slopes}
+\NormalTok{        +{-}{-} categorical + continuous {-}\textgreater{} ANCOVA{-}style model}
+\NormalTok{        +{-}{-} multiple predictors {-}\textgreater{} multiple model}
+\NormalTok{        +{-}{-} interactions {-}\textgreater{} one effect depends on another}
+\NormalTok{        |}
+\NormalTok{        v}
+\NormalTok{Planned statistical model}
+\NormalTok{        |}
+\NormalTok{        v}
+\NormalTok{Plan sample size and expected residual df}
+\end{Highlighting}
+\end{Shaded}
+
+Traditional names like ANOVA, regression, and ANCOVA are useful, but
+they are not the deepest decision. They are mostly different
+fixed-effect structures inside the linear model.
+
+The deeper questions are:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  What kind of response variable do I have?
+\item
+  Are the observations independent, or is there grouping/repeated
+  structure?
+\item
+  What kind of explanatory variables do I have?
+\end{enumerate}
+
+\subsection*{The planning sentence}\label{the-planning-sentence}
+\addcontentsline{toc}{subsection}{The planning sentence}
+
+A useful planning sentence is:
+
+\begin{quote}
+We will test whether \textbf{X} affects (or is related with) \textbf{Y}
+using \textbf{model Z}, because \textbf{Y} is {[}response type{]},
+\textbf{X} is {[}predictor type{]}, and the observations are
+{[}independent/grouped{]}. We plan to collect \textbf{n = \ldots{}}
+observations, giving \textbf{n minus the number of estimated parameters}
+residual degrees of freedom.
+\end{quote}
+
+This sentence is not just a reporting sentence. It is a design sentence.
+If you cannot complete it, the study plan (including question) is
+probably not clear enough yet.
+
+\begin{tcolorbox}[enhanced jigsaw, arc=.35mm, bottomrule=.15mm, bottomtitle=1mm, breakable, colback=white, colbacktitle=quarto-callout-note-color!10!white, colframe=quarto-callout-note-color-frame, coltitle=black, left=2mm, leftrule=.75mm, opacityback=0, opacitybacktitle=0.6, rightrule=.15mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Note}, titlerule=0mm, toprule=.15mm, toptitle=1mm]
+
+Residual degrees of freedom are not magic numbers that appear later in
+R. They are already implied by the design and the model.
+
+\end{tcolorbox}
+
+\subsection*{Example 1: Comparing treatment
+means}\label{example-1-comparing-treatment-means}
+\addcontentsline{toc}{subsection}{Example 1: Comparing treatment means}
+
+Biological question:
+
+\begin{quote}
+Does fertilizer treatment affect plant biomass?
+\end{quote}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Planning step
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Decision
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Expected figure & Biomass on the y-axis, fertilizer treatment on the
+x-axis; probably a boxplot, dot plot, or means with confidence
+intervals \\
+Response variable & Plant biomass, continuous \\
+Data structure & Each plant is measured once and plants are
+independent \\
+Explanatory variables & Fertilizer treatment, categorical: control, low
+fertilizer, high fertilizer \\
+Planned model & Gaussian linear model with biomass as the response and
+fertilizer treatment as the explanatory variable \\
+Traditional name & One-way ANOVA, also understood as a linear model with
+one categorical predictor \\
+\end{longtable}
+}
+
+Example model:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m1 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(biomass }\SpecialCharTok{\textasciitilde{}}\NormalTok{ fertilizer, }\AttributeTok{data =}\NormalTok{ plants)}
+\end{Highlighting}
+\end{Shaded}
+
+Suppose we plan 20 plants per treatment and 3 treatments. That gives
+\(n = 60\) observations.
+
+The model estimates 3 treatment means, so the expected residual df is
+approximately:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{60 {-} 3 = 57}
+\end{Highlighting}
+\end{Shaded}
+
+Planning sentence:
+
+\begin{quote}
+We will test whether fertilizer treatment affects plant biomass using a
+Gaussian linear model, because biomass is continuous, fertilizer
+treatment is categorical, and each plant is measured independently. We
+plan to collect 60 observations, 20 per treatment, giving an expected
+residual df of about 57.
+\end{quote}
+
+\subsection*{Example 2: A continuous
+predictor}\label{example-2-a-continuous-predictor}
+\addcontentsline{toc}{subsection}{Example 2: A continuous predictor}
+
+Biological question:
+
+\begin{quote}
+Does temperature affect growth rate?
+\end{quote}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Planning step
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Decision
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Expected figure & Growth rate on the y-axis, temperature on the x-axis;
+a scatterplot with a fitted line and uncertainty band \\
+Response variable & Growth rate, continuous \\
+Data structure & Each experimental unit is measured once and
+observations are independent \\
+Explanatory variables & Temperature, continuous \\
+Planned model & Gaussian linear model with a continuous predictor \\
+Traditional name & Linear regression \\
+\end{longtable}
+}
+
+Example model:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m1 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(growth\_rate }\SpecialCharTok{\textasciitilde{}}\NormalTok{ temperature, }\AttributeTok{data =}\NormalTok{ growth)}
+\end{Highlighting}
+\end{Shaded}
+
+Suppose we plan \(n = 50\) observations across the temperature gradient.
+
+The model estimates an intercept and a slope, so the expected residual
+df is:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{50 {-} 2 = 48}
+\end{Highlighting}
+\end{Shaded}
+
+Planning sentence:
+
+\begin{quote}
+We will test whether temperature affects growth rate using a Gaussian
+linear model, because growth rate is continuous, temperature is
+continuous, and observations are independent. We plan to collect 50
+observations, giving an expected residual df of about 48.
+\end{quote}
+
+The expected figure helps clarify the model. If the figure is a
+scatterplot with one fitted line, the model is probably a
+regression-type model.
+
+\subsection*{Example 3: Grouping structure and random
+effects}\label{example-3-grouping-structure-and-random-effects}
+\addcontentsline{toc}{subsection}{Example 3: Grouping structure and
+random effects}
+
+Biological question:
+
+\begin{quote}
+Does a drug treatment affect heart rate when each animal is measured
+repeatedly over time?
+\end{quote}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Planning step
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Decision
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Expected figure & Heart rate on the y-axis, time or treatment on the
+x-axis, with repeated measurements connected or grouped by animal \\
+Response variable & Heart rate, continuous \\
+Data structure & Observations are not independent, because each animal
+contributes multiple measurements \\
+Explanatory variables & Treatment is categorical; time may be continuous
+or categorical, depending on the design \\
+Planned model & Mixed model, because repeated measurements are grouped
+within animals \\
+Random effect & Animal identity, because measurements are repeated
+within animal \\
+\end{longtable}
+}
+
+Example model:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m1 }\OtherTok{\textless{}{-}} \FunctionTok{lmer}\NormalTok{(heart\_rate }\SpecialCharTok{\textasciitilde{}}\NormalTok{ treatment }\SpecialCharTok{+}\NormalTok{ time }\SpecialCharTok{+}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{|}\NormalTok{ animal\_id), }\AttributeTok{data =}\NormalTok{ heart)}
+\end{Highlighting}
+\end{Shaded}
+
+If the biological question is whether the treatment changes the
+trajectory through time, then plan an interaction:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m2 }\OtherTok{\textless{}{-}} \FunctionTok{lmer}\NormalTok{(heart\_rate }\SpecialCharTok{\textasciitilde{}}\NormalTok{ treatment }\SpecialCharTok{*}\NormalTok{ time }\SpecialCharTok{+}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{|}\NormalTok{ animal\_id), }\AttributeTok{data =}\NormalTok{ heart)}
+\end{Highlighting}
+\end{Shaded}
+
+Here we need to plan both the number of animals and the number of
+measurements per animal. For example, 20 animals measured 5 times each
+gives 100 observations, but those 100 observations are not equivalent to
+100 independent animals.
+
+Planning sentence:
+
+\begin{quote}
+We will test whether drug treatment affects heart rate over time using a
+mixed model, because heart rate is continuous, treatment and time are
+explanatory variables, and repeated measurements are grouped within
+animals. We plan to measure 20 animals 5 times each, giving 100 total
+observations, while accounting for animal identity as a random effect.
+\end{quote}
+
+\begin{tcolorbox}[enhanced jigsaw, arc=.35mm, bottomrule=.15mm, bottomtitle=1mm, breakable, colback=white, colbacktitle=quarto-callout-caution-color!10!white, colframe=quarto-callout-caution-color-frame, coltitle=black, left=2mm, leftrule=.75mm, opacityback=0, opacitybacktitle=0.6, rightrule=.15mm, title=\textcolor{quarto-callout-caution-color}{\faFire}\hspace{0.5em}{Caution}, titlerule=0mm, toprule=.15mm, toptitle=1mm]
+
+The random-effects question comes early. Before asking ``ANOVA or
+regression?'', ask whether the observations are independent.
+
+\end{tcolorbox}
+
+\subsection*{Example 4: Binary
+response}\label{example-4-binary-response}
+\addcontentsline{toc}{subsection}{Example 4: Binary response}
+
+Biological question:
+
+\begin{quote}
+Does habitat type affect whether individuals are infected?
+\end{quote}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Planning step
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Decision
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Expected figure & Infection probability on the y-axis and habitat type
+on the x-axis, perhaps shown as proportions with confidence intervals \\
+Response variable & Infection status: infected or not infected,
+binary \\
+Data structure & Each individual is sampled once and observations are
+independent \\
+Explanatory variables & Habitat type, categorical \\
+Planned model & Binomial GLM \\
+\end{longtable}
+}
+
+Example model:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m1 }\OtherTok{\textless{}{-}} \FunctionTok{glm}\NormalTok{(infected }\SpecialCharTok{\textasciitilde{}}\NormalTok{ habitat, }\AttributeTok{family =}\NormalTok{ binomial, }\AttributeTok{data =}\NormalTok{ infection)}
+\end{Highlighting}
+\end{Shaded}
+
+Suppose we plan 50 individuals in each of two habitats, giving
+\(n = 100\) observations. With two habitat groups, the expected residual
+df is roughly:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{100 {-} 2 = 98}
+\end{Highlighting}
+\end{Shaded}
+
+Planning sentence:
+
+\begin{quote}
+We will test whether infection probability differs between habitats
+using a binomial GLM, because infection status is binary, habitat is
+categorical, and individuals are independent. We plan to sample 100
+individuals, 50 per habitat, giving an expected residual df of about 98.
+\end{quote}
+
+The explanatory variable could be categorical or continuous, just as in
+a linear model. What changes the model class is the response variable.
+
+\section*{Part 2: Implementing the
+analysis}\label{part-2-implementing-the-analysis}
+\addcontentsline{toc}{section}{Part 2: Implementing the analysis}
+
+\markright{Part 2: Implementing the analysis}
+
+Once we have the data, the key implementation question is:
+
+\begin{quote}
+Did the model behave well enough that we can interpret it?
+\end{quote}
+
+The workflow is:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Fit planned model}
+\NormalTok{        |}
+\NormalTok{        v}
+\NormalTok{Check model assumptions / diagnostics}
+\NormalTok{        |}
+\NormalTok{        +{-}{-} okay {-}\textgreater{} interpret model output}
+\NormalTok{        +{-}{-} not okay {-}\textgreater{} revise model / family / structure}
+\NormalTok{        |}
+\NormalTok{        v}
+\NormalTok{Interpret output}
+\NormalTok{        |}
+\NormalTok{        v}
+\NormalTok{Make explicit predictions}
+\NormalTok{        |}
+\NormalTok{        v}
+\NormalTok{Plot data + model predictions}
+\NormalTok{        |}
+\NormalTok{        v}
+\NormalTok{Report statistical and biological conclusion}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{tcolorbox}[enhanced jigsaw, arc=.35mm, bottomrule=.15mm, bottomtitle=1mm, breakable, colback=white, colbacktitle=quarto-callout-important-color!10!white, colframe=quarto-callout-important-color-frame, coltitle=black, left=2mm, leftrule=.75mm, opacityback=0, opacitybacktitle=0.6, rightrule=.15mm, title=\textcolor{quarto-callout-important-color}{\faExclamation}\hspace{0.5em}{Important}, titlerule=0mm, toprule=.15mm, toptitle=1mm]
+
+The order matters. We do not fit a model, look for a small p-value, and
+only then check whether the model was reasonable. We check first, then
+interpret.
+
+\end{tcolorbox}
+
+Good practice is to make predictions explicitly from the fitted model
+and then plot those predictions. The figure should show the model you
+fitted, not a model quietly fitted by the plotting function.
+
+\section*{Example 1: Linear model with an
+interaction}\label{example-1-linear-model-with-an-interaction}
+\addcontentsline{toc}{section}{Example 1: Linear model with an
+interaction}
+
+\markright{Example 1: Linear model with an interaction}
+
+Biological question:
+
+\begin{quote}
+Does body size affect metabolic rate, and does this body-size effect
+differ among three species?
+\end{quote}
+
+This example connects several ideas from the course:
+
+\begin{itemize}
+\tightlist
+\item
+  regression
+\item
+  treatment groups
+\item
+  interactions
+\item
+  diagnostic plots
+\item
+  reading model output
+\item
+  degrees of freedom
+\item
+  explicit prediction and plotting
+\end{itemize}
+
+\subsection*{Planning recap}\label{planning-recap}
+\addcontentsline{toc}{subsection}{Planning recap}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Planning step
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Decision
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Expected figure & Scatterplot of metabolic rate against body size, with
+separate fitted lines for each species \\
+Response variable & \texttt{metabolic\_rate}, continuous \\
+Data structure & Independent observations, assuming each individual is
+measured once \\
+Explanatory variables & \texttt{body\_size}, continuous;
+\texttt{species}, categorical \\
+Planned model & Gaussian linear model with a species-by-body-size
+interaction \\
+Approximate residual df & Number of observations minus number of
+estimated parameters \\
+\end{longtable}
+}
+
+Planning sentence:
+
+\begin{quote}
+We will test whether body size affects metabolic rate differently among
+species using a Gaussian linear model with a species-by-body-size
+interaction, because metabolic rate is continuous, body size is
+continuous, species is categorical, and observations are independent.
+\end{quote}
+
+\subsection*{An example dataset}\label{an-example-dataset-2}
+\addcontentsline{toc}{subsection}{An example dataset}
+
+Reading in the dataset:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{metabolism }\OtherTok{\textless{}{-}} \FunctionTok{read\_csv}\NormalTok{(}\StringTok{"datasets/metabolism\_species\_body\_size.csv"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Rows: 135 Columns: 3
+-- Column specification --------------------------------------------------------
+Delimiter: ","
+chr (1): species
+dbl (2): body_size, metabolic_rate
+
+i Use `spec()` to retrieve the full column specification for this data.
+i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+\end{verbatim}
+
+Here are the first few rows of the dataset:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{metabolism }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{slice\_head}\NormalTok{(}\AttributeTok{n =} \DecValTok{6}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+# A tibble: 6 x 3
+  species   body_size metabolic_rate
+  <chr>         <dbl>          <dbl>
+1 species_A      9.92           3.71
+2 species_A     27.2            8.35
+3 species_A     14.2            5.58
+4 species_A     13.7            8.06
+5 species_A     18.4            6.82
+6 species_A     18.4            5.48
+\end{verbatim}
+
+Planned figure:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(metabolism, }\FunctionTok{aes}\NormalTok{(body\_size, metabolic\_rate, }\AttributeTok{colour =}\NormalTok{ species)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}
+    \AttributeTok{x =} \StringTok{"Body size"}\NormalTok{,}
+    \AttributeTok{y =} \StringTok{"Metabolic rate"}\NormalTok{,}
+    \AttributeTok{colour =} \StringTok{"Species"}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{theme\_classic}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{12.1-review_files/figure-pdf/unnamed-chunk-6-1.pdf}}
+
+\subsection*{Fit the planned model}\label{fit-the-planned-model}
+\addcontentsline{toc}{subsection}{Fit the planned model}
+
+The planned model has:
+
+\begin{itemize}
+\tightlist
+\item
+  a continuous response: \texttt{metabolic\_rate}
+\item
+  one continuous explanatory variable: \texttt{body\_size}
+\item
+  one categorical explanatory variable: \texttt{species}
+\item
+  an interaction: \texttt{body\_size:species}
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m\_metabolism }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(metabolic\_rate }\SpecialCharTok{\textasciitilde{}}\NormalTok{ species }\SpecialCharTok{*}\NormalTok{ body\_size, }\AttributeTok{data =}\NormalTok{ metabolism)}
+\end{Highlighting}
+\end{Shaded}
+
+The model formula:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{metabolic\_rate \textasciitilde{} species * body\_size}
+\end{Highlighting}
+\end{Shaded}
+
+means:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{metabolic\_rate \textasciitilde{} species + body\_size + species:body\_size}
+\end{Highlighting}
+\end{Shaded}
+
+The \texttt{*} means main effects plus the interaction. We use it when
+the biological question is whether the effect of one predictor depends
+on another predictor.
+
+\subsection*{Check the model before
+interpreting}\label{check-the-model-before-interpreting}
+\addcontentsline{toc}{subsection}{Check the model before interpreting}
+
+For a linear model, the common diagnostic questions are:
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Diagnostic plot
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Question
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Residuals vs fitted & Is there obvious nonlinearity or unequal
+variance? \\
+QQ plot & Are residuals approximately normal? \\
+Scale-location & Does residual spread change with fitted values? \\
+Residuals vs leverage & Are a few observations dominating the model? \\
+\end{longtable}
+}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{autoplot}\NormalTok{(m\_metabolism)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Warning: `fortify(<lm>)` was deprecated in ggplot2 4.0.0.
+i Please use `broom::augment(<lm>)` instead.
+i The deprecated feature was likely used in the ggfortify package.
+  Please report the issue at <https://github.com/sinhrks/ggfortify/issues>.
+\end{verbatim}
+
+\begin{verbatim}
+Warning: `aes_string()` was deprecated in ggplot2 3.0.0.
+i Please use tidy evaluation idioms with `aes()`.
+i See also `vignette("ggplot2-in-packages")` for more information.
+i The deprecated feature was likely used in the ggfortify package.
+  Please report the issue at <https://github.com/sinhrks/ggfortify/issues>.
+\end{verbatim}
+
+\begin{verbatim}
+Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+i Please use `linewidth` instead.
+i The deprecated feature was likely used in the ggfortify package.
+  Please report the issue at <https://github.com/sinhrks/ggfortify/issues>.
+\end{verbatim}
+
+\pandocbounded{\includegraphics[keepaspectratio]{12.1-review_files/figure-pdf/unnamed-chunk-8-1.pdf}}
+
+We are not looking for perfect plots. We are looking for obvious
+problems that would make the model inappropriate.
+
+Possible actions if diagnostics look bad:
+
+\begin{itemize}
+\tightlist
+\item
+  reconsider whether the response should be transformed
+\item
+  reconsider whether the relationship is nonlinear
+\item
+  check for influential observations
+\item
+  check whether important grouping structure was ignored
+\item
+  for non-continuous responses, consider a GLM family instead of an LM
+\end{itemize}
+
+\subsection*{Interpret the output}\label{interpret-the-output}
+\addcontentsline{toc}{subsection}{Interpret the output}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(m\_metabolism)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+
+Call:
+lm(formula = metabolic_rate ~ species * body_size, data = metabolism)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-4.1918 -0.8628 -0.0026  0.9103  3.5532 
+
+Coefficients:
+                           Estimate Std. Error t value Pr(>|t|)    
+(Intercept)                 3.83601    0.56726   6.762 4.25e-10 ***
+speciesspecies_B           -0.42823    0.80217  -0.534   0.5944    
+speciesspecies_C           -0.68723    0.79494  -0.865   0.3889    
+body_size                   0.17335    0.03001   5.777 5.40e-08 ***
+speciesspecies_B:body_size  0.23073    0.04327   5.333 4.20e-07 ***
+speciesspecies_C:body_size -0.07204    0.04127  -1.746   0.0832 .  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.426 on 129 degrees of freedom
+Multiple R-squared:  0.8028,    Adjusted R-squared:  0.7952 
+F-statistic:   105 on 5 and 129 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{anova}\NormalTok{(m\_metabolism)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Analysis of Variance Table
+
+Response: metabolic_rate
+                   Df Sum Sq Mean Sq F value    Pr(>F)    
+species             2 632.80  316.40 155.492 < 2.2e-16 ***
+body_size           1 324.39  324.39 159.417 < 2.2e-16 ***
+species:body_size   2 111.55   55.78  27.411 1.201e-10 ***
+Residuals         129 262.50    2.03                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+Use this table to orient yourself:
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Question level
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Model/output
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Common test statistic
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+What it asks
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Model / term level & ANOVA table for LM & \texttt{F} & Does this
+explanatory variable or term explain variation in the response? \\
+Model / term level & Deviance comparison for GLM & Deviance /
+chi-square-like test & Does adding/removing this term improve the
+model? \\
+Coefficient level & Linear model coefficients & \texttt{t} & Is this
+estimated coefficient different from zero? \\
+Coefficient level & Binomial/Poisson GLM coefficients & \texttt{z} & Is
+this estimated coefficient different from zero on the link scale? \\
+Coefficient level & Confidence interval & CI & What range of effect
+sizes is compatible with the data/model? \\
+\end{longtable}
+}
+
+\texttt{summary()} often gives coefficient-level tests. \texttt{anova()}
+often gives term-level tests. These are related, but they are not always
+asking exactly the same question.
+
+Residual degrees of freedom:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{df.residual}\NormalTok{(m\_metabolism)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] 129
+\end{verbatim}
+
+Residual degrees of freedom are the amount of information left for
+estimating error after fitting the model. Here they are roughly the
+number of observations minus the number of estimated parameters.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{nrow}\NormalTok{(metabolism)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] 135
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{length}\NormalTok{(}\FunctionTok{coef}\NormalTok{(m\_metabolism))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] 6
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{nrow}\NormalTok{(metabolism) }\SpecialCharTok{{-}} \FunctionTok{length}\NormalTok{(}\FunctionTok{coef}\NormalTok{(m\_metabolism))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] 129
+\end{verbatim}
+
+\subsection*{Make explicit predictions}\label{make-explicit-predictions}
+\addcontentsline{toc}{subsection}{Make explicit predictions}
+
+Do not use \texttt{geom\_smooth()} as the model.
+
+Instead:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  fit the model
+\item
+  create new data containing the predictor values we want predictions
+  for
+\item
+  use \texttt{predict()}
+\item
+  plot the observed data and model predictions
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{new\_metabolism }\OtherTok{\textless{}{-}} \FunctionTok{expand\_grid}\NormalTok{(}
+  \AttributeTok{species =} \FunctionTok{c}\NormalTok{(}\StringTok{"species\_A"}\NormalTok{, }\StringTok{"species\_B"}\NormalTok{, }\StringTok{"species\_C"}\NormalTok{),}
+  \AttributeTok{body\_size =} \FunctionTok{seq}\NormalTok{(}\DecValTok{5}\NormalTok{, }\DecValTok{30}\NormalTok{, }\AttributeTok{length.out =} \DecValTok{100}\NormalTok{)}
+\NormalTok{)}
+
+\NormalTok{pred\_metabolism }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(}
+\NormalTok{  m\_metabolism,}
+  \AttributeTok{newdata =}\NormalTok{ new\_metabolism,}
+  \AttributeTok{interval =} \StringTok{"confidence"}
+\NormalTok{)}
+
+\NormalTok{plot\_metabolism }\OtherTok{\textless{}{-}} \FunctionTok{bind\_cols}\NormalTok{(}
+\NormalTok{  new\_metabolism,}
+  \FunctionTok{as\_tibble}\NormalTok{(pred\_metabolism)}
+\NormalTok{)}
+
+\NormalTok{plot\_metabolism }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{slice\_head}\NormalTok{(}\AttributeTok{n =} \DecValTok{6}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+# A tibble: 6 x 5
+  species   body_size   fit   lwr   upr
+  <chr>         <dbl> <dbl> <dbl> <dbl>
+1 species_A      5     4.70  3.85  5.56
+2 species_A      5.25  4.75  3.91  5.59
+3 species_A      5.51  4.79  3.96  5.62
+4 species_A      5.76  4.83  4.02  5.65
+5 species_A      6.01  4.88  4.08  5.68
+6 species_A      6.26  4.92  4.13  5.71
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(metabolism, }\FunctionTok{aes}\NormalTok{(body\_size, metabolic\_rate, }\AttributeTok{colour =}\NormalTok{ species)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.65}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_ribbon}\NormalTok{(}
+    \AttributeTok{data =}\NormalTok{ plot\_metabolism,}
+    \FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ body\_size, }\AttributeTok{ymin =}\NormalTok{ lwr, }\AttributeTok{ymax =}\NormalTok{ upr, }\AttributeTok{fill =}\NormalTok{ species),}
+    \AttributeTok{alpha =} \FloatTok{0.18}\NormalTok{,}
+    \AttributeTok{colour =} \ConstantTok{NA}\NormalTok{,}
+    \AttributeTok{inherit.aes =} \ConstantTok{FALSE}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{data =}\NormalTok{ plot\_metabolism, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ fit), }\AttributeTok{linewidth =} \DecValTok{1}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}
+    \AttributeTok{x =} \StringTok{"Body size"}\NormalTok{,}
+    \AttributeTok{y =} \StringTok{"Metabolic rate"}\NormalTok{,}
+    \AttributeTok{colour =} \StringTok{"Species"}\NormalTok{,}
+    \AttributeTok{fill =} \StringTok{"Species"}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{theme\_classic}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{12.1-review_files/figure-pdf/unnamed-chunk-14-1.pdf}}
+
+The model and the figure now match. The lines and ribbons come from
+\texttt{m\_metabolism}, the model we fitted and checked.
+
+\subsection*{Report}\label{report}
+\addcontentsline{toc}{subsection}{Report}
+
+Example structure:
+
+\begin{quote}
+We fitted a Gaussian linear model testing whether metabolic rate
+depended on body size, species, and their interaction. Diagnostic plots
+did not show major violations of model assumptions. Metabolic rate
+changed with body size, but the slope differed among species: the
+relationship was strongest in species B and weakest in species C. This
+indicates that species changed the relationship between body size and
+metabolism.
+\end{quote}
+
+If giving formal results, add the relevant coefficient or term-level
+test from the output.
+
+\section*{Example 2: Binomial GLM}\label{example-2-binomial-glm}
+\addcontentsline{toc}{section}{Example 2: Binomial GLM}
+
+\markright{Example 2: Binomial GLM}
+
+Biological question:
+
+\begin{quote}
+Does habitat type affect whether individuals are infected?
+\end{quote}
+
+\subsection*{Planning recap}\label{planning-recap-1}
+\addcontentsline{toc}{subsection}{Planning recap}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Planning step
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Decision
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Expected figure & Infection probability or observed proportion infected
+by habitat \\
+Response variable & \texttt{infected}, binary: 0 = not infected, 1 =
+infected \\
+Data structure & Independent observations, assuming each individual is
+sampled once \\
+Explanatory variables & \texttt{habitat}, categorical \\
+Planned model & Binomial GLM \\
+Approximate residual df & Number of observations minus number of
+estimated habitat probabilities \\
+\end{longtable}
+}
+
+Planning sentence:
+
+\begin{quote}
+We will test whether infection probability differs between habitats
+using a binomial GLM, because infection status is binary, habitat is
+categorical, and observations are independent.
+\end{quote}
+
+\subsection*{An example dataset}\label{an-example-dataset-3}
+\addcontentsline{toc}{subsection}{An example dataset}
+
+Reading in the dataset:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{infection }\OtherTok{\textless{}{-}} \FunctionTok{read\_csv}\NormalTok{(}\StringTok{"datasets/infection\_habitat.csv"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Rows: 160 Columns: 2
+-- Column specification --------------------------------------------------------
+Delimiter: ","
+chr (1): habitat
+dbl (1): infected
+
+i Use `spec()` to retrieve the full column specification for this data.
+i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+\end{verbatim}
+
+Here are the first few rows of the dataset:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{infection }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{slice\_head}\NormalTok{(}\AttributeTok{n =} \DecValTok{6}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+# A tibble: 6 x 2
+  habitat infected
+  <chr>      <dbl>
+1 forest         0
+2 forest         1
+3 forest         0
+4 forest         0
+5 forest         0
+6 forest         0
+\end{verbatim}
+
+Planned figure:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{infection\_summary }\OtherTok{\textless{}{-}}\NormalTok{ infection }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{group\_by}\NormalTok{(habitat) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{summarise}\NormalTok{(}
+    \AttributeTok{infected =} \FunctionTok{mean}\NormalTok{(infected),}
+    \AttributeTok{.groups =} \StringTok{"drop"}
+\NormalTok{  )}
+
+\FunctionTok{ggplot}\NormalTok{(infection\_summary, }\FunctionTok{aes}\NormalTok{(habitat, infected)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_col}\NormalTok{(}\AttributeTok{fill =} \StringTok{"grey70"}\NormalTok{, }\AttributeTok{colour =} \StringTok{"grey25"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}
+    \AttributeTok{x =} \StringTok{"Habitat"}\NormalTok{,}
+    \AttributeTok{y =} \StringTok{"Observed proportion infected"}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{theme\_classic}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{12.1-review_files/figure-pdf/unnamed-chunk-19-1.pdf}}
+
+\subsection*{Fit the planned model}\label{fit-the-planned-model-1}
+\addcontentsline{toc}{subsection}{Fit the planned model}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m\_infection }\OtherTok{\textless{}{-}} \FunctionTok{glm}\NormalTok{(}
+\NormalTok{  infected }\SpecialCharTok{\textasciitilde{}}\NormalTok{ habitat,}
+  \AttributeTok{family =}\NormalTok{ binomial,}
+  \AttributeTok{data =}\NormalTok{ infection}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection*{Check before interpreting}\label{check-before-interpreting}
+\addcontentsline{toc}{subsection}{Check before interpreting}
+
+For a binomial GLM, ask:
+
+\begin{itemize}
+\tightlist
+\item
+  Did I use the correct response type and family?
+\item
+  Are observations independent?
+\item
+  Are there obvious influential observations?
+\item
+  Is there overdispersion, especially for grouped/binomial count data?
+\end{itemize}
+
+A simple overdispersion check:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{deviance}\NormalTok{(m\_infection) }\SpecialCharTok{/} \FunctionTok{df.residual}\NormalTok{(m\_infection)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] 1.238983
+\end{verbatim}
+
+A ratio much larger than 1 can suggest overdispersion. This is a warning
+sign that the model may be underestimating uncertainty.
+
+\subsection*{Interpret the output}\label{interpret-the-output-1}
+\addcontentsline{toc}{subsection}{Interpret the output}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(m\_infection)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+
+Call:
+glm(formula = infected ~ habitat, family = binomial, data = infection)
+
+Coefficients:
+                 Estimate Std. Error z value Pr(>|z|)    
+(Intercept)       -1.2368     0.2677  -4.619 3.85e-06 ***
+habitatgrassland   1.3870     0.3492   3.972 7.14e-05 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 212.70  on 159  degrees of freedom
+Residual deviance: 195.76  on 158  degrees of freedom
+AIC: 199.76
+
+Number of Fisher Scoring iterations: 4
+\end{verbatim}
+
+In a binomial GLM, coefficients are on the log-odds scale by default.
+That scale is useful for the model, but not always intuitive
+biologically.
+
+Predicted probabilities are often easier to interpret.
+
+\subsection*{Make explicit
+predictions}\label{make-explicit-predictions-1}
+\addcontentsline{toc}{subsection}{Make explicit predictions}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{new\_infection }\OtherTok{\textless{}{-}} \FunctionTok{tibble}\NormalTok{(}
+  \AttributeTok{habitat =} \FunctionTok{c}\NormalTok{(}\StringTok{"forest"}\NormalTok{, }\StringTok{"grassland"}\NormalTok{)}
+\NormalTok{) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{predicted\_probability =} \FunctionTok{predict}\NormalTok{(}
+\NormalTok{      m\_infection,}
+      \AttributeTok{newdata =} \FunctionTok{pick}\NormalTok{(}\FunctionTok{everything}\NormalTok{()),}
+      \AttributeTok{type =} \StringTok{"response"}
+\NormalTok{    )}
+\NormalTok{  )}
+
+\NormalTok{new\_infection}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+# A tibble: 2 x 2
+  habitat   predicted_probability
+  <chr>                     <dbl>
+1 forest                    0.225
+2 grassland                 0.537
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(infection, }\FunctionTok{aes}\NormalTok{(habitat, infected)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_jitter}\NormalTok{(}\AttributeTok{width =} \FloatTok{0.08}\NormalTok{, }\AttributeTok{height =} \FloatTok{0.03}\NormalTok{, }\AttributeTok{alpha =} \FloatTok{0.25}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{(}
+    \AttributeTok{data =}\NormalTok{ new\_infection,}
+    \FunctionTok{aes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ predicted\_probability),}
+    \AttributeTok{size =} \DecValTok{4}\NormalTok{,}
+    \AttributeTok{colour =} \StringTok{"firebrick"}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}
+    \AttributeTok{x =} \StringTok{"Habitat"}\NormalTok{,}
+    \AttributeTok{y =} \StringTok{"Infection status / predicted probability"}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{theme\_classic}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{12.1-review_files/figure-pdf/unnamed-chunk-24-1.pdf}}
+
+For GLMs, \texttt{type\ =\ "response"} gives predictions on the
+biological scale. For a binomial GLM, that means predicted
+probabilities.
+
+\subsection*{Report}\label{report-1}
+\addcontentsline{toc}{subsection}{Report}
+
+Example structure:
+
+\begin{quote}
+We fitted a binomial GLM testing whether infection probability differed
+between habitats. The model used infection status as a binary response
+and habitat as a categorical explanatory variable. After checking model
+fit, we interpreted the model on the probability scale: predicted
+infection probability was higher in grassland than forest.
+\end{quote}
+
+\section*{Example 3: Count GLM}\label{example-3-count-glm}
+\addcontentsline{toc}{section}{Example 3: Count GLM}
+
+\markright{Example 3: Count GLM}
+
+Biological question:
+
+\begin{quote}
+Does food availability affect the number of offspring produced?
+\end{quote}
+
+\subsection*{Planning recap}\label{planning-recap-2}
+\addcontentsline{toc}{subsection}{Planning recap}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Planning step
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Decision
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Expected figure & Scatterplot of offspring number against food
+availability, with a fitted prediction line \\
+Response variable & \texttt{n\_offspring}, count \\
+Data structure & Independent observations, assuming each individual or
+reproductive unit is measured once \\
+Explanatory variables & \texttt{food}, continuous \\
+Planned model & Poisson GLM, with overdispersion checked after
+fitting \\
+Approximate residual df & Number of observations minus number of
+estimated parameters \\
+\end{longtable}
+}
+
+Planning sentence:
+
+\begin{quote}
+We will test whether food availability affects offspring number using a
+Poisson GLM, because offspring number is a count, food availability is
+continuous, and observations are independent.
+\end{quote}
+
+\subsection*{An example dataset}\label{an-example-dataset-4}
+\addcontentsline{toc}{subsection}{An example dataset}
+
+Reading in the dataset:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{offspring }\OtherTok{\textless{}{-}} \FunctionTok{read\_csv}\NormalTok{(}\StringTok{"datasets/offspring\_food.csv"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Rows: 90 Columns: 2
+-- Column specification --------------------------------------------------------
+Delimiter: ","
+dbl (2): food, n_offspring
+
+i Use `spec()` to retrieve the full column specification for this data.
+i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+\end{verbatim}
+
+Here are the first few rows of the dataset:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{offspring }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{slice\_head}\NormalTok{(}\AttributeTok{n =} \DecValTok{6}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+# A tibble: 6 x 2
+   food n_offspring
+  <dbl>       <dbl>
+1  1.97           4
+2  8.89           7
+3  3.67           3
+4  3.47           4
+5  5.35           5
+6  5.37           5
+\end{verbatim}
+
+Planned figure:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(offspring, }\FunctionTok{aes}\NormalTok{(food, n\_offspring)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.7}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}
+    \AttributeTok{x =} \StringTok{"Food availability"}\NormalTok{,}
+    \AttributeTok{y =} \StringTok{"Number of offspring"}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{theme\_classic}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{12.1-review_files/figure-pdf/unnamed-chunk-29-1.pdf}}
+
+\subsection*{Fit the planned model}\label{fit-the-planned-model-2}
+\addcontentsline{toc}{subsection}{Fit the planned model}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m\_offspring }\OtherTok{\textless{}{-}} \FunctionTok{glm}\NormalTok{(}
+\NormalTok{  n\_offspring }\SpecialCharTok{\textasciitilde{}}\NormalTok{ food,}
+  \AttributeTok{family =}\NormalTok{ poisson,}
+  \AttributeTok{data =}\NormalTok{ offspring}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection*{Check before
+interpreting}\label{check-before-interpreting-1}
+\addcontentsline{toc}{subsection}{Check before interpreting}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{deviance}\NormalTok{(m\_offspring) }\SpecialCharTok{/} \FunctionTok{df.residual}\NormalTok{(m\_offspring)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] 1.338865
+\end{verbatim}
+
+For count models, overdispersion is a common issue. If the residual
+deviance is much larger than the residual df, the Poisson model may be
+too simple.
+
+\subsection*{Interpret the output}\label{interpret-the-output-2}
+\addcontentsline{toc}{subsection}{Interpret the output}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(m\_offspring)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+
+Call:
+glm(formula = n_offspring ~ food, family = poisson, data = offspring)
+
+Coefficients:
+            Estimate Std. Error z value Pr(>|z|)    
+(Intercept)  0.61383    0.12057   5.091 3.56e-07 ***
+food         0.17327    0.01782   9.721  < 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for poisson family taken to be 1)
+
+    Null deviance: 216.70  on 89  degrees of freedom
+Residual deviance: 117.82  on 88  degrees of freedom
+AIC: 401.27
+
+Number of Fisher Scoring iterations: 5
+\end{verbatim}
+
+In a Poisson GLM, coefficients are on the log scale. A positive
+coefficient means the expected count increases as the predictor
+increases.
+
+\subsection*{Make explicit
+predictions}\label{make-explicit-predictions-2}
+\addcontentsline{toc}{subsection}{Make explicit predictions}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{new\_offspring }\OtherTok{\textless{}{-}} \FunctionTok{tibble}\NormalTok{(}
+  \AttributeTok{food =} \FunctionTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{10}\NormalTok{, }\AttributeTok{length.out =} \DecValTok{100}\NormalTok{)}
+\NormalTok{) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{predicted\_count =} \FunctionTok{predict}\NormalTok{(}
+\NormalTok{      m\_offspring,}
+      \AttributeTok{newdata =} \FunctionTok{pick}\NormalTok{(}\FunctionTok{everything}\NormalTok{()),}
+      \AttributeTok{type =} \StringTok{"response"}
+\NormalTok{    )}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(offspring, }\FunctionTok{aes}\NormalTok{(food, n\_offspring)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.6}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{(}
+    \AttributeTok{data =}\NormalTok{ new\_offspring,}
+    \FunctionTok{aes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ predicted\_count),}
+    \AttributeTok{colour =} \StringTok{"firebrick"}\NormalTok{,}
+    \AttributeTok{linewidth =} \DecValTok{1}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}
+    \AttributeTok{x =} \StringTok{"Food availability"}\NormalTok{,}
+    \AttributeTok{y =} \StringTok{"Number of offspring"}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{theme\_classic}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{12.1-review_files/figure-pdf/unnamed-chunk-34-1.pdf}}
+
+\subsection*{Report}\label{report-2}
+\addcontentsline{toc}{subsection}{Report}
+
+Example structure:
+
+\begin{quote}
+We fitted a Poisson GLM testing whether offspring number changed with
+food availability. Model checks did not suggest major overdispersion.
+Predicted offspring number increased with food availability, suggesting
+that food availability was positively associated with reproductive
+output.
+\end{quote}
+
+\section*{Final checklist}\label{final-checklist}
+\addcontentsline{toc}{section}{Final checklist}
+
+\markright{Final checklist}
+
+Planning checklist:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  What is the biological question?
+\item
+  What would the figure look like?
+\item
+  What is the response variable?
+\item
+  Are observations independent, grouped, repeated, blocked, or nested?
+\item
+  What are the explanatory variables?
+\item
+  What model follows from those choices?
+\item
+  How many observations will we collect?
+\item
+  What residual degrees of freedom do we expect?
+\end{enumerate}
+
+Implementation checklist:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Did I fit the model I planned?
+\item
+  Did I check assumptions or diagnostics before interpretation?
+\item
+  Am I reading the correct output for my question?
+\item
+  Am I asking a model/term-level question or a coefficient-level
+  question?
+\item
+  Did I make explicit predictions from the fitted model?
+\item
+  Does my plot show the model I actually fitted?
+\item
+  Does my report include both the statistical result and the biological
+  meaning?
+\end{enumerate}
+
+The goal is not to memorize every possible test. The goal is to move
+carefully from biological question to planned model, and then from
+fitted model to checked, interpreted, plotted, and reported result.
 
 
 \backmatter

@@ -1,0 +1,312 @@
+---
+title: "Planning the Statistical Analysis"
+subtitle: "30-minute review script for the final lecture"
+format:
+  html:
+    toc: true
+    code-fold: false
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+## Aim
+
+By the end of this section, students should be able to start with a biological question and make a defensible statistical plan before collecting or analyzing data.
+
+Core message:
+
+> Do not start with "Which test do I use?" Start with the biological question, sketch the expected figure, identify the response variable and data structure, then choose the model.
+
+---
+
+## 0-3 min: Set Up the Big Idea
+
+Today I want to start with the planning stage of analysis.
+
+A common mistake is to think that statistics starts after data collection, when we open R and ask: "Which test should I use?"
+
+But in a good study, the statistical approach is part of the study design. Before collecting data, we should already be able to say:
+
+> Here is my biological question.  
+> Here is the figure I expect to make.  
+> Here is the response variable.  
+> Here is the model I plan to fit.  
+> Here is roughly how many observations I need, and how many error degrees of freedom I expect.
+
+This does not mean the plan can never change. Real data can surprise us. But without a plan, we often discover too late that the design does not answer the question.
+
+---
+
+## 3-7 min: The Planning Workflow
+
+Put this workflow on the board or slide:
+
+```text
+PLANNING: before collecting/analyzing data
+
+Biological question
+        |
+        v
+Sketch expected figure
+        |
+        v
+Define response variable
+        |
+        +-- Continuous -> LM / Gaussian model
+        +-- Binary / proportion -> binomial GLM
+        +-- Count -> Poisson/count GLM
+        +-- Multivariate -> ordination / multivariate methods
+        |
+        v
+Check data structure
+        |
+        +-- independent observations -> ordinary LM / GLM
+        +-- grouped / repeated / blocked / nested -> mixed model / random effects
+        |
+        v
+Define explanatory variables
+        |
+        +-- categorical -> group differences
+        +-- continuous -> slopes
+        +-- categorical + continuous -> ANCOVA-style model
+        +-- multiple predictors -> multiple model
+        +-- interactions -> one effect depends on another
+        |
+        v
+Planned statistical model
+        |
+        v
+Plan sample size and expected error df
+        |
+        +-- planned number of observations
+        +-- planned number of groups / treatments / predictor levels
+        +-- planned number of estimated parameters
+        +-- expected degrees of freedom for error
+```
+
+Emphasize:
+
+The traditional names, like ANOVA, regression, and ANCOVA, are useful, but they are not the deepest decision. They are mostly different fixed-effect structures inside the linear model.
+
+The deeper forks are:
+
+1. What kind of response variable do I have?
+2. Are the observations independent, or is there grouping/repeated structure?
+3. What kind of explanatory variables do I have?
+
+---
+
+## 7-10 min: The Planning Sentence
+
+Give students a template:
+
+> We will test whether **X** affects **Y** using **model Z**, because **Y** is [response type], **X** is [predictor type], and the observations are [independent/grouped]. We plan to collect **n = ...** observations, giving approximately **n minus the number of estimated parameters** error degrees of freedom.
+
+Then say:
+
+This sentence is not just a reporting sentence. It is a design sentence. If you cannot complete it, the study plan is probably not clear enough yet.
+
+---
+
+## 10-15 min: Example 1, Comparing Treatment Means
+
+### Biological Question
+
+Does fertilizer treatment affect plant biomass?
+
+### Planning Walkthrough
+
+| Planning step | Decision |
+|---|---|
+| Expected figure | Biomass on the y-axis, fertilizer treatment on the x-axis; probably a boxplot, dot plot, or means with confidence intervals |
+| Response variable | Plant biomass, continuous |
+| Data structure | Each plant is measured once and plants are independent |
+| Explanatory variables | Fertilizer treatment, categorical: control, low fertilizer, high fertilizer |
+| Planned model | Gaussian linear model with biomass as the response and fertilizer treatment as the explanatory variable |
+| Traditional name | One-way ANOVA, also understood as a linear model with one categorical predictor |
+
+Example model:
+
+```r
+m1 <- lm(biomass ~ fertilizer, data = plants)
+```
+
+Sample size and expected error df:
+
+> Suppose we plan 20 plants per treatment and 3 treatments. That gives n = 60 observations.
+>
+> The model estimates 3 treatment means, so the expected residual/error df is approximately:
+
+```text
+60 - 3 = 57
+```
+
+Planning sentence:
+
+> We will test whether fertilizer treatment affects plant biomass using a Gaussian linear model, because biomass is continuous, fertilizer treatment is categorical, and each plant is measured independently. We plan to collect 60 observations, 20 per treatment, giving an expected residual df of about 57.
+
+Point to make:
+
+The degrees of freedom are not magic numbers that appear later in R. They are already implied by the design and the model.
+
+---
+
+## 15-20 min: Example 2, A Continuous Predictor
+
+### Biological Question
+
+Does temperature affect growth rate?
+
+### Planning Walkthrough
+
+| Planning step | Decision |
+|---|---|
+| Expected figure | Growth rate on the y-axis, temperature on the x-axis; a scatterplot with a fitted line and uncertainty band |
+| Response variable | Growth rate, continuous |
+| Data structure | Each experimental unit is measured once and observations are independent |
+| Explanatory variables | Temperature, continuous |
+| Planned model | Gaussian linear model with a continuous predictor |
+| Traditional name | Linear regression |
+
+Example model:
+
+```r
+m1 <- lm(growth_rate ~ temperature, data = growth)
+```
+
+Sample size and expected error df:
+
+> Suppose we plan n = 50 observations across the temperature gradient.
+>
+> The model estimates an intercept and a slope, so 2 parameters. The expected residual df is:
+
+```text
+50 - 2 = 48
+```
+
+Planning sentence:
+
+> We will test whether temperature affects growth rate using a Gaussian linear model, because growth rate is continuous, temperature is continuous, and observations are independent. We plan to collect 50 observations, giving an expected residual df of about 48.
+
+Point to make:
+
+The expected figure helps clarify the model. If the figure is a scatterplot with one fitted line, the model is probably a regression-type model.
+
+---
+
+## 20-24 min: Example 3, Grouping Structure and Random Effects
+
+### Biological Question
+
+Does a drug treatment affect heart rate when each animal is measured repeatedly over time?
+
+### Planning Walkthrough
+
+| Planning step | Decision |
+|---|---|
+| Expected figure | Heart rate on the y-axis, time or treatment on the x-axis, with repeated measurements connected or grouped by animal |
+| Response variable | Heart rate, continuous |
+| Data structure | Observations are not independent, because each animal contributes multiple measurements |
+| Explanatory variables | Treatment is categorical; time may be continuous or categorical, depending on the design |
+| Planned model | Mixed model, because repeated measurements are grouped within animals |
+| Random effect | Animal identity, because measurements are repeated within animal |
+
+Example model:
+
+```r
+m1 <- lmer(heart_rate ~ treatment + time + (1 | animal_id), data = heart)
+```
+
+Possible interaction:
+
+If the biological question is whether the treatment changes the trajectory through time, then plan an interaction:
+
+```r
+m2 <- lmer(heart_rate ~ treatment * time + (1 | animal_id), data = heart)
+```
+
+Sample size and expected error df:
+
+> Here we need to plan both the number of animals and the number of measurements per animal.
+>
+> For example, 20 animals measured 5 times each gives 100 observations, but those 100 observations are not equivalent to 100 independent animals.
+>
+> The grouping structure affects the model and the effective information in the data.
+
+Planning sentence:
+
+> We will test whether drug treatment affects heart rate over time using a mixed model, because heart rate is continuous, treatment and time are explanatory variables, and repeated measurements are grouped within animals. We plan to measure 20 animals 5 times each, giving 100 total observations, while accounting for animal identity as a random effect.
+
+Point to make:
+
+The random-effects question comes early. Before asking "ANOVA or regression?", ask whether the observations are independent.
+
+---
+
+## 24-27 min: Example 4, Binary Response
+
+### Biological Question
+
+Does habitat type affect whether individuals are infected?
+
+### Planning Walkthrough
+
+| Planning step | Decision |
+|---|---|
+| Expected figure | Infection probability on the y-axis and habitat type on the x-axis, perhaps shown as proportions with confidence intervals |
+| Response variable | Infection status: infected or not infected, binary |
+| Data structure | Each individual is sampled once and observations are independent |
+| Explanatory variables | Habitat type, categorical |
+| Planned model | Binomial GLM |
+
+Example model:
+
+```r
+m1 <- glm(infected ~ habitat, family = binomial, data = infection)
+```
+
+Sample size and expected error df:
+
+> Suppose we plan 50 individuals in each of two habitats, giving n = 100 observations.
+>
+> With two habitat groups, the expected residual df is roughly:
+
+```text
+100 - 2 = 98
+```
+
+Planning sentence:
+
+> We will test whether infection probability differs between habitats using a binomial GLM, because infection status is binary, habitat is categorical, and individuals are independent. We plan to sample 100 individuals, 50 per habitat, giving an expected residual df of about 98.
+
+Point to make:
+
+The explanatory variable could be categorical or continuous, just as in a linear model. What changes the model class is the response variable.
+
+---
+
+## 27-30 min: Pull the Threads Together
+
+Return to the workflow and summarize:
+
+> Planning is where we connect the biology to the model.
+
+Ask students:
+
+1. What is the biological question?
+2. What would the figure look like?
+3. What is the response variable?
+4. Are observations independent, grouped, repeated, blocked, or nested?
+5. What are the explanatory variables?
+6. What model follows from those choices?
+7. How many observations will we collect?
+8. What error degrees of freedom do we expect?
+
+Finish with:
+
+> Once we have the data, we move to implementation: fit the planned model, check the assumptions, and only then interpret the output.
+>
+> Checking comes before interpretation. Otherwise we may be interpreting a model that is not appropriate for the data.
+

@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.36">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Implementation: Fit, Check, Interpret, Predict, Report</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="implementation_review_script_files/libs/clipboard/clipboard.min.js"></script>
+<script src="implementation_review_script_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="implementation_review_script_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="implementation_review_script_files/libs/quarto-html/popper.min.js"></script>
+<script src="implementation_review_script_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="implementation_review_script_files/libs/quarto-html/anchor.min.js"></script>
+<link href="implementation_review_script_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="implementation_review_script_files/libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="implementation_review_script_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="implementation_review_script_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="implementation_review_script_files/libs/bootstrap/bootstrap-138a6193a3bd40baf1e627da441a4734.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#aim" id="toc-aim" class="nav-link active" data-scroll-target="#aim">Aim</a></li>
+  <li><a href="#setup" id="toc-setup" class="nav-link" data-scroll-target="#setup">Setup</a></li>
+  <li><a href="#min-the-implementation-workflow" id="toc-min-the-implementation-workflow" class="nav-link" data-scroll-target="#min-the-implementation-workflow">0-5 min: The Implementation Workflow</a></li>
+  <li><a href="#min-example-1-linear-model-with-interaction" id="toc-min-example-1-linear-model-with-interaction" class="nav-link" data-scroll-target="#min-example-1-linear-model-with-interaction">5-18 min: Example 1, Linear Model With Interaction</a>
+  <ul class="collapse">
+  <li><a href="#biological-question" id="toc-biological-question" class="nav-link" data-scroll-target="#biological-question">Biological Question</a></li>
+  <li><a href="#brief-planning-recap" id="toc-brief-planning-recap" class="nav-link" data-scroll-target="#brief-planning-recap">Brief Planning Recap</a></li>
+  <li><a href="#simulate-data" id="toc-simulate-data" class="nav-link" data-scroll-target="#simulate-data">Simulate Data</a></li>
+  <li><a href="#fit-the-planned-model" id="toc-fit-the-planned-model" class="nav-link" data-scroll-target="#fit-the-planned-model">Fit the Planned Model</a></li>
+  <li><a href="#check-the-model-before-interpreting" id="toc-check-the-model-before-interpreting" class="nav-link" data-scroll-target="#check-the-model-before-interpreting">Check the Model Before Interpreting</a></li>
+  <li><a href="#interpret-the-output" id="toc-interpret-the-output" class="nav-link" data-scroll-target="#interpret-the-output">Interpret the Output</a></li>
+  <li><a href="#make-explicit-predictions" id="toc-make-explicit-predictions" class="nav-link" data-scroll-target="#make-explicit-predictions">Make Explicit Predictions</a></li>
+  <li><a href="#report" id="toc-report" class="nav-link" data-scroll-target="#report">Report</a></li>
+  </ul></li>
+  <li><a href="#min-example-2-binomial-glm" id="toc-min-example-2-binomial-glm" class="nav-link" data-scroll-target="#min-example-2-binomial-glm">18-26 min: Example 2, Binomial GLM</a>
+  <ul class="collapse">
+  <li><a href="#biological-question-1" id="toc-biological-question-1" class="nav-link" data-scroll-target="#biological-question-1">Biological Question</a></li>
+  <li><a href="#brief-planning-recap-1" id="toc-brief-planning-recap-1" class="nav-link" data-scroll-target="#brief-planning-recap-1">Brief Planning Recap</a></li>
+  <li><a href="#simulate-data-1" id="toc-simulate-data-1" class="nav-link" data-scroll-target="#simulate-data-1">Simulate Data</a></li>
+  <li><a href="#fit-the-planned-model-1" id="toc-fit-the-planned-model-1" class="nav-link" data-scroll-target="#fit-the-planned-model-1">Fit the Planned Model</a></li>
+  <li><a href="#check-before-interpreting" id="toc-check-before-interpreting" class="nav-link" data-scroll-target="#check-before-interpreting">Check Before Interpreting</a></li>
+  <li><a href="#interpret-the-output-1" id="toc-interpret-the-output-1" class="nav-link" data-scroll-target="#interpret-the-output-1">Interpret the Output</a></li>
+  <li><a href="#make-explicit-predictions-1" id="toc-make-explicit-predictions-1" class="nav-link" data-scroll-target="#make-explicit-predictions-1">Make Explicit Predictions</a></li>
+  <li><a href="#report-1" id="toc-report-1" class="nav-link" data-scroll-target="#report-1">Report</a></li>
+  </ul></li>
+  <li><a href="#min-example-3-count-glm" id="toc-min-example-3-count-glm" class="nav-link" data-scroll-target="#min-example-3-count-glm">26-32 min: Example 3, Count GLM</a>
+  <ul class="collapse">
+  <li><a href="#biological-question-2" id="toc-biological-question-2" class="nav-link" data-scroll-target="#biological-question-2">Biological Question</a></li>
+  <li><a href="#brief-planning-recap-2" id="toc-brief-planning-recap-2" class="nav-link" data-scroll-target="#brief-planning-recap-2">Brief Planning Recap</a></li>
+  <li><a href="#simulate-data-2" id="toc-simulate-data-2" class="nav-link" data-scroll-target="#simulate-data-2">Simulate Data</a></li>
+  <li><a href="#fit-the-planned-model-2" id="toc-fit-the-planned-model-2" class="nav-link" data-scroll-target="#fit-the-planned-model-2">Fit the Planned Model</a></li>
+  <li><a href="#check-before-interpreting-1" id="toc-check-before-interpreting-1" class="nav-link" data-scroll-target="#check-before-interpreting-1">Check Before Interpreting</a></li>
+  <li><a href="#interpret-the-output-2" id="toc-interpret-the-output-2" class="nav-link" data-scroll-target="#interpret-the-output-2">Interpret the Output</a></li>
+  <li><a href="#make-explicit-predictions-2" id="toc-make-explicit-predictions-2" class="nav-link" data-scroll-target="#make-explicit-predictions-2">Make Explicit Predictions</a></li>
+  <li><a href="#report-2" id="toc-report-2" class="nav-link" data-scroll-target="#report-2">Report</a></li>
+  </ul></li>
+  <li><a href="#min-final-checklist" id="toc-min-final-checklist" class="nav-link" data-scroll-target="#min-final-checklist">32-35 min: Final Checklist</a></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Implementation: Fit, Check, Interpret, Predict, Report</h1>
+<p class="subtitle lead">35-minute review script for the final lecture</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="aim" class="level2">
+<h2 class="anchored" data-anchor-id="aim">Aim</h2>
+<p>By the end of this section, students should be able to take a planned statistical model and implement it in a disciplined order:</p>
+<pre class="text"><code>Fit -&gt; check -&gt; interpret -&gt; predict explicitly -&gt; plot -&gt; report</code></pre>
+<p>Core messages:</p>
+<ol type="1">
+<li>Check model assumptions before interpreting model output.</li>
+<li>Read model output at the correct level: term/model level or coefficient level.</li>
+<li>Make explicit predictions from the fitted model and plot those predictions.</li>
+<li>Do not rely on <code>geom_smooth()</code> as a substitute for modelling.</li>
+</ol>
+<hr>
+</section>
+<section id="setup" class="level2">
+<h2 class="anchored" data-anchor-id="setup">Setup</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">12026</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggfortify)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<hr>
+</section>
+<section id="min-the-implementation-workflow" class="level2">
+<h2 class="anchored" data-anchor-id="min-the-implementation-workflow">0-5 min: The Implementation Workflow</h2>
+<p>In the planning stage, we decided what model we intended to fit.</p>
+<p>In the implementation stage, the key question is:</p>
+<blockquote class="blockquote">
+<p>Did the model behave well enough that we can interpret it?</p>
+</blockquote>
+<p>The workflow is:</p>
+<pre class="text"><code>IMPLEMENTATION: after collecting data
+
+Fit planned model
+        |
+        v
+Check model assumptions / diagnostics
+        |
+        +-- okay -&gt; interpret model output
+        +-- not okay -&gt; revise model / family / structure
+        |
+        v
+Interpret output
+        |
+        v
+Make explicit predictions
+        |
+        v
+Plot data + model predictions
+        |
+        v
+Report statistical and biological conclusion</code></pre>
+<p>Say to students:</p>
+<blockquote class="blockquote">
+<p>The order matters. We do not fit a model, look for a small p-value, and only then check whether the model was reasonable. We check first, then interpret.</p>
+</blockquote>
+<p>Also say:</p>
+<blockquote class="blockquote">
+<p>Good practice is to make predictions explicitly from the fitted model and then plot those predictions. The figure should show the model you fitted, not a model quietly fitted by the plotting function.</p>
+</blockquote>
+<hr>
+</section>
+<section id="min-example-1-linear-model-with-interaction" class="level2">
+<h2 class="anchored" data-anchor-id="min-example-1-linear-model-with-interaction">5-18 min: Example 1, Linear Model With Interaction</h2>
+<section id="biological-question" class="level3">
+<h3 class="anchored" data-anchor-id="biological-question">Biological Question</h3>
+<p>Does body size affect metabolic rate, and does this body-size effect differ among three species?</p>
+<p>This example is useful because it connects many things students asked about:</p>
+<ul>
+<li>regression</li>
+<li>treatment groups</li>
+<li>interactions</li>
+<li>diagnostic plots</li>
+<li>reading model output</li>
+<li>degrees of freedom</li>
+<li>explicit prediction and plotting</li>
+</ul>
+</section>
+<section id="brief-planning-recap" class="level3">
+<h3 class="anchored" data-anchor-id="brief-planning-recap">Brief Planning Recap</h3>
+<p>Before implementation, the plan would be:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Planning step</th>
+<th>Decision</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Expected figure</td>
+<td>Scatterplot of metabolic rate against body size, with separate fitted lines for each species</td>
+</tr>
+<tr class="even">
+<td>Response variable</td>
+<td><code>metabolic_rate</code>, continuous</td>
+</tr>
+<tr class="odd">
+<td>Data structure</td>
+<td>Independent observations, assuming each individual is measured once</td>
+</tr>
+<tr class="even">
+<td>Explanatory variables</td>
+<td><code>body_size</code>, continuous; <code>species</code>, categorical</td>
+</tr>
+<tr class="odd">
+<td>Planned model</td>
+<td>Gaussian linear model with a species-by-body-size interaction</td>
+</tr>
+<tr class="even">
+<td>Approximate error df</td>
+<td>Number of observations minus number of estimated parameters</td>
+</tr>
+</tbody>
+</table>
+<p>Planning sentence:</p>
+<blockquote class="blockquote">
+<p>We will test whether body size affects metabolic rate differently among species using a Gaussian linear model with a species-by-body-size interaction, because metabolic rate is continuous, body size is continuous, species is categorical, and observations are independent.</p>
+</blockquote>
+</section>
+<section id="simulate-data" class="level3">
+<h3 class="anchored" data-anchor-id="simulate-data">Simulate Data</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>n_per_species <span class="ot">&lt;-</span> <span class="dv">45</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>metabolism <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">species =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"species_A"</span>, <span class="st">"species_B"</span>, <span class="st">"species_C"</span>), <span class="at">each =</span> n_per_species),</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">body_size =</span> <span class="fu">c</span>(</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">runif</span>(n_per_species, <span class="dv">5</span>, <span class="dv">30</span>),</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">runif</span>(n_per_species, <span class="dv">5</span>, <span class="dv">30</span>),</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">runif</span>(n_per_species, <span class="dv">5</span>, <span class="dv">30</span>)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>metabolism<span class="sc">$</span>metabolic_rate <span class="ot">&lt;-</span> <span class="fu">with</span>(</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  metabolism,</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="dv">3</span> <span class="sc">+</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.22</span> <span class="sc">*</span> body_size <span class="sc">+</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ifelse</span>(species <span class="sc">==</span> <span class="st">"species_B"</span>, <span class="fl">1.3</span>, <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ifelse</span>(species <span class="sc">==</span> <span class="st">"species_C"</span>, <span class="sc">-</span><span class="fl">0.7</span>, <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ifelse</span>(species <span class="sc">==</span> <span class="st">"species_B"</span>, <span class="fl">0.14</span> <span class="sc">*</span> body_size, <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ifelse</span>(species <span class="sc">==</span> <span class="st">"species_C"</span>, <span class="sc">-</span><span class="fl">0.08</span> <span class="sc">*</span> body_size, <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rnorm</span>(<span class="fu">nrow</span>(metabolism), <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="fl">1.4</span>)</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(metabolism)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    species body_size metabolic_rate
+1 species_A  9.918342       3.713256
+2 species_A 27.213330       8.346689
+3 species_A 14.171796       5.579503
+4 species_A 13.672379       8.060545
+5 species_A 18.368775       6.824531
+6 species_A 18.430160       5.475546</code></pre>
+</div>
+</div>
+<p>Planned figure:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(metabolism, <span class="fu">aes</span>(body_size, metabolic_rate, <span class="at">colour =</span> species)) <span class="sc">+</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Body size"</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Metabolic rate"</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="st">"Species"</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="implementation_review_script_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="fit-the-planned-model" class="level3">
+<h3 class="anchored" data-anchor-id="fit-the-planned-model">Fit the Planned Model</h3>
+<p>The planned model has:</p>
+<ul>
+<li>a continuous response: <code>metabolic_rate</code></li>
+<li>one continuous explanatory variable: <code>body_size</code></li>
+<li>one categorical explanatory variable: <code>species</code></li>
+<li>an interaction: <code>body_size:species</code></li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>m_metabolism <span class="ot">&lt;-</span> <span class="fu">lm</span>(metabolic_rate <span class="sc">~</span> species <span class="sc">*</span> body_size, <span class="at">data =</span> metabolism)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The model formula:</p>
+<pre class="text"><code>metabolic_rate ~ species * body_size</code></pre>
+<p>means:</p>
+<pre class="text"><code>metabolic_rate ~ species + body_size + species:body_size</code></pre>
+<p>Say to students:</p>
+<blockquote class="blockquote">
+<p>The <code>*</code> means main effects plus the interaction. We use it when the biological question is whether the effect of one predictor depends on another predictor.</p>
+</blockquote>
+</section>
+<section id="check-the-model-before-interpreting" class="level3">
+<h3 class="anchored" data-anchor-id="check-the-model-before-interpreting">Check the Model Before Interpreting</h3>
+<p>For a linear model, the common diagnostic questions are:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Diagnostic plot</th>
+<th>Question</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Residuals vs fitted</td>
+<td>Is there obvious nonlinearity or unequal variance?</td>
+</tr>
+<tr class="even">
+<td>QQ plot</td>
+<td>Are residuals approximately normal?</td>
+</tr>
+<tr class="odd">
+<td>Scale-location</td>
+<td>Does residual spread change with fitted values?</td>
+</tr>
+<tr class="even">
+<td>Residuals vs leverage</td>
+<td>Are a few observations dominating the model?</td>
+</tr>
+</tbody>
+</table>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(m_metabolism)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="implementation_review_script_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Say to students:</p>
+<blockquote class="blockquote">
+<p>We are not looking for perfect plots. We are looking for obvious problems that would make the model inappropriate.</p>
+</blockquote>
+<p>Possible actions if diagnostics look bad:</p>
+<ul>
+<li>reconsider whether the response should be transformed</li>
+<li>reconsider whether the relationship is nonlinear</li>
+<li>check for influential observations</li>
+<li>check whether important grouping structure was ignored</li>
+<li>for non-continuous responses, consider a GLM family instead of an LM</li>
+</ul>
+</section>
+<section id="interpret-the-output" class="level3">
+<h3 class="anchored" data-anchor-id="interpret-the-output">Interpret the Output</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m_metabolism)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = metabolic_rate ~ species * body_size, data = metabolism)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-4.1918 -0.8628 -0.0026  0.9103  3.5532 
+
+Coefficients:
+                           Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)                 3.83601    0.56726   6.762 4.25e-10 ***
+speciesspecies_B           -0.42823    0.80217  -0.534   0.5944    
+speciesspecies_C           -0.68723    0.79494  -0.865   0.3889    
+body_size                   0.17335    0.03001   5.777 5.40e-08 ***
+speciesspecies_B:body_size  0.23073    0.04327   5.333 4.20e-07 ***
+speciesspecies_C:body_size -0.07204    0.04127  -1.746   0.0832 .  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.426 on 129 degrees of freedom
+Multiple R-squared:  0.8028,    Adjusted R-squared:  0.7952 
+F-statistic:   105 on 5 and 129 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(m_metabolism)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Response: metabolic_rate
+                   Df Sum Sq Mean Sq F value    Pr(&gt;F)    
+species             2 632.80  316.40 155.492 &lt; 2.2e-16 ***
+body_size           1 324.39  324.39 159.417 &lt; 2.2e-16 ***
+species:body_size   2 111.55   55.78  27.411 1.201e-10 ***
+Residuals         129 262.50    2.03                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>Use this table to orient students:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Question level</th>
+<th>Model/output</th>
+<th>Common test statistic</th>
+<th>What it asks</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Model / term level</td>
+<td>ANOVA table for LM</td>
+<td><code>F</code></td>
+<td>Does this explanatory variable or term explain variation in the response?</td>
+</tr>
+<tr class="even">
+<td>Model / term level</td>
+<td>Deviance comparison for GLM</td>
+<td>Deviance / chi-square-like test</td>
+<td>Does adding/removing this term improve the model?</td>
+</tr>
+<tr class="odd">
+<td>Coefficient level</td>
+<td>Linear model coefficients</td>
+<td><code>t</code></td>
+<td>Is this estimated coefficient different from zero?</td>
+</tr>
+<tr class="even">
+<td>Coefficient level</td>
+<td>Binomial/Poisson GLM coefficients</td>
+<td><code>z</code></td>
+<td>Is this estimated coefficient different from zero on the link scale?</td>
+</tr>
+<tr class="odd">
+<td>Coefficient level</td>
+<td>Confidence interval</td>
+<td>CI</td>
+<td>What range of effect sizes is compatible with the data/model?</td>
+</tr>
+</tbody>
+</table>
+<p>Say to students:</p>
+<blockquote class="blockquote">
+<p><code>summary()</code> often gives coefficient-level tests. <code>anova()</code> often gives term-level tests. These are related, but they are not always asking exactly the same question.</p>
+</blockquote>
+<p>Degrees of freedom:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">df.residual</span>(m_metabolism)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 129</code></pre>
+</div>
+</div>
+<p>Say to students:</p>
+<blockquote class="blockquote">
+<p>Residual degrees of freedom are the amount of information left for estimating error after fitting the model. Here they are roughly the number of observations minus the number of estimated parameters.</p>
+</blockquote>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(metabolism)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 135</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">coef</span>(m_metabolism))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 6</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(metabolism) <span class="sc">-</span> <span class="fu">length</span>(<span class="fu">coef</span>(m_metabolism))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 129</code></pre>
+</div>
+</div>
+</section>
+<section id="make-explicit-predictions" class="level3">
+<h3 class="anchored" data-anchor-id="make-explicit-predictions">Make Explicit Predictions</h3>
+<p>Do not use <code>geom_smooth()</code> as the model.</p>
+<p>Instead:</p>
+<ol type="1">
+<li>fit the model</li>
+<li>create new data containing the predictor values we want predictions for</li>
+<li>use <code>predict()</code></li>
+<li>plot the observed data and model predictions</li>
+</ol>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>new_metabolism <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">species =</span> <span class="fu">c</span>(<span class="st">"species_A"</span>, <span class="st">"species_B"</span>, <span class="st">"species_C"</span>),</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">body_size =</span> <span class="fu">seq</span>(<span class="dv">5</span>, <span class="dv">30</span>, <span class="at">length.out =</span> <span class="dv">100</span>)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>pred_metabolism <span class="ot">&lt;-</span> <span class="fu">predict</span>(</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  m_metabolism,</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> new_metabolism,</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">interval =</span> <span class="st">"confidence"</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>plot_metabolism <span class="ot">&lt;-</span> <span class="fu">cbind</span>(new_metabolism, pred_metabolism)</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(plot_metabolism)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    species body_size      fit      lwr      upr
+1 species_A  5.000000 4.702764 3.848364 5.557164
+2 species_B  5.000000 5.428193 4.583904 6.272483
+3 species_C  5.000000 3.655316 2.805723 4.504910
+4 species_A  5.252525 4.746540 3.905157 5.587923
+5 species_B  5.252525 5.530235 4.699410 6.361059
+6 species_C  5.252525 3.680899 2.843573 4.518225</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(metabolism, <span class="fu">aes</span>(body_size, metabolic_rate, <span class="at">colour =</span> species)) <span class="sc">+</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.65</span>) <span class="sc">+</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> plot_metabolism,</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> body_size, <span class="at">ymin =</span> lwr, <span class="at">ymax =</span> upr, <span class="at">fill =</span> species),</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.18</span>,</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="cn">NA</span>,</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">inherit.aes =</span> <span class="cn">FALSE</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> plot_metabolism, <span class="fu">aes</span>(<span class="at">y =</span> fit), <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Body size"</span>,</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Metabolic rate"</span>,</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="st">"Species"</span>,</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Species"</span></span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="implementation_review_script_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Say to students:</p>
+<blockquote class="blockquote">
+<p>The model and the figure now match. The lines and ribbons come from <code>m_metabolism</code>, the model we fitted and checked.</p>
+</blockquote>
+</section>
+<section id="report" class="level3">
+<h3 class="anchored" data-anchor-id="report">Report</h3>
+<p>Example structure:</p>
+<blockquote class="blockquote">
+<p>We fitted a Gaussian linear model testing whether metabolic rate depended on body size, species, and their interaction. Diagnostic plots did not show major violations of model assumptions. Metabolic rate changed with body size, but the slope differed among species: the relationship was strongest in species B and weakest in species C. This indicates that species changed the relationship between body size and metabolism.</p>
+</blockquote>
+<p>If giving formal results, add the relevant coefficient or term-level test from the output.</p>
+<hr>
+</section>
+</section>
+<section id="min-example-2-binomial-glm" class="level2">
+<h2 class="anchored" data-anchor-id="min-example-2-binomial-glm">18-26 min: Example 2, Binomial GLM</h2>
+<section id="biological-question-1" class="level3">
+<h3 class="anchored" data-anchor-id="biological-question-1">Biological Question</h3>
+<p>Does habitat type affect whether individuals are infected?</p>
+</section>
+<section id="brief-planning-recap-1" class="level3">
+<h3 class="anchored" data-anchor-id="brief-planning-recap-1">Brief Planning Recap</h3>
+<p>Before implementation, the plan would be:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Planning step</th>
+<th>Decision</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Expected figure</td>
+<td>Infection probability or observed proportion infected by habitat</td>
+</tr>
+<tr class="even">
+<td>Response variable</td>
+<td><code>infected</code>, binary: 0 = not infected, 1 = infected</td>
+</tr>
+<tr class="odd">
+<td>Data structure</td>
+<td>Independent observations, assuming each individual is sampled once</td>
+</tr>
+<tr class="even">
+<td>Explanatory variables</td>
+<td><code>habitat</code>, categorical</td>
+</tr>
+<tr class="odd">
+<td>Planned model</td>
+<td>Binomial GLM</td>
+</tr>
+<tr class="even">
+<td>Approximate error df</td>
+<td>Number of observations minus number of estimated habitat probabilities</td>
+</tr>
+</tbody>
+</table>
+<p>Planning sentence:</p>
+<blockquote class="blockquote">
+<p>We will test whether infection probability differs between habitats using a binomial GLM, because infection status is binary, habitat is categorical, and observations are independent.</p>
+</blockquote>
+</section>
+<section id="simulate-data-1" class="level3">
+<h3 class="anchored" data-anchor-id="simulate-data-1">Simulate Data</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>n_per_habitat <span class="ot">&lt;-</span> <span class="dv">80</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>infection <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">habitat =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"forest"</span>, <span class="st">"grassland"</span>), <span class="at">each =</span> n_per_habitat)</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>infection<span class="sc">$</span>p_infected <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(infection<span class="sc">$</span>habitat <span class="sc">==</span> <span class="st">"forest"</span>, <span class="fl">0.28</span>, <span class="fl">0.55</span>)</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>infection<span class="sc">$</span>infected <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(<span class="fu">nrow</span>(infection), <span class="at">size =</span> <span class="dv">1</span>, <span class="at">prob =</span> infection<span class="sc">$</span>p_infected)</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(infection)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  habitat p_infected infected
+1  forest       0.28        0
+2  forest       0.28        1
+3  forest       0.28        0
+4  forest       0.28        0
+5  forest       0.28        0
+6  forest       0.28        0</code></pre>
+</div>
+</div>
+<p>Planned figure:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>infection_summary <span class="ot">&lt;-</span> <span class="fu">aggregate</span>(</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  infected <span class="sc">~</span> habitat,</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> infection,</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">FUN =</span> mean</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(infection_summary, <span class="fu">aes</span>(habitat, infected)) <span class="sc">+</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"grey70"</span>, <span class="at">colour =</span> <span class="st">"grey25"</span>) <span class="sc">+</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Habitat"</span>,</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Observed proportion infected"</span></span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="implementation_review_script_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="fit-the-planned-model-1" class="level3">
+<h3 class="anchored" data-anchor-id="fit-the-planned-model-1">Fit the Planned Model</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>m_infection <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  infected <span class="sc">~</span> habitat,</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> binomial,</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> infection</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="check-before-interpreting" class="level3">
+<h3 class="anchored" data-anchor-id="check-before-interpreting">Check Before Interpreting</h3>
+<p>For a binomial GLM, ask:</p>
+<ul>
+<li>Did I use the correct response type and family?</li>
+<li>Are observations independent?</li>
+<li>Are there obvious influential observations?</li>
+<li>Is there overdispersion, especially for grouped/binomial count data?</li>
+</ul>
+<p>A simple overdispersion check:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>overdispersion_ratio <span class="ot">&lt;-</span> <span class="fu">deviance</span>(m_infection) <span class="sc">/</span> <span class="fu">df.residual</span>(m_infection)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>overdispersion_ratio</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.346005</code></pre>
+</div>
+</div>
+<p>Say to students:</p>
+<blockquote class="blockquote">
+<p>A ratio much larger than 1 can suggest overdispersion. This is a warning sign that the model may be underestimating uncertainty.</p>
+</blockquote>
+</section>
+<section id="interpret-the-output-1" class="level3">
+<h3 class="anchored" data-anchor-id="interpret-the-output-1">Interpret the Output</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m_infection)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = infected ~ habitat, family = binomial, data = infection)
+
+Coefficients:
+                 Estimate Std. Error z value Pr(&gt;|z|)   
+(Intercept)       -0.4578     0.2295  -1.995  0.04604 * 
+habitatgrassland   0.9687     0.3256   2.975  0.00293 **
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 221.78  on 159  degrees of freedom
+Residual deviance: 212.67  on 158  degrees of freedom
+AIC: 216.67
+
+Number of Fisher Scoring iterations: 4</code></pre>
+</div>
+</div>
+<p>Say to students:</p>
+<blockquote class="blockquote">
+<p>In a binomial GLM, coefficients are on the log-odds scale by default. That scale is useful for the model, but not always intuitive biologically.</p>
+</blockquote>
+<p>Predicted probabilities are often easier to interpret.</p>
+</section>
+<section id="make-explicit-predictions-1" class="level3">
+<h3 class="anchored" data-anchor-id="make-explicit-predictions-1">Make Explicit Predictions</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>new_infection <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">habitat =</span> <span class="fu">c</span>(<span class="st">"forest"</span>, <span class="st">"grassland"</span>)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>new_infection<span class="sc">$</span>predicted_probability <span class="ot">&lt;-</span> <span class="fu">predict</span>(</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>  m_infection,</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> new_infection,</span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"response"</span></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>new_infection</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    habitat predicted_probability
+1    forest                0.3875
+2 grassland                0.6250</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(infection, <span class="fu">aes</span>(habitat, infected)) <span class="sc">+</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.08</span>, <span class="at">height =</span> <span class="fl">0.03</span>, <span class="at">alpha =</span> <span class="fl">0.25</span>) <span class="sc">+</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> new_infection,</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">y =</span> predicted_probability),</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">4</span>,</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="st">"firebrick"</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Habitat"</span>,</span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Infection status / predicted probability"</span></span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="implementation_review_script_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Say to students:</p>
+<blockquote class="blockquote">
+<p>For GLMs, <code>type = "response"</code> gives predictions on the biological scale. For a binomial GLM, that means predicted probabilities.</p>
+</blockquote>
+</section>
+<section id="report-1" class="level3">
+<h3 class="anchored" data-anchor-id="report-1">Report</h3>
+<p>Example structure:</p>
+<blockquote class="blockquote">
+<p>We fitted a binomial GLM testing whether infection probability differed between habitats. The model used infection status as a binary response and habitat as a categorical explanatory variable. After checking model fit, we interpreted the model on the probability scale: predicted infection probability was higher in grassland than forest.</p>
+</blockquote>
+<hr>
+</section>
+</section>
+<section id="min-example-3-count-glm" class="level2">
+<h2 class="anchored" data-anchor-id="min-example-3-count-glm">26-32 min: Example 3, Count GLM</h2>
+<section id="biological-question-2" class="level3">
+<h3 class="anchored" data-anchor-id="biological-question-2">Biological Question</h3>
+<p>Does food availability affect the number of offspring produced?</p>
+</section>
+<section id="brief-planning-recap-2" class="level3">
+<h3 class="anchored" data-anchor-id="brief-planning-recap-2">Brief Planning Recap</h3>
+<p>Before implementation, the plan would be:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Planning step</th>
+<th>Decision</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Expected figure</td>
+<td>Scatterplot of offspring number against food availability, with a fitted prediction line</td>
+</tr>
+<tr class="even">
+<td>Response variable</td>
+<td><code>n_offspring</code>, count</td>
+</tr>
+<tr class="odd">
+<td>Data structure</td>
+<td>Independent observations, assuming each individual or reproductive unit is measured once</td>
+</tr>
+<tr class="even">
+<td>Explanatory variables</td>
+<td><code>food</code>, continuous</td>
+</tr>
+<tr class="odd">
+<td>Planned model</td>
+<td>Poisson GLM, with overdispersion checked after fitting</td>
+</tr>
+<tr class="even">
+<td>Approximate error df</td>
+<td>Number of observations minus number of estimated parameters</td>
+</tr>
+</tbody>
+</table>
+<p>Planning sentence:</p>
+<blockquote class="blockquote">
+<p>We will test whether food availability affects offspring number using a Poisson GLM, because offspring number is a count, food availability is continuous, and observations are independent.</p>
+</blockquote>
+</section>
+<section id="simulate-data-2" class="level3">
+<h3 class="anchored" data-anchor-id="simulate-data-2">Simulate Data</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>n_count <span class="ot">&lt;-</span> <span class="dv">90</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>offspring <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">food =</span> <span class="fu">runif</span>(n_count, <span class="dv">0</span>, <span class="dv">10</span>)</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>offspring<span class="sc">$</span>expected_count <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fl">0.6</span> <span class="sc">+</span> <span class="fl">0.18</span> <span class="sc">*</span> offspring<span class="sc">$</span>food)</span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>offspring<span class="sc">$</span>n_offspring <span class="ot">&lt;-</span> <span class="fu">rpois</span>(n_count, <span class="at">lambda =</span> offspring<span class="sc">$</span>expected_count)</span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(offspring)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       food expected_count n_offspring
+1 0.1263841       1.864046           1
+2 6.2161219       5.578400           5
+3 1.1030249       2.222304           1
+4 7.3039512       6.784979          13
+5 8.7111276       8.740811          13
+6 5.5352228       4.934938           8</code></pre>
+</div>
+</div>
+<p>Planned figure:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(offspring, <span class="fu">aes</span>(food, n_offspring)) <span class="sc">+</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Food availability"</span>,</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Number of offspring"</span></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="implementation_review_script_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="fit-the-planned-model-2" class="level3">
+<h3 class="anchored" data-anchor-id="fit-the-planned-model-2">Fit the Planned Model</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>m_offspring <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  n_offspring <span class="sc">~</span> food,</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> poisson,</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> offspring</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="check-before-interpreting-1" class="level3">
+<h3 class="anchored" data-anchor-id="check-before-interpreting-1">Check Before Interpreting</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">deviance</span>(m_offspring) <span class="sc">/</span> <span class="fu">df.residual</span>(m_offspring)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.9933966</code></pre>
+</div>
+</div>
+<p>Say to students:</p>
+<blockquote class="blockquote">
+<p>For count models, overdispersion is a common issue. If the residual deviance is much larger than the residual df, the Poisson model may be too simple.</p>
+</blockquote>
+</section>
+<section id="interpret-the-output-2" class="level3">
+<h3 class="anchored" data-anchor-id="interpret-the-output-2">Interpret the Output</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m_offspring)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = n_offspring ~ food, family = poisson, data = offspring)
+
+Coefficients:
+            Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)  0.53555    0.12635   4.239 2.25e-05 ***
+food         0.19782    0.01751  11.301  &lt; 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for poisson family taken to be 1)
+
+    Null deviance: 229.898  on 89  degrees of freedom
+Residual deviance:  87.419  on 88  degrees of freedom
+AIC: 391.33
+
+Number of Fisher Scoring iterations: 4</code></pre>
+</div>
+</div>
+<p>Say to students:</p>
+<blockquote class="blockquote">
+<p>In a Poisson GLM, coefficients are on the log scale. A positive coefficient means the expected count increases as the predictor increases.</p>
+</blockquote>
+</section>
+<section id="make-explicit-predictions-2" class="level3">
+<h3 class="anchored" data-anchor-id="make-explicit-predictions-2">Make Explicit Predictions</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>new_offspring <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">food =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">10</span>, <span class="at">length.out =</span> <span class="dv">100</span>)</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>new_offspring<span class="sc">$</span>predicted_count <span class="ot">&lt;-</span> <span class="fu">predict</span>(</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>  m_offspring,</span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> new_offspring,</span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"response"</span></span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(offspring, <span class="fu">aes</span>(food, n_offspring)) <span class="sc">+</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> new_offspring,</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">y =</span> predicted_count),</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="st">"firebrick"</span>,</span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="dv">1</span></span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Food availability"</span>,</span>
+<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Number of offspring"</span></span>
+<span id="cb46-12"><a href="#cb46-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb46-13"><a href="#cb46-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="implementation_review_script_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="report-2" class="level3">
+<h3 class="anchored" data-anchor-id="report-2">Report</h3>
+<p>Example structure:</p>
+<blockquote class="blockquote">
+<p>We fitted a Poisson GLM testing whether offspring number changed with food availability. Model checks did not suggest major overdispersion. Predicted offspring number increased with food availability, suggesting that food availability was positively associated with reproductive output.</p>
+</blockquote>
+<hr>
+</section>
+</section>
+<section id="min-final-checklist" class="level2">
+<h2 class="anchored" data-anchor-id="min-final-checklist">32-35 min: Final Checklist</h2>
+<p>Return to the implementation workflow:</p>
+<pre class="text"><code>Fit -&gt; check -&gt; interpret -&gt; predict explicitly -&gt; plot -&gt; report</code></pre>
+<p>Ask students to use this checklist:</p>
+<ol type="1">
+<li>Did I fit the model I planned?</li>
+<li>Did I check assumptions or diagnostics before interpretation?</li>
+<li>Am I reading the correct output for my question?</li>
+<li>Am I asking a model/term-level question or a coefficient-level question?</li>
+<li>Did I make explicit predictions from the fitted model?</li>
+<li>Does my plot show the model I actually fitted?</li>
+<li>Does my report include both the statistical result and the biological meaning?</li>
+</ol>
+<p>Final sentence:</p>
+<blockquote class="blockquote">
+<p>The goal is not to memorize every possible test. The goal is to move carefully from biological question to planned model, and then from fitted model to checked, interpreted, plotted, and reported result.</p>
+</blockquote>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

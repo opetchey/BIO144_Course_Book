@@ -11,7 +11,6 @@ invisible(
           library(here)
           library(kableExtra)
           library(ggfortify)
-          library(AICcmodavg)
           library(HSAUR3)
           library(vegan)
           library(car)

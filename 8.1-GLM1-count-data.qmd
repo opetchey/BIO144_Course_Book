@@ -6,6 +6,14 @@ source("_common.R")
 
 # Count data (L8) {.unnumbered}
 
+```{r}
+#| echo: false
+#| output: asis
+lo_dir <- "../BIO144_Course_Information/learning_objectives"
+source(file.path(lo_dir, "lo.R"))
+lo_callout("8.1", lo_dir)
+```
+
 In all the previous chapters, we have focused on **linear models**. These are suitable for continuous response variables that can, mathematically, take negative values. However, response variables can be otherwise. For example, we might have a response variable that is the number of offspring produced by a mother. This is a *count* type of response variable. In this chapter, you'll see why the models we used so far are usually inappropriate for count data. Then you'll learn about a more appropriate type of model: **Generalized Linear Models (GLMs)**.
 
 ## Introduction
@@ -353,6 +361,8 @@ The QQ-plot is rather concerning. However, QQ-plots in GLMs are not testing norm
 
 The other plots look much better than for the linear model. The residuals vs fitted plot shows no obvious pattern, and the scale-location plot shows more constant variance.
 
+{{< include _glm-checklist.qmd >}}
+
 ::: {.callout-important}
 You must specify the **family** in `glm()`. If you omit the link function, R uses the default link for that family.
 :::
@@ -455,10 +465,10 @@ When we wish to make a graph of the fitted relationship, we can either make it w
 The first step is to create a new data frame with a sequence of body sizes for prediction, and errors for the 95% confidence intervals:
 ```{r}
 new_data <- data.frame(body.size = seq(min(soay$body.size), max(soay$body.size), length.out = 100))
-predictions <- predict(soay_glm, newdata = new_data, se.fit = TRUE)
-new_data$fit <- exp(predictions$fit)
-new_data$lower <- exp(predictions$fit - 1.96 * predictions$se.fit)
-new_data$upper <- exp(predictions$fit + 1.96 * predictions$se.fit)
+soay_predictions <- predict(soay_glm, newdata = new_data, se.fit = TRUE)
+new_data$fit <- exp(soay_predictions$fit)
+new_data$lower <- exp(soay_predictions$fit - 1.96 * soay_predictions$se.fit)
+new_data$upper <- exp(soay_predictions$fit + 1.96 * soay_predictions$se.fit)
 ```
 
 Note that we back-transform the predictions and confidence intervals using the exponential function, since the link function is the log. And note that we must calculate the confidence intervals on the log scale first, and then back-transform them.
@@ -484,6 +494,11 @@ Excellent! We can now write a nice sentence for our results:
 
 Reproductive fitness (in terms of lifetime number of offspring) increased significantly with body mass, with a unit increase in body mass associated with a multiplicative increase in expected fitness of `r round(exp(coef(soay_glm)[2]), 2)` (95% CI: `r round(exp(confint(soay_glm)[2, ]), 2)`; $\chi^2 =$ `r round(anova(soay_glm, test = "Chisq")$Deviance[2], 2)`, $df = 1$, $p <$ `r signif(anova(soay_glm, test = "Chisq")[2,5], 2)`).
 
+
+<!-- 2027 addition: effect size and biological relevance -->
+::: {.callout-tip}
+**How big is the effect?** A multiplicative effect per kg of body mass can be hard to judge. It helps to also express it over the range of the data. In this example, the model predicts an expected lifetime fitness of `r round(new_data$fit[1], 1)` offspring for the lightest sheep (`r round(min(soay$body.size))` kg) and `r round(new_data$fit[nrow(new_data)], 1)` offspring for the heaviest (`r round(max(soay$body.size))` kg). Whether a difference of this size is biologically important (for example, for the evolution of body size) is a biological question, but reporting the effect in this way gives readers what they need to judge it.
+:::
 
 ## Well done!
 
@@ -606,20 +621,20 @@ It looks like higher parasite loads are associated with lower fitness.
 We can fit a Poisson GLM with both body size and parasite load as explanatory variables:
 
 ```{r}
-soay_glm2 <- glm(fitness ~ body.size + parasite.load, data = soay, family = poisson)
+soay_glm_parasites <- glm(fitness ~ body.size + parasite.load, data = soay, family = poisson)
 ```
 
 As always we check model assumptions:
 ```{r}
 #| warning: false
 #par(mfrow = c(2, 2))
-autoplot(soay_glm2, which = 1:4, add.smooth = TRUE)
+autoplot(soay_glm_parasites, which = 1:4, add.smooth = TRUE)
 ```
 
 The model checking plots look good. We can summarise the model:
 
 ```{r}
-anova(soay_glm2, test = "Chisq")
+anova(soay_glm_parasites, test = "Chisq")
 ```
 
 We see that both body size and parasite load significantly affect fitness. Body size has a positive effect, while parasite load has a negative effect. These effects are interpreted conditional on the other explanatory variable being held constant, just as in multiple linear regression.
@@ -651,6 +666,10 @@ With this foundation, you are now equipped to analyse count data using GLMs in R
 
 
 ## Extras
+
+::: {.callout-note}
+The content of this Extras section is not examinable. It is here for those who want to learn more.
+:::
 
 ### Deviance residuals
 

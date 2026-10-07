@@ -215,7 +215,7 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./5.1-anova.html" class="sidebar-item-text sidebar-link">
+  <a href="./5.1-ANOVA.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Analysis of variance (L5)</span></a>
   </div>
 </li>
@@ -277,16 +277,35 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#notation-and-some-definitions" id="toc-notation-and-some-definitions" class="nav-link active" data-scroll-target="#notation-and-some-definitions">Notation and some definitions</a></li>
-  <li><a href="#data-analysis-workflow" id="toc-data-analysis-workflow" class="nav-link" data-scroll-target="#data-analysis-workflow">Data analysis workflow</a></li>
-  <li><a href="#using-generative-ai-in-r-and-data-analysis-guidance-and-good-practice" id="toc-using-generative-ai-in-r-and-data-analysis-guidance-and-good-practice" class="nav-link" data-scroll-target="#using-generative-ai-in-r-and-data-analysis-guidance-and-good-practice">Using Generative AI in R and Data Analysis: Guidance and Good Practice</a>
+  <li><a href="#about-this-chapter" id="toc-about-this-chapter" class="nav-link active" data-scroll-target="#about-this-chapter">About this chapter</a></li>
+  <li><a href="#goals-of-the-course" id="toc-goals-of-the-course" class="nav-link" data-scroll-target="#goals-of-the-course">Goals of the course</a></li>
+  <li><a href="#why-data-analysis-matters" id="toc-why-data-analysis-matters" class="nav-link" data-scroll-target="#why-data-analysis-matters">Why data analysis matters</a></li>
+  <li><a href="#high-quality-data-analysis-four-principles" id="toc-high-quality-data-analysis-four-principles" class="nav-link" data-scroll-target="#high-quality-data-analysis-four-principles">High-quality data analysis: four principles</a></li>
+  <li><a href="#how-the-course-is-organised" id="toc-how-the-course-is-organised" class="nav-link" data-scroll-target="#how-the-course-is-organised">How the course is organised</a></li>
+  <li><a href="#the-final-examination" id="toc-the-final-examination" class="nav-link" data-scroll-target="#the-final-examination">The final examination</a></li>
+  <li><a href="#how-we-will-work-together" id="toc-how-we-will-work-together" class="nav-link" data-scroll-target="#how-we-will-work-together">How we will work together</a></li>
+  <li><a href="#using-ai-assistants" id="toc-using-ai-assistants" class="nav-link" data-scroll-target="#using-ai-assistants">Using AI assistants</a>
   <ul class="collapse">
+  <li><a href="#guidance-and-good-practice" id="toc-guidance-and-good-practice" class="nav-link" data-scroll-target="#guidance-and-good-practice">Guidance and good practice</a></li>
   <li><a href="#guidelines-for-good-use-of-generative-ai" id="toc-guidelines-for-good-use-of-generative-ai" class="nav-link" data-scroll-target="#guidelines-for-good-use-of-generative-ai">Guidelines for Good Use of Generative AI</a></li>
   <li><a href="#indicators-of-problematic-usage" id="toc-indicators-of-problematic-usage" class="nav-link" data-scroll-target="#indicators-of-problematic-usage">Indicators of Problematic Usage</a></li>
   <li><a href="#examples-of-good-and-problematic-use" id="toc-examples-of-good-and-problematic-use" class="nav-link" data-scroll-target="#examples-of-good-and-problematic-use">Examples of Good and Problematic Use</a></li>
   <li><a href="#common-genai-errors-in-r-and-statistical-modelling" id="toc-common-genai-errors-in-r-and-statistical-modelling" class="nav-link" data-scroll-target="#common-genai-errors-in-r-and-statistical-modelling">Common GenAI Errors in R and Statistical Modelling</a></li>
   </ul></li>
-  <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading">Further reading</a></li>
+  <li><a href="#rstudio-server" id="toc-rstudio-server" class="nav-link" data-scroll-target="#rstudio-server">RStudio Server</a></li>
+  <li><a href="#a-complete-data-analysis-reaction-times" id="toc-a-complete-data-analysis-reaction-times" class="nav-link" data-scroll-target="#a-complete-data-analysis-reaction-times">A complete data analysis: reaction times</a>
+  <ul class="collapse">
+  <li><a href="#question" id="toc-question" class="nav-link" data-scroll-target="#question">Question</a></li>
+  <li><a href="#expectation" id="toc-expectation" class="nav-link" data-scroll-target="#expectation">Expectation</a></li>
+  <li><a href="#planned-presentation-and-analysis" id="toc-planned-presentation-and-analysis" class="nav-link" data-scroll-target="#planned-presentation-and-analysis">Planned presentation and analysis</a></li>
+  <li><a href="#selection-of-subjects" id="toc-selection-of-subjects" class="nav-link" data-scroll-target="#selection-of-subjects">Selection of subjects</a></li>
+  <li><a href="#how-the-data-are-collected-and-ethics" id="toc-how-the-data-are-collected-and-ethics" class="nav-link" data-scroll-target="#how-the-data-are-collected-and-ethics">How the data are collected, and ethics</a></li>
+  <li><a href="#data-wrangling-visualisation-and-statistical-test" id="toc-data-wrangling-visualisation-and-statistical-test" class="nav-link" data-scroll-target="#data-wrangling-visualisation-and-statistical-test">Data wrangling, visualisation and statistical test</a></li>
+  <li><a href="#critical-thinking-and-reporting" id="toc-critical-thinking-and-reporting" class="nav-link" data-scroll-target="#critical-thinking-and-reporting">Critical thinking, and reporting</a></li>
+  </ul></li>
+  <li><a href="#activate-your-prior-learning" id="toc-activate-your-prior-learning" class="nav-link" data-scroll-target="#activate-your-prior-learning">Activate your prior learning</a></li>
+  <li><a href="#notation-and-some-definitions" id="toc-notation-and-some-definitions" class="nav-link" data-scroll-target="#notation-and-some-definitions">Notation and some definitions</a></li>
+  <li><a href="#references-and-further-reading" id="toc-references-and-further-reading" class="nav-link" data-scroll-target="#references-and-further-reading">References and further reading</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/opetchey/BIO144_Course_Book/edit/main/1.1-intro.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/opetchey/BIO144_Course_Book/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -312,71 +331,201 @@ window.Quarto = {
 </header>
 
 
-<p>The first lecture of the course introduces it, gives some important information, and sets the stage for the rest of the course. Some of the time in the lecture will be used to create a dataset for use during the course. It also gives an opportunity to review some of the things about R and statistics that it is very useful to already know.</p>
-<p>The lecture includes:</p>
-<ul>
-<li>Goals of the course</li>
-<li>Course organisation</li>
-<li>AI and the course</li>
-<li>Making a course dataset</li>
-<li>Using RStudio</li>
-<li>Reviewing what you should already know</li>
-<li>Learning objectives</li>
-<li>A general workflow for data analysis</li>
-</ul>
-<section id="notation-and-some-definitions" class="level2">
-<h2 class="anchored" data-anchor-id="notation-and-some-definitions">Notation and some definitions</h2>
-<p>Throughout the course, we will use the following notation:</p>
-<ul>
-<li><span class="math inline">\(x\)</span> for a variable. Typically this variable contains a set of observations. These observations are said to represent a sample of all the possible observations that could be made of a <em>population</em>.</li>
-<li><span class="math inline">\(x_1, x_2, \ldots\)</span> for the values of a variable</li>
-<li><span class="math inline">\(x_i\)</span> for the <span class="math inline">\(i\)</span>th value of a scalar variable. This is often spoken as “x sub i” or the “i-th value of x”.</li>
-<li><span class="math inline">\(x^{(1)}\)</span> for variable 1, <span class="math inline">\(x^{(2)}\)</span> for variable 2, etc.</li>
-<li>The mean of the sample <span class="math inline">\(x\)</span> is <span class="math inline">\(\bar{x}\)</span>. This is usually spoken as “x-bar”.</li>
-<li>The mean of <span class="math inline">\(x\)</span> is calculated as <span class="math inline">\(\bar{x} = \frac{1}{n} \sum_{i=1}^n x_i\)</span>.</li>
-<li><span class="math inline">\(n\)</span> is the number of observations in a sample.</li>
-<li>The summation symbol <span class="math inline">\(\sum\)</span> is used to indicate that the values of <span class="math inline">\(x\)</span> are summed over all values of <span class="math inline">\(i\)</span> from 1 to <span class="math inline">\(n\)</span>.</li>
-<li>The standard deviation of the sample is <span class="math inline">\(s\)</span>. The standard deviation of the population is <span class="math inline">\(\sigma\)</span>.</li>
-<li>The variance is <span class="math inline">\(s^2\)</span>. The variance of the population is <span class="math inline">\(\sigma^2\)</span>.</li>
-<li>The variance of the sample is calculated as <span class="math inline">\(s^2 = \frac{1}{n-1} \sum_{i=1}^n (x_i - \bar{x})^2\)</span>.</li>
-<li>The standard deviation of the sample is calculated as <span class="math inline">\(s = \sqrt{s^2}\)</span>.</li>
-<li><span class="math inline">\(y\)</span> is usually used to represent a dependent / response variable.</li>
-<li><span class="math inline">\(x\)</span> is usually used to represent an independent / predictor / explanatory variable.</li>
-<li><span class="math inline">\(\beta_0\)</span> is usually used to denote the intercept of a linear model.</li>
-<li><span class="math inline">\(\beta_1\)</span>, <span class="math inline">\(\beta_2\)</span>, etc. are usually used to denote the coefficients of the independent variables in a linear model.</li>
-<li>Estimates are denoted with a hat, so <span class="math inline">\(\hat{\beta}_0\)</span> is the estimate of the intercept of a linear model.</li>
-<li>Hence, the estimated value of <span class="math inline">\(y_i\)</span> in a linear regression model is <span class="math inline">\(\hat{y_i} = \hat{\beta}_0 + \hat{\beta}_1 x_i^{(1)}\)</span>.</li>
-<li><span class="math inline">\(e_i\)</span> is the residual for the <span class="math inline">\(i\)</span>th observation in a linear model. The residual is the difference between the observed value of <span class="math inline">\(y_i\)</span> and the predicted value of <span class="math inline">\(y_i\)</span> (<span class="math inline">\(\hat{y_i}\)</span>).</li>
-<li>Often we assume errors are normally distributed with mean 0 and variance <span class="math inline">\(\sigma^2\)</span>. This is written as <span class="math inline">\(e_i \sim N(0, \sigma^2)\)</span>.</li>
-<li>SST is the total sum of squares. It is the sum of the squared differences between the observed values of <span class="math inline">\(y\)</span> and the mean of <span class="math inline">\(y\)</span>. It is calculated as <span class="math inline">\(\sum_{i=1}^n (y_i - \bar{y})^2\)</span>.</li>
-<li>SSM is the model sum of squares. It is the sum of the squared differences between the predicted values of <span class="math inline">\(y\)</span> and the mean of <span class="math inline">\(y\)</span>. It is calculated as <span class="math inline">\(\sum_{i=1}^n (\hat{y_i} - \bar{y})^2\)</span>.</li>
-<li>SSE is the error sum of squares. It is the sum of the squared differences between the observed values of <span class="math inline">\(y\)</span> and the predicted values of <span class="math inline">\(y\)</span>. It is calculated as <span class="math inline">\(\sum_{i=1}^n (y_i - \hat{y_i})^2\)</span>.</li>
-<li>The variance of <span class="math inline">\(x\)</span> can be written as <span class="math inline">\(Var(x)\)</span>. The covariance between <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> can be written as <span class="math inline">\(Cov(x, y)\)</span>.</li>
-<li>Covariance is calculated as <span class="math inline">\(Cov(x, y) = \frac{1}{n-1} \sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y})\)</span>.</li>
-<li><span class="math inline">\(H_0\)</span> is the null hypothesis.</li>
-<li><span class="math inline">\(\alpha\)</span> is the significance level.</li>
-<li><em>df</em> is the degrees of freedom.</li>
-<li><span class="math inline">\(p\)</span> is the p-value.</li>
-</ul>
-</section>
-<section id="data-analysis-workflow" class="level2">
-<h2 class="anchored" data-anchor-id="data-analysis-workflow">Data analysis workflow</h2>
-<p>A general workflow for data analysis is as follows:</p>
+<!--
+2027 version of chapter 1, written from the Week 1 lecture slides
+(BIO144_Course_Information/assets/Week1_lecture_slides.pdf). Replaced the 2026 chapter on 2026-10-06
+(the 2026 version is in the git history).
+Sections marked "TO DO (Owen)" need input that is not in the slides.
+Year-specific details (times, names, exam rules) are marked "check each year".
+The "Notation" and "Using AI assistants" detail sections are carried over from the 2026 chapter.
+-->
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Learning objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><em>Version 2027.0-draft (reviewed): these learning objectives may still change.</em></p>
+<p>After this unit, students will be able to:</p>
 <ol type="1">
-<li><strong>Define the question</strong>: What are you trying to find out?</li>
-<li><strong>Define the study</strong>: How will you answer the question? What subjects, what observations, what measurements? What experimental design? What treatments? What graphics and analyses will you use?</li>
-<li><strong>Collect the data</strong>: Gather the necessary data to answer the question.</li>
-<li><strong>Explore the data</strong>: Use summary statistics and graphics to understand the data.</li>
-<li><strong>Prepare the data</strong>: Clean and format the data for analysis.</li>
-<li><strong>Visualise the data</strong>: Create plots to visualise patterns and relationships.</li>
-<li><strong>Analyse the data</strong>: Use appropriate statistical methods to analyse the data, including checking model assumptions.</li>
-<li><strong>Interpret the results</strong>: Draw conclusions from the analysis in the context of the original question.</li>
-<li><strong>Be critical</strong>: Consider limitations, alternative explanations, and the robustness of your conclusions.</li>
-<li><strong>Communicate the results</strong>: Present the findings in a clear and concise manner, using tables, figures, and written summaries.</li>
+<li>Describe how the lectures, course book, practicals, homework, weekly quizzes and final exam of BIO144 fit together. <em>(not examined)</em></li>
+<li>Identify the prior knowledge and skills assumed at the start of the course, and where to revise them. <em>(not examined)</em></li>
+<li>Describe the steps of a data analysis workflow, from formulating a question to communicating the answer, and explain why the presentation and analysis should be planned before the data are collected.</li>
+<li>Describe the four principles for high-quality data analysis: a focused question with planned sampling and analysis; a model that accounts for the distribution and dependence of the data; emphasis on effect sizes and biological relevance; and reporting that makes the research reproducible.</li>
+<li>Explain the advantages of doing a data analysis with a script in R, such as being repeatable, readable and sharable.</li>
+<li>Distinguish appropriate from inappropriate uses of AI assistants in learning data analysis and in BIO144 assessments.</li>
+<li>Recognise and use the course notation for samples, populations and linear models (e.g.&nbsp;the sample mean, sample and population standard deviation, parameter estimates and residuals).</li>
 </ol>
+<p>These learning objectives, together with the content of this chapter, define what you need to know for the exam.</p>
+<p>The learning objectives for all chapters, and for the course as a whole, are also given on the <a href="https://opetchey.github.io/BIO144_Course_Information/3.1-learning-objectives.html">Learning Objectives page of the course information website</a>.</p>
+</div>
+</div>
+<section id="about-this-chapter" class="level2">
+<h2 class="anchored" data-anchor-id="about-this-chapter">About this chapter</h2>
+<p>The first week of BIO144 is different from all the others. It is the only lecture that uses slides, and much of it is about how the course works rather than about statistical methods. This chapter is the written version of that lecture. It covers:</p>
+<ul>
+<li>the goals of the course, and why data analysis matters;</li>
+<li>what makes a data analysis high quality;</li>
+<li>how the course is organised, and how the final examination works;</li>
+<li>how we will work together, including how to use AI assistants;</li>
+<li>RStudio Server;</li>
+<li>a complete data analysis, from question to answer, using data that you collect in the lecture;</li>
+<li>the knowledge it is useful to have already, and the notation used throughout the course.</li>
+</ul>
 </section>
-<section id="using-generative-ai-in-r-and-data-analysis-guidance-and-good-practice" class="level2">
-<h2 class="anchored" data-anchor-id="using-generative-ai-in-r-and-data-analysis-guidance-and-good-practice">Using Generative AI in R and Data Analysis: Guidance and Good Practice</h2>
+<section id="goals-of-the-course" class="level2">
+<h2 class="anchored" data-anchor-id="goals-of-the-course">Goals of the course</h2>
+<p>The overarching goals of BIO144 are to:</p>
+<ul>
+<li>provide a solid foundation for answering biological questions with quantitative data;</li>
+<li>grow your confidence in your ability to understand and perform data analysis;</li>
+<li>help you plan research projects so that they are easy to analyse;</li>
+<li>excite you about the wonders of data analysis;</li>
+<li>prepare you for the final exam;</li>
+<li>have fun!</li>
+</ul>
+</section>
+<section id="why-data-analysis-matters" class="level2">
+<h2 class="anchored" data-anchor-id="why-data-analysis-matters">Why data analysis matters</h2>
+<p>Why should you care about data analysis? Only you can answer that question. A strong sense of purpose usually comes from doing something that is meaningful to you and useful to others. Here are some of the ways in which data analysis is both:</p>
+<ul>
+<li><strong>Showing that a problem exists.</strong> Good analysis can make invisible problems visible, and help others take them seriously.</li>
+<li><strong>Testing solutions.</strong> Does an intervention work? Does it work for everyone? Does it have unintended consequences?</li>
+<li><strong>Evaluating evidence that affects people’s lives.</strong> Showing whether a drug works, does not work, or has serious side effects is not abstract: it shapes real decisions.</li>
+<li><strong>Questioning powerful claims.</strong> Marketing, policy and public messaging often rely on selective statistics. You can learn to ask: what is missing? What is exaggerated?</li>
+<li><strong>Protecting others, especially those with less power.</strong> From children targeted by unhealthy products to communities affected by environmental harm, good analysis can act as a form of protection.</li>
+<li><strong>Serving something bigger than yourself.</strong> Science, public trust, health, biodiversity, fairness: data analysis is one way people contribute to their community and society.</li>
+</ul>
+<p>In this course you will work on questions from many areas of biology, from animal behaviour and plant growth to soil organisms and human health. Each time, the pattern is the same: we start with a <strong>question</strong> (or puzzle, or problem), combine <strong>data</strong> with <strong>analysis</strong>, and arrive at an <strong>answer</strong> (or solution).</p>
+<p>But how do we make sure the analysis is a good one?</p>
+</section>
+<section id="high-quality-data-analysis-four-principles" class="level2">
+<h2 class="anchored" data-anchor-id="high-quality-data-analysis-four-principles">High-quality data analysis: four principles</h2>
+<p>Popovic et al.&nbsp;(2024) proposed four principles that lead to reliable findings. They were written for ecology, but they apply to data analysis in all of biology, and they run through the whole of this course.</p>
+<ol type="1">
+<li><strong>Define a focused research question, then plan sampling and analysis to answer it.</strong>
+<ul>
+<li>Define the research question <em>before</em> collecting new data or exploring existing data.</li>
+<li>Match the data collection to the question.</li>
+<li>Plan (and ideally register) the analysis in advance.</li>
+</ul></li>
+<li><strong>Develop a model that accounts for the distribution and dependence of your data.</strong>
+<ul>
+<li>Use a distribution appropriate for the response variable (for example, counts are not normally distributed).</li>
+<li>Model all dependence among observations (for example, repeated measurements of the same individual).</li>
+<li>Check the assumptions of the model.</li>
+</ul></li>
+<li><strong>Emphasise effect sizes, to replace statistical significance with biological relevance.</strong>
+<ul>
+<li>Emphasise and report effect sizes, with confidence intervals.</li>
+<li>Discuss whether the effects are biologically relevant.</li>
+<li>De-emphasise p-values.</li>
+</ul></li>
+<li><strong>Report methods and findings in enough detail that the research is valid and reproducible.</strong>
+<ul>
+<li>Publish all data.</li>
+<li>Provide code that others can run.</li>
+<li>Visualise the outputs of the model to communicate the results.</li>
+</ul></li>
+</ol>
+<p>You will meet each principle many times. Principle 1 is the first step of the workflow below. Principle 2 is why the course moves from linear models to generalised linear models (for counts and binary data) and mixed models (for grouped data). Principle 3 is why we put so much weight on interpreting estimates and their uncertainty. Principle 4 is one reason we do all analyses with scripts in R.</p>
+</section>
+<section id="how-the-course-is-organised" class="level2">
+<h2 class="anchored" data-anchor-id="how-the-course-is-organised">How the course is organised</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Times, names and other details in this section can change from year to year. The <a href="https://opetchey.github.io/BIO144_Course_Information/">course information website</a> has the current details. <!-- check each year --></p>
+</div>
+</div>
+<p><strong>The team.</strong> You are at the centre of the course, supported by the lectures, the practicals, the discussion forum on OLAT and, when needed, email. The course is taught by Prof.&nbsp;Owen Petchey, with a head teaching assistant, an examinations coordinator, and numerous teaching assistants. <!-- check each year: names were Til Hämmig (head TA) and Dr Frank Pennekamp (examinations) in 2026 --></p>
+<p><strong>The conceptual side: lectures</strong> (Mondays, 8:00–9:45).</p>
+<ul>
+<li>Apart from this first week, the lectures do not use slides.</li>
+<li>The <strong>course book contains what you need to know.</strong> Each week has a chapter.</li>
+<li>In lectures, the lecturer talks, draws, codes, and asks you questions.</li>
+<li>One lecture is given by a guest.</li>
+</ul>
+<p>Many of the questions in lectures use <strong>think, pair, share</strong>: you first think about the question on your own, then discuss it with a neighbour, then share with the class. Peer discussion improves understanding, even when none of the students in a discussion group originally knew the correct answer (Smith et al.&nbsp;2009).</p>
+<p><strong>The practical side.</strong></p>
+<ul>
+<li><strong>Practicals</strong> (Thursday or Friday, 13:00–15:00), where you work on data analysis with help from the teaching assistants.</li>
+<li><strong>Homework</strong>, best done between Monday and the practical.</li>
+<li><strong>Weekly practice quizzes</strong>, which you can do at any time.</li>
+</ul>
+<p>Please keep up with the course material, and reach out to us if you feel you are falling behind. The weeks do not all need the same amount of time, so look ahead and plan early.</p>
+<p><strong>Where to find everything.</strong> The course uses four websites:</p>
+<ul>
+<li><strong>OLAT</strong>, the hub, which links to everything else and hosts the discussion forum. Please ask questions and make requests in the forum.</li>
+<li>The <strong>course information website</strong>, with general information, the learning objectives, and a page for each week.</li>
+<li>The <strong>course book</strong> (this book).</li>
+<li>The site with the <strong>homework, practicals and weekly quizzes</strong>.</li>
+</ul>
+<p>Much of the course material is new or recently revised. If you find something that is unclear, too brief, or wrong, please let us know.</p>
+<!-- The 2026 slides included last year's student feedback and our responses. That is year-specific, so it is left out of the book. -->
+</section>
+<section id="the-final-examination" class="level2">
+<h2 class="anchored" data-anchor-id="the-final-examination">The final examination</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Check the course information website for the current examination details. <!-- check each year --></p>
+</div>
+</div>
+<ul>
+<li>The exam consists of three or four <strong>case studies</strong>. In each, you analyse a dataset and answer questions about it. Many conceptual questions are embedded in the case studies.</li>
+<li>Many questions are answered by <strong>entering numbers</strong>, rounded to the required number of decimal places.</li>
+<li>The exam is in person, on site, on your own computer (a “bring your own device” exam), using the Safe Exam Browser and <strong>RStudio Server</strong>.</li>
+<li>You may bring notes on both sides of three sheets of A4 paper, and a German–English dictionary (which we may inspect). No other sources may be consulted.</li>
+<li>There is a mandatory practice exam, and you will have access to a representative exam from a previous year.</li>
+<li>Grades are not “curved”: you are not competing against each other. (We may adjust the pass mark if a particular exam turns out to be much harder than previous ones.)</li>
+</ul>
+<p>Because the exam asks you to analyse data in R and give numerical answers, the best preparation is to practise doing analyses yourself, every week.</p>
+</section>
+<section id="how-we-will-work-together" class="level2">
+<h2 class="anchored" data-anchor-id="how-we-will-work-together">How we will work together</h2>
+<p>We are here to support you: to give you the knowledge of how to learn more, and the confidence that you can.</p>
+<ul>
+<li>Everyone here can learn to think analytically and statistically.</li>
+<li>We will hold you to high standards, because we believe you can meet them. Our job is to support you in reaching them.</li>
+<li>Struggle is part of growth, not a sign of failure or deficiency.</li>
+<li>Feeling stressed before a challenge is normal. A higher heart rate, faster breathing and a tight stomach are your body giving you more resources to meet the challenge.</li>
+</ul>
+<p><strong>High standards and wise feedback.</strong> Feedback in this course follows the idea of “wise feedback” (Cohen et al.&nbsp;1999): <em>“I’m giving you these comments because I have high standards and I know that you can meet them.”</em> Feedback will be honest and specific. It comes from belief in your potential, not criticism of you as a person. If it ever feels like you are being criticised, try to reframe it as being challenged to grow. This class is a safe space for you, and it is a challenging space for you.</p>
+</section>
+<section id="using-ai-assistants" class="level2">
+<h2 class="anchored" data-anchor-id="using-ai-assistants">Using AI assistants</h2>
+<p>AI assistants such as ChatGPT, Claude, Gemini and Copilot can help you learn, if you use them well.</p>
+<p><strong>Asking for help understanding</strong> is usually a good use. For example:</p>
+<ul>
+<li>“What is the mode of a distribution?”</li>
+<li>“I didn’t understand that explanation. Can you give an easier one?”</li>
+<li>“Can you show me the mode graphically?”</li>
+<li>“Can you give me an example of getting the mode of a distribution in R?”</li>
+</ul>
+<p><strong>Asking for help writing code</strong> needs more care. A request like “write code to import data and give the number of missing values in each variable” can save time. A request like “import the data, fit a regression, check the diagnostics, summarise the results, make a nice figure, put it all in a Quarto file, and do it while I go and chill” means you learn nothing, and you cannot check whether the result is correct.</p>
+<p><strong>Your relationship with AI assistants.</strong> In a strong relationship, the AI is an empowering tool: a knowledgeable collaborator that complements your skills, speeds up your work, and supports your growth. You provide the context, direction and critical judgement. In a poor relationship, you use the AI’s output without understanding it, copying and pasting solutions. This leads to errors, inefficient or misaligned solutions, and your own skills stagnating.</p>
+<p>The knowledge and expertise <em>you</em> bring is what makes a good relationship with an AI assistant possible. So we suggest you <strong>minimise your use of AI assistants during the course</strong> (and minimise your use of the example solutions too). Do the work, and get the benefit.</p>
+<section id="guidance-and-good-practice" class="level3">
+<h3 class="anchored" data-anchor-id="guidance-and-good-practice">Guidance and good practice</h3>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -417,6 +566,7 @@ Important
 </li>
 <li>cannot see your working R session</li>
 </ul>
+</section>
 <section id="guidelines-for-good-use-of-generative-ai" class="level3">
 <h3 class="anchored" data-anchor-id="guidelines-for-good-use-of-generative-ai">Guidelines for Good Use of Generative AI</h3>
 <section id="use-genai-as-a-helper-not-a-source-of-truth" class="level4">
@@ -757,8 +907,133 @@ Always check:</p>
 </section>
 </section>
 </section>
-<section id="further-reading" class="level2">
-<h2 class="anchored" data-anchor-id="further-reading">Further reading</h2>
+<section id="rstudio-server" class="level2">
+<h2 class="anchored" data-anchor-id="rstudio-server">RStudio Server</h2>
+<p>In this course you use RStudio in a web browser, through the UZH RStudio Server (<a href="https://rstudio.mnf.uzh.ch/" class="uri">https://rstudio.mnf.uzh.ch/</a>).</p>
+<ul>
+<li>The downside: you have to be connected to the internet.</li>
+<li>The upside: much of the setup is already done for you, and the available memory and processing power can be increased when needed.</li>
+<li><strong>You will have to use RStudio Server in the exam</strong>, so it is worth getting used to it from the start.</li>
+</ul>
+<p>Only registered users can log in. Everyone in the OLAT course is registered, so you must be in the OLAT course to get access.</p>
+</section>
+<section id="a-complete-data-analysis-reaction-times" class="level2">
+<h2 class="anchored" data-anchor-id="a-complete-data-analysis-reaction-times">A complete data analysis: reaction times</h2>
+<p>To give you a feel for what is involved in data analysis, the first lecture includes a live demonstration of the whole workflow, using data collected from you during the lecture. You will understand some of the demonstration, and not other parts of it. That is expected: keep notes about what you do not understand, and look for the answers as the course goes on.</p>
+<p>The steps of the workflow are:</p>
+<ol type="1">
+<li>Question</li>
+<li>Expectation</li>
+<li>Planned presentation and analysis</li>
+<li>Selection of subjects</li>
+<li>How the data will be collected</li>
+<li>Ethics and permissions</li>
+<li>Data collection</li>
+<li>Data wrangling</li>
+<li>Visualisation</li>
+<li>Statistical test</li>
+<li>Critical thinking</li>
+<li>Reporting and communicating</li>
+</ol>
+<p>Notice that the first six steps all happen <em>before</em> any data are collected. This is Popovic et al.’s first principle in action.</p>
+<section id="question" class="level3">
+<h3 class="anchored" data-anchor-id="question">Question</h3>
+<p>What should our question be? As always, there are some influences and some constraints. We should ask a question that is of interest to us, and of some importance. And we must be able to collect the data needed to answer it, within our current constraints.</p>
+<p>The question we address is: <strong>do the reaction times of male and female students at the University of Zurich differ?</strong> Reaction times matter for safety (for example, when driving) and in sport (for example, at the start of a sprint race).</p>
+</section>
+<section id="expectation" class="level3">
+<h3 class="anchored" data-anchor-id="expectation">Expectation</h3>
+<p>There has already been quite a lot of research on reaction times. In general, males tend to have faster reaction times than females, so we expect the same for students at the University of Zurich.</p>
+</section>
+<section id="planned-presentation-and-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="planned-presentation-and-analysis">Planned presentation and analysis</h3>
+<p>Before collecting any data, we decide what graph we will make and what statistical test we will use.</p>
+<ul>
+<li><strong>Graph:</strong> box plots of reaction time (in seconds, on the horizontal axis) for females and males. This shows the centre and spread of the two groups side by side.</li>
+<li><strong>Statistical test:</strong> we are comparing the mean of a continuous response variable (reaction time) between two groups (the explanatory variable, sex), so a two-sample t-test is a natural choice. Its assumptions include independent observations, and roughly normally distributed values with similar variances in the two groups.</li>
+</ul>
+<!-- TO DO (Owen): confirm the test used in the demonstration, and whether you also show it as a linear model with lm(). -->
+</section>
+<section id="selection-of-subjects" class="level3">
+<h3 class="anchored" data-anchor-id="selection-of-subjects">Selection of subjects</h3>
+<p>Ideally, the subjects would be a random sample from the population we want to draw conclusions about. Are the students in this lecture a random selection of all humans? Of all students at the University of Zurich? The way subjects are selected limits the population to which our conclusions can be generalised.</p>
+</section>
+<section id="how-the-data-are-collected-and-ethics" class="level3">
+<h3 class="anchored" data-anchor-id="how-the-data-are-collected-and-ethics">How the data are collected, and ethics</h3>
+<p>You measure your own reaction time using an online test, and record it, along with some other information about yourself, in a form linked from the course information website. Because these are data about people, we need to think about ethical issues, such as consent, anonymity, and how the data will be used and shared.</p>
+<!-- TO DO (Owen): add a sentence on what the form records (variables) and how anonymity and consent are handled. -->
+</section>
+<section id="data-wrangling-visualisation-and-statistical-test" class="level3">
+<h3 class="anchored" data-anchor-id="data-wrangling-visualisation-and-statistical-test">Data wrangling, visualisation and statistical test</h3>
+<p>These steps are done live in RStudio, with a script.</p>
+<!-- TO DO (Owen): add the R code from the demonstration (import, wrangling, box plot, t-test), using meaningful object names, e.g. reaction_times for the dataset. -->
+<p>Doing the analysis with a script in R, rather than by pointing and clicking, makes it:</p>
+<ul>
+<li>efficient and scalable: it is quick to re-run, including on more or new data;</li>
+<li>consistent, repeatable and reliable: the same steps give the same result every time;</li>
+<li>readable, sharable and persistent: others (and your future self) can see exactly what was done, check it, and re-use it;</li>
+<li>robust: mistakes can be found and fixed, and the whole analysis re-run.</li>
+</ul>
+<p>This is Popovic et al.’s fourth principle in action.</p>
+</section>
+<section id="critical-thinking-and-reporting" class="level3">
+<h3 class="anchored" data-anchor-id="critical-thinking-and-reporting">Critical thinking, and reporting</h3>
+<p>Finally, we think critically about the result. How big is the difference in reaction times, and is it biologically relevant (principle 3)? How precise is our estimate? Could something other than sex explain the difference? To whom do the conclusions apply, given how the subjects were selected? Then we report the result clearly, with a figure and a short description of the estimate, its uncertainty, and the test.</p>
+<!-- TO DO (Owen): add the results and an example results statement once the 2027 data are collected, or use data from a previous year. -->
+</section>
+</section>
+<section id="activate-your-prior-learning" class="level2">
+<h2 class="anchored" data-anchor-id="activate-your-prior-learning">Activate your prior learning</h2>
+<p>BIO144 builds on knowledge you should already have from earlier courses. The “previous knowledge” resources on OLAT help you review it. If you have not worked through them yet, there is still time. It is useful to already be familiar with:</p>
+<ul>
+<li><strong>Summarising distributions of data:</strong> central tendency (mean, median, mode); spread (range, quartiles, standard deviation, standard error); symmetry (skew); pointedness (kurtosis); number of peaks (unimodal, bimodal, multimodal).</li>
+<li><strong>Types of variable:</strong> numeric, continuous, discrete, categorical; response (dependent) and explanatory (independent) variables.</li>
+<li><strong>Statistical ideas:</strong> expected value, parameter, parameter estimate, variable, the central limit theorem, hypothesis testing, degrees of freedom, p-value; the difference between a population and a sample.</li>
+<li><strong>Probability:</strong> for example, the probability of getting five heads when tossing a fair coin seven times; probability distributions (normal, binomial, Poisson, exponential); frequency distributions (histograms).</li>
+<li><strong>Basic methods and graphs:</strong> the t-test, linear regression and the equation of a straight line; box-and-whisker plots and scatterplots.</li>
+<li><strong>Notation</strong>, described in the next section.</li>
+</ul>
+</section>
+<section id="notation-and-some-definitions" class="level2">
+<h2 class="anchored" data-anchor-id="notation-and-some-definitions">Notation and some definitions</h2>
+<p>Throughout the course, we will use the following notation:</p>
+<ul>
+<li><span class="math inline">\(x\)</span> for a variable. Typically this variable contains a set of observations. These observations are said to represent a sample of all the possible observations that could be made of a <em>population</em>.</li>
+<li><span class="math inline">\(x_1, x_2, \ldots\)</span> for the values of a variable</li>
+<li><span class="math inline">\(x_i\)</span> for the <span class="math inline">\(i\)</span>th value of a scalar variable. This is often spoken as “x sub i” or the “i-th value of x”.</li>
+<li><span class="math inline">\(x^{(1)}\)</span> for variable 1, <span class="math inline">\(x^{(2)}\)</span> for variable 2, etc.</li>
+<li>The mean of the sample <span class="math inline">\(x\)</span> is <span class="math inline">\(\bar{x}\)</span>. This is usually spoken as “x-bar”.</li>
+<li>The mean of <span class="math inline">\(x\)</span> is calculated as <span class="math inline">\(\bar{x} = \frac{1}{n} \sum_{i=1}^n x_i\)</span>.</li>
+<li><span class="math inline">\(n\)</span> is the number of observations in a sample.</li>
+<li>The summation symbol <span class="math inline">\(\sum\)</span> is used to indicate that the values of <span class="math inline">\(x\)</span> are summed over all values of <span class="math inline">\(i\)</span> from 1 to <span class="math inline">\(n\)</span>.</li>
+<li>The standard deviation of the sample is <span class="math inline">\(s\)</span>. The standard deviation of the population is <span class="math inline">\(\sigma\)</span>.</li>
+<li>The variance is <span class="math inline">\(s^2\)</span>. The variance of the population is <span class="math inline">\(\sigma^2\)</span>.</li>
+<li>The variance of the sample is calculated as <span class="math inline">\(s^2 = \frac{1}{n-1} \sum_{i=1}^n (x_i - \bar{x})^2\)</span>.</li>
+<li>The standard deviation of the sample is calculated as <span class="math inline">\(s = \sqrt{s^2}\)</span>.</li>
+<li><span class="math inline">\(y\)</span> is usually used to represent a dependent / response variable.</li>
+<li><span class="math inline">\(x\)</span> is usually used to represent an independent / predictor / explanatory variable.</li>
+<li><span class="math inline">\(\beta_0\)</span> is usually used to denote the intercept of a linear model.</li>
+<li><span class="math inline">\(\beta_1\)</span>, <span class="math inline">\(\beta_2\)</span>, etc. are usually used to denote the coefficients of the independent variables in a linear model.</li>
+<li>Estimates are denoted with a hat, so <span class="math inline">\(\hat{\beta}_0\)</span> is the estimate of the intercept of a linear model.</li>
+<li>Hence, the estimated value of <span class="math inline">\(y_i\)</span> in a linear regression model is <span class="math inline">\(\hat{y_i} = \hat{\beta}_0 + \hat{\beta}_1 x_i^{(1)}\)</span>.</li>
+<li><span class="math inline">\(e_i\)</span> is the residual for the <span class="math inline">\(i\)</span>th observation in a linear model. The residual is the difference between the observed value of <span class="math inline">\(y_i\)</span> and the predicted value of <span class="math inline">\(y_i\)</span> (<span class="math inline">\(\hat{y_i}\)</span>).</li>
+<li>Often we assume errors are normally distributed with mean 0 and variance <span class="math inline">\(\sigma^2\)</span>. This is written as <span class="math inline">\(e_i \sim N(0, \sigma^2)\)</span>.</li>
+<li>SST is the total sum of squares. It is the sum of the squared differences between the observed values of <span class="math inline">\(y\)</span> and the mean of <span class="math inline">\(y\)</span>. It is calculated as <span class="math inline">\(\sum_{i=1}^n (y_i - \bar{y})^2\)</span>.</li>
+<li>SSM is the model sum of squares. It is the sum of the squared differences between the predicted values of <span class="math inline">\(y\)</span> and the mean of <span class="math inline">\(y\)</span>. It is calculated as <span class="math inline">\(\sum_{i=1}^n (\hat{y_i} - \bar{y})^2\)</span>.</li>
+<li>SSE is the error sum of squares. It is the sum of the squared differences between the observed values of <span class="math inline">\(y\)</span> and the predicted values of <span class="math inline">\(y\)</span>. It is calculated as <span class="math inline">\(\sum_{i=1}^n (y_i - \hat{y_i})^2\)</span>.</li>
+<li>The variance of <span class="math inline">\(x\)</span> can be written as <span class="math inline">\(Var(x)\)</span>. The covariance between <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> can be written as <span class="math inline">\(Cov(x, y)\)</span>.</li>
+<li>Covariance is calculated as <span class="math inline">\(Cov(x, y) = \frac{1}{n-1} \sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y})\)</span>.</li>
+<li><span class="math inline">\(H_0\)</span> is the null hypothesis.</li>
+<li><span class="math inline">\(\alpha\)</span> is the significance level.</li>
+<li><em>df</em> is the degrees of freedom.</li>
+<li><span class="math inline">\(p\)</span> is the p-value.</li>
+</ul>
+</section>
+<section id="references-and-further-reading" class="level2">
+<h2 class="anchored" data-anchor-id="references-and-further-reading">References and further reading</h2>
+<p>Cohen, G.L., Steele, C.M. &amp; Ross, L.D. (1999). The mentor’s dilemma: providing critical feedback across the racial divide. <em>Personality and Social Psychology Bulletin</em>, 25, 1302–1318.</p>
+<p>Popovic, G., Mason, T.J., Drobniak, S.M., Marques, T.A., Potts, J., Joo, R., et al.&nbsp;(2024). Four principles for improved statistical ecology. <em>Methods in Ecology and Evolution</em>, 15, 266–281.</p>
+<p>Smith, M.K., Wood, W.B., Adams, W.K., Wieman, C., Knight, J.K., Guild, N. &amp; Su, T.T. (2009). Why peer discussion improves student performance on in-class concept questions. <em>Science</em>, 323, 122–124.</p>
 <p>Students who are curious and would like to explore these topics further (purely for their own interest) may find the following resources useful. Material from these resources will not be examined in the final exam, unless it is also already present in the course book.</p>
 <p>If you would like to read more about reaction time differences between men and women, this is a quite interesting paper: <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0026141">On the Implications of a Sex Difference in the Reaction Times of Sprinters at the Beijing Olympics, by Lipps et al (2011)</a>. The analyses are relatively simple, and the implications explored are quite interesting. Unfortunately, the data used in the paper is not publicly available, so you cannot use it for practice here.</p>
 <p>A more detailed data analysis workflow suggestion is here on the <a href="https://insightsfromdata.io/insights-workflow.html#insights-workflow">Insights from data website.</a></p>

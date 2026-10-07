@@ -215,7 +215,7 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./5.1-anova.html" class="sidebar-item-text sidebar-link">
+  <a href="./5.1-ANOVA.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Analysis of variance (L5)</span></a>
   </div>
 </li>
@@ -334,6 +334,37 @@ window.Quarto = {
 </header>
 
 
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Learning objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><em>Version 2027.0-draft (reviewed): these learning objectives may still change.</em></p>
+<p>After this unit, students will be able to:</p>
+<ol type="1">
+<li>Identify biological questions and study designs in which the response variable is a count.</li>
+<li>Explain why linear models with normal errors are often inappropriate for count data (counts are non-negative integers, and their variance tends to increase with the mean).</li>
+<li>Describe the three components of a generalised linear model: the linear predictor, the distribution family and the link function.</li>
+<li>Use R to fit a Poisson regression with <code>glm()</code>.</li>
+<li>Explain null and residual deviance as measures of fit for a GLM, analogous to sums of squares in a linear model.</li>
+<li>Check the assumptions of a Poisson GLM using diagnostic plots, recognising that QQ-plots of deviance residuals are interpreted differently from those of a linear model.</li>
+<li>Interpret coefficients on the log (link) scale, and back-transform them to multiplicative effects on the expected count.</li>
+<li>Use R to calculate predicted counts for given values of the explanatory variables.</li>
+<li>Use deviance-based tests to judge whether explanatory variables are associated with the response.</li>
+<li>Explain that in a chi-squared (likelihood ratio) test between nested GLMs, the degrees of freedom equal the difference in the number of estimated parameters.</li>
+<li>Detect overdispersion and select an appropriate response to it (e.g.&nbsp;a quasi-Poisson or negative binomial model).</li>
+<li>Recognise zero inflation in count data, and that it requires models beyond the Poisson GLM.</li>
+<li>Recognise a correct and complete statement of results from a Poisson regression.</li>
+</ol>
+<p>These learning objectives, together with the content of this chapter, define what you need to know for the exam.</p>
+<p>The learning objectives for all chapters, and for the course as a whole, are also given on the <a href="https://opetchey.github.io/BIO144_Course_Information/3.1-learning-objectives.html">Learning Objectives page of the course information website</a>.</p>
+</div>
+</div>
 <p>In all the previous chapters, we have focused on <strong>linear models</strong>. These are suitable for continuous response variables that can, mathematically, take negative values. However, response variables can be otherwise. For example, we might have a response variable that is the number of offspring produced by a mother. This is a <em>count</em> type of response variable. In this chapter, you’ll see why the models we used so far are usually inappropriate for count data. Then you’ll learn about a more appropriate type of model: <strong>Generalized Linear Models (GLMs)</strong>.</p>
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
@@ -381,7 +412,7 @@ window.Quarto = {
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="8.1-GLM1-count-data_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="384"></p>
+<p><img src="8.1-GLM1-count-data_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="384"></p>
 </figure>
 </div>
 </div>
@@ -402,7 +433,7 @@ window.Quarto = {
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="8.1-GLM1-count-data_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="8.1-GLM1-count-data_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -416,7 +447,7 @@ window.Quarto = {
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="8.1-GLM1-count-data_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="384"></p>
+<p><img src="8.1-GLM1-count-data_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="384"></p>
 </figure>
 </div>
 </div>
@@ -608,7 +639,7 @@ F-statistic: 198.7 on 1 and 98 DF,  p-value: &lt; 2.2e-16</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="8.1-GLM1-count-data_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="8.1-GLM1-count-data_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -676,13 +707,35 @@ In a Poisson distribution, the mean and variance are equal. This captures an imp
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="8.1-GLM1-count-data_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="8.1-GLM1-count-data_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>The QQ-plot is rather concerning. However, QQ-plots in GLMs are not testing normality of residuals in the same way as for linear models, so their interpretation differs. The <em>deviance residuals</em> should approximately follow a normal distribution if the model fits well. Here, there are some deviations from normality, which could be somewhat concerning, but for now we will focus on the other plots. (If you’re interested in what are deviance residuals, please see the <em>Extras</em> section at the end of this chapter.)</p>
 <p>The other plots look much better than for the linear model. The residuals vs fitted plot shows no obvious pattern, and the scale-location plot shows more constant variance.</p>
+<!-- 2027 addition: shared checklist for checking a GLM, included in chapters 8 and 9 -->
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Checklist: checking a GLM
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><strong>Is the family right for the response variable?</strong> Counts: Poisson (or quasi-Poisson / negative binomial if overdispersed). Binary data, or successes out of a number of trials: binomial. No diagnostic plot can rescue a model with the wrong family.</li>
+<li><strong>Are the observations independent?</strong> This comes from the study design, not from the plots. If observations are grouped or repeated, a mixed model is needed (Chapter 11).</li>
+<li><strong>Residuals vs fitted values.</strong> Look for strong patterns or curvature, which suggest a missing explanatory variable, a missing interaction, or a non-linear relationship. For individual-level 0/1 data this plot shows two bands of points and is hard to interpret.</li>
+<li><strong>Dispersion.</strong> The ratio of residual deviance to residual degrees of freedom should be roughly 1. Values above about 1.5–2 suggest overdispersion (consider quasi-Poisson, negative binomial or quasibinomial). This check works for counts and aggregated binomial data, but not for individual-level 0/1 data.</li>
+<li><strong>Influential observations.</strong> As for linear models, look at the residuals vs leverage plot (Cook’s distance).</li>
+<li><strong>QQ-plot of the deviance residuals.</strong> A GLM does not assume normally distributed residuals, so this is only a rough guide. Large departures can point to a wrong family or to overdispersion.</li>
+<li><strong>Zeros (count data).</strong> Many more zeros than the Poisson model predicts suggests zero inflation.</li>
+</ol>
+</div>
+</div>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -826,10 +879,10 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <p>The first step is to create a new data frame with a sequence of body sizes for prediction, and errors for the 95% confidence intervals:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>new_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">body.size =</span> <span class="fu">seq</span>(<span class="fu">min</span>(soay<span class="sc">$</span>body.size), <span class="fu">max</span>(soay<span class="sc">$</span>body.size), <span class="at">length.out =</span> <span class="dv">100</span>))</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(soay_glm, <span class="at">newdata =</span> new_data, <span class="at">se.fit =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>new_data<span class="sc">$</span>fit <span class="ot">&lt;-</span> <span class="fu">exp</span>(predictions<span class="sc">$</span>fit)</span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>new_data<span class="sc">$</span>lower <span class="ot">&lt;-</span> <span class="fu">exp</span>(predictions<span class="sc">$</span>fit <span class="sc">-</span> <span class="fl">1.96</span> <span class="sc">*</span> predictions<span class="sc">$</span>se.fit)</span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>new_data<span class="sc">$</span>upper <span class="ot">&lt;-</span> <span class="fu">exp</span>(predictions<span class="sc">$</span>fit <span class="sc">+</span> <span class="fl">1.96</span> <span class="sc">*</span> predictions<span class="sc">$</span>se.fit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>soay_predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(soay_glm, <span class="at">newdata =</span> new_data, <span class="at">se.fit =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>new_data<span class="sc">$</span>fit <span class="ot">&lt;-</span> <span class="fu">exp</span>(soay_predictions<span class="sc">$</span>fit)</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>new_data<span class="sc">$</span>lower <span class="ot">&lt;-</span> <span class="fu">exp</span>(soay_predictions<span class="sc">$</span>fit <span class="sc">-</span> <span class="fl">1.96</span> <span class="sc">*</span> soay_predictions<span class="sc">$</span>se.fit)</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>new_data<span class="sc">$</span>upper <span class="ot">&lt;-</span> <span class="fu">exp</span>(soay_predictions<span class="sc">$</span>fit <span class="sc">+</span> <span class="fl">1.96</span> <span class="sc">*</span> soay_predictions<span class="sc">$</span>se.fit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Note that we back-transform the predictions and confidence intervals using the exponential function, since the link function is the log. And note that we must calculate the confidence intervals on the log scale first, and then back-transform them.</p>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -850,13 +903,27 @@ Note
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="8.1-GLM1-count-data_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="384"></p>
+<p><img src="8.1-GLM1-count-data_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" width="384"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Excellent! We can now write a nice sentence for our results:</p>
 <p>Reproductive fitness (in terms of lifetime number of offspring) increased significantly with body mass, with a unit increase in body mass associated with a multiplicative increase in expected fitness of 1.06 (95% CI: 1.05, 1.06; <span class="math inline">\(\chi^2 =\)</span> 235.32, <span class="math inline">\(df = 1\)</span>, <span class="math inline">\(p &lt;\)</span> 4.1^{-53}).</p>
+<!-- 2027 addition: effect size and biological relevance -->
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>How big is the effect?</strong> A multiplicative effect per kg of body mass can be hard to judge. It helps to also express it over the range of the data. In this example, the model predicts an expected lifetime fitness of 0.8 offspring for the lightest sheep (20 kg) and 12.2 offspring for the heaviest (70 kg). Whether a difference of this size is biologically important (for example, for the evolution of body size) is a biological question, but reporting the effect in this way gives readers what they need to judge it.</p>
+</div>
+</div>
 </section>
 </section>
 <section id="well-done" class="level2">
@@ -992,7 +1059,7 @@ Note
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="8.1-GLM1-count-data_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="384"></p>
+<p><img src="8.1-GLM1-count-data_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="384"></p>
 </figure>
 </div>
 </div>
@@ -1000,23 +1067,23 @@ Note
 <p>It looks like higher parasite loads are associated with lower fitness.</p>
 <p>We can fit a Poisson GLM with both body size and parasite load as explanatory variables:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>soay_glm2 <span class="ot">&lt;-</span> <span class="fu">glm</span>(fitness <span class="sc">~</span> body.size <span class="sc">+</span> parasite.load, <span class="at">data =</span> soay, <span class="at">family =</span> poisson)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>soay_glm_parasites <span class="ot">&lt;-</span> <span class="fu">glm</span>(fitness <span class="sc">~</span> body.size <span class="sc">+</span> parasite.load, <span class="at">data =</span> soay, <span class="at">family =</span> poisson)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>As always we check model assumptions:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co">#par(mfrow = c(2, 2))</span></span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(soay_glm2, <span class="at">which =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="at">add.smooth =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(soay_glm_parasites, <span class="at">which =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="at">add.smooth =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="8.1-GLM1-count-data_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="8.1-GLM1-count-data_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>The model checking plots look good. We can summarise the model:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(soay_glm2, <span class="at">test =</span> <span class="st">"Chisq"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(soay_glm_parasites, <span class="at">test =</span> <span class="st">"Chisq"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Deviance Table
 
@@ -1061,6 +1128,19 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </section>
 <section id="extras" class="level2">
 <h2 class="anchored" data-anchor-id="extras">Extras</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The content of this Extras section is not examinable. It is here for those who want to learn more.</p>
+</div>
+</div>
 <section id="deviance-residuals" class="level3">
 <h3 class="anchored" data-anchor-id="deviance-residuals">Deviance residuals</h3>
 <p>In linear models, residuals are simply the difference between observed and predicted values. In GLMs, residuals are more complex due to the non-normal distribution of the response variable.</p>

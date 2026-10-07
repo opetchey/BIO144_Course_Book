@@ -3,6 +3,8 @@
 
 This book contains the content of the course BIO144 Data Analysis in Biology at the University of Zurich. It is intended to be used as a companion to the lectures and practical exercises of the course. All of the required content of the course (i.e., what could be in the final exam) is included in this book. Additional content is included for those who want to learn more.
 
+**Sections headed "Extras" at the end of chapters are not examinable.** They are there for those who want to learn more. The same applies to the "Further reading" sections: their content is not examined unless it is also in the main text of the book.
+
 Beware that Owen sometimes makes updates to the book during the semester, so if you have downloaded a copy or taken screenshots, your copy may not exactly match the most current version. However, all of the required content will be the same, and any changes will be correcting typos or improving explanations. If content does change in a way that would change the answer to a question in the final exam, Owen will announce this in the lectures and on OLAT.
 
 ## How to get a copy of this book {.unnumbered}

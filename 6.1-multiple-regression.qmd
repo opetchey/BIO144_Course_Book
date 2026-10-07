@@ -5,6 +5,14 @@ source("_common.R")
 
 # Multiple regression (L6) {.unnumbered}
 
+```{r}
+#| echo: false
+#| output: asis
+lo_dir <- "../BIO144_Course_Information/learning_objectives"
+source(file.path(lo_dir, "lo.R"))
+lo_callout("6.1", lo_dir)
+```
+
 ## Introduction
 
 In the previous chapters we covered simple linear regression and one-way analysis of variance. In both we had one response variable and one explanatory variable. In both cases we made a linear model to relate the response variable to the explanatory variable. The two cases differed in the type of explanatory variable. In the case of simple linear regression, the explanatory variable was continuous. In the case of one-way ANOVA, the explanatory variable was categorical.
@@ -231,7 +239,7 @@ We know how to estimate the parameters $\beta_0, \beta_1, \ldots, \beta_p$ using
 In R, we can fit a multiple linear regression model using the `lm()` function in a very similar way to the simple linear regression model. Here is the code for the blood pressure example. To fit two explanatory variables, we simply add the second variable to the formula using the `+` sign:
 
 ```{r eval=T,echo=T}
-m1 <- lm(bp ~ age + mins_exercise, data = bp_data_multreg)
+m_bp_age_exercise <- lm(bp ~ age + mins_exercise, data = bp_data_multreg)
 ```
 
 
@@ -265,7 +273,7 @@ We can check the assumptions of the multiple linear regression model using the s
 ```{r eval=T,echo=T}
 # Check the assumptions
 par(mfrow=c(2,2))
-plot(m1, which = c(1,2,3,5), add.smooth = FALSE)
+plot(m_bp_age_exercise, which = c(1,2,3,5), add.smooth = FALSE)
 ```
 
 We see that the assumptions are met for the blood pressure example:
@@ -315,7 +323,7 @@ So, to calculate these two mean squares, we need to calculate three sums of squa
 We also need to calculate the degrees of freedom associated with each sum of squares.
 
 1. The total degrees of freedom is $n-1$, where $n$ is the number of observations.
-2. The model degrees of freedom is $p$, where $p$ is the number of explanatory variables. This is because for each explanatory variable we estimate one parameter (the slope), and each estimated parameter uses up one degree of freedom.
+2. The model degrees of freedom is $p$, where $p$ is the number of parameters estimated in addition to the intercept. Each estimated parameter uses up one degree of freedom. A continuous explanatory variable has one parameter (its slope), so in our example with two continuous explanatory variables, $p = 2$. A categorical explanatory variable with $k$ levels has $k-1$ parameters, so it contributes $k-1$ degrees of freedom.
 3. The residual degrees of freedom is $n-1-p$.
 
 ### The F-statistic in R
@@ -323,16 +331,16 @@ We also need to calculate the degrees of freedom associated with each sum of squ
 We could do all these calculations ourselves (and you might be asked to in the exam), but also we can just ask R! For question 1 we need to know the $F$-statistic for the multiple linear regression model. We can easily get this from R using the `summary()` function, and by looking in the right place in the output:
 
 ```{r echo = TRUE}
-summary(m1)
+summary(m_bp_age_exercise)
 ```
 
-In the final line of output we see "F-statistic: `r round(summary(m1)$fstatistic[1], 2)` on `r summary(m1)$fstatistic[2]` and `r summary(m1)$fstatistic[3]` DF,  p-value: `r signif(pf(summary(m1)$fstatistic[1], summary(m1)$fstatistic[2], summary(m1)$fstatistic[3], lower.tail = FALSE), 3)`".
+In the final line of output we see "F-statistic: `r round(summary(m_bp_age_exercise)$fstatistic[1], 2)` on `r summary(m_bp_age_exercise)$fstatistic[2]` and `r summary(m_bp_age_exercise)$fstatistic[3]` DF,  p-value: `r signif(pf(summary(m_bp_age_exercise)$fstatistic[1], summary(m_bp_age_exercise)$fstatistic[2], summary(m_bp_age_exercise)$fstatistic[3], lower.tail = FALSE), 3)`".
 
 The model degrees of freedom is 2 (because we have two explanatory variables), and the residual degrees of freedom is 97 (because we have 100 observations and 2 explanatory variables, so $100 - 1 - 2 = 97$).
 
 So the `summary()` function gives us everything we need to answer question 1. It even gives us the $p$-value for the $F$-test.
 
-**How to report the result**. We could write somthing like this: "The combination of age and minutes of exercise is significantly associated with blood pressure (F(2, 97) = `r round(summary(m1)$fstatistic[1], 2)`, p = `r signif(pf(summary(m1)$fstatistic[1], summary(m1)$fstatistic[2], summary(m1)$fstatistic[3], lower.tail = FALSE), 3)`)." Note that this is rather an undesirable statement, because it focuses too much on the statistics and not enough on the science. Indeed, perhaps we care more about the association of each explanatory variable with blood pressure, which we will look at next.
+**How to report the result**. We could write somthing like this: "The combination of age and minutes of exercise is significantly associated with blood pressure (F(2, 97) = `r round(summary(m_bp_age_exercise)$fstatistic[1], 2)`, p = `r signif(pf(summary(m_bp_age_exercise)$fstatistic[1], summary(m_bp_age_exercise)$fstatistic[2], summary(m_bp_age_exercise)$fstatistic[3], lower.tail = FALSE), 3)`)." Note that this is rather an undesirable statement, because it focuses too much on the statistics and not enough on the science. Indeed, perhaps we care more about the association of each explanatory variable with blood pressure, which we will look at next.
 
 ::: {.callout-note}
 If you want to review how to calculate a p-value from an F-statistic, see the corresponding section of the one-way ANOVA chapter.
@@ -348,19 +356,19 @@ As we did for simple linear regression, we can perform a $t$-test for one explan
 Here is the coefficients table, which includes the results of the $t$-tests for each explanatory variable:
 
 ```{r echo = TRUE, eval = TRUE}
-summary(m1)$coef
+summary(m_bp_age_exercise)$coef
 ```
 
 
 And we can get the 95% CI for each slope estimate $\hat\beta_j$ as follows:
 
 ```{r echo = TRUE}
-confint(m1)
+confint(m_bp_age_exercise)
 ```
 
 Reminder: The 95% confidence interval is $[\hat\beta - c \cdot \sigma^{(\beta)} ; \hat\beta + c \cdot \sigma^{(\beta)}]$,
-where $c$ is the 97.5% quantile of the $t$-distribution with $n-p$
-degrees of freedom).
+where $c$ is the 97.5% quantile of the $t$-distribution with $n-p-1$
+degrees of freedom (the residual degrees of freedom).
 
 
 
@@ -385,9 +393,9 @@ As before, for simple linear regression, the multiple $R^2$ value is calculated 
 $$R^2 = \frac{SSM}{SST}$$
 
 ```{r}
-sss <- anova(m1)
-SSM <- sss$`Sum Sq`[1] + sss$`Sum Sq`[2]
-SST <- sum(sss$`Sum Sq`)
+anova_bp_age_exercise <- anova(m_bp_age_exercise)
+SSM <- anova_bp_age_exercise$`Sum Sq`[1] + anova_bp_age_exercise$`Sum Sq`[2]
+SST <- sum(anova_bp_age_exercise$`Sum Sq`)
 R_squared <- SSM / SST
 #R_squared
 ```
@@ -398,7 +406,7 @@ where $SSM$ is the sum of squares explained by the model and $SST$ is the total 
 For the blood pressure data:
 
 ```{r}
-summary(m1)$r.squared
+summary(m_bp_age_exercise)$r.squared
 ```
 
 
@@ -409,16 +417,16 @@ $$\hat{y}_i = \hat\beta_0 + \hat\beta_1 x^{(1)} + \ldots + \hat\beta_m x^{(m)}$$
 In R:
 
 ```{r echo = TRUE}
-r_squared <- cor(m1$fitted.values, bp_data_multreg$bp)^2
+r_squared <- cor(m_bp_age_exercise$fitted.values, bp_data_multreg$bp)^2
 r_squared
 ```
 
 Or:
 
 ```{r echo = TRUE}
-sss <- anova(m1)
-SSM <- sss$`Sum Sq`[1] + sss$`Sum Sq`[2]
-SST <- sum(sss$`Sum Sq`)
+anova_bp_age_exercise <- anova(m_bp_age_exercise)
+SSM <- anova_bp_age_exercise$`Sum Sq`[1] + anova_bp_age_exercise$`Sum Sq`[2]
+SST <- sum(anova_bp_age_exercise$`Sum Sq`)
 R_squared <- SSM / SST
 R_squared
 ```
@@ -433,16 +441,16 @@ However, we have a little problem to address. The $R^2$ value increases as we ad
 Here is an example of this problem. First, here's the explanatory power of the model with only age and minutes of exercise as the explanatory variables:
 
 ```{r}
-m1 <- lm(bp ~ age + mins_exercise, data = bp_data_multreg)
-summary(m1)$r.squared
+m_bp_age_exercise <- lm(bp ~ age + mins_exercise, data = bp_data_multreg)
+summary(m_bp_age_exercise)$r.squared
 ```
 
 Now, we can add a new explanatory variable to the blood pressure model that is not associated with the response:
 
 ```{r echo = TRUE}
 bp_data_multreg$random_variable <- rnorm(nrow(bp_data_multreg))
-m2 <- lm(bp ~ age + mins_exercise + random_variable, data = bp_data_multreg)
-summary(m2)$r.squared
+m_bp_age_exercise_random <- lm(bp ~ age + mins_exercise + random_variable, data = bp_data_multreg)
+summary(m_bp_age_exercise_random)$r.squared
 ```
 
 
@@ -469,7 +477,7 @@ In this form, we can see that as $p$ increases (as we add explanatory variables)
 #| echo: false
 n <- nrow(bp_data_multreg)
 p <- seq(1, 20, 1)
-R_squared <- summary(m1)$r.squared
+R_squared <- summary(m_bp_age_exercise)$r.squared
 R_squared_adj <- 1 - (1 - R_squared) * (n - 1) / (n - p - 1)
 ggplot(data.frame(p = p, R_squared_adj = R_squared_adj, R_squared = R_squared), aes(x = p)) +
   geom_line(aes(y = R_squared_adj, color = "Adjusted R^2")) +
@@ -513,7 +521,7 @@ One way to relate the coefficients in this case is to realise that to compensate
 
 
 ```{r}
-extra_mins_exercise <- coef(m1)["age"] / -coef(m1)["mins_exercise"]
+extra_mins_exercise <- coef(m_bp_age_exercise)["age"] / -coef(m_bp_age_exercise)["mins_exercise"]
 #extra_mins_exercise
 ```
 
@@ -532,10 +540,10 @@ $$\hat{y}_i = \hat\beta_0 + \hat\beta_1 x_i^{(1)} + \hat\beta_2 x_i^{(2)} + \ldo
 In R, we can use the `predict()` function to make predictions from a multiple linear regression model. Here is an example of how to make predictions for the values of the explanatory variables in the original dataset:
 
 ```{r}
-predictions <- predict(m1)
+predictions <- predict(m_bp_age_exercise)
 ```
 
-Where `m1` is the multiple linear regression model fitted earlier. The `predict` function automatically uses the original data because we did not provide any new data.
+Where `m_bp_age_exercise` is the multiple linear regression model fitted earlier. The `predict` function automatically uses the original data because we did not provide any new data.
 
 We can also make predictions for new values of the explanatory variables by providing a new data frame to the `predict()` function. Here is an example of how to make predictions for new values of age and minutes of exercise:
 
@@ -549,7 +557,7 @@ new_data <- data.frame(age = c(30, 40, 50),
 Then we can use the `predict()` function to make predictions for these new values:
 
 ```{r}
-new_predictions <- predict(m1, newdata = new_data)
+new_predictions <- predict(m_bp_age_exercise, newdata = new_data)
 ```
 
 ::: {.callout-important}
@@ -562,7 +570,7 @@ We can take this to the next level and make what is called a "conditional effect
 new_data_effects <- data.frame(age = seq(20, 80, by = 1),
                                 mins_exercise = 100)
 new_data_effects <- new_data_effects |>
-  mutate(new_predictions_effects = predict(m1, newdata = new_data_effects))
+  mutate(new_predictions_effects = predict(m_bp_age_exercise, newdata = new_data_effects))
 ggplot(data = new_data_effects, aes(x = age, y = new_predictions_effects)) +
   geom_line() +
   labs(x = "Age", y = "Predicted blood pressure") +
@@ -582,7 +590,7 @@ We then give the new data frame to the `predict()` function to get the predicted
 
 ```{r}
 new_data_effects_3 <- new_data_effects_3 |> 
-  mutate(prediction = predict(m1, newdata = new_data_effects_3),
+  mutate(prediction = predict(m_bp_age_exercise, newdata = new_data_effects_3),
          mins_exercise_fac = as.factor(mins_exercise)) 
 ```
 
@@ -602,6 +610,15 @@ ggplot(data = new_data_effects_3, aes(x = age, y = prediction,
 
 
 
+
+<!-- 2027 addition: reporting with effect sizes -->
+## Reporting
+
+As for simple regression, a good report of a multiple regression gives the effect size of each explanatory variable, with its uncertainty, in meaningful units, as well as the test results. For example:
+
+*Blood pressure increased with age and decreased with the amount of exercise (multiple regression, $R^2$ = `r round(summary(m_bp_age_exercise)$r.squared, 2)`, $n$ = `r nobs(m_bp_age_exercise)`). With the amount of exercise held constant, blood pressure was `r round(10 * coef(m_bp_age_exercise)["age"], 1)` mmHg higher for every ten years of age (95% CI `r round(10 * confint(m_bp_age_exercise)["age", 1], 1)` to `r round(10 * confint(m_bp_age_exercise)["age", 2], 1)`). With age held constant, each additional hour of exercise per week was associated with blood pressure `r round(-60 * coef(m_bp_age_exercise)["mins_exercise"], 1)` mmHg lower (95% CI `r round(-60 * confint(m_bp_age_exercise)["mins_exercise", 2], 1)` to `r round(-60 * confint(m_bp_age_exercise)["mins_exercise", 1], 1)`).*
+
+Notice that the effects are expressed over meaningful amounts (ten years of age, one hour of exercise) rather than per year and per minute, which makes it easier for readers to judge whether they are biologically important.
 
 ## Collinearity
 
@@ -890,7 +907,7 @@ The VIF measures how much the variance of the estimated regression coefficients 
 In R, we can calculate the VIF using the `vif()` function from the `car` package. Here is the code to calculate the VIF for the blood pressure model:
 
 ```{r echo = TRUE}
-vif(m1)
+vif(m_bp_age_exercise)
 ```
 
 We see that the VIF values for both explanatory variables are close to 1, indicating that there is no collinearity between the explanatory variables.
@@ -1030,6 +1047,57 @@ This means that about `r round(semi_partial_r2 * 100, 2)`% of the total variance
 **Think–Pair–Share** (#a_interpreting_coefficients_conditionally) How does the interpretation of a coefficient change when you add another explanatory variable to the model?
 --->
 
+<!-- 2027 addition: confounding and causation -->
+## Confounding: why we include other explanatory variables
+
+In Chapter 4 we saw that an association between two variables in an observational study does not show that one causes the other, because of possible **confounding variables**: variables associated with both the explanatory variable and the response. Multiple regression gives us one way to deal with confounding variables that we have measured: include them as explanatory variables.
+
+Here is an example. Imagine a survey of 100 gardens, in which we measured the height of a particular crop plant (cm), the amount of fertiliser the gardener applies (g per week) and the amount of watering (litres per week). Gardeners who use more fertiliser also tend to water more. In these simulated data, fertiliser truly increases height by 1 cm per g, and water by 3 cm per litre:
+
+```{r}
+set.seed(2027)
+n <- 100
+water <- runif(n, 0, 10)
+fertiliser <- 2 + 0.8 * water + rnorm(n, 0, 1.5)
+height <- 20 + 1 * fertiliser + 3 * water + rnorm(n, 0, 4)
+garden_survey <- tibble(water = water, fertiliser = fertiliser, height = height)
+```
+
+```{r}
+#| echo: false
+write_csv(garden_survey, "datasets/garden_survey.csv")
+```
+
+```{r}
+garden_survey <- read_csv("datasets/garden_survey.csv")
+```
+
+If we look only at fertiliser, we get:
+
+```{r}
+m_fertiliser_only <- lm(height ~ fertiliser, data = garden_survey)
+coef(m_fertiliser_only)
+```
+
+The estimated effect of fertiliser is `r round(coef(m_fertiliser_only)["fertiliser"], 2)` cm per g, much larger than the true value of 1. This is because gardens with more fertiliser also receive more water, so in this model fertiliser is "taking the credit" for some of the effect of water. Water is a confounding variable.
+
+If we include water in the model:
+
+```{r}
+m_fertiliser_water <- lm(height ~ fertiliser + water, data = garden_survey)
+coef(m_fertiliser_water)
+confint(m_fertiliser_water)
+```
+
+the estimated effect of fertiliser, with the amount of water held constant, is `r round(coef(m_fertiliser_water)["fertiliser"], 2)` cm per g, close to the true value.
+
+Some important points:
+
+* **We can only adjust for confounders we have measured.** If an unmeasured variable (for example, soil quality) is associated with both fertiliser use and plant height, the estimate will still be biased, and the model cannot warn us. This is why observational studies, even with multiple regression, cannot prove causation.
+* **Adjusting has a cost.** Because the confounder is correlated with the explanatory variable of interest, including it introduces collinearity, which makes the estimates less precise. Here the standard error of the fertiliser effect increases from `r round(summary(m_fertiliser_only)$coefficients["fertiliser", "Std. Error"], 2)` to `r round(summary(m_fertiliser_water)$coefficients["fertiliser", "Std. Error"], 2)` when water is included. This is a price worth paying to remove the bias.
+* **Choose the variables in advance.** Which potential confounders to include should be decided using biological knowledge when planning the study and analysis, not by trying different combinations until a result looks interesting.
+* **Experiments avoid the problem.** If we had instead done an experiment and *randomly assigned* the amount of fertiliser to the gardens, fertiliser would be unrelated to watering (and to soil quality, and anything else). A simple regression of height on fertiliser would then give an unbiased estimate of its effect. This is why randomised experiments give the strongest evidence for causal effects.
+
 ## Review
 
 Simple regression:
@@ -1061,6 +1129,10 @@ If you'd like to solidify your understanding of multiple linear regression, you 
 
 ## Extras
 
+::: {.callout-note}
+The content of this Extras section is not examinable. It is here for those who want to learn more.
+:::
+
 ### 3D plot of multiple linear regression
 
 3D plots can help us to visualise multiple linear regression models with two explanatory variables. They are also kind of cool. They can also be difficult to interpret. So use with caution! 
@@ -1081,15 +1153,15 @@ plotly::plot_ly(bp_data_multreg, x = ~age, y = ~mins_exercise, z = ~bp,
 Sometimes we need to put a table of coefficients and confidence intervals into a report or publication. One option is to make a table in Word, and to manually enter the coefficients and confidence intervals. This is tedious and error prone. A much better option is to use R to make the table for us. One way to do this is to use the `broom` package to tidy up the model output into a data frame, and then use the `knitr` package to make a table from the data frame.
 
 ```{r echo = TRUE, as.is = TRUE}
-tidy_m1 <- tidy(m1, conf.int = TRUE)
-kable(tidy_m1, digits = 3, caption = "Multiple linear regression results
+tidy_m_bp_age_exercise <- tidy(m_bp_age_exercise, conf.int = TRUE)
+kable(tidy_m_bp_age_exercise, digits = 3, caption = "Multiple linear regression results
 for blood pressure data")
 ```
 
 Another approach is to use `tbl_regression` function within the `gtsummary` package to get a publication ready table of the coefficients and confidence intervals:
 
 ```{r echo = TRUE, as.is = TRUE}
-tbl_regression(m1)
+tbl_regression(m_bp_age_exercise)
 ```
 
 To use either approach most efficiently you will, however, need to write your report using R Markdown or Quarto so that the table is automatically created in your report document.
@@ -1100,8 +1172,8 @@ To use either approach most efficiently you will, however, need to write your re
 As well as or rather than a table of coefficients, we could make a figure showing the coefficients and confidence intervals for each explanatory variable. This can be a nice way to visualise the results of the multiple linear regression model.
 
 ```{r echo = TRUE}
-tidy_m1 <- tidy(m1, conf.int = TRUE)
-tidy_m1 |> 
+tidy_m_bp_age_exercise <- tidy(m_bp_age_exercise, conf.int = TRUE)
+tidy_m_bp_age_exercise |> 
   filter(term != "(Intercept)") |> 
 ggplot(aes(x = term, y = estimate)) +
   geom_point() +

@@ -68,7 +68,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./5.1-anova.html" rel="next">
+<link href="./5.1-ANOVA.html" rel="next">
 <link href="./3.1-regression-part1.html" rel="prev">
 <link href="./cover.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
@@ -215,7 +215,7 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./5.1-anova.html" class="sidebar-item-text sidebar-link">
+  <a href="./5.1-ANOVA.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Analysis of variance (L5)</span></a>
   </div>
 </li>
@@ -299,7 +299,12 @@ window.Quarto = {
   <li><a href="#confidence-interval-of-slope" id="toc-confidence-interval-of-slope" class="nav-link" data-scroll-target="#confidence-interval-of-slope">Confidence interval of slope</a></li>
   <li><a href="#confidence-band" id="toc-confidence-band" class="nav-link" data-scroll-target="#confidence-band">Confidence band</a></li>
   <li><a href="#prediction-band" id="toc-prediction-band" class="nav-link" data-scroll-target="#prediction-band">Prediction band</a></li>
-  <li><a href="#reporting" id="toc-reporting" class="nav-link" data-scroll-target="#reporting">Reporting</a></li>
+  <li><a href="#extrapolation-predicting-beyond-the-data" id="toc-extrapolation-predicting-beyond-the-data" class="nav-link" data-scroll-target="#extrapolation-predicting-beyond-the-data">Extrapolation: predicting beyond the data</a></li>
+  <li><a href="#reporting" id="toc-reporting" class="nav-link" data-scroll-target="#reporting">Reporting</a>
+  <ul class="collapse">
+  <li><a href="#how-big-is-the-effect-and-does-it-matter" id="toc-how-big-is-the-effect-and-does-it-matter" class="nav-link" data-scroll-target="#how-big-is-the-effect-and-does-it-matter">How big is the effect, and does it matter?</a></li>
+  </ul></li>
+  <li><a href="#association-is-not-causation" id="toc-association-is-not-causation" class="nav-link" data-scroll-target="#association-is-not-causation">Association is not causation</a></li>
   <li><a href="#relationship-between-r2-and-the-p-value-of-the-slope" id="toc-relationship-between-r2-and-the-p-value-of-the-slope" class="nav-link" data-scroll-target="#relationship-between-r2-and-the-p-value-of-the-slope">Relationship between <span class="math inline">\(R^2\)</span> and the <span class="math inline">\(p\)</span>-value of the slope</a></li>
   <li><a href="#review" id="toc-review" class="nav-link" data-scroll-target="#review">Review</a></li>
   <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading">Further reading</a></li>
@@ -335,6 +340,38 @@ window.Quarto = {
 </header>
 
 
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Learning objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><em>Version 2027.0-draft (reviewed): these learning objectives may still change.</em></p>
+<p>After this unit, students will be able to:</p>
+<ol type="1">
+<li>Explain what the correlation coefficient (r) and R² each measure, and how they differ.</li>
+<li>Explain R² as the proportion of the total sum of squares explained by the model, and calculate it from the sums of squares.</li>
+<li>Use R to obtain r and R² for a simple linear regression, and interpret their values.</li>
+<li>Identify the null hypothesis tested by the t-test of a regression slope.</li>
+<li>Explain what a p-value is, and calculate the t-statistic of a slope as its estimate divided by its standard error.</li>
+<li>Explain how the number of degrees of freedom changes the t-distribution, and why fewer residual degrees of freedom give wider confidence intervals and larger p-values for the same t-statistic.</li>
+<li>Use R to test whether the estimated slope is compatible with zero or another specified value, and draw the appropriate conclusion.</li>
+<li>Use the residual degrees of freedom (n − 2) to obtain the critical t-value for a confidence interval and the p-value for a slope, and identify the degrees of freedom in R output.</li>
+<li>Use R to obtain a 95% confidence interval for the slope and intercept, and interpret it.</li>
+<li>Distinguish a confidence band from a prediction band, and explain why the prediction band is wider.</li>
+<li>Use <code>predict()</code> to calculate the expected value of the response, with its confidence interval or prediction interval, for a new value of the explanatory variable.</li>
+<li>Interpret the slope and intercept in the biological units of the study, including whether the intercept is biologically meaningful.</li>
+<li>Recognise a correct and complete statement of regression results that reports the estimate, its uncertainty and the test result.</li>
+<li>Evaluate whether a regression analysis supports a stated biological claim, considering R² versus statistical significance, extrapolation beyond the data, model diagnostics, and correlation versus causation.</li>
+</ol>
+<p>These learning objectives, together with the content of this chapter, define what you need to know for the exam.</p>
+<p>The learning objectives for all chapters, and for the course as a whole, are also given on the <a href="https://opetchey.github.io/BIO144_Course_Information/3.1-learning-objectives.html">Learning Objectives page of the course information website</a>.</p>
+</div>
+</div>
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
 <p>This chapter builds on the previous chapter on simple linear regression. There we learned how to fit a regression model to data, and how to check if the assumptions of the regression model are met. When we are satisfied that the assumptions of linear regression are adequately met, we can move on to the next stage: interpreting the model and using it to answer our biological question.</p>
@@ -361,7 +398,7 @@ window.Quarto = {
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -392,7 +429,7 @@ window.Quarto = {
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -410,7 +447,7 @@ window.Quarto = {
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -427,12 +464,12 @@ window.Quarto = {
 <p>where: <span class="math inline">\(\hat{y}_i\)</span> is the predicted value of the response variable,</p>
 <p>In R, we calculate this as follows:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y1 <span class="sc">~</span> x)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>y1_predicted <span class="ot">&lt;-</span> <span class="fu">predict</span>(m1)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>m_sd1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y1 <span class="sc">~</span> x)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>y1_predicted <span class="ot">&lt;-</span> <span class="fu">predict</span>(m_sd1)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>SSM <span class="ot">&lt;-</span> <span class="fu">sum</span>((y1_predicted <span class="sc">-</span> <span class="fu">mean</span>(y1))<span class="sc">^</span><span class="dv">2</span>)</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>SSM</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 332.6166</code></pre>
+<pre><code>[1] 319.828</code></pre>
 </div>
 </div>
 </section>
@@ -444,7 +481,7 @@ window.Quarto = {
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>SSE <span class="ot">&lt;-</span> <span class="fu">sum</span>((y1 <span class="sc">-</span> y1_predicted)<span class="sc">^</span><span class="dv">2</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>SSE</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 3.856123</code></pre>
+<pre><code>[1] 6.771819</code></pre>
 </div>
 </div>
 <p>Or…</p>
@@ -452,7 +489,7 @@ window.Quarto = {
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>SSE <span class="ot">&lt;-</span> SST <span class="sc">-</span> SSM</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>SSE</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 3.856123</code></pre>
+<pre><code>[1] 6.771819</code></pre>
 </div>
 </div>
 </section>
@@ -464,7 +501,7 @@ window.Quarto = {
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>R.squared <span class="ot">&lt;-</span> SSM<span class="sc">/</span>SST</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>R.squared</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.9885396</code></pre>
+<pre><code>[1] 0.9792657</code></pre>
 </div>
 </div>
 </section>
@@ -476,7 +513,7 @@ window.Quarto = {
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -544,7 +581,7 @@ Note
 <p>To calculation this probability we use the fact that the slope of the regression line is an estimate and this estimate has uncertainty associated with it.</p>
 <p>We can see that the slope estimate (the <span class="math inline">\(x\)</span> row) has uncertainty by looking at the regression output:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m1)<span class="sc">$</span>coefficients[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m_sd1)<span class="sc">$</span>coefficients[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>              Estimate Std. Error
 (Intercept) -0.7638353  0.6652233
@@ -563,7 +600,7 @@ x            2.1161160  0.1072104</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -589,12 +626,24 @@ x            2.1161160  0.1072104</code></pre>
 <p>When performing a <span class="math inline">\(t\)</span>-test, the data summary is the value of the <span class="math inline">\(t\)</span>-statistic. Therefore, the <span class="math inline">\(p\)</span>-value is the probability of observing a value of the <span class="math inline">\(t\)</span>-statistic at least as extreme as the one observed, given that the null hypothesis is correct.</p>
 <p>But how can we calculate the <span class="math inline">\(p\)</span>-value from the <span class="math inline">\(t\)</span>-statistic? The answer is to use the <strong><span class="math inline">\(t\)</span>-distribution</strong>, which quantifies the probability of observing a value of the <span class="math inline">\(t\)</span>-statistic under the null hypothesis.</p>
 <p>But what is the <span class="math inline">\(t\)</span>-distribution? It is a distribution of the <span class="math inline">\(t\)</span>-statistic under the null hypothesis. It is a bell-shaped distribution that is centered on zero. The shape of the distribution is determined by the degrees of freedom, which is <span class="math inline">\(n-2\)</span> for a simple linear regression model.</p>
+<!-- 2027 addition: how the degrees of freedom change the t-distribution -->
+<p>With few degrees of freedom the <span class="math inline">\(t\)</span>-distribution has heavier tails than the normal distribution: extreme values of <span class="math inline">\(t\)</span> are more likely, because the residual variance (and so the standard error) is estimated less precisely. As the degrees of freedom increase, the <span class="math inline">\(t\)</span>-distribution gets closer and closer to the standard normal distribution:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This is why, as we saw in the table of critical <span class="math inline">\(t\)</span>-values in Chapter 3, fewer residual degrees of freedom give larger critical values, wider confidence intervals, and larger <span class="math inline">\(p\)</span>-values for the same <span class="math inline">\(t\)</span>-statistic.</p>
 <p>Here is the distribution of <span class="math inline">\(t\)</span> values under the null hypothesis for a sample size of 100 (i.e., 98 degrees of freedom):</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -619,7 +668,7 @@ Tip
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -641,7 +690,7 @@ Tip
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -661,7 +710,7 @@ Tip
 <h3 class="anchored" data-anchor-id="where-is-the-p-value-in-the-regression-output">Where is the <span class="math inline">\(p\)</span>-value in the regression output?</h3>
 <p>Using the blood pressure data again, we can fit a regression model and look at the output. We use the <code>summary</code> function to get the regression output.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(bp_age_model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -714,7 +763,7 @@ Note
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="960"></p>
+<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -724,7 +773,7 @@ Note
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="960"></p>
+<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -740,11 +789,11 @@ Note
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>t_0975 <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, <span class="at">df =</span> n <span class="sc">-</span> <span class="dv">2</span>)</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>half_interval <span class="ot">&lt;-</span> t_0975 <span class="sc">*</span> <span class="fu">summary</span>(mod1)<span class="sc">$</span>coef[<span class="dv">2</span>,<span class="dv">2</span>]</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>lower_limit <span class="ot">&lt;-</span> <span class="fu">coef</span>(mod1)[<span class="dv">2</span>] <span class="sc">-</span> half_interval</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>upper_limit <span class="ot">&lt;-</span> <span class="fu">coef</span>(mod1)[<span class="dv">2</span>] <span class="sc">+</span> half_interval</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>half_interval <span class="ot">&lt;-</span> t_0975 <span class="sc">*</span> <span class="fu">summary</span>(bp_age_model)<span class="sc">$</span>coef[<span class="dv">2</span>,<span class="dv">2</span>]</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>lower_limit <span class="ot">&lt;-</span> <span class="fu">coef</span>(bp_age_model)[<span class="dv">2</span>] <span class="sc">-</span> half_interval</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>upper_limit <span class="ot">&lt;-</span> <span class="fu">coef</span>(bp_age_model)[<span class="dv">2</span>] <span class="sc">+</span> half_interval</span>
 <span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>ci_slope <span class="ot">&lt;-</span> <span class="fu">c</span>(lower_limit, upper_limit)</span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>slope <span class="ot">&lt;-</span> <span class="fu">coef</span>(mod1)[<span class="dv">2</span>]</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>slope <span class="ot">&lt;-</span> <span class="fu">coef</span>(bp_age_model)[<span class="dv">2</span>]</span>
 <span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>slope</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      Age 
@@ -758,8 +807,8 @@ Note
 </div>
 <p>Or, using the <code>confint</code> function:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="do">## 95% confidence interval of the slope of mod1</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>ci_slope_2 <span class="ot">&lt;-</span> <span class="fu">confint</span>(mod1, <span class="at">level=</span><span class="fu">c</span>(<span class="fl">0.95</span>))[<span class="dv">2</span>,]</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="do">## 95% confidence interval of the slope of bp_age_model</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>ci_slope_2 <span class="ot">&lt;-</span> <span class="fu">confint</span>(bp_age_model, <span class="at">level=</span><span class="fu">c</span>(<span class="fl">0.95</span>))[<span class="dv">2</span>,]</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>ci_slope_2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    2.5 %    97.5 % 
@@ -768,9 +817,9 @@ Note
 </div>
 <p>Or we can do it using values from the coefficients table:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>coefs <span class="ot">&lt;-</span> <span class="fu">summary</span>(mod1)<span class="sc">$</span>coef</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">&lt;-</span> coefs[<span class="dv">2</span>,<span class="dv">1</span>]</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>sdbeta <span class="ot">&lt;-</span> coefs[<span class="dv">2</span>,<span class="dv">2</span>] </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>bp_age_coefs <span class="ot">&lt;-</span> <span class="fu">summary</span>(bp_age_model)<span class="sc">$</span>coef</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">&lt;-</span> bp_age_coefs[<span class="dv">2</span>,<span class="dv">1</span>]</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>sdbeta <span class="ot">&lt;-</span> bp_age_coefs[<span class="dv">2</span>,<span class="dv">2</span>] </span>
 <span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>beta <span class="sc">+</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>) <span class="sc">*</span> <span class="fu">qt</span>(<span class="fl">0.975</span>,<span class="dv">241</span>) <span class="sc">*</span> sdbeta </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.7694840 0.8786516</code></pre>
@@ -786,7 +835,7 @@ Note
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -797,7 +846,7 @@ Note
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -818,7 +867,7 @@ Note
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -827,6 +876,16 @@ Note
 <!---
 **Think–Pair–Share** (#a_prediction_vs_estimation) Which interval answers: "What is the mean response?" Which answers: "What might a new observation look like?"
 --->
+<!-- 2027 addition: extrapolation -->
+</section>
+<section id="extrapolation-predicting-beyond-the-data" class="level2">
+<h2 class="anchored" data-anchor-id="extrapolation-predicting-beyond-the-data">Extrapolation: predicting beyond the data</h2>
+<p>A regression model describes the relationship only over the range of values of the explanatory variable that we observed. In the blood pressure data, ages range from 21 to 79 years. Using the model to make predictions outside this range is called <strong>extrapolation</strong>, and it is risky:</p>
+<ul>
+<li>We have no data outside the observed range, so we have no way to check whether the relationship is still linear there. For example, blood pressure may not keep increasing at the same rate into very old age.</li>
+<li>Confidence and prediction bands become wider the further we move from the mean of the explanatory variable. But even these bands assume that the straight line still holds outside the data, so when extrapolating they understate the real uncertainty.</li>
+</ul>
+<p>The intercept is a common example of an unintended extrapolation. It is the expected value of <span class="math inline">\(y\)</span> when <span class="math inline">\(x = 0\)</span>. Here the estimated intercept is 99 mmHg: the predicted systolic blood pressure of a newborn baby. Age 0 is far outside the range of the data, so this value is not biologically meaningful; it is simply where the fitted line crosses the vertical axis. If we want an intercept that can be interpreted, we can centre the explanatory variable, for example by using age minus 50 years as the explanatory variable. The intercept is then the expected blood pressure of a 50-year-old.</p>
 </section>
 <section id="reporting" class="level2">
 <h2 class="anchored" data-anchor-id="reporting">Reporting</h2>
@@ -835,7 +894,7 @@ Note
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -846,6 +905,21 @@ Note
 <p><em>Systolic blood pressure was positively associated with age (slope = 0.82 mmHg per year, 95% confidence interval [0.77, 0.88], degrees of freedom = 98, <span class="math inline">\(t\)</span> = 29.7, <span class="math inline">\(p &lt; 0.001\)</span>). The regression model explained 90% of the variability in systolic blood pressure.</em></p>
 <p>We <em>DO NOT</em> report like this:</p>
 <p><em>There was a statistically significant relationship between age and systolic blood pressure (<span class="math inline">\(p &lt; 0.001\)</span>).</em></p>
+<!-- 2027 addition: effect size and biological relevance -->
+<section id="how-big-is-the-effect-and-does-it-matter" class="level3">
+<h3 class="anchored" data-anchor-id="how-big-is-the-effect-and-does-it-matter">How big is the effect, and does it matter?</h3>
+<p>A <span class="math inline">\(p\)</span>-value tells us whether the data are compatible with there being no relationship. It does not tell us how strong the relationship is, or whether it is important. For that we need the <strong>effect size</strong>: here, the estimated slope, with its confidence interval, in the units of the variables.</p>
+<p>In the blood pressure example, the slope is 0.82 mmHg per year (95% CI 0.77 to 0.88). It is often helpful to express an effect over a meaningful change in the explanatory variable. Over ten years, for example, the expected increase in systolic blood pressure is 8.2 mmHg (95% CI 7.7 to 8.8 mmHg).</p>
+<p>Whether an effect of this size is <em>biologically</em> (or medically) important is not a statistical question. It requires knowledge of the system: for example, how large a change in blood pressure has consequences for health. Good reporting gives readers the effect size and its uncertainty, in meaningful units, so that they can make this judgement. Pay attention to the whole confidence interval: if it includes both trivially small and important effects, the data cannot tell us which is the case, even if the <span class="math inline">\(p\)</span>-value is small.</p>
+<p>This is the third of the four principles for high-quality data analysis introduced in Chapter 1: emphasise effect sizes and biological relevance, rather than statistical significance alone.</p>
+<!-- 2027 addition: association versus causation -->
+</section>
+</section>
+<section id="association-is-not-causation" class="level2">
+<h2 class="anchored" data-anchor-id="association-is-not-causation">Association is not causation</h2>
+<p>The blood pressure data come from an <em>observational</em> study: we did not assign people their ages. The regression therefore describes an <strong>association</strong>: older people in this sample tend to have higher blood pressure. On its own, it does not show that ageing <em>causes</em> the increase. Many other things differ with age, such as diet, exercise and body weight, and any of these could contribute to the association.</p>
+<p>A variable that is associated with both the explanatory variable and the response, and so creates or distorts the association between them, is called a <strong>confounding variable</strong>. The strongest evidence for a causal effect comes from <em>manipulative experiments</em>, in which the researcher randomly assigns the values of the explanatory variable to the subjects. Random assignment breaks any link between the explanatory variable and potential confounders. In observational studies, we can include potential confounders as additional explanatory variables in a multiple regression (Chapter 6), but only those that we have measured.</p>
+<p>When reporting results from observational data, use language such as “was associated with” rather than “caused”, “increased” or “affected”.</p>
 </section>
 <section id="relationship-between-r2-and-the-p-value-of-the-slope" class="level2">
 <h2 class="anchored" data-anchor-id="relationship-between-r2-and-the-p-value-of-the-slope">Relationship between <span class="math inline">\(R^2\)</span> and the <span class="math inline">\(p\)</span>-value of the slope</h2>
@@ -856,7 +930,7 @@ Note
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -921,6 +995,19 @@ F-statistic: 12.38 on 1 and 1998 DF,  p-value: 0.0004447</code></pre>
 </section>
 <section id="extras" class="level2">
 <h2 class="anchored" data-anchor-id="extras">Extras</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The content of this Extras section is not examinable. It is here for those who want to learn more.</p>
+</div>
+</div>
 <section id="calculation-of-confidence-bands" class="level3">
 <h3 class="anchored" data-anchor-id="calculation-of-confidence-bands">Calculation of confidence bands</h3>
 <p>Given a fixed value of <span class="math inline">\(x\)</span>, say <span class="math inline">\(x_0\)</span>. The question is:</p>
@@ -952,8 +1039,8 @@ F-statistic: 12.38 on 1 and 1998 DF,  p-value: 0.0004447</code></pre>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span></span>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span>n</span>
 <span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fl">0.1</span><span class="sc">*</span>x <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, <span class="dv">10</span>)</span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x)</span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(m)[<span class="dv">2</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>m_sim <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x)</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(m_sim)[<span class="dv">2</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>        x 
 0.1251108 </code></pre>
@@ -966,7 +1053,7 @@ F-statistic: 12.38 on 1 and 1998 DF,  p-value: 0.0004447</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -983,7 +1070,7 @@ F-statistic: 12.38 on 1 and 1998 DF,  p-value: 0.0004447</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid figure-img" width="960"></p>
+<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-37-1.png" class="img-fluid figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -993,7 +1080,7 @@ F-statistic: 12.38 on 1 and 1998 DF,  p-value: 0.0004447</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid figure-img" width="960"></p>
+<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-38-1.png" class="img-fluid figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -1003,7 +1090,7 @@ F-statistic: 12.38 on 1 and 1998 DF,  p-value: 0.0004447</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-37-1.png" class="img-fluid figure-img" width="960"></p>
+<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-39-1.png" class="img-fluid figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -1021,18 +1108,18 @@ F-statistic: 12.38 on 1 and 1998 DF,  p-value: 0.0004447</code></pre>
 <span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">slopes =</span> rand_slopes), <span class="fu">aes</span>(<span class="at">x =</span> slopes)) <span class="sc">+</span></span>
 <span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">50</span>) <span class="sc">+</span></span>
-<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">coef</span>(m)[<span class="dv">2</span>], <span class="at">color =</span> <span class="st">"red"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">coef</span>(m_sim)[<span class="dv">2</span>], <span class="at">color =</span> <span class="st">"red"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-38-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-40-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>We can now calculate the probability of observing the data we have, given the null hypothesis is true.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>p_value <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">abs</span>(rand_slopes) <span class="sc">&gt;=</span> <span class="fu">abs</span>(<span class="fu">coef</span>(m)[<span class="dv">2</span>]))</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>p_value <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">abs</span>(rand_slopes) <span class="sc">&gt;=</span> <span class="fu">abs</span>(<span class="fu">coef</span>(m_sim)[<span class="dv">2</span>]))</span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>p_value</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.0172</code></pre>
@@ -1045,7 +1132,7 @@ F-statistic: 12.38 on 1 and 1998 DF,  p-value: 0.0004447</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-40-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="4.1-regression-part2_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -1463,7 +1550,7 @@ F-statistic: 12.38 on 1 and 1998 DF,  p-value: 0.0004447</code></pre>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./5.1-anova.html" class="pagination-link" aria-label="Analysis of variance (L5)">
+      <a href="./5.1-ANOVA.html" class="pagination-link" aria-label="Analysis of variance (L5)">
         <span class="nav-page-text">Analysis of variance (L5)</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>

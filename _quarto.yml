@@ -3,7 +3,7 @@ project:
   output-dir: docs
 
 book:
-  title: "BIO144 Course Book (version 2026)"
+  title: "BIO144 Course Book (version 2027, draft)"
   author: "Owen Petchey"
   date: today
   reader-mode: true
@@ -26,7 +26,7 @@ book:
     - 2.1-R-and-RStudio.qmd
     - 3.1-regression-part1.qmd
     - 4.1-regression-part2.qmd
-    - 5.1-anova.qmd
+    - 5.1-ANOVA.qmd
     - 6.1-multiple-regression.qmd
     - 7.1-interactions.qmd
     - 8.1-GLM1-count-data.qmd

@@ -6,6 +6,14 @@ source("_common.R")
 
 # Analysis of variance (L5) {.unnumbered}
 
+```{r}
+#| echo: false
+#| output: asis
+lo_dir <- "../BIO144_Course_Information/learning_objectives"
+source(file.path(lo_dir, "lo.R"))
+lo_callout("5.1", lo_dir)
+```
+
 The previous two chapters were about linear regression. *Linear regression* is a type of *linear model* -- recall that in *R* we used the function `lm()` to make the regression model.  In this chapter we will look at a different type of linear model: analysis of variance (ANOVA).
 
 ## Introduction
@@ -85,13 +93,13 @@ Analysis of variance (ANOVA) is a statistical method that can help us answer thi
 We can fit a one-way ANOVA model in *R* using the same `lm()` function that we used for linear regression. The only difference is that the explanatory variable is categorical.
 
 ```{r}
-anova_model <- lm(bp ~ diet, data = bp_data_diet)
+m_bp_diet <- lm(bp ~ diet, data = bp_data_diet)
 ```
 
 Then instead of using `summary()` to look at the results, we use the `anova()` function.
 
 ```{r}
-anova(anova_model)
+anova(m_bp_diet)
 ```
 
 This is an ANOVA table. It shows us the sources of variation in the data, along with their associated degrees of freedom (Df), sum of squares (Sum Sq), mean square (Mean Sq), F value, and p-value (Pr(>F)) associate with a getting a F value the same as or greater than the observed F value if the null hypothesis were true.
@@ -198,16 +206,16 @@ Graphically, the model now looks like this:
 
 ```{r}
 #| echo: false
-bp_model_diet <- lm(bp ~ diet, data = bp_data_diet)
+m_bp_diet <- lm(bp ~ diet, data = bp_data_diet)
 group_means <- bp_data_diet %>%
   group_by(diet, .groups = "drop") %>%
   summarise(mean_bp = mean(bp), .groups = "drop")
 ggplot(bp_data_diet, aes(x = diet, y = bp)) +
   geom_point() +
-  geom_hline(yintercept = coef(bp_model_diet)[1], color = "red") +
+  geom_hline(yintercept = coef(m_bp_diet)[1], color = "red") +
   geom_point(data = group_means, aes(y = mean_bp), color = "blue", size = 3) +
   geom_segment(data = group_means[-2,], aes(x = diet, xend = diet,
-                                       y = coef(bp_model_diet)[1], yend = mean_bp),
+                                       y = coef(m_bp_diet)[1], yend = mean_bp),
                color = "blue",
                arrow = arrow(length = unit(0.5,"cm"), ends = "both")) +
   labs(title = "Blood pressure by diet",
@@ -271,7 +279,7 @@ Here is an example with very low within group variability, and high between grou
 #| echo: false
 set.seed(123)
 n <- 10
-g <- 3
+n_groups <- 3
 bp_data <- data.frame(bp = c(rnorm(n, 100, 1), rnorm(n, 110, 1), rnorm(n, 120, 1)),
                       diet = rep(c("meat", "med", "vegan"), each = n))
 bp_data$diet <- factor(bp_data$diet)
@@ -289,7 +297,7 @@ And here's an example with very high within group variability, and low between g
 #| echo: false
 set.seed(123)
 n <- 10
-g <- 3
+n_groups <- 3
 bp_data <- data.frame(bp = c(rnorm(n, 100, 10), rnorm(n, 101, 10), rnorm(n, 102, 10)),
                       diet = rep(c("meat", "med", "vegan"), each = n))
 bp_data$diet <- factor(bp_data$diet)
@@ -496,7 +504,7 @@ $$H_1: \beta_1 \neq 0 \text{ or } \beta_2 \neq 0 \text{ or } \ldots \text{ or } 
 
 To test this hypothesis we are going to, as usual, calculate a $p$-value. The $p$-value is the probability of observing a test statistic as or more extreme as the one we observed, assuming the null hypothesis is true. To do this, we need to know the distribution of the test statistic under the null hypothesis. The distribution of the test statistic under the null hypothesis is known as the $F$-distribution.
 
-The $F$-distribution has two degrees of freedom values associated with it: the degrees of freedom of the model and the degrees of freedom of the residuals. The degrees of freedom of the model are the number of parameters estimated by the model corresponding to the null hypothesis. The degrees of freedom of the residuals are the total degrees of freedom minus the degrees of freedom of the model.
+The $F$-distribution has two degrees of freedom values associated with it: the degrees of freedom of the model and the degrees of freedom of the residuals. The degrees of freedom of the model are the number of extra parameters that the model estimates compared with the null (intercept-only) model; for a categorical explanatory variable with $k$ groups this is $k-1$. The degrees of freedom of the residuals are the total degrees of freedom minus the degrees of freedom of the model.
 
 Here is the $F$-distribution with 2 and 99 degrees of freedom:
 
@@ -564,7 +572,7 @@ And here is how we fit a linear model to this data:
 
 ```{r}
 #| echo: true
-fit <- lm(bp ~ diet, data = bp_data_diet)
+m_bp_diet <- lm(bp ~ diet, data = bp_data_diet)
 ```
 
 **IMPORTANT**: Since ANOVA is a linear model, it is important to check the assumptions of linear models before interpreting the results. These are some of the same assumptions we checked for simple linear regression, including: independence of errors, normality of residuals, and homoscedasticity (constant variance of residuals).
@@ -573,13 +581,13 @@ As with linear regression, we check the assumptions are not too badly broken by 
 
 ```{r}
 #| eval: false
-autoplot(fit, which = 1:4, add.smooth = FALSE)
+autoplot(m_bp_diet, which = 1:4, add.smooth = FALSE)
 ```
 
 
 ```{r}
 #| echo: false
-suppressWarnings(autoplot(fit, which = 1:4, add.smooth = FALSE))
+suppressWarnings(autoplot(m_bp_diet, which = 1:4, add.smooth = FALSE))
 ```
 
 
@@ -607,7 +615,7 @@ There are a few residuals that might be a bit extreme. These might be worth inve
 Now we can look at the ANOVA table:
 
 ```{r}
-anova(fit)
+anova(m_bp_diet)
 ```
 
 The ANOVA table shows the sum of squares, degrees of freedom, mean square, F value, and p-value for the model and residuals. As we know, the $F$ value ($F$ statistics) is calculated as the mean square of the model divided by the mean square of the residuals. The p-value is calculated based on the F-distribution with the appropriate degrees of freedom.
@@ -741,9 +749,9 @@ In R we can use the `multcomp` package to do Tukey HSD tests:
 #| echo: true
 bp_data_diet <- bp_data_diet %>%
   mutate(diet = as.factor(diet))
-fit <- lm(bp ~ diet, data = bp_data_diet)
+m_bp_diet <- lm(bp ~ diet, data = bp_data_diet)
 suppressMessages(library(multcomp))
-tukey_test <- glht(fit, linfct = mcp(diet = "Tukey"))
+tukey_test <- glht(m_bp_diet, linfct = mcp(diet = "Tukey"))
 summary(tukey_test)
 ```
 
@@ -778,7 +786,7 @@ Here we defined a new explanatory variable that groups the meat heavy and Medite
 
 ```{r}
 #| echo: true
-fit_mnm <- lm(bp ~ meat_or_no_meat, data = bp_data_diet)
+m_bp_meat_or_no_meat <- lm(bp ~ meat_or_no_meat, data = bp_data_diet)
 ```
 
 (We should not look at model checking plots here, before using the model. But let us continue as if the assumptions are sufficiently met.)
@@ -789,7 +797,7 @@ Let's look at the ANOVA table of the model comparison:
 
 ```{r}
 #| echo: true
-anova(fit, fit_mnm)
+anova(m_bp_diet, m_bp_meat_or_no_meat)
 ```
 
 We see the residual sum of squares of the model with meat or no meat is over 9'000, while that of the four diet model is less than 4'000. That is, the four diet model explains much more variance in the data than the two diet model. The $F$-test is highly significant, so we reject the null hypothesis that the two models are equally good at explaining the data. And we conclude that its not just whether people eat meat or not, but rather what kind of diet they eat that affects their blood pressure.
@@ -797,58 +805,16 @@ We see the residual sum of squares of the model with meat or no meat is over 9'0
 Ideally we do not make a lot of contrasts after we have collected and looked at our data. Rather, we would specify the contrasts we are interested in before we collect the data. This is called a priori contrasts. But sometimes we do exploratory data analysis and then we can make post hoc contrasts. In this case we should be careful to adjust for multiple comparisons.
 
 
-## Review
-
-Here are the key points from this chapter:
-
-* ANOVA is just another linear model.
-* It is used when we have categorical explanatory variables.
-* We use $F$-tests to test the null hypothesis of no difference among the means of the groups (categories).
-* We can use contrasts and post-hoc tests to test specific hypotheses about the means of the groups.
-
-<!---
-**Think–Pair–Share** (#a_anova_is_regression) What changes when we move from regression to ANOVA? What stays exactly the same?
---->
-
-## Further reading
-
-If you'd like some further reading on ANOVA and ANOVA in R, here are some good resources. There is lots of overlap among them, however, and with the material in this chapter. I suggest to look at them mostly for different perspectives and examples. And only if you'd like to solidify your understanding.
-
-* Chapter 5, Section 5.6, of *Getting Started with R* by Beckerman et al. This section is about 10 pages.
-* Chapter 11 of *The New Statistics with R* by Hector, not including the section on two-way ANOVA. This chapter is about 10 pages.
-* Chapter 14 of *Linear Models with R* by Faraway. This chapter is eight pages.
-* Chapter 9 of **Statistics. An Introduction using R** by Crawley, up to the section *Factorial experiments*. This section is about 16 pages.
-
-## Extras
-
-### Choosing the reference category
-
-**Question**: Why was the "heavy meat" diet chosen as the reference (intercept) category?
-
-**Answer**: Because R orders the categories alphabetically and takes the first level alphabetically as reference category.
-
-Sometimes we may want to override this, for example if we have a treatment that is experimentally the control, then it will usually be useful to set this as the reference / intercept level.
-
-In R we can set the reference level using the `relevel` function:
-
-```{r}
-bp_data_diet$diet <- relevel(factor(bp_data_diet$diet), ref = "vegan")
-```
-
-And now make the model and look at the estimated coefficients:
-
-```{r}
-fit_vegan_ref <- lm(bp ~ diet, data = bp_data_diet)
-summary(fit_vegan_ref)
-```
-
-Now we see the estimated coefficients for all diets except the vegan diet. The intercept is the mean individuals with vegan diet.
-
 ## Communicating the results of ANOVA
 
 When communicating the results of an ANOVA, we usually report the $F$-statistic, the degrees of freedom of the numerator and denominator, and the p-value. For example, we could say:
 
 > Blood pressure differed significantly between groups, with the mean of a meat heavy diet being 123 mmHg, while the mean blood pressure of the vegan group was 27 mmHg lower (One-way ANOVA, $F(3, 46) = 20.7$, $p < 0.0001$.
+
+<!-- 2027 addition: effect size -->
+::: {.callout-tip}
+**Report the effect sizes, not only the test.** The $F$-test only tells us whether there is evidence that *some* group means differ. Notice that the sentence above also gives the size of the difference (27 mmHg lower in the vegan group). Even better is to give the uncertainty of the difference too, for example its 95% confidence interval (from `confint()` applied to the linear model). Readers can then judge whether the difference is large enough to be biologically or medically important.
+:::
 
 And we would make a nice graph, in this case showing each individual observation since there are not too many to cause overplotting. We can also add the estimated means of each group if we like:
 
@@ -887,3 +853,53 @@ This might lead you to wonder if we always analyse manipulative experiments with
 So there isn't necessarily an association between type of explanatory variable (continuous or categorical) and whether a study is experimental or observational. Essential is for the researcher to clearly be aware of which variables are manipulation and which are observations. Because only the manipulations can be used to infer causation.
 
 
+## Review
+
+Here are the key points from this chapter:
+
+* ANOVA is just another linear model.
+* It is used when we have categorical explanatory variables.
+* We use $F$-tests to test the null hypothesis of no difference among the means of the groups (categories).
+* We can use contrasts and post-hoc tests to test specific hypotheses about the means of the groups.
+
+<!---
+**Think–Pair–Share** (#a_anova_is_regression) What changes when we move from regression to ANOVA? What stays exactly the same?
+--->
+
+## Further reading
+
+If you'd like some further reading on ANOVA and ANOVA in R, here are some good resources. There is lots of overlap among them, however, and with the material in this chapter. I suggest to look at them mostly for different perspectives and examples. And only if you'd like to solidify your understanding.
+
+* Chapter 5, Section 5.6, of *Getting Started with R* by Beckerman et al. This section is about 10 pages.
+* Chapter 11 of *The New Statistics with R* by Hector, not including the section on two-way ANOVA. This chapter is about 10 pages.
+* Chapter 14 of *Linear Models with R* by Faraway. This chapter is eight pages.
+* Chapter 9 of **Statistics. An Introduction using R** by Crawley, up to the section *Factorial experiments*. This section is about 16 pages.
+
+## Extras
+
+::: {.callout-note}
+The content of this Extras section is not examinable. It is here for those who want to learn more.
+:::
+
+### Choosing the reference category
+
+**Question**: Why was the "heavy meat" diet chosen as the reference (intercept) category?
+
+**Answer**: Because R orders the categories alphabetically and takes the first level alphabetically as reference category.
+
+Sometimes we may want to override this, for example if we have a treatment that is experimentally the control, then it will usually be useful to set this as the reference / intercept level.
+
+In R we can set the reference level using the `relevel` function:
+
+```{r}
+bp_data_diet$diet <- relevel(factor(bp_data_diet$diet), ref = "vegan")
+```
+
+And now make the model and look at the estimated coefficients:
+
+```{r}
+m_bp_diet_vegan_ref <- lm(bp ~ diet, data = bp_data_diet)
+summary(m_bp_diet_vegan_ref)
+```
+
+Now we see the estimated coefficients for all diets except the vegan diet. The intercept is the mean individuals with vegan diet.

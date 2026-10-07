@@ -6,6 +6,14 @@ source("_common.R")
 
 # Interactions (L7) {.unnumbered}
 
+```{r}
+#| echo: false
+#| output: asis
+lo_dir <- "../BIO144_Course_Information/learning_objectives"
+source(file.path(lo_dir, "lo.R"))
+lo_callout("7.1", lo_dir)
+```
+
 ## Thought for the week
 
 "*You should arrive at answers on your own, and not rely upon what you get from someone else. Answers from others are nothing more than stopgap measures, they're of no value.*"
@@ -475,8 +483,8 @@ Let us fit the model with the interaction term in R. There are two methods to do
 
 ```{r}
 #| echo: true
-mod1 <- lm(bp ~ mins_per_week + diet + mins_per_week:diet, data=bp_1cont1cat)
-mod2 <- lm(bp ~ mins_per_week * diet, data=bp_1cont1cat)
+m_bp_exercise_diet_explicit <- lm(bp ~ mins_per_week + diet + mins_per_week:diet, data=bp_1cont1cat)
+m_bp_exercise_diet <- lm(bp ~ mins_per_week * diet, data=bp_1cont1cat)
 ```
 
 The second is a shorthand for the first. The `*` operator includes the main effects (main effects are terms in the model that don't include interactions) and the interaction term. The `:` operator includes only the interaction term.
@@ -485,25 +493,25 @@ Of course, we check the model assumptions before we interpret the results:
 
 ```{r}
 par(mfrow=c(2,2))
-plot(mod2, add.smooth=FALSE)
+plot(m_bp_exercise_diet, add.smooth=FALSE)
 ```
 
 All of the plots look good.
 Now we can do hypothesis testing of the interaction term using an F-test:
 
 ```{r}
-anova(mod2)
+anova(m_bp_exercise_diet)
 ```
 
 In the ANOVA table we see four rows. The first row is for the main effect of minutes of exercise, the second row is for the main effect of diet, the third row is for the interaction effect between diet and minutes of exercise, and the fourth row is for the residuals. As always, an interaction term in the R output is shown with a colon `:` between the two variables (here it looks like `mins_per_week:diet`). 
 
-In this example, the F-statistic for the interaction term is quite large (`r round(anova(mod2)[3,4],2)`), and the p-value is small (`r signif(anova(mod2)[3,5],2)`). This means that we reject the null hypothesis that there is no interaction between diet and minutes of exercise on blood pressure. We conclude that the effect of minutes of exercise on blood pressure is different for people with different diets.
+In this example, the F-statistic for the interaction term is quite large (`r round(anova(m_bp_exercise_diet)[3,4],2)`), and the p-value is small (`r signif(anova(m_bp_exercise_diet)[3,5],2)`). This means that we reject the null hypothesis that there is no interaction between diet and minutes of exercise on blood pressure. We conclude that the effect of minutes of exercise on blood pressure is different for people with different diets.
 
 
 If we like (and we don't have to), we can look at the coefficients of the model:
 
 ```{r}
-summary(mod2)$coefficients
+summary(m_bp_exercise_diet)$coefficients
 ```
 
 As expected, there are four coefficients.
@@ -542,7 +550,7 @@ We also might want some tables summarizing the model results. Here is a table of
 
 ```{r}
 #| echo: false
-tab_coef <- summary(mod2)$coefficients
+tab_coef <- summary(m_bp_exercise_diet)$coefficients
 
 if (knitr::is_latex_output()) {
   knitr::kable(tab_coef, format = "latex", booktabs = TRUE) |>
@@ -558,14 +566,14 @@ if (knitr::is_latex_output()) {
 We could also report the $R^2$ of the model:
 
 ```{r}
-summary(mod2)$r.squared
+summary(m_bp_exercise_diet)$r.squared
 ```
 
 And also a table of the variances of the terms in the model:
 
 ```{r}
 #| echo: false
-tab_anova <- anova(mod2)
+tab_anova <- anova(m_bp_exercise_diet)
 
 if (knitr::is_latex_output()) {
   knitr::kable(tab_anova, format = "latex", booktabs = TRUE) |>
@@ -577,7 +585,12 @@ if (knitr::is_latex_output()) {
 ```
 
 
-We also might use a sentence like this to report the results: "The effect of minutes of exercise is generally negative, but the effect is stronger for people on a meat heavy diet than for people on a vegetarian diet ($F$-statistics of interaction term = `r round(anova(mod2)[3,4],2)`, degrees of freedom = `r anova(mod2)[3,1]`, degrees of freedom residuals = `r anova(mod2)[4,1]`, $p$-value = `r signif(anova(mod2)[3,5],2)`)."
+We also might use a sentence like this to report the results: "The effect of minutes of exercise is generally negative, but the effect is stronger for people on a meat heavy diet than for people on a vegetarian diet ($F$-statistics of interaction term = `r round(anova(m_bp_exercise_diet)[3,4],2)`, degrees of freedom = `r anova(m_bp_exercise_diet)[3,1]`, degrees of freedom residuals = `r anova(m_bp_exercise_diet)[4,1]`, $p$-value = `r signif(anova(m_bp_exercise_diet)[3,5],2)`)."
+
+<!-- 2027 addition: effect size -->
+::: {.callout-tip}
+**Report the effect sizes, too.** The sentence above tells the reader that the effect of exercise differs between diets, and gives the test of the interaction. It would be more informative to also give the size of the effect of exercise in each diet: the estimated slope of blood pressure against minutes of exercise for each diet, with its 95% confidence interval, preferably expressed over a meaningful amount of exercise (for example, per hour per week). Readers can then judge whether the effects, and the difference between them, are biologically important.
+:::
 
 <!---
 **Think–Pair–Share (#a_interaction_vs_main_effect)** How does an interaction change the meaning of a "main effect"? Can a main effect be misleading when an interaction is present?
@@ -884,17 +897,17 @@ It could look otherwise. For example, if we found a (albeit rather unlikely patt
 #| fig-width: 5
 #| fig-height: 4
 
-bd_2cat_weird <- data.frame(
+bp_2cat_weird <- data.frame(
   reps = paste0("R", 1:40),
   diet = rep(c("meat heavy", "vegetarian"), each = 20),
   exercise = rep(rep(c("low", "high"), each = 10), 2),
   bp = c(rnorm(10, 130, 5), rnorm(10, 110, 5), rnorm(10, 140, 5), rnorm(10, 100, 5))) |> 
   arrange(reps, diet, exercise) |>
   mutate(exercise = relevel(factor(exercise), "low"))
-grouped_data_weird <- group_by(bd_2cat_weird, diet,
+grouped_data_weird <- group_by(bp_2cat_weird, diet,
          exercise) %>%
   summarise(mean_bp = mean(bp), sd_bp = sd(bp), .groups = "drop")
-ggplot(bd_2cat_weird, aes(x=exercise, y=bp, col=diet)) + 
+ggplot(bp_2cat_weird, aes(x=exercise, y=bp, col=diet)) + 
   geom_point(position=position_dodge(width=0.1), alpha = 0.5) + 
   geom_point(data = grouped_data_weird, aes(x=exercise, y=mean_bp, col=diet),
              position=position_dodge(width=0.1), size=3) +
@@ -934,11 +947,17 @@ Interpretation of three-way interactions can be quite complex, as it involves un
 
 ## Extras
 
+::: {.callout-note}
+The content of this Extras section is not examinable. It is here for those who want to learn more.
+:::
+
 ### Degrees of freedom
 
 It can be useful to think about degrees of freedom in terms of how many parameters / coefficients have to be estimated by the model.
 
 In one-way ANOVA, this is the number of groups one has. So if you have a categorical variable with five categories (in another language one would say a factor variable with five levels), there will be five means estimated, and so the model uses five degrees of freedom. So error degrees of freedom will be the total number of observation minus five.
+
+(Note that here we count *all* the parameters the model estimates, including the intercept. In an ANOVA table, the degrees of freedom shown for a term do not include the intercept, so a categorical variable with five levels has $5 - 1 = 4$ degrees of freedom there, as in Chapter 5. Both ways of counting give the same residual degrees of freedom.)
 
 In two-way ANOVA (which includes the interaction of the two categorical variables) we have to estimate a mean for each of the combinations of the categories. So if we have one categorical variable with three levels and another with four, there are 3*4 combinations, so 12 means to estimate. So the model takes 12 degrees of freedom, and the error degrees of freedom will be the number of observations minus 12.
 

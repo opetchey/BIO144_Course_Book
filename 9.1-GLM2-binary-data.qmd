@@ -7,6 +7,14 @@ source("_common.R")
 
 # Binomial data (L9) {.unnumbered}
 
+```{r}
+#| echo: false
+#| output: asis
+lo_dir <- "../BIO144_Course_Information/learning_objectives"
+source(file.path(lo_dir, "lo.R"))
+lo_callout("9.1", lo_dir)
+```
+
 ## Introduction
 
 In the previous chapter we moved from linear models and normal errors to generalized linear models (GLMs) to handle count responses with a Poisson GLM. In this chapter we move to another common case: **binary** and **binomial responses**. Because binary data is a special case of binomial data, we will often refer to both as "binomial data".
@@ -257,24 +265,24 @@ y_adults <- rbinom(n_adults, size = 1, prob = p_pass_adults)
 Now we can combine the data into a data frame (tibble), and look at the data:
 
 ```{r}
-data_binom <- tibble(
+pass_data <- tibble(
   age_group = rep(c("child", "adult"), each = 50),
   pass = c(y_children, y_adults)
 )
-data_binom
+pass_data
 ```
 
 We can summarize the data to see how many passed in each group:
 
 ```{r}
-data_summary <- data_binom |>
+pass_summary <- pass_data |>
   group_by(age_group) |>
   summarise(
     n_tested = n(),
     n_passed = sum(pass),
     pass_rate = mean(pass)
   )
-data_summary
+pass_summary
 ```
 
 In the simulated experiment, 78% of the children passed, when the true probability of passing was 0.8. The adults did really well! -- 60% of the adults passed, when the true probability was 0.4.
@@ -282,19 +290,19 @@ In the simulated experiment, 78% of the children passed, when the true probabili
 If we had collected that data for real, we might be interested in if the difference in pass rates between children and adults is statistically significant. We can use a binomial GLM to test that. Here is how we specify and fit the model in R:
 
 ```{r}
-binom_glm <- glm(pass ~ age_group, data = data_binom, family = binomial(link = "logit"))
+m_pass_age_group <- glm(pass ~ age_group, data = pass_data, family = binomial(link = "logit"))
 ```
 
 The critical part here is the `family = binomial(link = "logit")` argument, which tells R to fit a binomial GLM with a logit link function. Note that if we do not specify the link function, R will use the logit link by default for the binomial family. This means that the following model specification is equivalent:
 
 ```{r eval = FALSE}
-binom_glm <- glm(pass ~ age_group, data = data_binom, family = binomial)
+m_pass_age_group <- glm(pass ~ age_group, data = pass_data, family = binomial)
 ```
 
 We can look at the estimated coefficients to see the result:
 
 ```{r}
-coef(summary(binom_glm))
+coef(summary(m_pass_age_group))
 ```
 
 **Important**: The estimates are on the scale of the linear predictor, which is the logit (log-odds) scale. The intercept corresponds to the log-odds of passing for the reference group (adults), and the coefficient for `age_groupchild` corresponds to the difference in log-odds between adults and children.
@@ -306,7 +314,7 @@ $\pi = \frac{\exp(\eta)}{1+\exp(\eta)}$
 Calculating that in R:
 
 ```{r}
-eta_adults <- coef(binom_glm)[["(Intercept)"]]
+eta_adults <- coef(m_pass_age_group)[["(Intercept)"]]
 p_adults <- exp(eta_adults) / (1 + exp(eta_adults))
 p_adults
 ```
@@ -319,7 +327,7 @@ Logit for children = 0.405 + 0.860 = 1.265
 
 Then we convert that to a probability:
 ```{r}
-eta_children <- eta_adults + coef(binom_glm)[["age_groupchild"]]
+eta_children <- eta_adults + coef(m_pass_age_group)[["age_groupchild"]]
 p_children <- exp(eta_children) / (1 + exp(eta_children))
 p_children
 ```
@@ -352,11 +360,7 @@ Let's work though an example of binomial regression, with data in what we call *
 
 Eight groups of beetles were exposed to an insecticide dose for 5 hours. For each dose level, we know how many beetles were tested and how many died. This is **binomial (aggregated)** data.
 
-```{r}
-#| echo: false
-data(beetle)
-write_csv(beetle, here("datasets", "beetle_mortality.csv"))
-```
+<!-- 2027 fix: the beetle data used to come from the AICcmodavg package (no longer loaded); it is read from datasets/beetle_mortality.csv below -->
 
 Read in the beetle dataset:
 ```{r}
@@ -499,13 +503,13 @@ We will plot $P(Y=1)$ (mortality probability) against dose using model predictio
 
 ```{r}
 dose_grid <- tibble(Dose = seq(min(beetle$Dose)-20, max(beetle$Dose)+20, length.out = 400))
-preds <- predict(beetle_glm, newdata = dose_grid, se.fit = TRUE) |> 
+beetle_predictions <- predict(beetle_glm, newdata = dose_grid, se.fit = TRUE) |> 
   as_tibble() |>
          mutate(p_hat = exp(fit) / (1 + exp(fit)),
          p_hat_upper_2se = exp(fit + 2*se.fit) / (1 + exp(fit + 2*se.fit)),
          p_hat_lower_2se = exp(fit - 2*se.fit) / (1 + exp(fit - 2*se.fit))
        )
-dose_grid <- bind_cols(dose_grid, preds)
+dose_grid <- bind_cols(dose_grid, beetle_predictions)
 ```
 
 And now the plot:
@@ -526,11 +530,28 @@ We also see that the standard errors are larger at intermediate doses, where the
 
 ### Reporting
 
+<!-- 2027 fix: confidence interval for a predicted probability -->
+To report a predicted probability with its confidence interval, we calculate the prediction and its standard error on the link (log-odds) scale, form the interval there, and then back-transform both to the probability scale with `plogis()` (the inverse of the logit). This is the same approach we used for the Poisson GLM, where we back-transformed with `exp()`. Calculating the interval on the link scale first ensures that it stays between 0 and 1.
+
+```{r}
+pred_50 <- predict(beetle_glm, newdata = data.frame(Dose = 50),
+                   type = "link", se.fit = TRUE)
+prob_50 <- plogis(pred_50$fit)
+prob_50_ci <- plogis(pred_50$fit + c(-1.96, 1.96) * pred_50$se.fit)
+prob_50
+prob_50_ci
+```
+
 When reporting results from a logistic regression, you might say something like:
 
-"A logistic regression was used to model the probability of beetle mortality as a function of insecticide dose. The odds of mortality increased by a factor of `r round(exp(coef(beetle_glm)[["Dose"]]), 2)` (95% CI: `r round(exp(confint(beetle_glm)["Dose", ]), 2)` per unit increase in dose. This indicates that higher doses are associated with higher odds of mortality. The model predicts that at a dose of 50, the probability of mortality is approximately `r round(predict(beetle_glm, newdata = data.frame(Dose = 50), type = "response"), 2)` (95% CI: `r round(predict(beetle_glm, newdata = data.frame(Dose = 50), type = "link") + c(-2, 2) * summary(beetle_glm)$coefficients["Dose", "Std. Error"], 2)` transformed to probability scale). The model explained a significant amount of deviance (Deviance = `r round(deviance(beetle_glm), 1)`, df = `r df.residual(beetle_glm)`, $\chi^2$ p < 0.001)."
+"A logistic regression was used to model the probability of beetle mortality as a function of insecticide dose. The odds of mortality increased by a factor of `r round(exp(coef(beetle_glm)[["Dose"]]), 2)` (95% CI: `r round(exp(confint(beetle_glm)["Dose", 1]), 2)` to `r round(exp(confint(beetle_glm)["Dose", 2]), 2)`) per unit increase in dose. This indicates that higher doses are associated with higher odds of mortality. The model predicts that at a dose of 50, the probability of mortality is approximately `r round(prob_50, 2)` (95% CI: `r round(prob_50_ci[1], 2)` to `r round(prob_50_ci[2], 2)`). Mortality was strongly associated with dose (likelihood ratio test: change in deviance = `r round(anova(beetle_glm, test = "Chisq")$Deviance[2], 1)`, $df = 1$, $p$ `r beetle_p <- anova(beetle_glm, test = "Chisq")[2, 5]; if (beetle_p < 0.001) "< 0.001" else paste("=", signif(beetle_p, 2))`)." <!-- 2027 fix: report the change in deviance (null minus residual) on 1 df, not the residual deviance -->
 
 
+
+<!-- 2027 addition: effect size -->
+::: {.callout-tip}
+**How big is the effect?** Odds ratios are hard for most readers to interpret. As well as the odds ratio, report predicted probabilities at a few meaningful values of the explanatory variable (for example, the lowest and highest doses used, or a dose of practical interest), with their confidence intervals. Readers can then judge whether the effect is biologically (or practically) important. See also "Probability vs odds ratio in reporting" below.
+:::
 
 ### Overdispersion in aggregated binomial data
 
@@ -642,6 +663,13 @@ plasma_glm <- glm(y ~ fibrinogen + globulin, data = plasma, family = binomial)
 
 
 ### Complication 2: model checking and dispersion
+
+The general checklist for checking a GLM, from Chapter 8, applies here too:
+
+{{< include _glm-checklist.qmd >}}
+
+For individual-level 0/1 data, points 3 and 4 need particular care:
+
 
 Residual plots exist, but can be hard to interpret for 0/1 data:
 

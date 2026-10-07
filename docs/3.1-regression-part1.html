@@ -215,7 +215,7 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./5.1-anova.html" class="sidebar-item-text sidebar-link">
+  <a href="./5.1-ANOVA.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Analysis of variance (L5)</span></a>
   </div>
 </li>
@@ -289,6 +289,7 @@ window.Quarto = {
   <li><a href="#least-squares" id="toc-least-squares" class="nav-link" data-scroll-target="#least-squares">Least squares</a></li>
   <li><a href="#least-squares-estimates" id="toc-least-squares-estimates" class="nav-link" data-scroll-target="#least-squares-estimates">Least squares estimates</a></li>
   <li><a href="#why-division-by-n-2-ensures-an-unbiased-estimator" id="toc-why-division-by-n-2-ensures-an-unbiased-estimator" class="nav-link" data-scroll-target="#why-division-by-n-2-ensures-an-unbiased-estimator">Why division by <span class="math inline">\(n-2\)</span> ensures an unbiased estimator</a></li>
+  <li><a href="#degrees-of-freedom-and-why-having-few-of-them-is-a-problem" id="toc-degrees-of-freedom-and-why-having-few-of-them-is-a-problem" class="nav-link" data-scroll-target="#degrees-of-freedom-and-why-having-few-of-them-is-a-problem">Degrees of freedom, and why having few of them is a problem</a></li>
   <li><a href="#lets-do-it-in-r" id="toc-lets-do-it-in-r" class="nav-link" data-scroll-target="#lets-do-it-in-r">Let’s do it in R</a></li>
   </ul></li>
   <li><a href="#dealing-with-the-error" id="toc-dealing-with-the-error" class="nav-link" data-scroll-target="#dealing-with-the-error">Dealing with the error</a>
@@ -312,6 +313,7 @@ window.Quarto = {
   <li><a href="#what-to-do-when-things-go-wrong" id="toc-what-to-do-when-things-go-wrong" class="nav-link" data-scroll-target="#what-to-do-when-things-go-wrong">What to do when things “go wrong”?</a></li>
   <li><a href="#dealing-with-non-linearity" id="toc-dealing-with-non-linearity" class="nav-link" data-scroll-target="#dealing-with-non-linearity">Dealing with non-linearity</a></li>
   <li><a href="#common-transformations" id="toc-common-transformations" class="nav-link" data-scroll-target="#common-transformations">Common transformations</a></li>
+  <li><a href="#interpreting-a-model-with-log-transformed-variables" id="toc-interpreting-a-model-with-log-transformed-variables" class="nav-link" data-scroll-target="#interpreting-a-model-with-log-transformed-variables">Interpreting a model with log-transformed variables</a></li>
   <li><a href="#outliers" id="toc-outliers" class="nav-link" data-scroll-target="#outliers">Outliers</a></li>
   <li><a href="#removing-outliers" id="toc-removing-outliers" class="nav-link" data-scroll-target="#removing-outliers">Removing outliers</a></li>
   </ul></li>
@@ -352,6 +354,39 @@ window.Quarto = {
 </header>
 
 
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Learning objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><em>Version 2027.0-draft (reviewed): these learning objectives may still change.</em></p>
+<p>After this unit, students will be able to:</p>
+<ol type="1">
+<li>Explain when simple linear regression is an appropriate tool for a biological question.</li>
+<li>Write the simple linear regression model as an equation, and identify the intercept, slope and error term.</li>
+<li>Explain the least squares principle by which the intercept and slope are estimated.</li>
+<li>Calculate fitted values and residuals from a regression equation and data.</li>
+<li>Explain what degrees of freedom are: the number of independent pieces of information left for estimating variation after the model parameters have been estimated, so that the residual degrees of freedom equal the number of observations minus the number of estimated parameters.</li>
+<li>Explain why the residual variance of a simple linear regression is estimated by dividing the residual sum of squares by n − 2, and calculate the residual degrees of freedom.</li>
+<li>Explain why few residual degrees of freedom are a problem: imprecise estimates of the residual variance, larger critical t-values and so wider confidence intervals and less power, a risk of fitting noise, and difficulty checking assumptions.</li>
+<li>Describe how the error term is modelled: normally distributed, with mean zero and constant variance.</li>
+<li>State the assumptions of simple linear regression.</li>
+<li>Use R to fit a simple linear regression with <code>lm()</code> and obtain the estimated intercept and slope.</li>
+<li>Use diagnostic plots to judge whether the assumptions of a linear regression are reasonably met, and identify which assumption is violated if not.</li>
+<li>Explain leverage and Cook’s distance, and identify influential observations.</li>
+<li>Identify common problems in a regression (e.g.&nbsp;non-linearity, non-constant variance, influential observations) and select an appropriate remedy (e.g.&nbsp;a transformation).</li>
+<li>Interpret the coefficients of a regression with a log-transformed response and/or explanatory variable (e.g.&nbsp;as proportional or multiplicative effects).</li>
+<li>Explain what makes a model linear (linear in its parameters), so that models with transformed variables can still be fitted with <code>lm()</code>.</li>
+</ol>
+<p>These learning objectives, together with the content of this chapter, define what you need to know for the exam.</p>
+<p>The learning objectives for all chapters, and for the course as a whole, are also given on the <a href="https://opetchey.github.io/BIO144_Course_Information/3.1-learning-objectives.html">Learning Objectives page of the course information website</a>.</p>
+</div>
+</div>
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
 <p>Linear regression is a common statistical method that models the relationship between a dependent (response) variable and one or more independent (explanatory) variables. The relationship is modeled with the equation for a straight line (<span class="math inline">\(y = a + bx\)</span>).</p>
@@ -406,7 +441,7 @@ window.Quarto = {
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -451,7 +486,7 @@ window.Quarto = {
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -461,7 +496,7 @@ window.Quarto = {
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -471,7 +506,7 @@ window.Quarto = {
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -491,7 +526,7 @@ window.Quarto = {
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -526,7 +561,72 @@ Note
 <h3 class="anchored" data-anchor-id="why-division-by-n-2-ensures-an-unbiased-estimator">Why division by <span class="math inline">\(n-2\)</span> ensures an unbiased estimator</h3>
 <p>When estimating parameters (<span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span>), the square of the residuals is minimised. This fitting process inherently <em>uses up</em> two <em>degrees of freedom</em>, as the model forces the residuals to sum to zero and aligns the slope to best fit the data. I.e., one degree of freedom is lost due to the estimation of the intercept, and another due to the estimation of the slope.</p>
 <p>The adjustment (division by <span class="math inline">\(n-2\)</span> instead of <span class="math inline">\(n\)</span>) compensates for the loss of variability due to parameter estimation, ensuring the estimator of the residual variance is unbiased. Mathematically, dividing by n - 2 adjusts for this loss and gives an accurate estimate of the population variance when working with sample data.</p>
-<p>We’ll look at degrees of freedom in more detail later, so don’t worry if this is a bit confusing right now.</p>
+</section>
+<section id="degrees-of-freedom-and-why-having-few-of-them-is-a-problem" class="level3">
+<h3 class="anchored" data-anchor-id="degrees-of-freedom-and-why-having-few-of-them-is-a-problem">Degrees of freedom, and why having few of them is a problem</h3>
+<p>The <strong>residual degrees of freedom</strong> are the number of observations minus the number of parameters estimated by the model. In simple linear regression we estimate two parameters (the intercept and the slope), so the residual degrees of freedom are <span class="math inline">\(n - 2\)</span>. You can think of them as the number of independent pieces of information left over, after fitting the model, for estimating how much the data vary around the model (the residual variance).</p>
+<p>Having few residual degrees of freedom is a problem, for several connected reasons:</p>
+<ul>
+<li><strong>The residual variance is estimated imprecisely.</strong> It is estimated from the residuals, and with few residual degrees of freedom there is little information to estimate it from. By chance it could be much too small or much too large.</li>
+<li><strong>Confidence intervals become wider and tests less powerful.</strong> Because the residual variance is uncertain, the <span class="math inline">\(t\)</span>-distribution used for confidence intervals and <span class="math inline">\(p\)</span>-values has heavier tails when there are few degrees of freedom. The value we multiply the standard error by to get a 95% confidence interval (the critical <span class="math inline">\(t\)</span>-value) is then larger, so confidence intervals are wider, and a real effect is less likely to be detected. The table below shows how quickly the critical value grows as the degrees of freedom shrink. (With very many degrees of freedom it approaches 1.96, the value for the normal distribution.)</li>
+<li><strong>The model can fit the noise.</strong> If the number of parameters gets close to the number of observations, the model can fit the data closely just by chance. In the extreme, a straight line through two points fits perfectly, leaves zero residual degrees of freedom, and tells us nothing about the residual variance.</li>
+<li><strong>Assumptions are hard to check.</strong> With few residuals, diagnostic plots show very little, so it is difficult to judge whether the model’s assumptions are met.</li>
+</ul>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 37%">
+<col style="width: 62%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">Residual degrees of freedom</th>
+<th style="text-align: right;">Critical t-value for a 95% confidence interval</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">12.71</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">4.30</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">3.18</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">2.57</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">2.23</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">2.09</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">2.04</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">1.98</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1000</td>
+<td style="text-align: right;">1.96</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>So each parameter a model estimates uses up one degree of freedom. Adding explanatory variables, adding levels to a categorical explanatory variable, or adding interactions all increase the number of parameters, and so reduce the residual degrees of freedom. This is why, when planning a study, it is worth checking that the planned number of observations leaves enough residual degrees of freedom for the model you intend to fit. We will meet degrees of freedom again in every chapter that follows.</p>
 </section>
 <section id="lets-do-it-in-r" class="level3">
 <h3 class="anchored" data-anchor-id="lets-do-it-in-r">Let’s do it in R</h3>
@@ -542,7 +642,7 @@ Note
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -588,7 +688,7 @@ F-statistic: 884.4 on 1 and 98 DF,  p-value: &lt; 2.2e-16</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -610,7 +710,7 @@ F-statistic: 884.4 on 1 and 98 DF,  p-value: &lt; 2.2e-16</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -742,7 +842,7 @@ Note
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -752,7 +852,7 @@ Note
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -768,7 +868,7 @@ Note
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -781,7 +881,7 @@ Note
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="768"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" width="768"></p>
 </figure>
 </div>
 </div>
@@ -799,7 +899,7 @@ Note
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" width="768"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid figure-img" width="768"></p>
 </figure>
 </div>
 </div>
@@ -812,7 +912,7 @@ Note
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -830,19 +930,19 @@ set.seed(123)
 par(mfrow=c(2,5), mar=c(4,4,1,1))
 for (ii in 1:10){
   if (ii == 7){
-    ss <- runif(100)
+    sim_values <- runif(100)
   } else {
-    ss <- rnorm(100)
+    sim_values <- rnorm(100)
   }
-  qqnorm(ss,main="")
-  qqline(ss,xlab="")
+  qqnorm(sim_values,main="")
+  qqline(sim_values,xlab="")
   ## add a title to the plot
   title(paste("Plot", ii))
 }
 ```
 
 ::: {.cell-output-display}
-![](3.1-regression-part1_files/figure-html/unnamed-chunk-26-1.png){width=432}
+![](3.1-regression-part1_files/figure-html/unnamed-chunk-28-1.png){width=432}
 :::
 :::
 
@@ -877,7 +977,7 @@ for (ii in 1:10){
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -899,7 +999,7 @@ Tip
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -920,19 +1020,19 @@ Tip
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>And here the scale-location plot for a linear model of that data:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y<span class="sc">~</span>x)</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(m,<span class="at">which=</span><span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>m_sim <span class="ot">&lt;-</span> <span class="fu">lm</span>(y<span class="sc">~</span>x)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(m_sim,<span class="at">which=</span><span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -968,7 +1068,7 @@ Tip
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -983,14 +1083,14 @@ Tip
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">100</span>, <span class="dv">1</span>, <span class="dv">10</span>)</span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">2</span><span class="sc">*</span>x <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">100</span>,<span class="dv">0</span>,<span class="dv">2</span>) <span class="sc">+</span> <span class="fl">0.5</span><span class="sc">*</span>x<span class="sc">^</span><span class="dv">2</span></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y<span class="sc">~</span>x)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>m_sim <span class="ot">&lt;-</span> <span class="fu">lm</span>(y<span class="sc">~</span>x)</span>
 <span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">x=</span>x,<span class="at">y=</span>y), <span class="fu">aes</span>(<span class="at">x=</span>x,<span class="at">y=</span>y)) <span class="sc">+</span></span>
 <span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
 <span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">formula =</span> y <span class="sc">~</span> x, <span class="at">method=</span><span class="st">"lm"</span>, <span class="at">se=</span><span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -1000,33 +1100,7 @@ Tip
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">x=</span>x,<span class="at">y=</span>y), <span class="fu">aes</span>(<span class="at">x=</span>x,<span class="at">y=</span>y)) <span class="sc">+</span></span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">formula =</span> y <span class="sc">~</span> x, <span class="at">method=</span><span class="st">"lm"</span>, <span class="at">se=</span><span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">xend=</span>x, <span class="at">yend=</span>m<span class="sc">$</span>fitted), <span class="at">color=</span><span class="st">"red"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid figure-img" width="432"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>At low values of <span class="math inline">\(y\)</span>, the residuals are positive, at intermediate values of <span class="math inline">\(y\)</span> the residuals are negative, and at high values of <span class="math inline">\(y\)</span> the residuals are positive. This pattern in the residuals is a sign that the relationship between <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> is not linear.</p>
-<p>We can plot the value of the residuals against the <span class="math inline">\(y\)</span> value directly, instead of looking at the pattern in the graph above. This is called a <strong>Tukey-Anscombe plot</strong>. It is a graph of the residuals versus the fitted <span class="math inline">\(y\)</span> values:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">fitted</span>(m), <span class="at">y =</span> <span class="fu">resid</span>(m))) <span class="sc">+</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype=</span><span class="st">"dashed"</span>, <span class="at">color=</span><span class="st">"red"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid figure-img" width="432"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>We can very clearly see pattern in the residuals in this Tukey-Anscombe plot. The residuals are positive, then negative, then positive, as the fitted <span class="math inline">\(y\)</span> value gets larger.</p>
-<p>We can also make this Tukey-Anscombe plot using the built-in plot function for linear models in R:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(m, <span class="at">which=</span><span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">xend=</span>x, <span class="at">yend=</span>m_sim<span class="sc">$</span>fitted), <span class="at">color=</span><span class="st">"red"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1035,13 +1109,39 @@ Tip
 </div>
 </div>
 </div>
-<p>The red line in the Tukey-Anscombe plot is a loess smooth. It is automatically added to the plot. It is a way of estimating the pattern in the residuals. If the red line is not flat, then there is a pattern in the residuals. However, the loess smooth is not always reliable. It is a good idea to look at the residuals directly, without this smooth.</p>
+<p>At low values of <span class="math inline">\(y\)</span>, the residuals are positive, at intermediate values of <span class="math inline">\(y\)</span> the residuals are negative, and at high values of <span class="math inline">\(y\)</span> the residuals are positive. This pattern in the residuals is a sign that the relationship between <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> is not linear.</p>
+<p>We can plot the value of the residuals against the <span class="math inline">\(y\)</span> value directly, instead of looking at the pattern in the graph above. This is called a <strong>Tukey-Anscombe plot</strong>. It is a graph of the residuals versus the fitted <span class="math inline">\(y\)</span> values:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(m, <span class="at">which=</span><span class="dv">1</span>, <span class="at">add.smooth =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">fitted</span>(m_sim), <span class="at">y =</span> <span class="fu">resid</span>(m_sim))) <span class="sc">+</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype=</span><span class="st">"dashed"</span>, <span class="at">color=</span><span class="st">"red"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
 <p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-38-1.png" class="img-fluid figure-img" width="432"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We can very clearly see pattern in the residuals in this Tukey-Anscombe plot. The residuals are positive, then negative, then positive, as the fitted <span class="math inline">\(y\)</span> value gets larger.</p>
+<p>We can also make this Tukey-Anscombe plot using the built-in plot function for linear models in R:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(m_sim, <span class="at">which=</span><span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-39-1.png" class="img-fluid figure-img" width="432"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The red line in the Tukey-Anscombe plot is a loess smooth. It is automatically added to the plot. It is a way of estimating the pattern in the residuals. If the red line is not flat, then there is a pattern in the residuals. However, the loess smooth is not always reliable. It is a good idea to look at the residuals directly, without this smooth.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(m_sim, <span class="at">which=</span><span class="dv">1</span>, <span class="at">add.smooth =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-40-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -1053,7 +1153,7 @@ Tip
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-39-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-41-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -1074,14 +1174,14 @@ for (ii in 1:6){
   } else {
     y <- 2*x + rnorm(100,0,2)
   }
-  m <- lm(y~x)
-  plot(m, which=1, add.smooth = FALSE)
+  m_sim <- lm(y~x)
+  plot(m_sim, which=1, add.smooth = FALSE)
   mtext(paste("Plot", ii), side=3, line=-1.3)
 }
 ```
 
 ::: {.cell-output-display}
-![](3.1-regression-part1_files/figure-html/unnamed-chunk-40-1.png){width=432}
+![](3.1-regression-part1_files/figure-html/unnamed-chunk-42-1.png){width=432}
 :::
 :::
 
@@ -1100,7 +1200,7 @@ for (ii in 1:6){
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-41-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-43-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -1127,7 +1227,7 @@ for (ii in 1:6){
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-44-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -1138,7 +1238,7 @@ for (ii in 1:6){
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-43-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-45-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -1148,11 +1248,11 @@ for (ii in 1:6){
 <p><span class="math inline">\(D_i = \sum_{j=1}^n (\hat{y}_j - \hat{y}_{j(i)})^2 / (p \times MSE)\)</span>.</p>
 <p>where <span class="math inline">\(\hat{y}_j\)</span> is the predicted value of the dependent variable for data point <span class="math inline">\(j\)</span>, <span class="math inline">\(\hat{y}_{j(i)}\)</span> is the predicted value of the dependent variable for data point <span class="math inline">\(j\)</span> when data point <span class="math inline">\(i\)</span> is removed, <span class="math inline">\(p\)</span> is the number of parameters in the model (2 in this case), <span class="math inline">\(MSE\)</span> is the mean squared error of the model.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(bp_age_model_outlier, <span class="at">which=</span><span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(bp_age_data_outlier_added, <span class="at">which=</span><span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-44-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-46-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -1162,7 +1262,7 @@ for (ii in 1:6){
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-45-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-47-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -1175,7 +1275,7 @@ for (ii in 1:6){
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-46-1.png" class="img-fluid figure-img" width="768"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-48-1.png" class="img-fluid figure-img" width="768"></p>
 </figure>
 </div>
 </div>
@@ -1190,7 +1290,7 @@ for (ii in 1:6){
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-47-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-49-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -1235,20 +1335,20 @@ for (ii in 1:6){
 <h3 class="anchored" data-anchor-id="dealing-with-non-linearity">Dealing with non-linearity</h3>
 <p>Here’s another example of <span class="math inline">\(y\)</span> and <span class="math inline">\(x\)</span> that are not linearly related:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>eg_data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">x =</span> <span class="fu">runif</span>(<span class="dv">50</span>)) <span class="sc">%&gt;%</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>nonlinear_data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">x =</span> <span class="fu">runif</span>(<span class="dv">50</span>)) <span class="sc">%&gt;%</span></span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">log_y =</span> <span class="fu">log</span>(<span class="fl">0.1</span>) <span class="sc">+</span> <span class="fl">0.5</span><span class="sc">*</span> <span class="fu">log</span>(x) <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">50</span>,<span class="dv">0</span>,<span class="fl">0.1</span>),</span>
 <span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="fu">exp</span>(log_y),</span>
 <span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">log_y =</span> <span class="fu">log</span>(y),</span>
 <span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">log_x =</span> <span class="fu">log</span>(x),</span>
 <span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">sqrt_y =</span> <span class="fu">sqrt</span>(y))</span>
 <span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(eg_data, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span></span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(nonlinear_data, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span></span>
 <span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
 <span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">formula =</span> y <span class="sc">~</span> x, <span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x, eg_data)</span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>m_untransformed <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x, nonlinear_data)</span>
 <span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">fitted</span>(m1), <span class="at">y =</span> <span class="fu">residuals</span>(m1))) <span class="sc">+</span></span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">fitted</span>(m_untransformed), <span class="at">y =</span> <span class="fu">residuals</span>(m_untransformed))) <span class="sc">+</span></span>
 <span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
 <span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
 <span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">formula =</span> y <span class="sc">~</span> x, <span class="at">method =</span> <span class="st">"loess"</span>)</span>
@@ -1257,19 +1357,19 @@ for (ii in 1:6){
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-49-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-51-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>One way to deal with this is to transform the response variable <span class="math inline">\(Y\)</span>. Here we try two different transformations: <span class="math inline">\(\log_{10}(Y)\)</span> and <span class="math inline">\(\sqrt{Y}\)</span>.</p>
+<p>One way to deal with this is to transform the response variable <span class="math inline">\(Y\)</span>. Here we try two different transformations: <span class="math inline">\(\log(Y)\)</span> (the natural logarithm, which is what the <code>log()</code> function in R calculates) and <span class="math inline">\(\sqrt{Y}\)</span>.</p>
 <p>Square root transform of the response variable <span class="math inline">\(Y\)</span>:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(eg_data, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> sqrt_y)) <span class="sc">+</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(nonlinear_data, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> sqrt_y)) <span class="sc">+</span></span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
 <span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">formula =</span> y <span class="sc">~</span> x, <span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(sqrt_y <span class="sc">~</span> x, eg_data)</span>
-<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>p4 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">fitted</span>(m2), <span class="at">y =</span> <span class="fu">residuals</span>(m2))) <span class="sc">+</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>m_sqrt_y <span class="ot">&lt;-</span> <span class="fu">lm</span>(sqrt_y <span class="sc">~</span> x, nonlinear_data)</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>p4 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">fitted</span>(m_sqrt_y), <span class="at">y =</span> <span class="fu">residuals</span>(m_sqrt_y))) <span class="sc">+</span></span>
 <span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
 <span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
 <span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">formula =</span> y <span class="sc">~</span> x, <span class="at">method =</span> <span class="st">"loess"</span>)</span>
@@ -1278,7 +1378,7 @@ for (ii in 1:6){
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-50-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-52-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1286,11 +1386,11 @@ for (ii in 1:6){
 <p>Not great.</p>
 <p>Log transformation of the response variable <span class="math inline">\(Y\)</span>:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>p5 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(eg_data, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> log_y)) <span class="sc">+</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>p5 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(nonlinear_data, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> log_y)) <span class="sc">+</span></span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
 <span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">formula =</span> y <span class="sc">~</span> x, <span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>m3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(log_y <span class="sc">~</span> x, eg_data)</span>
-<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>p6 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">fitted</span>(m3), <span class="at">y =</span> <span class="fu">residuals</span>(m3))) <span class="sc">+</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>m_log_y <span class="ot">&lt;-</span> <span class="fu">lm</span>(log_y <span class="sc">~</span> x, nonlinear_data)</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>p6 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">fitted</span>(m_log_y), <span class="at">y =</span> <span class="fu">residuals</span>(m_log_y))) <span class="sc">+</span></span>
 <span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
 <span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
 <span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">formula =</span> y <span class="sc">~</span> x, <span class="at">method =</span> <span class="st">"loess"</span>)</span>
@@ -1299,7 +1399,7 @@ for (ii in 1:6){
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-51-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-53-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1307,11 +1407,11 @@ for (ii in 1:6){
 <p>Nope. Still some evidence of non-linearity.</p>
 <p>What about transforming the explanatory variable <span class="math inline">\(X\)</span> as well?</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>p7 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(eg_data, <span class="fu">aes</span>(<span class="at">x =</span> log_x, <span class="at">y =</span> log_y)) <span class="sc">+</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>p7 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(nonlinear_data, <span class="fu">aes</span>(<span class="at">x =</span> log_x, <span class="at">y =</span> log_y)) <span class="sc">+</span></span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
 <span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">formula =</span> y <span class="sc">~</span> x, <span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>m4 <span class="ot">&lt;-</span> <span class="fu">lm</span>(log_y <span class="sc">~</span> log_x, eg_data)</span>
-<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>p8 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">fitted</span>(m4), <span class="at">y =</span> <span class="fu">residuals</span>(m4))) <span class="sc">+</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>m_log_log <span class="ot">&lt;-</span> <span class="fu">lm</span>(log_y <span class="sc">~</span> log_x, nonlinear_data)</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>p8 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">fitted</span>(m_log_log), <span class="at">y =</span> <span class="fu">residuals</span>(m_log_log))) <span class="sc">+</span></span>
 <span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
 <span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
 <span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">formula =</span> y <span class="sc">~</span> x, <span class="at">method =</span> <span class="st">"loess"</span>)</span>
@@ -1320,7 +1420,7 @@ for (ii in 1:6){
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-52-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-54-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1330,7 +1430,7 @@ for (ii in 1:6){
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-53-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:14cm"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-55-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:14cm"></p>
 </figure>
 </div>
 </div>
@@ -1351,6 +1451,22 @@ for (ii in 1:6){
 <li>The arcsin square-root <span class="math inline">\(\arcsin(\sqrt{\cdot})\)</span> transformation for proportions/percentages.</li>
 </ul>
 <p>Transformations can also be applied on explanatory variables, as we saw in the example above.</p>
+<!-- 2027 addition: interpreting models with log-transformed variables -->
+</section>
+<section id="interpreting-a-model-with-log-transformed-variables" class="level3">
+<h3 class="anchored" data-anchor-id="interpreting-a-model-with-log-transformed-variables">Interpreting a model with log-transformed variables</h3>
+<p>When we transform a variable, the coefficients of the model are on the transformed scale. With a square-root transformation they are hard to interpret. With a log transformation, however, they have useful interpretations in terms of <em>multiplicative</em> (proportional) changes. This matters a lot in practice: the slope of a model with a log-transformed response is not “the change in <span class="math inline">\(y\)</span> per unit <span class="math inline">\(x\)</span>”.</p>
+<p>Here are the three common cases, using natural logarithms (<code>log()</code> in R):</p>
+<p><strong>1. Log-transformed response: <span class="math inline">\(\log(y) = \beta_0 + \beta_1 x\)</span>.</strong> Increasing <span class="math inline">\(x\)</span> by one unit adds <span class="math inline">\(\beta_1\)</span> to <span class="math inline">\(\log(y)\)</span>, which <em>multiplies</em> the expected <span class="math inline">\(y\)</span> by <span class="math inline">\(e^{\beta_1}\)</span>. For example, if <span class="math inline">\(\beta_1 = 0.1\)</span>, then <span class="math inline">\(e^{0.1} = 1.105\)</span>, so each unit increase in <span class="math inline">\(x\)</span> is associated with a 10.5% increase in <span class="math inline">\(y\)</span>. For small values of <span class="math inline">\(\beta_1\)</span> (say, between −0.1 and 0.1), <span class="math inline">\(100 \cdot \beta_1\)</span> is a good approximation of the percentage change.</p>
+<p><strong>2. Log-transformed explanatory variable: <span class="math inline">\(y = \beta_0 + \beta_1 \log(x)\)</span>.</strong> Multiplying <span class="math inline">\(x\)</span> by a factor <span class="math inline">\(k\)</span> changes <span class="math inline">\(y\)</span> by <span class="math inline">\(\beta_1 \log(k)\)</span>. So doubling <span class="math inline">\(x\)</span> is associated with a change in <span class="math inline">\(y\)</span> of <span class="math inline">\(\beta_1 \log(2) \approx 0.69 \cdot \beta_1\)</span>.</p>
+<p><strong>3. Both log-transformed (a “log–log” model): <span class="math inline">\(\log(y) = \beta_0 + \beta_1 \log(x)\)</span>.</strong> This corresponds to the power law <span class="math inline">\(y = e^{\beta_0} x^{\beta_1}\)</span>. A 1% increase in <span class="math inline">\(x\)</span> is associated with an (approximately) <span class="math inline">\(\beta_1\)</span>% change in <span class="math inline">\(y\)</span>, and doubling <span class="math inline">\(x\)</span> multiplies <span class="math inline">\(y\)</span> by <span class="math inline">\(2^{\beta_1}\)</span>. Log–log models are common in biology, for example when describing how metabolic rate or other traits scale with body mass.</p>
+<p>In the log–log model we fitted above (<code>m_log_log</code>), the estimated slope is 0.49. So doubling <span class="math inline">\(x\)</span> is associated with <span class="math inline">\(y\)</span> being multiplied by <span class="math inline">\(2^{0.49} =\)</span> 1.4, that is, an increase of about 40%. (The data were simulated with a true slope of 0.5.)</p>
+<p>Some practical points:</p>
+<ul>
+<li><strong>Back-transforming predictions.</strong> To get predictions on the original scale, back-transform with <code>exp()</code>. For a log-transformed response, <code>exp()</code> of a predicted value estimates the <em>median</em> (more precisely, the geometric mean) of <span class="math inline">\(y\)</span> at that value of <span class="math inline">\(x\)</span>, not its mean. Back-transform confidence intervals by applying <code>exp()</code> to their limits; the resulting intervals are not symmetric around the prediction.</li>
+<li><strong>Which logarithm?</strong> If base-10 logarithms are used (<code>log10()</code>), replace <span class="math inline">\(e^{\beta_1}\)</span> with <span class="math inline">\(10^{\beta_1}\)</span> in case 1, and <span class="math inline">\(\log(2)\)</span> with <span class="math inline">\(\log_{10}(2) \approx 0.30\)</span> in case 2. The log–log interpretation (case 3) is the same whatever the base, as long as the same base is used for both variables. Always state which logarithm you used.</li>
+<li><strong>Zeros.</strong> The logarithm of zero is undefined, so a log transformation cannot be applied directly to data containing zeros. Adding a constant (e.g.&nbsp;<span class="math inline">\(\log(y + 1)\)</span>) is sometimes done, but it changes the interpretation of the coefficients. For count data, a generalised linear model (Chapter 8) is usually a better solution.</li>
+</ul>
 </section>
 <section id="outliers" class="level3">
 <h3 class="anchored" data-anchor-id="outliers">Outliers</h3>
@@ -1420,6 +1536,19 @@ for (ii in 1:6){
 </section>
 <section id="extras" class="level2">
 <h2 class="anchored" data-anchor-id="extras">Extras</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The content of this Extras section is not examinable. It is here for those who want to learn more.</p>
+</div>
+</div>
 <section id="making-a-qq-plot" class="level3">
 <h3 class="anchored" data-anchor-id="making-a-qq-plot">Making a QQ plot</h3>
 <p>With the quantile-quantile plot we are investigating the distribution of the residuals. We do this by comparing the quantiles of the residuals (the sample quantiles) to the quantiles of a normal distribution (the theoretical quantiles). If the residuals are normally distributed, then the points in the QQ-plot will approximately lie on a straight line.</p>
@@ -1429,10 +1558,10 @@ for (ii in 1:6){
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">121</span>)</span>
 <span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">200</span></span>
-<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>residuals <span class="ot">&lt;-</span> <span class="fu">runif</span>(n)</span>
-<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>residuals <span class="ot">&lt;-</span> residuals <span class="sc">-</span> <span class="fu">mean</span>(residuals)</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>sim_residuals <span class="ot">&lt;-</span> <span class="fu">runif</span>(n)</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>sim_residuals <span class="ot">&lt;-</span> sim_residuals <span class="sc">-</span> <span class="fu">mean</span>(sim_residuals)</span>
 <span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>ordered_residuals <span class="ot">&lt;-</span> <span class="fu">sort</span>(residuals)</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>ordered_residuals <span class="ot">&lt;-</span> <span class="fu">sort</span>(sim_residuals)</span>
 <span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a><span class="co"># plotting positions</span></span>
 <span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> (<span class="dv">1</span><span class="sc">:</span>n <span class="sc">-</span> <span class="fl">0.5</span>) <span class="sc">/</span> n</span>
@@ -1446,7 +1575,7 @@ for (ii in 1:6){
 <span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb39-19"><a href="#cb39-19" aria-hidden="true" tabindex="-1"></a><span class="co"># --- replicate qqline() ---</span></span>
 <span id="cb39-20"><a href="#cb39-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-21"><a href="#cb39-21" aria-hidden="true" tabindex="-1"></a>sample_q <span class="ot">&lt;-</span> <span class="fu">quantile</span>(residuals, <span class="at">probs =</span> <span class="fu">c</span>(<span class="fl">0.25</span>, <span class="fl">0.75</span>))</span>
+<span id="cb39-21"><a href="#cb39-21" aria-hidden="true" tabindex="-1"></a>sample_q <span class="ot">&lt;-</span> <span class="fu">quantile</span>(sim_residuals, <span class="at">probs =</span> <span class="fu">c</span>(<span class="fl">0.25</span>, <span class="fl">0.75</span>))</span>
 <span id="cb39-22"><a href="#cb39-22" aria-hidden="true" tabindex="-1"></a>theoretical_q <span class="ot">&lt;-</span> <span class="fu">qnorm</span>(<span class="fu">c</span>(<span class="fl">0.25</span>, <span class="fl">0.75</span>))</span>
 <span id="cb39-23"><a href="#cb39-23" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb39-24"><a href="#cb39-24" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fu">diff</span>(sample_q) <span class="sc">/</span> <span class="fu">diff</span>(theoretical_q)</span>
@@ -1456,12 +1585,12 @@ for (ii in 1:6){
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-54-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-56-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co">#qqnorm(residuals)</span></span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="co">#qqline(residuals, col = "red", lwd = 2)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co">#qqnorm(sim_residuals)</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="co">#qqline(sim_residuals, col = "red", lwd = 2)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="tests-for-normality" class="level3">
@@ -1484,7 +1613,7 @@ for (ii in 1:6){
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-55-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-57-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -1497,7 +1626,7 @@ for (ii in 1:6){
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-56-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-58-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -1526,7 +1655,7 @@ W = 0.99467, p-value = 0.9658</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-58-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-60-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -1539,7 +1668,7 @@ W = 0.99467, p-value = 0.9658</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-59-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-61-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -1584,7 +1713,7 @@ W = 0.92167, p-value = 1.728e-05</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-62-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-64-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -1597,7 +1726,7 @@ W = 0.92167, p-value = 1.728e-05</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-63-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-65-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -1641,7 +1770,7 @@ W = 0.99966, p-value = 0.5779</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-65-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="3.1-regression-part1_files/figure-html/unnamed-chunk-67-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1676,7 +1805,7 @@ W = 0.99966, p-value = 0.5779</code></pre>
 <span id="cb55-24"><a href="#cb55-24" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb55-25"><a href="#cb55-25" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb55-26"><a href="#cb55-26" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb55-27"><a href="#cb55-27" aria-hidden="true" tabindex="-1"></a>  xx <span class="ot">&lt;-</span> <span class="fu">qqnorm</span>(m1<span class="sc">$</span>residuals, <span class="at">plot.it=</span>F)</span>
+<span id="cb55-27"><a href="#cb55-27" aria-hidden="true" tabindex="-1"></a>  xx <span class="ot">&lt;-</span> <span class="fu">qqnorm</span>(m_child_mort<span class="sc">$</span>residuals, <span class="at">plot.it=</span>F)</span>
 <span id="cb55-28"><a href="#cb55-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">points</span>(xx<span class="sc">$</span>x, <span class="fu">scale</span>(xx<span class="sc">$</span>y), <span class="at">col=</span><span class="st">"red"</span>, <span class="at">pch=</span><span class="dv">19</span>)</span>
 <span id="cb55-29"><a href="#cb55-29" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb55-30"><a href="#cb55-30" aria-hidden="true" tabindex="-1"></a>}</span>
@@ -1688,36 +1817,36 @@ W = 0.99966, p-value = 0.5779</code></pre>
 <span id="cb55-36"><a href="#cb55-36" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb55-37"><a href="#cb55-37" aria-hidden="true" tabindex="-1"></a><span class="do">## load the data</span></span>
 <span id="cb55-38"><a href="#cb55-38" aria-hidden="true" tabindex="-1"></a><span class="do">## Here I'm loading it direct from online where the dataset are stored</span></span>
-<span id="cb55-39"><a href="#cb55-39" aria-hidden="true" tabindex="-1"></a>fhc <span class="ot">&lt;-</span> <span class="fu">suppressMessages</span>(readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">"https://raw.githubusercontent.com/opetchey/BIO144_Practicals_WAs/refs/heads/main/assets/datasets/financing_healthcare.csv"</span>,<span class="at">show_col_types =</span> <span class="cn">FALSE</span>))</span>
+<span id="cb55-39"><a href="#cb55-39" aria-hidden="true" tabindex="-1"></a>healthcare_data <span class="ot">&lt;-</span> <span class="fu">suppressMessages</span>(readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">"https://raw.githubusercontent.com/opetchey/BIO144_Practicals_WAs/refs/heads/main/assets/datasets/financing_healthcare.csv"</span>,<span class="at">show_col_types =</span> <span class="cn">FALSE</span>))</span>
 <span id="cb55-40"><a href="#cb55-40" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb55-41"><a href="#cb55-41" aria-hidden="true" tabindex="-1"></a><span class="do">## tell me which countries are in the dataset</span></span>
-<span id="cb55-42"><a href="#cb55-42" aria-hidden="true" tabindex="-1"></a><span class="co">#unique(fhc$country)</span></span>
+<span id="cb55-42"><a href="#cb55-42" aria-hidden="true" tabindex="-1"></a><span class="co">#unique(healthcare_data$country)</span></span>
 <span id="cb55-43"><a href="#cb55-43" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb55-44"><a href="#cb55-44" aria-hidden="true" tabindex="-1"></a><span class="do">## tell me which years are in the dataset</span></span>
-<span id="cb55-45"><a href="#cb55-45" aria-hidden="true" tabindex="-1"></a><span class="co">#unique(fhc$year)</span></span>
+<span id="cb55-45"><a href="#cb55-45" aria-hidden="true" tabindex="-1"></a><span class="co">#unique(healthcare_data$year)</span></span>
 <span id="cb55-46"><a href="#cb55-46" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb55-47"><a href="#cb55-47" aria-hidden="true" tabindex="-1"></a><span class="do">## give me the rows in which both child mortality and health care expenditure are not NA</span></span>
-<span id="cb55-48"><a href="#cb55-48" aria-hidden="true" tabindex="-1"></a><span class="co">#filter(fhc, !is.na(child_mort) &amp; !is.na(health_exp_total))</span></span>
+<span id="cb55-48"><a href="#cb55-48" aria-hidden="true" tabindex="-1"></a><span class="co">#filter(healthcare_data, !is.na(child_mort) &amp; !is.na(health_exp_total))</span></span>
 <span id="cb55-49"><a href="#cb55-49" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb55-50"><a href="#cb55-50" aria-hidden="true" tabindex="-1"></a><span class="do">## Wrange the data</span></span>
-<span id="cb55-51"><a href="#cb55-51" aria-hidden="true" tabindex="-1"></a>fhc1 <span class="ot">&lt;-</span> fhc <span class="sc">%&gt;%</span></span>
+<span id="cb55-51"><a href="#cb55-51" aria-hidden="true" tabindex="-1"></a>healthcare_2013 <span class="ot">&lt;-</span> healthcare_data <span class="sc">%&gt;%</span></span>
 <span id="cb55-52"><a href="#cb55-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year<span class="sc">==</span><span class="dv">2013</span>) <span class="sc">%&gt;%</span> <span class="do">## only data fro 2013 please</span></span>
 <span id="cb55-53"><a href="#cb55-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(year<span class="sc">:</span>continent, health_exp_total, child_mort, life_expectancy) <span class="sc">%&gt;%</span> <span class="do">## only these columns please</span></span>
 <span id="cb55-54"><a href="#cb55-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>() <span class="do">## drop rows with any NAs</span></span>
 <span id="cb55-55"><a href="#cb55-55" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb55-56"><a href="#cb55-56" aria-hidden="true" tabindex="-1"></a><span class="do">## From last weeks work we know we need to log transform the data</span></span>
-<span id="cb55-57"><a href="#cb55-57" aria-hidden="true" tabindex="-1"></a>fhc1 <span class="ot">&lt;-</span> <span class="fu">mutate</span>(fhc1,</span>
+<span id="cb55-57"><a href="#cb55-57" aria-hidden="true" tabindex="-1"></a>healthcare_2013 <span class="ot">&lt;-</span> <span class="fu">mutate</span>(healthcare_2013,</span>
 <span id="cb55-58"><a href="#cb55-58" aria-hidden="true" tabindex="-1"></a>               <span class="at">log10_health_exp_total=</span><span class="fu">log10</span>(health_exp_total),</span>
 <span id="cb55-59"><a href="#cb55-59" aria-hidden="true" tabindex="-1"></a>               <span class="at">log10_child_mort=</span><span class="fu">log10</span>(child_mort))</span>
 <span id="cb55-60"><a href="#cb55-60" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb55-61"><a href="#cb55-61" aria-hidden="true" tabindex="-1"></a><span class="do">## plot the relationship between health care expenditure and child mortality</span></span>
-<span id="cb55-62"><a href="#cb55-62" aria-hidden="true" tabindex="-1"></a><span class="co">#ggplot(data=fhc1, aes(x=health_exp_total, y=child_mort)) + geom_point()</span></span>
+<span id="cb55-62"><a href="#cb55-62" aria-hidden="true" tabindex="-1"></a><span class="co">#ggplot(data=healthcare_2013, aes(x=health_exp_total, y=child_mort)) + geom_point()</span></span>
 <span id="cb55-63"><a href="#cb55-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb55-64"><a href="#cb55-64" aria-hidden="true" tabindex="-1"></a><span class="do">## fit the linear model of the log transformed data and assign it to object named m1</span></span>
-<span id="cb55-65"><a href="#cb55-65" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(log10_child_mort <span class="sc">~</span> log10_health_exp_total, <span class="at">data=</span>fhc1)</span>
+<span id="cb55-64"><a href="#cb55-64" aria-hidden="true" tabindex="-1"></a><span class="do">## fit the linear model of the log transformed data and assign it to object named m_child_mort</span></span>
+<span id="cb55-65"><a href="#cb55-65" aria-hidden="true" tabindex="-1"></a>m_child_mort <span class="ot">&lt;-</span> <span class="fu">lm</span>(log10_child_mort <span class="sc">~</span> log10_health_exp_total, <span class="at">data=</span>healthcare_2013)</span>
 <span id="cb55-66"><a href="#cb55-66" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb55-67"><a href="#cb55-67" aria-hidden="true" tabindex="-1"></a><span class="do">## Here we run the function that makes the qqplot with some random samples from a normal distribution</span></span>
-<span id="cb55-68"><a href="#cb55-68" aria-hidden="true" tabindex="-1"></a><span class="fu">qqfunc</span>(m1, <span class="dv">100</span>)</span>
+<span id="cb55-68"><a href="#cb55-68" aria-hidden="true" tabindex="-1"></a><span class="fu">qqfunc</span>(m_child_mort, <span class="dv">100</span>)</span>
 <span id="cb55-69"><a href="#cb55-69" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="dv">0</span>,<span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 

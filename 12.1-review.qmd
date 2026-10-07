@@ -6,6 +6,14 @@ source("_common.R")
 
 # Review: planning and implementing statistical analyses (L12) {.unnumbered}
 
+```{r}
+#| echo: false
+#| output: asis
+lo_dir <- "../BIO144_Course_Information/learning_objectives"
+source(file.path(lo_dir, "lo.R"))
+lo_callout("12.1", lo_dir)
+```
+
 ## Introduction
 
 In earlier chapters we learned many different statistical tools:
@@ -243,6 +251,48 @@ The explanatory variable could be categorical or continuous, just as in a linear
 <!---
 **Think–Pair–Share** (#tps-planning-sentence) Write a planning sentence for a study you might do in your own area of biology.
 --->
+
+<!-- 2027 addition: study design basics -->
+### Designing the study so that it is easy to analyse
+
+The planning sentence assumes that the data will be collected in a way that can answer the question. A few principles of study design make this much more likely. You have met each of them in earlier chapters; here they are together.
+
+* **Identify the experimental unit.** The experimental unit is the thing to which a treatment is independently applied (or, in an observational study, the independent thing we sample). It is the unit of replication. If fertiliser is applied to whole pots, and we measure five plants per pot, the pot is the experimental unit, not the plant.
+* **Replicate.** We need several independent experimental units per treatment (or across the range of a continuous explanatory variable). Replication is what lets us estimate the residual variance and so the uncertainty of our estimates.
+* **Avoid pseudoreplication.** Measuring the same unit several times, or measuring several subunits within a unit, does not give independent replicates. Either analyse the units (for example, using averages per unit), or model the grouping with a mixed model (Chapter 11). Treating subunits as independent overstates the residual degrees of freedom and gives over-confident results.
+* **Randomise.** Assign treatments to experimental units at random. Randomisation breaks any link between the treatment and other variables that might affect the response, which is why experiments give the strongest evidence for causal effects (Chapters 4 and 6).
+* **Include controls.** A comparison group (for example, no fertiliser) is needed to know what would have happened without the treatment.
+* **Block when units differ in known ways.** If experimental units differ in a known way (for example, different greenhouse benches, or different days), put a full set of treatments in each block, and include the block in the model, as a fixed or random effect. This removes the variation between blocks from the residual variation and makes treatment comparisons more precise.
+* **Aim for balance.** Equal numbers of units per treatment (or per combination of treatments) make the analysis simpler and more robust, and make the estimates as precise as possible for a given total effort.
+* **In observational studies, plan for confounders.** List the variables that might be associated with both the explanatory variable of interest and the response, and plan to measure them (Chapter 6).
+
+<!-- 2027 addition: sample size, precision and power -->
+### How many observations? Sample size, precision and power
+
+More observations give more precise estimates. The standard error of an estimate is roughly proportional to $1/\sqrt{n}$, so to halve the width of a confidence interval we need about four times as many observations. More observations also give more residual degrees of freedom, and we saw in Chapter 3 why having few residual degrees of freedom is a problem: the residual variance is estimated imprecisely and the critical $t$-values are large.
+
+A few practical guidelines:
+
+* Count the parameters the planned model will estimate (including the intercept, each slope, $k-1$ parameters for each categorical variable with $k$ levels, and the parameters for any interactions), and check that the planned number of observations leaves plenty of residual degrees of freedom. A common rough guide is to aim for at least 10–20 observations per estimated parameter.
+* Remember that the number that matters is the number of *independent* experimental units, not the number of measurements (see pseudoreplication above).
+* The **power** of a study is the probability that it detects an effect of a given size, if that effect really exists. Power increases with the number of observations and with the size of the effect, and decreases with the residual variation. A formal **power analysis** uses these quantities to calculate the sample size needed. We do not cover how to do a power analysis in this course (see Chapter 11.2), but you should know what it is and why it is done before collecting data.
+
+<!-- 2027 addition: deciding which terms go into the model -->
+### Deciding which terms go into the model
+
+The terms in the model should follow from the question and the design, and should be decided **before** looking at the results.
+
+* **The explanatory variables of interest** come from the question.
+* **Interactions** are included when the question is about whether one effect depends on another (Chapter 7), or when the design is fully crossed (factorial) and an interaction is biologically plausible.
+* **Design variables** are included because of how the data were collected: blocks, and grouping variables as random effects (Chapter 11). They are included whether or not they turn out to be "significant".
+* **Potential confounders** (in observational studies) are included because of biological knowledge that they may affect both the response and the explanatory variables of interest (Chapter 6).
+
+What to avoid:
+
+* **Trying many models and reporting the one that gives the result you hoped for.** Adding and removing terms, transformations or observations until a $p$-value becomes small is a form of "p-hacking" (Chapter 3). The $p$-values from the final model are then misleading, because they do not take into account all the models that were tried.
+* **Automatic variable selection** (such as stepwise selection, which adds or removes terms one by one according to their $p$-values). It suffers from the same problem.
+
+In this course we test terms with $F$-tests (for linear models) and likelihood ratio (chi-squared) tests (for GLMs), comparing models that differ only in the terms relevant to the planned question. Other approaches to choosing among models, such as information criteria (e.g. AIC), are not covered in this course. If an analysis is exploratory, rather than planned, say so clearly when reporting it.
 
 ## Part 2: Implementing the analysis
 
@@ -817,8 +867,10 @@ Planning checklist:
 4. Are observations independent, grouped, repeated, blocked, or nested?
 5. What are the explanatory variables?
 6. What model follows from those choices?
-7. How many observations will we collect?
-8. What residual degrees of freedom do we expect?
+7. What is the experimental unit, and how will treatments be replicated, randomised and (if needed) blocked?
+8. Which terms will the model include, and why? (Decided before seeing the results.)
+9. How many independent observations will we collect?
+10. What residual degrees of freedom do we expect, and are they enough?
 
 Implementation checklist:
 

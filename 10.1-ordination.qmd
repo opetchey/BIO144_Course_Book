@@ -6,6 +6,14 @@ source("_common.R")
 
 # Ordination (L10) {.unnumbered}
 
+```{r}
+#| echo: false
+#| output: asis
+lo_dir <- "../BIO144_Course_Information/learning_objectives"
+source(file.path(lo_dir, "lo.R"))
+lo_callout("10.1", lo_dir)
+```
+
 ## Introduction
 
 In earlier chapters, we have analysed variability in **one response variable at a time**. But many biological questions are intrinsically **multivariate**:
@@ -199,15 +207,15 @@ This is quite a lot, so we can visualize the data well with two PC axes. When we
 The **scores** are the coordinates of each skull in the new PC space. We do a bit of data wrangling to combine these with the original data (id and time):
 
 ```{r}
-scores <- as_tibble(skull_pca$x) |>
+pca_scores <- as_tibble(skull_pca$x) |>
   mutate(id = skull$id, thousand.years = skull$thousand.years)
-scores |> select(id, PC1, PC2, thousand.years) |> slice_head(n = 5)
+pca_scores |> select(id, PC1, PC2, thousand.years) |> slice_head(n = 5)
 ```
 
 And then make the graph:
 
 ```{r}
-ggplot(scores, aes(x = PC1, y = PC2, color = thousand.years)) +
+ggplot(pca_scores, aes(x = PC1, y = PC2, color = thousand.years)) +
   geom_point(alpha = 0.8) +
   labs(color = "Thousand\nyears ago")
 ```
@@ -231,9 +239,9 @@ These can help us interpret the PCs. For example, we see a strong positive loadi
 Another way to interpret PCs is to look at the correlations between the original variables and the PCs. This can provide insights into how each original variable relates to the new PC axes. We can calculate these correlations as follows:
 
 ```{r}
-X <- skull |>
+skull_measurements <- skull |>
   dplyr::select(max.breadth, basi.height, basi.length, nasal.height)
-round(cor(X, skull_pca$x), 2)
+round(cor(skull_measurements, skull_pca$x), 2)
 ```
 
 <!---
@@ -248,18 +256,18 @@ Below is a lightweight biplot-style plot.   (There are fancy versions in package
 ```{r}
 #| echo: false
 # Scale loadings for visibility (a plotting choice, not statistical)
-L <- loadings |> mutate(PC1 = PC1 * 4, PC2 = PC2 * 4)
+pca_loadings_scaled <- loadings |> mutate(PC1 = PC1 * 4, PC2 = PC2 * 4)
 
-ggplot(scores, aes(PC1, PC2)) +
+ggplot(pca_scores, aes(PC1, PC2)) +
   geom_point(aes(color = thousand.years), alpha = 0.75) +
   geom_segment(
-    data = L,
+    data = pca_loadings_scaled,
     aes(x = 0, y = 0, xend = PC1, yend = PC2),
     inherit.aes = FALSE,
     arrow = arrow(length = unit(0.15, "inches"))
   ) +
   geom_text(
-    data = L,
+    data = pca_loadings_scaled,
     aes(x = PC1, y = PC2, label = variable),
     inherit.aes = FALSE,
     vjust = -0.4
@@ -494,11 +502,11 @@ Here our variables are numeric, so Euclidean distance is a reasonable default.
 We will scale first (so variables contribute comparably), then compute distances:
 
 ```{r}
-X <- skull |>
+skull_measurements <- skull |>
   dplyr::select(max.breadth, basi.height, basi.length, nasal.height)
-X_scaled <- scale(X)
-D <- dist(X_scaled, method = "euclidean")
-#D
+X_scaled <- scale(skull_measurements)
+skull_distances <- dist(X_scaled, method = "euclidean")
+#skull_distances
 ```
 
 ### Step 2: Fit NMDS with multiple random starts
@@ -516,8 +524,8 @@ When calling `metaMDS()`, we specify the following:
 
 ```{r}
 set.seed(1)
-nmds <- metaMDS(D, k = 2, trymax = 50, autotransform = FALSE, trace = FALSE)
-nmds
+skull_nmds <- metaMDS(skull_distances, k = 2, trymax = 50, autotransform = FALSE, trace = FALSE)
+skull_nmds
 ```
 
 Lots of information here, for example we have:
@@ -534,7 +542,7 @@ Lots of information here, for example we have:
 The stress of an NMDS solution quantifies how well the low-dimensional configuration preserves the rank order of the original dissimilarities. That is, it is a measure of mismatch between the distances in the original high-dimensional space and the distances in the reduced low-dimensional space. Here is the stress plot for our NMDS solution:
 
 ```{r}
-stressplot(nmds)
+stressplot(skull_nmds)
 ```
 
 We see a fairly good match between the original distances and the NMDS distances. The correlations are reasonably high, indicating that the NMDS solution captures the rank order of dissimilarities well.
@@ -542,7 +550,7 @@ We see a fairly good match between the original distances and the NMDS distances
 The stress value is another measure of fit. Lower stress values indicate a better fit. A common rule of thumb is that stress < 0.1 is a good fit, stress between 0.1 and 0.2 is acceptable, and stress > 0.2 indicates a poor fit. A poor fit suggests that the data may not be well represented in two dimensions, and a higher-dimensional solution may be needed.
 
 ```{r}
-nmds$stress
+skull_nmds$stress
 ```
 
 We are in the range of okay fit in two dimensions.
@@ -551,8 +559,8 @@ What improvement in stress do we get if we go to three dimensions?
 
 ```{r}
 set.seed(1)
-nmds_3d <- metaMDS(D, k = 3, trymax = 50, autotransform = FALSE, trace = FALSE)
-nmds_3d$stress
+skull_nmds_3d <- metaMDS(skull_distances, k = 3, trymax = 50, autotransform = FALSE, trace = FALSE)
+skull_nmds_3d$stress
 ```
 
 The stress decreases when we move to three dimensions, indicating a better fit. However, the improvement may not be substantial enough to justify the added complexity of a three-dimensional solution. In practice, we often prefer two-dimensional solutions for ease of visualization and interpretation, unless the stress reduction is very large.
@@ -561,7 +569,7 @@ We can plot the NMDS scores, colored by time:
 
 ```{r}
 #| echo: false
-nmds_scores <- as_tibble(scores(nmds, display = "sites")) |>
+nmds_scores <- as_tibble(scores(skull_nmds, display = "sites")) |>
   mutate(id = skull$id, thousand.years = skull$thousand.years)
 
 ggplot(nmds_scores, aes(x = NMDS1, y = NMDS2, color = thousand.years)) +
@@ -578,7 +586,7 @@ Only relative distances among points matter.
 If we wanted to know the biological interpretation of the NMDS axes, we would need to look at correlations between the original variables and the NMDS axes. This is just the same as we did for PCA. We could then plot the correlations as arrows on the NMDS plot to help interpret the axes.
 
 ```{r}
-cor_nmds <- round(cor(X, nmds_scores |> select(NMDS1, NMDS2)), 2)
+cor_nmds <- round(cor(skull_measurements, nmds_scores |> select(NMDS1, NMDS2)), 2)
 cor_nmds
 ```
 
@@ -624,6 +632,21 @@ If you test time against each skull measurement separately, you face a **multipl
 
 A better match to the question (“do skulls change through time in multivariate space?”) is a **multivariate test**.
 
+<!-- 2027 addition: scope of the multivariate tests -->
+::: {.callout-important}
+**What you need to know about these methods.** You do not need to be able to run these tests yourself. You should know that they exist, understand what question each one answers, and be able to choose which one you would use in a given situation:
+
+| Question | Approach |
+|---|---|
+| Do groups differ in their multivariate mean, assuming (approximately) multivariate normal data? | MANOVA |
+| Do groups differ in their position in multivariate space, using any distance measure and without assuming normality? | PERMANOVA |
+| Do groups differ in how spread out (variable) they are in multivariate space? | PERMDISP (`betadisper`) |
+| Is a continuous explanatory variable related to the positions of observations in an ordination, along a straight direction? | envfit |
+| ... or along a curved (non-linear) surface? | ordisurf |
+
+Because PERMANOVA can give a significant result when groups differ in spread rather than position, a PERMDISP check is often done alongside it.
+:::
+
 Here are four common approaches demonstrated but not deeply explained:
 
 1. MANOVA (parametric, multivariate normality assumptions)  
@@ -636,9 +659,9 @@ Here are four common approaches demonstrated but not deeply explained:
 Multivariate ANOVA (MANOVA) tests whether group **centroids** differ in multivariate space, assuming multivariate normality. The response is a matrix of multiple variables, and the explanatory variables can be categorical or continuous.
 
 ```{r}
-man_mod <- manova(cbind(max.breadth, basi.height, basi.length, nasal.height) ~ thousand.years,
+skull_manova <- manova(cbind(max.breadth, basi.height, basi.length, nasal.height) ~ thousand.years,
                   data = skull)
-summary(man_mod, test = "Pillai")
+summary(skull_manova, test = "Pillai")
 ```
 
 If we bin years into categories, MANOVA becomes closer to multivariate ANOVA:
@@ -646,9 +669,9 @@ If we bin years into categories, MANOVA becomes closer to multivariate ANOVA:
 ```{r}
 skull <- skull |>
   mutate(year_class = cut(thousand.years, breaks = 8) |> fct_inorder())
-man_mod_cat <- manova(cbind(max.breadth, basi.height, basi.length, nasal.height) ~ thousand.years,
+skull_manova_class <- manova(cbind(max.breadth, basi.height, basi.length, nasal.height) ~ thousand.years,
                       data = skull)
-summary(man_mod_cat, test = "Pillai")
+summary(skull_manova_class, test = "Pillai")
 ```
 
 ::: {.callout-caution}
@@ -663,8 +686,8 @@ PERMANOVA tests whether group **centroids** differ in multivariate space, using 
 In vegan, use `adonis2()`.
 
 ```{r}
-# Use the same distance matrix D we used for NMDS
-adonis2(D ~ year_class, data = skull, permutations = 999)
+# Use the same distance matrix skull_distances we used for NMDS
+adonis2(skull_distances ~ year_class, data = skull, permutations = 999)
 ```
 
 ### 3) PERMDISP / betadisper: are groups equally variable?
@@ -677,10 +700,10 @@ A common pitfall:
 So it’s good practice to check dispersion when comparing groups.
 
 ```{r}
-bd <- betadisper(D, skull$year_class)
-#bd
-anova(bd)
-permutest(bd, permutations = 999)
+skull_betadisper <- betadisper(skull_distances, skull$year_class)
+#skull_betadisper
+anova(skull_betadisper)
+permutest(skull_betadisper, permutations = 999)
 ```
 
 ### 4) Fitting time onto an ordination: envfit and ordisurf
@@ -690,22 +713,22 @@ Even when you use an unconstrained ordination (PCA/NMDS), you may want to show h
 #### envfit: linear fit + permutation test
 
 ```{r}
-fit_years <- envfit(nmds ~ thousand.years, data = skull, permutations = 999)
-fit_years
+skull_envfit_years <- envfit(skull_nmds ~ thousand.years, data = skull, permutations = 999)
+skull_envfit_years
 ```
 
 ```{r}
-plot(nmds, type = "n")
-points(nmds, display = "sites", pch = 16, cex = 0.8)
-plot(fit_years, col = "black")  # vector direction and significance
+plot(skull_nmds, type = "n")
+points(skull_nmds, display = "sites", pch = 16, cex = 0.8)
+plot(skull_envfit_years, col = "black")  # vector direction and significance
 ```
 
 #### ordisurf: non-linear surface (GAM)
 
 ```{r}
-plot(nmds, type = "n")
-points(nmds, display = "sites", pch = 16, cex = 0.8)
-ordisurf(nmds ~ thousand.years, data = skull, add = TRUE)
+plot(skull_nmds, type = "n")
+points(skull_nmds, display = "sites", pch = 16, cex = 0.8)
+ordisurf(skull_nmds ~ thousand.years, data = skull, add = TRUE)
 ```
 
 

@@ -6,6 +6,14 @@ source("_common.R")
 
 # R and RStudio (L2) {.unnumbered}
 
+```{r}
+#| echo: false
+#| output: asis
+lo_dir <- "../BIO144_Course_Information/learning_objectives"
+source(file.path(lo_dir, "lo.R"))
+lo_callout("2.1", lo_dir)
+```
+
 ## Getting R and RStudio
 
 ***R*** is a programming language and software environment for statistical computing and graphics. RStudio is an integrated development environment (IDE) for R. ***RStudio*** provides a user-friendly interface for working with R, including a console, a script editor, and tools for managing packages and projects.
@@ -168,6 +176,49 @@ And of course there is always your course instructors and fellow students to hel
 <!---
 **Think–Pair–Share** (#a_errors_are_information) When we do something that R does not understand, it often gives us an error message. In red! What will you do when you get an error message?
 --->
+
+<!-- 2027 addition: finding and fixing errors -->
+## Finding and fixing errors
+
+Everyone who writes R code gets errors, all the time. Error messages are not a sign that you are doing badly; they are information. Learning to read them and fix the problem quickly is one of the most useful skills you can develop, and it matters in the exam, where you have to get your code working on your own.
+
+### Errors and warnings
+
+An **error** stops R: the code did not run, and nothing was produced. A **warning** means the code ran, but R noticed something you should check. Warnings are easy to ignore, but they can point to real problems (for example, missing values that were silently removed).
+
+### Read the message
+
+The message usually tells you what went wrong, and sometimes where. For example:
+
+```{r}
+#| error: true
+my_values <- c(3, 5, 8)
+sum(my_value)
+```
+
+"object 'my_value' not found" tells us that R does not know anything called `my_value`. Here it is a typo: the object is called `my_values`.
+
+### Common errors and what they usually mean
+
+| Message (or symptom) | Usual cause | What to check |
+|---|---|---|
+| `object 'x' not found` | Typo in the name; wrong capitalisation (R is case-sensitive); the line that creates the object has not been run | Spelling and capitals; run the script from the top |
+| `could not find function "f"` | Typo in the function name; the package containing it is not loaded | Spelling; add `library(package)` |
+| `there is no package called 'p'` | The package is not installed | Install it once with `install.packages("p")` |
+| `unexpected symbol`, `unexpected ')'`, or `+` in the console that never goes away | Syntax error: a missing comma, bracket or quotation mark | Count brackets and quotes; press Esc to clear the `+` prompt |
+| `cannot open file ... No such file or directory` | Wrong file name or path; working directory not where you think | File name and folder; use an RStudio project |
+| `non-numeric argument to binary operator` | Doing arithmetic on text or a factor | `str()` of the data; is the variable numeric? |
+| A variable has unexpected `NA` values | Missing data in the file; text in a numeric column | `summary()` of the data |
+| A model has fewer observations than expected | Rows with missing values were dropped | `nobs(model)`, `summary()` of the data |
+
+### A strategy for fixing errors
+
+1. **Read the error message**, and find the line that caused it.
+2. **Run the code line by line**, from the top of the script, to find the first line that fails. Often the real mistake is earlier than the line that produces the error.
+3. **Look at your objects.** Use `str()`, `head()`, `names()` and `summary()` to check that the data are what you think they are: the right variable names, numeric variables that really are numeric, no unexpected missing values.
+4. **Restart R and run the whole script from the top** (in RStudio: Session > Restart R, then run all). This finds problems caused by objects that exist in your environment but are not created by your script.
+5. **Make the problem small.** Remove everything that is not needed to produce the error. Often the cause becomes obvious.
+6. **Search for the error message**, or ask for help. When you ask (for example in the course forum), include the code, the exact error message, and what you expected to happen.
 
 ## Add-on packages 
 
@@ -864,6 +915,10 @@ There are a series of excellent cheat sheets for R and RStudio, and for packages
 
 ## Extras
 
+::: {.callout-note}
+The content of this Extras section is not examinable. It is here for those who want to learn more.
+:::
+
 ### Joining data frames
 
 In this chapter we have only worked with one data frame at a time. However, in real life you will often have multiple data frames that you need to join together. For example, you might have one data frame with demographic information about people (e.g., age, sex, education level) and another data frame with information about their health outcomes (e.g., blood pressure, cholesterol levels). You can use the `dplyr` package to join these data frames together using functions like `left_join()`, `right_join()`, `inner_join()`, and `full_join()`. We won't cover these during the course, but you can read about them in the *R for Data Science* book -- [Joining data frames](https://r4ds.hadley.nz/joins.html).
@@ -991,8 +1046,8 @@ It would be nicer to have the "Control" group as the first level on the left of 
 Likewise, when we make a linear model:
 
 ```{r}
-model1 <- lm(response ~ treatment, data = my_data4)
-summary(model1)
+m_treatment_default_ref <- lm(response ~ treatment, data = my_data4)
+summary(m_treatment_default_ref)
 ```
 
 The (Intercept) term corresponds to the "Aspirin" group, and the coefficients for "Control" and "Ibuprofen" are relative to "Aspirin". *R* has done this because in the factor levels, "Aspirin" comes first alphabetically and was therefore set as the reference level when the factor variable was created.
@@ -1021,8 +1076,8 @@ Magic! The "Control" group is now the first level on the left of the x-axis.
 And when we fit the linear model again:
 
 ```{r}
-model2 <- lm(response ~ treatment, data = my_data4)
-summary(model2)
+m_treatment_control_ref <- lm(response ~ treatment, data = my_data4)
+summary(m_treatment_control_ref)
 ```
 
 The (Intercept) term now corresponds to the "Control" group, and the coefficients for "Aspirin" and "Ibuprofen" are relative to "Control". This makes interpretation of the model coefficients more intuitive.

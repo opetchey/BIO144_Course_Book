@@ -1,0 +1,12 @@
+<!-- 2027 addition: shared checklist for checking a GLM, included in chapters 8 and 9 -->
+::: {.callout-note}
+## Checklist: checking a GLM
+
+1. **Is the family right for the response variable?** Counts: Poisson (or quasi-Poisson / negative binomial if overdispersed). Binary data, or successes out of a number of trials: binomial. No diagnostic plot can rescue a model with the wrong family.
+2. **Are the observations independent?** This comes from the study design, not from the plots. If observations are grouped or repeated, a mixed model is needed (Chapter 11).
+3. **Residuals vs fitted values.** Look for strong patterns or curvature, which suggest a missing explanatory variable, a missing interaction, or a non-linear relationship. For individual-level 0/1 data this plot shows two bands of points and is hard to interpret.
+4. **Dispersion.** The ratio of residual deviance to residual degrees of freedom should be roughly 1. Values above about 1.5–2 suggest overdispersion (consider quasi-Poisson, negative binomial or quasibinomial). This check works for counts and aggregated binomial data, but not for individual-level 0/1 data.
+5. **Influential observations.** As for linear models, look at the residuals vs leverage plot (Cook's distance).
+6. **QQ-plot of the deviance residuals.** A GLM does not assume normally distributed residuals, so this is only a rough guide. Large departures can point to a wrong family or to overdispersion.
+7. **Zeros (count data).** Many more zeros than the Poisson model predicts suggests zero inflation.
+:::

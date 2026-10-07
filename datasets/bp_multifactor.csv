@@ -8,7 +8,7 @@ id,sex,treatment,exercise,age,visit,systolic_bp
 2,Female,Drug,No,47,3,120.30560721096113
 2,Female,Drug,No,47,4,131.76525120062925
 3,Male,Drug,Yes,35,1,132.5826633655926
-3,Male,Drug,Yes,35,2,131.50660655471503
+3,Male,Drug,Yes,35,2,131.506606554715
 3,Male,Drug,Yes,35,3,123.57093109809445
 3,Male,Drug,Yes,35,4,122.30414663953314
 4,Female,Placebo,Yes,54,1,137.40374042593686
@@ -60,7 +60,7 @@ id,sex,treatment,exercise,age,visit,systolic_bp
 15,Female,Drug,Yes,38,3,106.30425920828395
 15,Female,Drug,Yes,38,4,112.0582510111211
 16,Female,Drug,No,64,1,135.83853177403748
-16,Female,Drug,No,64,2,139.6081856995458
+16,Female,Drug,No,64,2,139.60818569954577
 16,Female,Drug,No,64,3,140.90623704962294
 16,Female,Drug,No,64,4,135.20068788962817
 17,Female,Drug,Yes,70,1,130.79053229030666
@@ -214,7 +214,7 @@ id,sex,treatment,exercise,age,visit,systolic_bp
 54,Female,Placebo,No,49,1,137.56913485450508
 54,Female,Placebo,No,49,2,132.59981236458708
 54,Female,Placebo,No,49,3,141.16699208174828
-54,Female,Placebo,No,49,4,128.3678148656791
+54,Female,Placebo,No,49,4,128.36781486567912
 55,Female,Drug,No,42,1,131.24110860879898
 55,Female,Drug,No,42,2,117.47553977060414
 55,Female,Drug,No,42,3,115.07592073989842
@@ -238,4 +238,4 @@ id,sex,treatment,exercise,age,visit,systolic_bp
 60,Female,Drug,No,58,1,133.2004279742864
 60,Female,Drug,No,58,2,124.73915194729899
 60,Female,Drug,No,58,3,130.12326819285204
-60,Female,Drug,No,58,4,123.37993753165635
+60,Female,Drug,No,58,4,123.37993753165634

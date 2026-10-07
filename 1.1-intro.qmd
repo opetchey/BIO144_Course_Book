@@ -1,79 +1,171 @@
+<!--
+2027 version of chapter 1, written from the Week 1 lecture slides
+(BIO144_Course_Information/assets/Week1_lecture_slides.pdf). Replaced the 2026 chapter on 2026-10-06
+(the 2026 version is in the git history).
+Sections marked "TO DO (Owen)" need input that is not in the slides.
+Year-specific details (times, names, exam rules) are marked "check each year".
+The "Notation" and "Using AI assistants" detail sections are carried over from the 2026 chapter.
+-->
+
 ```{r}
 #| echo: false
 source("_common.R")
 ```
 
-
 # Introduction (L1) {.unnumbered}
 
+```{r}
+#| echo: false
+#| output: asis
+lo_dir <- "../BIO144_Course_Information/learning_objectives"
+source(file.path(lo_dir, "lo.R"))
+lo_callout("1.1", lo_dir)
+```
 
-The first lecture of the course introduces it, gives some important information, and sets the stage for the rest of the course. Some of the time in the lecture will be used to create a dataset for use during the course. It also gives an opportunity to review some of the things about R and statistics that it is very useful to already know.
+## About this chapter
 
-The lecture includes:
+The first week of BIO144 is different from all the others. It is the only lecture that uses slides, and much of it is about how the course works rather than about statistical methods. This chapter is the written version of that lecture. It covers:
 
-* Goals of the course
-* Course organisation
-* AI and the course
-* Making a course dataset
-* Using RStudio
-* Reviewing what you should already know
-* Learning objectives
-* A general workflow for data analysis
+* the goals of the course, and why data analysis matters;
+* what makes a data analysis high quality;
+* how the course is organised, and how the final examination works;
+* how we will work together, including how to use AI assistants;
+* RStudio Server;
+* a complete data analysis, from question to answer, using data that you collect in the lecture;
+* the knowledge it is useful to have already, and the notation used throughout the course.
 
+## Goals of the course
 
-## Notation and some definitions
+The overarching goals of BIO144 are to:
 
-Throughout the course, we will use the following notation:
+* provide a solid foundation for answering biological questions with quantitative data;
+* grow your confidence in your ability to understand and perform data analysis;
+* help you plan research projects so that they are easy to analyse;
+* excite you about the wonders of data analysis;
+* prepare you for the final exam;
+* have fun!
 
-* $x$ for a variable. Typically this variable contains a set of observations. These observations are said to represent a sample of all the possible observations that could be made of a *population*.
-* $x_1, x_2, \ldots$ for the values of a variable
-* $x_i$ for the $i$th value of a scalar variable. This is often spoken as "x sub i" or the "i-th value of x".
-* $x^{(1)}$ for variable 1, $x^{(2)}$ for variable 2, etc.
-* The mean of the sample $x$ is $\bar{x}$. This is usually spoken as "x-bar".
-* The mean of $x$ is calculated as $\bar{x} = \frac{1}{n} \sum_{i=1}^n x_i$.
-* $n$ is the number of observations in a sample.
-* The summation symbol $\sum$ is used to indicate that the values of $x$ are summed over all values of $i$ from 1 to $n$.
-* The standard deviation of the sample is $s$. The standard deviation of the population is $\sigma$.
-* The variance is $s^2$. The variance of the population is $\sigma^2$.
-* The variance of the sample is calculated as $s^2 = \frac{1}{n-1} \sum_{i=1}^n (x_i - \bar{x})^2$.
-* The standard deviation of the sample is calculated as $s = \sqrt{s^2}$.
-* $y$ is usually used to represent a dependent / response variable.
-* $x$ is usually used to represent an independent / predictor / explanatory variable.
-* $\beta_0$ is usually used to denote the intercept of a linear model.
-* $\beta_1$, $\beta_2$, etc. are usually used to denote the coefficients of the independent variables in a linear model.
-* Estimates are denoted with a hat, so $\hat{\beta}_0$ is the estimate of the intercept of a linear model.
-* Hence, the estimated value of $y_i$ in a linear regression model is $\hat{y_i} = \hat{\beta}_0 + \hat{\beta}_1 x_i^{(1)}$.
-* $e_i$ is the residual for the $i$th observation in a linear model. The residual is the difference between the observed value of $y_i$ and the predicted value of $y_i$ ($\hat{y_i}$).
-* Often we assume errors are normally distributed with mean 0 and variance $\sigma^2$. This is written as $e_i \sim N(0, \sigma^2)$.
-* SST is the total sum of squares. It is the sum of the squared differences between the observed values of $y$ and the mean of $y$. It is calculated as $\sum_{i=1}^n (y_i - \bar{y})^2$.
-* SSM is the model sum of squares. It is the sum of the squared differences between the predicted values of $y$ and the mean of $y$. It is calculated as $\sum_{i=1}^n (\hat{y_i} - \bar{y})^2$.
-* SSE is the error sum of squares. It is the sum of the squared differences between the observed values of $y$ and the predicted values of $y$. It is calculated as $\sum_{i=1}^n (y_i - \hat{y_i})^2$.
-* The variance of $x$ can be written as $Var(x)$. The covariance between $x$ and $y$ can be written as $Cov(x, y)$.
-* Covariance is calculated as $Cov(x, y) = \frac{1}{n-1} \sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y})$.
-* $H_0$ is the null hypothesis.
-* $\alpha$ is the significance level.
-* *df* is the degrees of freedom.
-* $p$ is the p-value.
+## Why data analysis matters
 
+Why should you care about data analysis? Only you can answer that question. A strong sense of purpose usually comes from doing something that is meaningful to you and useful to others. Here are some of the ways in which data analysis is both:
 
-## Data analysis workflow
+* **Showing that a problem exists.** Good analysis can make invisible problems visible, and help others take them seriously.
+* **Testing solutions.** Does an intervention work? Does it work for everyone? Does it have unintended consequences?
+* **Evaluating evidence that affects people's lives.** Showing whether a drug works, does not work, or has serious side effects is not abstract: it shapes real decisions.
+* **Questioning powerful claims.** Marketing, policy and public messaging often rely on selective statistics. You can learn to ask: what is missing? What is exaggerated?
+* **Protecting others, especially those with less power.** From children targeted by unhealthy products to communities affected by environmental harm, good analysis can act as a form of protection.
+* **Serving something bigger than yourself.** Science, public trust, health, biodiversity, fairness: data analysis is one way people contribute to their community and society.
 
-A general workflow for data analysis is as follows:
+In this course you will work on questions from many areas of biology, from animal behaviour and plant growth to soil organisms and human health. Each time, the pattern is the same: we start with a **question** (or puzzle, or problem), combine **data** with **analysis**, and arrive at an **answer** (or solution).
 
-1. **Define the question**: What are you trying to find out?
-2. **Define the study**: How will you answer the question? What subjects, what observations, what measurements? What experimental design? What treatments? What graphics and analyses will you use?
-3. **Collect the data**: Gather the necessary data to answer the question.
-4. **Explore the data**: Use summary statistics and graphics to understand the data.
-5. **Prepare the data**: Clean and format the data for analysis.
-6. **Visualise the data**: Create plots to visualise patterns and relationships.
-7. **Analyse the data**: Use appropriate statistical methods to analyse the data, including checking model assumptions.
-8. **Interpret the results**: Draw conclusions from the analysis in the context of the original question.
-9. **Be critical**: Consider limitations, alternative explanations, and the robustness of your conclusions.
-10. **Communicate the results**: Present the findings in a clear and concise manner, using tables, figures, and written summaries.
+But how do we make sure the analysis is a good one?
 
+## High-quality data analysis: four principles
 
+Popovic et al. (2024) proposed four principles that lead to reliable findings. They were written for ecology, but they apply to data analysis in all of biology, and they run through the whole of this course.
 
-## Using Generative AI in R and Data Analysis: Guidance and Good Practice
+1. **Define a focused research question, then plan sampling and analysis to answer it.**
+   * Define the research question *before* collecting new data or exploring existing data.
+   * Match the data collection to the question.
+   * Plan (and ideally register) the analysis in advance.
+2. **Develop a model that accounts for the distribution and dependence of your data.**
+   * Use a distribution appropriate for the response variable (for example, counts are not normally distributed).
+   * Model all dependence among observations (for example, repeated measurements of the same individual).
+   * Check the assumptions of the model.
+3. **Emphasise effect sizes, to replace statistical significance with biological relevance.**
+   * Emphasise and report effect sizes, with confidence intervals.
+   * Discuss whether the effects are biologically relevant.
+   * De-emphasise p-values.
+4. **Report methods and findings in enough detail that the research is valid and reproducible.**
+   * Publish all data.
+   * Provide code that others can run.
+   * Visualise the outputs of the model to communicate the results.
+
+You will meet each principle many times. Principle 1 is the first step of the workflow below. Principle 2 is why the course moves from linear models to generalised linear models (for counts and binary data) and mixed models (for grouped data). Principle 3 is why we put so much weight on interpreting estimates and their uncertainty. Principle 4 is one reason we do all analyses with scripts in R.
+
+## How the course is organised
+
+::: {.callout-note}
+Times, names and other details in this section can change from year to year. The [course information website](https://opetchey.github.io/BIO144_Course_Information/) has the current details.
+<!-- check each year -->
+:::
+
+**The team.** You are at the centre of the course, supported by the lectures, the practicals, the discussion forum on OLAT and, when needed, email. The course is taught by Prof. Owen Petchey, with a head teaching assistant, an examinations coordinator, and numerous teaching assistants.
+<!-- check each year: names were Til Hämmig (head TA) and Dr Frank Pennekamp (examinations) in 2026 -->
+
+**The conceptual side: lectures** (Mondays, 8:00–9:45).
+
+* Apart from this first week, the lectures do not use slides.
+* The **course book contains what you need to know.** Each week has a chapter.
+* In lectures, the lecturer talks, draws, codes, and asks you questions.
+* One lecture is given by a guest.
+
+Many of the questions in lectures use **think, pair, share**: you first think about the question on your own, then discuss it with a neighbour, then share with the class. Peer discussion improves understanding, even when none of the students in a discussion group originally knew the correct answer (Smith et al. 2009).
+
+**The practical side.**
+
+* **Practicals** (Thursday or Friday, 13:00–15:00), where you work on data analysis with help from the teaching assistants.
+* **Homework**, best done between Monday and the practical.
+* **Weekly practice quizzes**, which you can do at any time.
+
+Please keep up with the course material, and reach out to us if you feel you are falling behind. The weeks do not all need the same amount of time, so look ahead and plan early.
+
+**Where to find everything.** The course uses four websites:
+
+* **OLAT**, the hub, which links to everything else and hosts the discussion forum. Please ask questions and make requests in the forum.
+* The **course information website**, with general information, the learning objectives, and a page for each week.
+* The **course book** (this book).
+* The site with the **homework, practicals and weekly quizzes**.
+
+Much of the course material is new or recently revised. If you find something that is unclear, too brief, or wrong, please let us know.
+
+<!-- The 2026 slides included last year's student feedback and our responses. That is year-specific, so it is left out of the book. -->
+
+## The final examination
+
+::: {.callout-note}
+Check the course information website for the current examination details.
+<!-- check each year -->
+:::
+
+* The exam consists of three or four **case studies**. In each, you analyse a dataset and answer questions about it. Many conceptual questions are embedded in the case studies.
+* Many questions are answered by **entering numbers**, rounded to the required number of decimal places.
+* The exam is in person, on site, on your own computer (a "bring your own device" exam), using the Safe Exam Browser and **RStudio Server**.
+* You may bring notes on both sides of three sheets of A4 paper, and a German–English dictionary (which we may inspect). No other sources may be consulted.
+* There is a mandatory practice exam, and you will have access to a representative exam from a previous year.
+* Grades are not "curved": you are not competing against each other. (We may adjust the pass mark if a particular exam turns out to be much harder than previous ones.)
+
+Because the exam asks you to analyse data in R and give numerical answers, the best preparation is to practise doing analyses yourself, every week.
+
+## How we will work together
+
+We are here to support you: to give you the knowledge of how to learn more, and the confidence that you can.
+
+* Everyone here can learn to think analytically and statistically.
+* We will hold you to high standards, because we believe you can meet them. Our job is to support you in reaching them.
+* Struggle is part of growth, not a sign of failure or deficiency.
+* Feeling stressed before a challenge is normal. A higher heart rate, faster breathing and a tight stomach are your body giving you more resources to meet the challenge.
+
+**High standards and wise feedback.** Feedback in this course follows the idea of "wise feedback" (Cohen et al. 1999): *"I'm giving you these comments because I have high standards and I know that you can meet them."* Feedback will be honest and specific. It comes from belief in your potential, not criticism of you as a person. If it ever feels like you are being criticised, try to reframe it as being challenged to grow. This class is a safe space for you, and it is a challenging space for you.
+
+## Using AI assistants
+
+AI assistants such as ChatGPT, Claude, Gemini and Copilot can help you learn, if you use them well.
+
+**Asking for help understanding** is usually a good use. For example:
+
+* "What is the mode of a distribution?"
+* "I didn't understand that explanation. Can you give an easier one?"
+* "Can you show me the mode graphically?"
+* "Can you give me an example of getting the mode of a distribution in R?"
+
+**Asking for help writing code** needs more care. A request like "write code to import data and give the number of missing values in each variable" can save time. A request like "import the data, fit a regression, check the diagnostics, summarise the results, make a nice figure, put it all in a Quarto file, and do it while I go and chill" means you learn nothing, and you cannot check whether the result is correct.
+
+**Your relationship with AI assistants.** In a strong relationship, the AI is an empowering tool: a knowledgeable collaborator that complements your skills, speeds up your work, and supports your growth. You provide the context, direction and critical judgement. In a poor relationship, you use the AI's output without understanding it, copying and pasting solutions. This leads to errors, inefficient or misaligned solutions, and your own skills stagnating.
+
+The knowledge and expertise *you* bring is what makes a good relationship with an AI assistant possible. So we suggest you **minimise your use of AI assistants during the course** (and minimise your use of the example solutions too). Do the work, and get the benefit.
+
+### Guidance and good practice
 
 ::: {.callout-important}
 For the final examination, you will use your own computer, but the test will run inside the Safe Exam Browser, which will be configured to block all access to generative AI tools, browser-based assistants, external software, online services, and any AI code copilots inside RStudio or other IDEs. This means **no form of generative AI will be available during the exam**. Because of this, please avoid becoming overly reliant on GenAI—such as ChatGPT, Claude, Gemini, Copilot, or similar tools for answering quiz questions, explaining results, fixing errors, guiding your analysis, or writing code. You must be able to perform all tasks independently. We also strongly recommend that you do not use RStudio with Copilot integration during the course, as it will not function in the exam environment and may leave you under prepared. Throughout the semester, be sure to practice writing your own R code, interpreting outputs yourself, and applying statistical reasoning without AI assistance, as your exam performance will depend entirely on your own knowledge and skills.
@@ -480,7 +572,139 @@ Always check:
 
 In statistics, clarity of reasoning matters more than code that merely *runs*.
 
-## Further reading
+## RStudio Server
+
+In this course you use RStudio in a web browser, through the UZH RStudio Server (<https://rstudio.mnf.uzh.ch/>).
+
+* The downside: you have to be connected to the internet.
+* The upside: much of the setup is already done for you, and the available memory and processing power can be increased when needed.
+* **You will have to use RStudio Server in the exam**, so it is worth getting used to it from the start.
+
+Only registered users can log in. Everyone in the OLAT course is registered, so you must be in the OLAT course to get access.
+
+## A complete data analysis: reaction times
+
+To give you a feel for what is involved in data analysis, the first lecture includes a live demonstration of the whole workflow, using data collected from you during the lecture. You will understand some of the demonstration, and not other parts of it. That is expected: keep notes about what you do not understand, and look for the answers as the course goes on.
+
+The steps of the workflow are:
+
+1. Question
+2. Expectation
+3. Planned presentation and analysis
+4. Selection of subjects
+5. How the data will be collected
+6. Ethics and permissions
+7. Data collection
+8. Data wrangling
+9. Visualisation
+10. Statistical test
+11. Critical thinking
+12. Reporting and communicating
+
+Notice that the first six steps all happen *before* any data are collected. This is Popovic et al.'s first principle in action.
+
+### Question
+
+What should our question be? As always, there are some influences and some constraints. We should ask a question that is of interest to us, and of some importance. And we must be able to collect the data needed to answer it, within our current constraints.
+
+The question we address is: **do the reaction times of male and female students at the University of Zurich differ?** Reaction times matter for safety (for example, when driving) and in sport (for example, at the start of a sprint race).
+
+### Expectation
+
+There has already been quite a lot of research on reaction times. In general, males tend to have faster reaction times than females, so we expect the same for students at the University of Zurich.
+
+### Planned presentation and analysis
+
+Before collecting any data, we decide what graph we will make and what statistical test we will use.
+
+* **Graph:** box plots of reaction time (in seconds, on the horizontal axis) for females and males. This shows the centre and spread of the two groups side by side.
+* **Statistical test:** we are comparing the mean of a continuous response variable (reaction time) between two groups (the explanatory variable, sex), so a two-sample t-test is a natural choice. Its assumptions include independent observations, and roughly normally distributed values with similar variances in the two groups.
+
+<!-- TO DO (Owen): confirm the test used in the demonstration, and whether you also show it as a linear model with lm(). -->
+
+### Selection of subjects
+
+Ideally, the subjects would be a random sample from the population we want to draw conclusions about. Are the students in this lecture a random selection of all humans? Of all students at the University of Zurich? The way subjects are selected limits the population to which our conclusions can be generalised.
+
+### How the data are collected, and ethics
+
+You measure your own reaction time using an online test, and record it, along with some other information about yourself, in a form linked from the course information website. Because these are data about people, we need to think about ethical issues, such as consent, anonymity, and how the data will be used and shared.
+
+<!-- TO DO (Owen): add a sentence on what the form records (variables) and how anonymity and consent are handled. -->
+
+### Data wrangling, visualisation and statistical test
+
+These steps are done live in RStudio, with a script.
+
+<!-- TO DO (Owen): add the R code from the demonstration (import, wrangling, box plot, t-test), using meaningful object names, e.g. reaction_times for the dataset. -->
+
+Doing the analysis with a script in R, rather than by pointing and clicking, makes it:
+
+* efficient and scalable: it is quick to re-run, including on more or new data;
+* consistent, repeatable and reliable: the same steps give the same result every time;
+* readable, sharable and persistent: others (and your future self) can see exactly what was done, check it, and re-use it;
+* robust: mistakes can be found and fixed, and the whole analysis re-run.
+
+This is Popovic et al.'s fourth principle in action.
+
+### Critical thinking, and reporting
+
+Finally, we think critically about the result. How big is the difference in reaction times, and is it biologically relevant (principle 3)? How precise is our estimate? Could something other than sex explain the difference? To whom do the conclusions apply, given how the subjects were selected? Then we report the result clearly, with a figure and a short description of the estimate, its uncertainty, and the test.
+
+<!-- TO DO (Owen): add the results and an example results statement once the 2027 data are collected, or use data from a previous year. -->
+
+## Activate your prior learning
+
+BIO144 builds on knowledge you should already have from earlier courses. The "previous knowledge" resources on OLAT help you review it. If you have not worked through them yet, there is still time. It is useful to already be familiar with:
+
+* **Summarising distributions of data:** central tendency (mean, median, mode); spread (range, quartiles, standard deviation, standard error); symmetry (skew); pointedness (kurtosis); number of peaks (unimodal, bimodal, multimodal).
+* **Types of variable:** numeric, continuous, discrete, categorical; response (dependent) and explanatory (independent) variables.
+* **Statistical ideas:** expected value, parameter, parameter estimate, variable, the central limit theorem, hypothesis testing, degrees of freedom, p-value; the difference between a population and a sample.
+* **Probability:** for example, the probability of getting five heads when tossing a fair coin seven times; probability distributions (normal, binomial, Poisson, exponential); frequency distributions (histograms).
+* **Basic methods and graphs:** the t-test, linear regression and the equation of a straight line; box-and-whisker plots and scatterplots.
+* **Notation**, described in the next section.
+
+## Notation and some definitions
+
+Throughout the course, we will use the following notation:
+
+* $x$ for a variable. Typically this variable contains a set of observations. These observations are said to represent a sample of all the possible observations that could be made of a *population*.
+* $x_1, x_2, \ldots$ for the values of a variable
+* $x_i$ for the $i$th value of a scalar variable. This is often spoken as "x sub i" or the "i-th value of x".
+* $x^{(1)}$ for variable 1, $x^{(2)}$ for variable 2, etc.
+* The mean of the sample $x$ is $\bar{x}$. This is usually spoken as "x-bar".
+* The mean of $x$ is calculated as $\bar{x} = \frac{1}{n} \sum_{i=1}^n x_i$.
+* $n$ is the number of observations in a sample.
+* The summation symbol $\sum$ is used to indicate that the values of $x$ are summed over all values of $i$ from 1 to $n$.
+* The standard deviation of the sample is $s$. The standard deviation of the population is $\sigma$.
+* The variance is $s^2$. The variance of the population is $\sigma^2$.
+* The variance of the sample is calculated as $s^2 = \frac{1}{n-1} \sum_{i=1}^n (x_i - \bar{x})^2$.
+* The standard deviation of the sample is calculated as $s = \sqrt{s^2}$.
+* $y$ is usually used to represent a dependent / response variable.
+* $x$ is usually used to represent an independent / predictor / explanatory variable.
+* $\beta_0$ is usually used to denote the intercept of a linear model.
+* $\beta_1$, $\beta_2$, etc. are usually used to denote the coefficients of the independent variables in a linear model.
+* Estimates are denoted with a hat, so $\hat{\beta}_0$ is the estimate of the intercept of a linear model.
+* Hence, the estimated value of $y_i$ in a linear regression model is $\hat{y_i} = \hat{\beta}_0 + \hat{\beta}_1 x_i^{(1)}$.
+* $e_i$ is the residual for the $i$th observation in a linear model. The residual is the difference between the observed value of $y_i$ and the predicted value of $y_i$ ($\hat{y_i}$).
+* Often we assume errors are normally distributed with mean 0 and variance $\sigma^2$. This is written as $e_i \sim N(0, \sigma^2)$.
+* SST is the total sum of squares. It is the sum of the squared differences between the observed values of $y$ and the mean of $y$. It is calculated as $\sum_{i=1}^n (y_i - \bar{y})^2$.
+* SSM is the model sum of squares. It is the sum of the squared differences between the predicted values of $y$ and the mean of $y$. It is calculated as $\sum_{i=1}^n (\hat{y_i} - \bar{y})^2$.
+* SSE is the error sum of squares. It is the sum of the squared differences between the observed values of $y$ and the predicted values of $y$. It is calculated as $\sum_{i=1}^n (y_i - \hat{y_i})^2$.
+* The variance of $x$ can be written as $Var(x)$. The covariance between $x$ and $y$ can be written as $Cov(x, y)$.
+* Covariance is calculated as $Cov(x, y) = \frac{1}{n-1} \sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y})$.
+* $H_0$ is the null hypothesis.
+* $\alpha$ is the significance level.
+* *df* is the degrees of freedom.
+* $p$ is the p-value.
+
+## References and further reading
+
+Cohen, G.L., Steele, C.M. & Ross, L.D. (1999). The mentor's dilemma: providing critical feedback across the racial divide. *Personality and Social Psychology Bulletin*, 25, 1302–1318.
+
+Popovic, G., Mason, T.J., Drobniak, S.M., Marques, T.A., Potts, J., Joo, R., et al. (2024). Four principles for improved statistical ecology. *Methods in Ecology and Evolution*, 15, 266–281.
+
+Smith, M.K., Wood, W.B., Adams, W.K., Wieman, C., Knight, J.K., Guild, N. & Su, T.T. (2009). Why peer discussion improves student performance on in-class concept questions. *Science*, 323, 122–124.
 
 Students who are curious and would like to explore these topics further (purely for their own interest) may find the following resources useful. Material from these resources will not be examined in the final exam, unless it is also already present in the course book.
 
@@ -488,8 +712,4 @@ If you would like to read more about reaction time differences between men and w
 
 A more detailed data analysis workflow suggestion is here on the [Insights from data website.](https://insightsfromdata.io/insights-workflow.html#insights-workflow)
 
-Here is an article about [Exploring The Ethical Implications Of Ai In Data
-Analytics: Challenges And Strategies For Responsible Implementation](https://www.ijcrt.org/papers/IJCRT2309747.pdf). It is rather brief and high-level, but may be of interest when you seek an ethical perspective on the use of AI tools in data analysis.
-
-
-
+Here is an article about [Exploring The Ethical Implications Of Ai In Data Analytics: Challenges And Strategies For Responsible Implementation](https://www.ijcrt.org/papers/IJCRT2309747.pdf). It is rather brief and high-level, but may be of interest when you seek an ethical perspective on the use of AI tools in data analysis.

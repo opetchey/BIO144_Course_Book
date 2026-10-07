@@ -6,6 +6,14 @@ source("_common.R")
 
 # Regression Part 1 (L3) {.unnumbered}
 
+```{r}
+#| echo: false
+#| output: asis
+lo_dir <- "../BIO144_Course_Information/learning_objectives"
+source(file.path(lo_dir, "lo.R"))
+lo_callout("3.1", lo_dir)
+```
+
 ## Introduction
 
 Linear regression is a common statistical method that models the relationship between a dependent (response) variable and one or more independent (explanatory) variables. The relationship is modeled with the equation for a straight line ($y = a + bx$).
@@ -226,7 +234,27 @@ When estimating parameters ($\beta_0$ and $\beta_1$), the square of the residual
 
 The adjustment (division by $n-2$ instead of $n$) compensates for the loss of variability due to parameter estimation, ensuring the estimator of the residual variance is unbiased. Mathematically, dividing by n - 2 adjusts for this loss and gives an accurate estimate of the population variance when working with sample data.
 
-We'll look at degrees of freedom in more detail later, so don't worry if this is a bit confusing right now.
+### Degrees of freedom, and why having few of them is a problem
+
+The **residual degrees of freedom** are the number of observations minus the number of parameters estimated by the model. In simple linear regression we estimate two parameters (the intercept and the slope), so the residual degrees of freedom are $n - 2$. You can think of them as the number of independent pieces of information left over, after fitting the model, for estimating how much the data vary around the model (the residual variance).
+
+Having few residual degrees of freedom is a problem, for several connected reasons:
+
+* **The residual variance is estimated imprecisely.** It is estimated from the residuals, and with few residual degrees of freedom there is little information to estimate it from. By chance it could be much too small or much too large.
+* **Confidence intervals become wider and tests less powerful.** Because the residual variance is uncertain, the $t$-distribution used for confidence intervals and $p$-values has heavier tails when there are few degrees of freedom. The value we multiply the standard error by to get a 95% confidence interval (the critical $t$-value) is then larger, so confidence intervals are wider, and a real effect is less likely to be detected. The table below shows how quickly the critical value grows as the degrees of freedom shrink. (With very many degrees of freedom it approaches 1.96, the value for the normal distribution.)
+* **The model can fit the noise.** If the number of parameters gets close to the number of observations, the model can fit the data closely just by chance. In the extreme, a straight line through two points fits perfectly, leaves zero residual degrees of freedom, and tells us nothing about the residual variance.
+* **Assumptions are hard to check.** With few residuals, diagnostic plots show very little, so it is difficult to judge whether the model's assumptions are met.
+
+```{r}
+#| echo: false
+df_table <- data.frame(residual_df = c(1, 2, 3, 5, 10, 20, 30, 100, 1000))
+df_table$critical_t <- round(qt(0.975, df = df_table$residual_df), 2)
+knitr::kable(df_table,
+             col.names = c("Residual degrees of freedom",
+                           "Critical t-value for a 95% confidence interval"))
+```
+
+So each parameter a model estimates uses up one degree of freedom. Adding explanatory variables, adding levels to a categorical explanatory variable, or adding interactions all increase the number of parameters, and so reduce the residual degrees of freedom. This is why, when planning a study, it is worth checking that the planned number of observations leaves enough residual degrees of freedom for the model you intend to fit. We will meet degrees of freedom again in every chapter that follows.
 
 ### Let's do it in R
 
@@ -308,15 +336,15 @@ Graphically the error term is the vertical distance between the observed value o
 ```{r}
 #| echo: false
 # filter for only one data point per age
-filtered_data <- bp_age_data[!duplicated(bp_age_data$Age),]
-# First make the linear model and getting the predicted values
-model <- lm(Systolic_BP ~ Age, data = filtered_data)
-predicted_values <- predict(model)
+bp_age_one_per_age <- bp_age_data[!duplicated(bp_age_data$Age),]
+# First make the linear bp_age_model_one_per_age and getting the predicted values
+bp_age_model_one_per_age <- lm(Systolic_BP ~ Age, data = bp_age_one_per_age)
+bp_predicted_one_per_age <- predict(bp_age_model_one_per_age)
 # Then show the residuals with vertical lines
-ggplot(filtered_data, aes(x = Age, y = Systolic_BP)) +
+ggplot(bp_age_one_per_age, aes(x = Age, y = Systolic_BP)) +
   geom_point() +
   geom_smooth(formula = y ~ x, method = "lm", se = FALSE, color = "blue") +
-  geom_segment(aes(xend = Age, yend = predicted_values), color = "red") +
+  geom_segment(aes(xend = Age, yend = bp_predicted_one_per_age), color = "red") +
   labs(title = "Systolic Blood Pressure vs. Age\nFiltered for only one data point per age year",
        x = "Age",
        y = "Systolic Blood Pressure") 
@@ -531,16 +559,16 @@ The *theoretical quantiles* come from the normal distribution. The
 #| echo: false
 par(mfrow=c(1,2))
 x<-seq(-3,3,0.1)
-stdr <- sort(scale(bp_age_model$residuals))
+std_residuals_sorted <- sort(scale(bp_age_model$residuals))
 
 s <- seq(2)  # one shorter than data
 x <- c(-2.5,qnorm(0.6),qnorm(0.6))
 y <- c(0.6,0.6,0)
 
-plot(stdr,pnorm(stdr),xlab="Theoretical quantiles",ylab="Theoretical cumulative distribution")
+plot(std_residuals_sorted,pnorm(std_residuals_sorted),xlab="Theoretical quantiles",ylab="Theoretical cumulative distribution")
 arrows(x[s], y[s], x[s+1], y[s+1])
 n<-nrow(bp_age_data)
-plot(stdr,(1:n)/n,xlab="Sample quantiles of the residuals",ylab="Empirical cumulative distribution")
+plot(std_residuals_sorted,(1:n)/n,xlab="Sample quantiles of the residuals",ylab="Empirical cumulative distribution")
 arrows(x[s], y[s], x[s+1], y[s+1])
 ```
 
@@ -556,9 +584,9 @@ Example: Generate 100 points $\epsilon_i \sim N(0,1)$ each time:
 set.seed(390457)
 par(mfrow=c(2,3),mar=c(4,4,1,1))
 for (ii in 1:6){
-  ss <- rnorm(100)
-qqnorm(ss,main="")
-qqline(ss,xlab="")
+  sim_values <- rnorm(100)
+qqnorm(sim_values,main="")
+qqline(sim_values,xlab="")
 }
 ```
 
@@ -574,12 +602,12 @@ set.seed(123)
 par(mfrow=c(2,5), mar=c(4,4,1,1))
 for (ii in 1:10){
   if (ii == 7){
-    ss <- runif(100)
+    sim_values <- runif(100)
   } else {
-    ss <- rnorm(100)
+    sim_values <- rnorm(100)
   }
-  qqnorm(ss,main="")
-  qqline(ss,xlab="")
+  qqnorm(sim_values,main="")
+  qqline(sim_values,xlab="")
   ## add a title to the plot
   title(paste("Plot", ii))
 }
@@ -660,8 +688,8 @@ ggplot(data.frame(x=x,y=y), aes(x=x,y=y)) +
 And here the scale-location plot for a linear model of that data:
 
 ```{r}
-m <- lm(y~x)
-plot(m,which=3)
+m_sim <- lm(y~x)
+plot(m_sim,which=3)
 ```
 
 
@@ -717,7 +745,7 @@ In contrast, look at this linear regression through data that appears non-linear
 set.seed(1)
 x <- runif(100, 1, 10)
 y <- 2*x + rnorm(100,0,2) + 0.5*x^2
-m <- lm(y~x)
+m_sim <- lm(y~x)
 ggplot(data.frame(x=x,y=y), aes(x=x,y=y)) +
   geom_point() +
   geom_smooth(formula = y ~ x, method="lm", se=FALSE)
@@ -730,7 +758,7 @@ And with the residuals shown as red lines:
 ggplot(data.frame(x=x,y=y), aes(x=x,y=y)) +
   geom_point() +
   geom_smooth(formula = y ~ x, method="lm", se=FALSE) +
-  geom_segment(aes(xend=x, yend=m$fitted), color="red")
+  geom_segment(aes(xend=x, yend=m_sim$fitted), color="red")
 ```
 
 At low values of $y$, the residuals are positive, at intermediate values of $y$ the residuals are negative, and at high values of $y$ the residuals are positive. This pattern in the residuals is a sign that the relationship between $x$ and $y$ is not linear.
@@ -738,7 +766,7 @@ At low values of $y$, the residuals are positive, at intermediate values of $y$ 
 We can plot the value of the residuals against the $y$ value directly, instead of looking at the pattern in the graph above. This is called a **Tukey-Anscombe plot**. It is a graph of the residuals versus the fitted $y$ values:
 
 ```{r}
-ggplot(mapping = aes(x = fitted(m), y = resid(m))) +
+ggplot(mapping = aes(x = fitted(m_sim), y = resid(m_sim))) +
   geom_point() +
   geom_hline(yintercept = 0, linetype="dashed", color="red")
 ```
@@ -748,13 +776,13 @@ We can very clearly see pattern in the residuals in this Tukey-Anscombe plot. Th
 We can also make this Tukey-Anscombe plot using the built-in plot function for linear models in R:
 
 ```{r}
-plot(m, which=1)
+plot(m_sim, which=1)
 ```
 
 The red line in the Tukey-Anscombe plot is a loess smooth. It is automatically added to the plot. It is a way of estimating the pattern in the residuals. If the red line is not flat, then there is a pattern in the residuals. However, the loess smooth is not always reliable. It is a good idea to look at the residuals directly, without this smooth.
 
 ```{r}
-plot(m, which=1, add.smooth = FALSE)
+plot(m_sim, which=1, add.smooth = FALSE)
 ```
 
 
@@ -781,8 +809,8 @@ for (ii in 1:6){
   } else {
     y <- 2*x + rnorm(100,0,2)
   }
-  m <- lm(y~x)
-  plot(m, which=1, add.smooth = FALSE)
+  m_sim <- lm(y~x)
+  plot(m_sim, which=1, add.smooth = FALSE)
   mtext(paste("Plot", ii), side=3, line=-1.3)
 }
 ```
@@ -841,8 +869,8 @@ Let's add a rather extreme data point to the blood pressure versus age data:
 ```{r}
 #| echo: false
 bp_age_data <- read.csv("datasets/Simulated_Blood_Pressure_and_Age_Data.csv")
-bp_age_model_outlier <- rbind(bp_age_data, data.frame(Age=80, Systolic_BP=120))
-ggplot(bp_age_model_outlier, aes(x = Age, y=Systolic_BP)) +
+bp_age_data_outlier_added <- rbind(bp_age_data, data.frame(Age=80, Systolic_BP=120))
+ggplot(bp_age_data_outlier_added, aes(x = Age, y=Systolic_BP)) +
   geom_point() +
   geom_smooth(formula = y ~ x, method="lm", se=FALSE) +
   geom_smooth(formula = y ~ x, data = bp_age_data, method="lm", se=FALSE, color="red") +
@@ -856,8 +884,8 @@ We can make a histogram of the residuals and see that the outlier has a large re
 
 ```{r}
 #| echo: false
-bp_age_model_outlier <- lm(Systolic_BP ~ Age, data=bp_age_model_outlier)
-ggplot(bp_age_model_outlier, aes(x = .resid)) +
+bp_age_data_outlier_added <- lm(Systolic_BP ~ Age, data=bp_age_data_outlier_added)
+ggplot(bp_age_data_outlier_added, aes(x = .resid)) +
   geom_histogram(bins=10) +
   geom_vline(xintercept = 0, color="red")
 ```
@@ -876,7 +904,7 @@ $MSE$ is the mean squared error of the model.
 
 
 ```{r}
-plot(bp_age_model_outlier, which=5)
+plot(bp_age_data_outlier_added, which=5)
 ```
 
 But does it have a large influence on the value of the slope? In the next graph we show the line of best fit with the outlier (blue line) and without the outlier (red line).
@@ -884,7 +912,7 @@ But does it have a large influence on the value of the slope? In the next graph 
 ```{r}
 #| echo: false
 bp_age_data_outlier <- rbind(bp_age_data, data.frame(Age=80, Systolic_BP=120))
-bp_age_model_outlier <- lm(Systolic_BP ~ Age, data=bp_age_data_outlier)
+bp_age_data_outlier_added <- lm(Systolic_BP ~ Age, data=bp_age_data_outlier)
 ggplot(bp_age_data_outlier, aes(x = Age, y=Systolic_BP)) +
   geom_point() +
   geom_smooth(formula = y ~ x, method="lm", se=FALSE) +
@@ -980,20 +1008,20 @@ Here's another example of $y$ and $x$ that are not linearly related:
 
 ```{r fig.height=4, fig.width=7}
 #| echo: true
-eg_data <- tibble(x = runif(50)) %>%
+nonlinear_data <- tibble(x = runif(50)) %>%
   mutate(log_y = log(0.1) + 0.5* log(x) + rnorm(50,0,0.1),
          y = exp(log_y),
          log_y = log(y),
          log_x = log(x),
          sqrt_y = sqrt(y))
 
-p1 <- ggplot(eg_data, aes(x = x, y = y)) +
+p1 <- ggplot(nonlinear_data, aes(x = x, y = y)) +
   geom_point() + 
   geom_smooth(formula = y ~ x, method = "lm", se = FALSE)
 
-m1 <- lm(y ~ x, eg_data)
+m_untransformed <- lm(y ~ x, nonlinear_data)
 
-p2 <- ggplot(mapping = aes(x = fitted(m1), y = residuals(m1))) +
+p2 <- ggplot(mapping = aes(x = fitted(m_untransformed), y = residuals(m_untransformed))) +
   geom_point() +
   geom_hline(yintercept = 0, linetype = "dashed") +
   geom_smooth(formula = y ~ x, method = "loess")
@@ -1001,16 +1029,16 @@ p2 <- ggplot(mapping = aes(x = fitted(m1), y = residuals(m1))) +
 p1 + p2
 ```
 
-One way to deal with this is to transform the response variable $Y$. Here we try two different transformations: $\log_{10}(Y)$ and $\sqrt{Y}$.
+One way to deal with this is to transform the response variable $Y$. Here we try two different transformations: $\log(Y)$ (the natural logarithm, which is what the `log()` function in R calculates) and $\sqrt{Y}$.
 
 Square root transform of the response variable $Y$:
 
 ```{r fig.height=7, fig.width=7}
-p3 <- ggplot(eg_data, aes(x = x, y = sqrt_y)) +
+p3 <- ggplot(nonlinear_data, aes(x = x, y = sqrt_y)) +
   geom_point() + 
   geom_smooth(formula = y ~ x, method = "lm", se = FALSE)
-m2 <- lm(sqrt_y ~ x, eg_data)
-p4 <- ggplot(mapping = aes(x = fitted(m2), y = residuals(m2))) +
+m_sqrt_y <- lm(sqrt_y ~ x, nonlinear_data)
+p4 <- ggplot(mapping = aes(x = fitted(m_sqrt_y), y = residuals(m_sqrt_y))) +
   geom_point() + 
   geom_hline(yintercept = 0, linetype = "dashed") +
   geom_smooth(formula = y ~ x, method = "loess")
@@ -1023,11 +1051,11 @@ Not great.
 Log transformation of the response variable $Y$:
 
 ```{r fig.height=10.5, fig.width=7}
-p5 <- ggplot(eg_data, aes(x = x, y = log_y)) +
+p5 <- ggplot(nonlinear_data, aes(x = x, y = log_y)) +
   geom_point() + 
   geom_smooth(formula = y ~ x, method = "lm", se = FALSE)
-m3 <- lm(log_y ~ x, eg_data)
-p6 <- ggplot(mapping = aes(x = fitted(m3), y = residuals(m3))) +
+m_log_y <- lm(log_y ~ x, nonlinear_data)
+p6 <- ggplot(mapping = aes(x = fitted(m_log_y), y = residuals(m_log_y))) +
   geom_point() + 
   geom_hline(yintercept = 0, linetype = "dashed") +
   geom_smooth(formula = y ~ x, method = "loess")
@@ -1040,11 +1068,11 @@ Nope. Still some evidence of non-linearity.
 What about transforming the explanatory variable $X$ as well?
 
 ```{r fig.height=3.5, fig.width=7}
-p7 <- ggplot(eg_data, aes(x = log_x, y = log_y)) +
+p7 <- ggplot(nonlinear_data, aes(x = log_x, y = log_y)) +
   geom_point() + 
   geom_smooth(formula = y ~ x, method = "lm", se = FALSE)
-m4 <- lm(log_y ~ log_x, eg_data)
-p8 <- ggplot(mapping = aes(x = fitted(m4), y = residuals(m4))) +
+m_log_log <- lm(log_y ~ log_x, nonlinear_data)
+p8 <- ggplot(mapping = aes(x = fitted(m_log_log), y = residuals(m_log_log))) +
   geom_point() + 
   geom_hline(yintercept = 0, linetype = "dashed") +
   geom_smooth(formula = y ~ x, method = "loess")
@@ -1059,7 +1087,7 @@ Let's look at the four model checking plots for the log-log-transformed data:
 
 ```{r out.width="14cm", fig.align='center', echo=FALSE, message=FALSE, warning=FALSE}
 par(mfrow=c(2,2))
-plot(m4)
+plot(m_log_log)
 ```
 
 All looks pretty good except for the scale-location plot, which shows a bit of a pattern. But overall, this looks much better than our original model.
@@ -1086,6 +1114,27 @@ Some common and useful transformations are:
 Transformations can also be applied on explanatory variables, as we saw in the example above.
 
 
+
+<!-- 2027 addition: interpreting models with log-transformed variables -->
+### Interpreting a model with log-transformed variables
+
+When we transform a variable, the coefficients of the model are on the transformed scale. With a square-root transformation they are hard to interpret. With a log transformation, however, they have useful interpretations in terms of *multiplicative* (proportional) changes. This matters a lot in practice: the slope of a model with a log-transformed response is not "the change in $y$ per unit $x$".
+
+Here are the three common cases, using natural logarithms (`log()` in R):
+
+**1. Log-transformed response: $\log(y) = \beta_0 + \beta_1 x$.** Increasing $x$ by one unit adds $\beta_1$ to $\log(y)$, which *multiplies* the expected $y$ by $e^{\beta_1}$. For example, if $\beta_1 = 0.1$, then $e^{0.1} = 1.105$, so each unit increase in $x$ is associated with a 10.5% increase in $y$. For small values of $\beta_1$ (say, between −0.1 and 0.1), $100 \cdot \beta_1$ is a good approximation of the percentage change.
+
+**2. Log-transformed explanatory variable: $y = \beta_0 + \beta_1 \log(x)$.** Multiplying $x$ by a factor $k$ changes $y$ by $\beta_1 \log(k)$. So doubling $x$ is associated with a change in $y$ of $\beta_1 \log(2) \approx 0.69 \cdot \beta_1$.
+
+**3. Both log-transformed (a "log–log" model): $\log(y) = \beta_0 + \beta_1 \log(x)$.** This corresponds to the power law $y = e^{\beta_0} x^{\beta_1}$. A 1% increase in $x$ is associated with an (approximately) $\beta_1$% change in $y$, and doubling $x$ multiplies $y$ by $2^{\beta_1}$. Log–log models are common in biology, for example when describing how metabolic rate or other traits scale with body mass.
+
+In the log–log model we fitted above (`m_log_log`), the estimated slope is `r round(coef(m_log_log)[2], 2)`. So doubling $x$ is associated with $y$ being multiplied by $2^{`r round(coef(m_log_log)[2], 2)`} =$ `r round(2^coef(m_log_log)[2], 2)`, that is, an increase of about `r round(100 * (2^coef(m_log_log)[2] - 1))`%. (The data were simulated with a true slope of 0.5.)
+
+Some practical points:
+
+* **Back-transforming predictions.** To get predictions on the original scale, back-transform with `exp()`. For a log-transformed response, `exp()` of a predicted value estimates the *median* (more precisely, the geometric mean) of $y$ at that value of $x$, not its mean. Back-transform confidence intervals by applying `exp()` to their limits; the resulting intervals are not symmetric around the prediction.
+* **Which logarithm?** If base-10 logarithms are used (`log10()`), replace $e^{\beta_1}$ with $10^{\beta_1}$ in case 1, and $\log(2)$ with $\log_{10}(2) \approx 0.30$ in case 2. The log–log interpretation (case 3) is the same whatever the base, as long as the same base is used for both variables. Always state which logarithm you used.
+* **Zeros.** The logarithm of zero is undefined, so a log transformation cannot be applied directly to data containing zeros. Adding a constant (e.g. $\log(y + 1)$) is sometimes done, but it changes the interpretation of the coefficients. For count data, a generalised linear model (Chapter 8) is usually a better solution.
 
 ### Outliers
 
@@ -1183,6 +1232,10 @@ There are many good books and online resources about regression models, fitting 
 
 ## Extras
 
+::: {.callout-note}
+The content of this Extras section is not examinable. It is here for those who want to learn more.
+:::
+
 ### Making a QQ plot
 
 With the quantile-quantile plot we are investigating the distribution of the residuals. We do this by comparing the quantiles of the residuals (the sample quantiles) to the quantiles of a normal distribution (the theoretical quantiles). If the residuals are normally distributed, then the points in the QQ-plot will approximately lie on a straight line.
@@ -1195,10 +1248,10 @@ Example for residuals sampled from a uniform distribution:
 set.seed(121)
 
 n <- 200
-residuals <- runif(n)
-residuals <- residuals - mean(residuals)
+sim_residuals <- runif(n)
+sim_residuals <- sim_residuals - mean(sim_residuals)
 
-ordered_residuals <- sort(residuals)
+ordered_residuals <- sort(sim_residuals)
 
 # plotting positions
 p <- (1:n - 0.5) / n
@@ -1212,7 +1265,7 @@ plot(theoretical_quantiles, ordered_residuals,
 
 # --- replicate qqline() ---
 
-sample_q <- quantile(residuals, probs = c(0.25, 0.75))
+sample_q <- quantile(sim_residuals, probs = c(0.25, 0.75))
 theoretical_q <- qnorm(c(0.25, 0.75))
 
 b <- diff(sample_q) / diff(theoretical_q)
@@ -1220,8 +1273,8 @@ a <- sample_q[1] - b * theoretical_q[1]
 
 abline(a = a, b = b, col = "red", lwd = 2)
 
-#qqnorm(residuals)
-#qqline(residuals, col = "red", lwd = 2)
+#qqnorm(sim_residuals)
+#qqline(sim_residuals, col = "red", lwd = 2)
 ```
 
 
@@ -1391,7 +1444,7 @@ qqfunc <- function(model, num.reps) {
     
   }
   
-  xx <- qqnorm(m1$residuals, plot.it=F)
+  xx <- qqnorm(m_child_mort$residuals, plot.it=F)
   points(xx$x, scale(xx$y), col="red", pch=19)
   
 }
@@ -1403,36 +1456,36 @@ library(ggfortify)
 
 ## load the data
 ## Here I'm loading it direct from online where the dataset are stored
-fhc <- suppressMessages(readr::read_csv("https://raw.githubusercontent.com/opetchey/BIO144_Practicals_WAs/refs/heads/main/assets/datasets/financing_healthcare.csv",show_col_types = FALSE))
+healthcare_data <- suppressMessages(readr::read_csv("https://raw.githubusercontent.com/opetchey/BIO144_Practicals_WAs/refs/heads/main/assets/datasets/financing_healthcare.csv",show_col_types = FALSE))
 
 ## tell me which countries are in the dataset
-#unique(fhc$country)
+#unique(healthcare_data$country)
 
 ## tell me which years are in the dataset
-#unique(fhc$year)
+#unique(healthcare_data$year)
 
 ## give me the rows in which both child mortality and health care expenditure are not NA
-#filter(fhc, !is.na(child_mort) & !is.na(health_exp_total))
+#filter(healthcare_data, !is.na(child_mort) & !is.na(health_exp_total))
 
 ## Wrange the data
-fhc1 <- fhc %>%
+healthcare_2013 <- healthcare_data %>%
   filter(year==2013) %>% ## only data fro 2013 please
   select(year:continent, health_exp_total, child_mort, life_expectancy) %>% ## only these columns please
   drop_na() ## drop rows with any NAs
 
 ## From last weeks work we know we need to log transform the data
-fhc1 <- mutate(fhc1,
+healthcare_2013 <- mutate(healthcare_2013,
                log10_health_exp_total=log10(health_exp_total),
                log10_child_mort=log10(child_mort))
 
 ## plot the relationship between health care expenditure and child mortality
-#ggplot(data=fhc1, aes(x=health_exp_total, y=child_mort)) + geom_point()
+#ggplot(data=healthcare_2013, aes(x=health_exp_total, y=child_mort)) + geom_point()
 
-## fit the linear model of the log transformed data and assign it to object named m1
-m1 <- lm(log10_child_mort ~ log10_health_exp_total, data=fhc1)
+## fit the linear model of the log transformed data and assign it to object named m_child_mort
+m_child_mort <- lm(log10_child_mort ~ log10_health_exp_total, data=healthcare_2013)
 
 ## Here we run the function that makes the qqplot with some random samples from a normal distribution
-qqfunc(m1, 100)
+qqfunc(m_child_mort, 100)
 abline(0,1)
 
 ```
@@ -1471,7 +1524,7 @@ qqfunc <- function(model, num.reps) {
     
   }
   
-  xx <- qqnorm(m1$residuals, plot.it=F)
+  xx <- qqnorm(m_child_mort$residuals, plot.it=F)
   points(xx$x, scale(xx$y), col="red", pch=19)
   
 }
@@ -1483,36 +1536,36 @@ library(ggfortify)
 
 ## load the data
 ## Here I'm loading it direct from online where the dataset are stored
-fhc <- suppressMessages(readr::read_csv("https://raw.githubusercontent.com/opetchey/BIO144_Practicals_WAs/refs/heads/main/assets/datasets/financing_healthcare.csv",show_col_types = FALSE))
+healthcare_data <- suppressMessages(readr::read_csv("https://raw.githubusercontent.com/opetchey/BIO144_Practicals_WAs/refs/heads/main/assets/datasets/financing_healthcare.csv",show_col_types = FALSE))
 
 ## tell me which countries are in the dataset
-#unique(fhc$country)
+#unique(healthcare_data$country)
 
 ## tell me which years are in the dataset
-#unique(fhc$year)
+#unique(healthcare_data$year)
 
 ## give me the rows in which both child mortality and health care expenditure are not NA
-#filter(fhc, !is.na(child_mort) & !is.na(health_exp_total))
+#filter(healthcare_data, !is.na(child_mort) & !is.na(health_exp_total))
 
 ## Wrange the data
-fhc1 <- fhc %>%
+healthcare_2013 <- healthcare_data %>%
   filter(year==2013) %>% ## only data fro 2013 please
   select(year:continent, health_exp_total, child_mort, life_expectancy) %>% ## only these columns please
   drop_na() ## drop rows with any NAs
 
 ## From last weeks work we know we need to log transform the data
-fhc1 <- mutate(fhc1,
+healthcare_2013 <- mutate(healthcare_2013,
                log10_health_exp_total=log10(health_exp_total),
                log10_child_mort=log10(child_mort))
 
 ## plot the relationship between health care expenditure and child mortality
-#ggplot(data=fhc1, aes(x=health_exp_total, y=child_mort)) + geom_point()
+#ggplot(data=healthcare_2013, aes(x=health_exp_total, y=child_mort)) + geom_point()
 
-## fit the linear model of the log transformed data and assign it to object named m1
-m1 <- lm(log10_child_mort ~ log10_health_exp_total, data=fhc1)
+## fit the linear model of the log transformed data and assign it to object named m_child_mort
+m_child_mort <- lm(log10_child_mort ~ log10_health_exp_total, data=healthcare_2013)
 
 ## Here we run the function that makes the qqplot with some random samples from a normal distribution
-qqfunc(m1, 100)
+qqfunc(m_child_mort, 100)
 abline(0,1)
 
 ```

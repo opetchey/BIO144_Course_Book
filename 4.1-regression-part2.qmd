@@ -6,6 +6,14 @@ source("_common.R")
 
 # Regression Part 2 (L4) {.unnumbered}
 
+```{r}
+#| echo: false
+#| output: asis
+lo_dir <- "../BIO144_Course_Information/learning_objectives"
+source(file.path(lo_dir, "lo.R"))
+lo_callout("4.1", lo_dir)
+```
+
 ## Introduction
 
 This chapter builds on the previous chapter on simple linear regression. There we learned how to fit a regression model to data, and how to check if the assumptions of the regression model are met. When we are satisfied that the assumptions of linear regression are adequately met, we can move on to the next stage: interpreting the model and using it to answer our biological question.
@@ -40,10 +48,10 @@ Take these two examples.
 x <- 1:10
 y1 <- 2*x + rnorm(10,0,1)
 y2 <- 2*x + rnorm(10,0,5)
-m1 <- lm(y1 ~ x)
-m2 <- lm(y2 ~ x)
-y1_predicted <- predict(m1)
-y2_predicted <- predict(m2)
+m_sd1 <- lm(y1 ~ x)
+m_sd5 <- lm(y2 ~ x)
+y1_predicted <- predict(m_sd1)
+y2_predicted <- predict(m_sd5)
 p1 <- ggplot() +
   geom_point(aes(x=x,y=y1)) +
   geom_line(aes(x=x,y=y1_predicted)) 
@@ -145,8 +153,8 @@ In R, we calculate this as follows:
 
 ```{r}
 #| echo: true
-m1 <- lm(y1 ~ x)
-y1_predicted <- predict(m1)
+m_sd1 <- lm(y1 ~ x)
+y1_predicted <- predict(m_sd1)
 SSM <- sum((y1_predicted - mean(y1))^2)
 SSM
 ```
@@ -198,33 +206,33 @@ y1 <- 2*x + rnorm(10,0,1)
 y2 <- 2*x + rnorm(10,0,5)
 y3 <- 2*x + rnorm(10,0,10)
 y4 <- 2*x + rnorm(10,0,20)
-m1 <- lm(y1 ~ x)
-m2 <- lm(y2 ~ x)
-m3 <- lm(y3 ~ x)
-m4 <- lm(y4 ~ x)
+m_sd1 <- lm(y1 ~ x)
+m_sd5 <- lm(y2 ~ x)
+m_sd10 <- lm(y3 ~ x)
+m_sd20 <- lm(y4 ~ x)
 ylims <- range(c(y1, y2, y3, y4))
 #ylims <- c(-30, 50)
 p1 <- ggplot(data.frame(x = x, y1 = y1), aes(x = x, y = y1)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE, formula = y ~ x) +
-  annotate("text", x = 0, y = -20, label = paste("R^2 = ", round(summary(m1)$r.squared, 2)), hjust = 0, vjust = 0) +
+  annotate("text", x = 0, y = -20, label = paste("R^2 = ", round(summary(m_sd1)$r.squared, 2)), hjust = 0, vjust = 0) +
   ylim(ylims)
 p2 <- ggplot(data.frame(x = x, y2 = y2), aes(x = x, y = y2)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE, formula = y ~ x) +
-  annotate("text", x = 0, y = -20, label = paste("R^2 = ", round(summary(m2)$r.squared, 2)), hjust = 0, vjust = 0) +
+  annotate("text", x = 0, y = -20, label = paste("R^2 = ", round(summary(m_sd5)$r.squared, 2)), hjust = 0, vjust = 0) +
   ylim(ylims)
 p3 <- ggplot(data.frame(x = x, y3 = y3), aes(x = x, y = y3)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE, formula = y ~ x) +
   annotate("text", x = 0, y = -20,
-                label = paste("R^2 = ", round(summary(m3)$r.squared, 2)),
+                label = paste("R^2 = ", round(summary(m_sd10)$r.squared, 2)),
             hjust = 0, vjust = 0) +
    ylim(ylims)
 p4 <- ggplot(data.frame(x = x, y4 = y4), aes(x = x, y = y4)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE, formula = y ~ x) +
-  annotate("text", x = 0, y = -20, label = paste("R^2 = ", round(summary(m4)$r.squared, 2)), hjust = 0, vjust = 0) +
+  annotate("text", x = 0, y = -20, label = paste("R^2 = ", round(summary(m_sd20)$r.squared, 2)), hjust = 0, vjust = 0) +
   ylim(ylims)
 (p1 + p2) / (p3 + p4)
 ```
@@ -240,11 +248,11 @@ Using the blood pressure data, we can fit a regression model and look at the out
 ```{r}
 #| echo: false
 bp_data <- suppressMessages(read_csv(here::here("datasets/Simulated_Blood_Pressure_and_Age_Data.csv")))
-mod1 <- lm(Systolic_BP ~ Age, data = bp_data)
-summary(mod1)
+bp_age_model <- lm(Systolic_BP ~ Age, data = bp_data)
+summary(bp_age_model)
 ```
 
-The value is `r round(summary(mod1)$r.squared, 3)`, which means that the model explains about `r round(summary(mod1)$r.squared * 100, 1)`% of the variability in the response variable (systolic blood pressure).
+The value is `r round(summary(bp_age_model)$r.squared, 3)`, which means that the model explains about `r round(summary(bp_age_model)$r.squared * 100, 1)`% of the variability in the response variable (systolic blood pressure).
 
 
 
@@ -285,7 +293,7 @@ To calculation this probability we use the fact that the slope of the regression
 We can see that the slope estimate (the $x$ row) has uncertainty by looking at the regression output:
 
 ```{r}
-summary(m1)$coefficients[1:2, 1:2]
+summary(m_sd1)$coefficients[1:2, 1:2]
 ```
 
 We see the estimate of the parameter (slope) and a measure of uncertainty in the estimate: the standard error of the estimate.
@@ -376,6 +384,26 @@ But how can we calculate the $p$-value from the $t$-statistic? The answer is to 
 
 But what is the $t$-distribution? It is a distribution of the $t$-statistic under the null hypothesis. It is a bell-shaped distribution that is centered on zero. The shape of the distribution is determined by the degrees of freedom, which is $n-2$ for a simple linear regression model.
 
+<!-- 2027 addition: how the degrees of freedom change the t-distribution -->
+With few degrees of freedom the $t$-distribution has heavier tails than the normal distribution: extreme values of $t$ are more likely, because the residual variance (and so the standard error) is estimated less precisely. As the degrees of freedom increase, the $t$-distribution gets closer and closer to the standard normal distribution:
+
+```{r}
+#| echo: false
+#| fig-width: 6
+#| fig-height: 3.5
+t_curves <- expand_grid(t = seq(-5, 5, 0.02), df = c(2, 5, 30)) |>
+  mutate(density = dt(t, df), distribution = paste("t,", df, "df"))
+normal_curve <- tibble(t = seq(-5, 5, 0.02), density = dnorm(t),
+                       distribution = "standard normal")
+ggplot(bind_rows(t_curves, normal_curve) |>
+         mutate(distribution = factor(distribution, levels = c("t, 2 df", "t, 5 df", "t, 30 df", "standard normal"))),
+       aes(x = t, y = density, colour = distribution, linetype = distribution)) +
+  geom_line() +
+  labs(x = "t value", y = "Density", colour = NULL, linetype = NULL)
+```
+
+This is why, as we saw in the table of critical $t$-values in Chapter 3, fewer residual degrees of freedom give larger critical values, wider confidence intervals, and larger $p$-values for the same $t$-statistic.
+
 Here is the distribution of $t$ values under the null hypothesis for a sample size of 100 (i.e., 98 degrees of freedom):
 
 ```{r}
@@ -401,19 +429,19 @@ Let's see this graphically. Say we have an observed $t$-statistic of 1.5. The p-
 #| echo: false
 n <- 100
 t_obs <- 1.5
-df <- data.frame(x = seq(-4, 4, 0.01), 
+t_density <- data.frame(x = seq(-4, 4, 0.01), 
                 dt = dt(seq(-4, 4, 0.01), df = n-2))
-df_95perc_lower <- df[df$x < -t_obs, ]
-df_95perc_upper <- df[df$x > t_obs, ]
-ggplot(df, aes(x = x, y = dt)) +
-  geom_line(data = df, mapping = aes(x = x, y = dt)) +
-  geom_area(data = df_95perc_lower,
+t_density_lower <- t_density[t_density$x < -t_obs, ]
+t_density_upper <- t_density[t_density$x > t_obs, ]
+ggplot(t_density, aes(x = x, y = dt)) +
+  geom_line(data = t_density, mapping = aes(x = x, y = dt)) +
+  geom_area(data = t_density_lower,
             mapping = aes(x = x, y = dt),
             fill = "lightblue") +
-  geom_area(data = df_95perc_upper,
+  geom_area(data = t_density_upper,
             mapping = aes(x = x, y = dt),
             fill = "lightblue") +
-  labs(title = "t-distribution with 100 degrees of freedom",
+  labs(title = paste("t-distribution with", n - 2, "degrees of freedom"),
        x = "t-value", y = "density")
 ```
 
@@ -439,19 +467,19 @@ Let's do the same graph and calculation for a $t$-statistic of 2.5:
 #| echo: false
 n <- 100
 t_obs <- 2.5
-df <- data.frame(x = seq(-4, 4, 0.01), 
+t_density <- data.frame(x = seq(-4, 4, 0.01), 
                 dt = dt(seq(-4, 4, 0.01), df = n-2))
-df_95perc_lower <- df[df$x < -t_obs, ]
-df_95perc_upper <- df[df$x > t_obs, ]
-ggplot(df, aes(x = x, y = dt)) +
-  geom_line(data = df, mapping = aes(x = x, y = dt)) +
-  geom_area(data = df_95perc_lower,
+t_density_lower <- t_density[t_density$x < -t_obs, ]
+t_density_upper <- t_density[t_density$x > t_obs, ]
+ggplot(t_density, aes(x = x, y = dt)) +
+  geom_line(data = t_density, mapping = aes(x = x, y = dt)) +
+  geom_area(data = t_density_lower,
             mapping = aes(x = x, y = dt),
             fill = "lightblue") +
-  geom_area(data = df_95perc_upper,
+  geom_area(data = t_density_upper,
             mapping = aes(x = x, y = dt),
             fill = "lightblue") +
-  labs(title = "t-distribution with 100 degrees of freedom",
+  labs(title = paste("t-distribution with", n - 2, "degrees of freedom"),
        x = "t-value", y = "density")
 ```
 
@@ -473,7 +501,7 @@ Using the blood pressure data again, we can fit a regression model and look at t
 
 ```{r}
 #| echo: true
-summary(mod1)
+summary(bp_age_model)
 ```
 
 In the coefficients table, look for the row corresponding to the slope (the second row, which is the "Age" row). In this row we see the estimate of the slope, the standard error of the slope, the $t$-value for the slope,and in the last column "Pr(>|t|)". This means "the probability of observing a value of the $t$-statistic at least as extreme as the one observed, given that the null hypothesis is true".
@@ -562,17 +590,17 @@ The 95% confidence interval of the slope is then given by:
 
 $$\hat\beta_1 \pm t_{0.975} \cdot \hat\sigma^{(\beta_1)}$$
 
-In our blood pressure example the estimated slope is `r coef(mod1)[2]` and the standard error of the slope is `r summary(mod1)$coef[2,2]`. We can calculate the 95% confidence interval of the slope in *R* as follows:
+In our blood pressure example the estimated slope is `r coef(bp_age_model)[2]` and the standard error of the slope is `r summary(bp_age_model)$coef[2,2]`. We can calculate the 95% confidence interval of the slope in *R* as follows:
 
 ```{r}
 #| echo: true
 n <- 100
 t_0975 <- qt(0.975, df = n - 2)
-half_interval <- t_0975 * summary(mod1)$coef[2,2]
-lower_limit <- coef(mod1)[2] - half_interval
-upper_limit <- coef(mod1)[2] + half_interval
+half_interval <- t_0975 * summary(bp_age_model)$coef[2,2]
+lower_limit <- coef(bp_age_model)[2] - half_interval
+upper_limit <- coef(bp_age_model)[2] + half_interval
 ci_slope <- c(lower_limit, upper_limit)
-slope <- coef(mod1)[2]
+slope <- coef(bp_age_model)[2]
 slope
 ci_slope
 ```
@@ -580,8 +608,8 @@ ci_slope
 Or, using the `confint` function:
 
 ```{r}
-## 95% confidence interval of the slope of mod1
-ci_slope_2 <- confint(mod1, level=c(0.95))[2,]
+## 95% confidence interval of the slope of bp_age_model
+ci_slope_2 <- confint(bp_age_model, level=c(0.95))[2,]
 ci_slope_2
 
 ```
@@ -590,9 +618,9 @@ ci_slope_2
 Or we can do it using values from the coefficients table:
 
 ```{r echo = TRUE, eval = TRUE}
-coefs <- summary(mod1)$coef
-beta <- coefs[2,1]
-sdbeta <- coefs[2,2] 
+bp_age_coefs <- summary(bp_age_model)$coef
+beta <- bp_age_coefs[2,1]
+sdbeta <- bp_age_coefs[2,2] 
 beta + c(-1,1) * qt(0.975,241) * sdbeta 
 ```
 
@@ -611,7 +639,7 @@ Lets look at this in a graph of our blood pressure data. The black line is the r
 ## calculate the confidence band for the expected values of y
 new_data <- data.frame(Age = seq(20, 80, by = 1))
 conf_band <- cbind(new_data,
-                   predict(mod1, newdata = new_data, interval = "confidence", level = 0.95))
+                   predict(bp_age_model, newdata = new_data, interval = "confidence", level = 0.95))
 ggplot(bp_data, aes(x = Age, y = Systolic_BP)) +
   geom_point() +
   geom_line(aes(y = fit), data = conf_band, color = "purple", lwd = 1) +
@@ -633,8 +661,8 @@ n_lines <- 100
 lines_data <- data.frame(Age = seq(20, 80, by = 1))
 for (i in 1:n_lines) {
   # sample the slope and intercept from their confidence intervals
-  slope_i <- rnorm(1, mean = coef(mod1)[2], sd = summary(mod1)$coef[2,2])
-  intercept_i <- rnorm(1, mean = coef(mod1)[1], sd = summary(mod1)$coef[1,2])
+  slope_i <- rnorm(1, mean = coef(bp_age_model)[2], sd = summary(bp_age_model)$coef[2,2])
+  intercept_i <- rnorm(1, mean = coef(bp_age_model)[1], sd = summary(bp_age_model)$coef[1,2])
   lines_data[[paste0("line_", i)]] <- intercept_i + slope_i * lines_data$Age
 }
 lines_data_long <- lines_data %>%
@@ -675,7 +703,7 @@ Here's a graph showing the prediction band in green for the blood pressure data 
 ```{r}
 #| echo: false
 prediction_band <- cbind(new_data,
-                   predict(mod1, newdata = new_data, interval = "prediction", level = 0.95))
+                   predict(bp_age_model, newdata = new_data, interval = "prediction", level = 0.95))
 ggplot(bp_data, aes(x = Age, y = Systolic_BP)) +
   geom_point() +
   geom_line(aes(y = fit), data = prediction_band, color = "blue", lwd = 1) +
@@ -693,6 +721,16 @@ Another way to think of the 95% confidence band is that it is where we would exp
 --->
 
 
+
+<!-- 2027 addition: extrapolation -->
+## Extrapolation: predicting beyond the data
+
+A regression model describes the relationship only over the range of values of the explanatory variable that we observed. In the blood pressure data, ages range from `r min(bp_data$Age)` to `r max(bp_data$Age)` years. Using the model to make predictions outside this range is called **extrapolation**, and it is risky:
+
+* We have no data outside the observed range, so we have no way to check whether the relationship is still linear there. For example, blood pressure may not keep increasing at the same rate into very old age.
+* Confidence and prediction bands become wider the further we move from the mean of the explanatory variable. But even these bands assume that the straight line still holds outside the data, so when extrapolating they understate the real uncertainty.
+
+The intercept is a common example of an unintended extrapolation. It is the expected value of $y$ when $x = 0$. Here the estimated intercept is `r round(coef(bp_age_model)[1], 1)` mmHg: the predicted systolic blood pressure of a newborn baby. Age 0 is far outside the range of the data, so this value is not biologically meaningful; it is simply where the fitted line crosses the vertical axis. If we want an intercept that can be interpreted, we can centre the explanatory variable, for example by using age minus 50 years as the explanatory variable. The intercept is then the expected blood pressure of a 50-year-old.
 
 ## Reporting
 
@@ -720,6 +758,26 @@ We *DO NOT* report like this:
 *There was a statistically significant relationship between age and systolic blood pressure ($p < 0.001$).*
 
 
+<!-- 2027 addition: effect size and biological relevance -->
+### How big is the effect, and does it matter?
+
+A $p$-value tells us whether the data are compatible with there being no relationship. It does not tell us how strong the relationship is, or whether it is important. For that we need the **effect size**: here, the estimated slope, with its confidence interval, in the units of the variables.
+
+In the blood pressure example, the slope is `r round(coef(bp_age_model)[2], 2)` mmHg per year (95% CI `r round(confint(bp_age_model)[2, 1], 2)` to `r round(confint(bp_age_model)[2, 2], 2)`). It is often helpful to express an effect over a meaningful change in the explanatory variable. Over ten years, for example, the expected increase in systolic blood pressure is `r round(10 * coef(bp_age_model)[2], 1)` mmHg (95% CI `r round(10 * confint(bp_age_model)[2, 1], 1)` to `r round(10 * confint(bp_age_model)[2, 2], 1)` mmHg).
+
+Whether an effect of this size is *biologically* (or medically) important is not a statistical question. It requires knowledge of the system: for example, how large a change in blood pressure has consequences for health. Good reporting gives readers the effect size and its uncertainty, in meaningful units, so that they can make this judgement. Pay attention to the whole confidence interval: if it includes both trivially small and important effects, the data cannot tell us which is the case, even if the $p$-value is small.
+
+This is the third of the four principles for high-quality data analysis introduced in Chapter 1: emphasise effect sizes and biological relevance, rather than statistical significance alone.
+
+<!-- 2027 addition: association versus causation -->
+## Association is not causation
+
+The blood pressure data come from an *observational* study: we did not assign people their ages. The regression therefore describes an **association**: older people in this sample tend to have higher blood pressure. On its own, it does not show that ageing *causes* the increase. Many other things differ with age, such as diet, exercise and body weight, and any of these could contribute to the association.
+
+A variable that is associated with both the explanatory variable and the response, and so creates or distorts the association between them, is called a **confounding variable**. The strongest evidence for a causal effect comes from *manipulative experiments*, in which the researcher randomly assigns the values of the explanatory variable to the subjects. Random assignment breaks any link between the explanatory variable and potential confounders. In observational studies, we can include potential confounders as additional explanatory variables in a multiple regression (Chapter 6), but only those that we have measured.
+
+When reporting results from observational data, use language such as "was associated with" rather than "caused", "increased" or "affected".
+
 ## Relationship between $R^2$ and the $p$-value of the slope
 
 Do you think a small $R^2$ value can be associated with a small $p$-value for the slope? Or do you think a large $R^2$ value can be associated with a large $p$-value for the slope?
@@ -734,7 +792,7 @@ set.seed(123)
 n <- 2000
 x <- 1:n
 y <- 0.01*x + rnorm(n, 0, 90)
-m <- lm(y ~ x)
+m_sim <- lm(y ~ x)
 ```
 
 
@@ -747,7 +805,7 @@ ggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +
 
 ```{r}
 #| echo: false
-summary(m)
+summary(m_sim)
 ```
 
 
@@ -793,6 +851,10 @@ Again, there are many good books and online resources about regression models. T
 
 
 ## Extras
+
+::: {.callout-note}
+The content of this Extras section is not examinable. It is here for those who want to learn more.
+:::
 
 ### Calculation of confidence bands
 
@@ -846,8 +908,8 @@ set.seed(123)
 n <- 100
 x <- 1:n
 y <- 0.1*x + rnorm(n, 0, 10)
-m <- lm(y ~ x)
-coef(m)[2]
+m_sim <- lm(y ~ x)
+coef(m_sim)[2]
 ```
 
 ```{r}
@@ -878,7 +940,7 @@ this_one <- round(runif(1, 1, 20),0)
 for (i in 1:20) {
   if (i == this_one) {
     plot(x, y, main = paste(i))
-    #abline(m)
+    #abline(m_sim)
   } else {
     y_rand <- sample(y)
     m_rand <- lm(y_rand ~ x)
@@ -899,7 +961,7 @@ this_one <- round(runif(1, 1, 20),0)
 for (i in 1:20) {
   if (i == this_one) {
     plot(x, y, main = paste(i), ylab = "y")
-    #abline(m)
+    #abline(m_sim)
   } else {
     y_rand <- sample(y)
     m_rand <- lm(y_rand ~ x)
@@ -924,13 +986,13 @@ rand_slopes <- replicate(10000, {
 
 ggplot(data.frame(slopes = rand_slopes), aes(x = slopes)) +
   geom_histogram(bins = 50) +
-  geom_vline(xintercept = coef(m)[2], color = "red")
+  geom_vline(xintercept = coef(m_sim)[2], color = "red")
 ```
 
 We can now calculate the probability of observing the data we have, given the null hypothesis is true.
 
 ```{r}
-p_value <- mean(abs(rand_slopes) >= abs(coef(m)[2]))
+p_value <- mean(abs(rand_slopes) >= abs(coef(m_sim)[2]))
 p_value
 ```
 

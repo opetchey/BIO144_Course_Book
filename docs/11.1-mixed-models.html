@@ -215,7 +215,7 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./5.1-anova.html" class="sidebar-item-text sidebar-link">
+  <a href="./5.1-ANOVA.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Analysis of variance (L5)</span></a>
   </div>
 </li>
@@ -331,6 +331,37 @@ window.Quarto = {
 </header>
 
 
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Learning objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><em>Version 2027.0-draft (reviewed): these learning objectives may still change.</em></p>
+<p>After this unit, students will be able to:</p>
+<ol type="1">
+<li>Recognise grouped, nested or hierarchical data in biological study designs (e.g.&nbsp;repeated measures, individuals within populations, sites within regions).</li>
+<li>Explain why ignoring grouping in the data leads to pseudoreplication and overconfident conclusions.</li>
+<li>Explain why averaging the repeated measurements within each group before using <code>lm()</code> is sometimes acceptable but often throws away information.</li>
+<li>Recognise pseudoreplication when a model’s residual degrees of freedom are much larger than the number of independent units (e.g.&nbsp;individual plants) in the study.</li>
+<li>Distinguish fixed effects from random effects, and decide which is appropriate for a variable in a described study.</li>
+<li>Distinguish random intercept models from random slope models, and nested from crossed random effects, and write the corresponding <code>lmer()</code> formula.</li>
+<li>Explain partial pooling, and how it shrinks group-level estimates towards the overall mean.</li>
+<li>Use R to fit linear mixed models with random intercepts, and with random slopes, using <code>lmer()</code> from the <code>lme4</code> package.</li>
+<li>Use R output to obtain the fixed-effect estimates and the variance components.</li>
+<li>Interpret mixed model output in biological terms, including what the variance components say about variation among groups.</li>
+<li>Explain why degrees of freedom, and so p-values, for fixed effects in mixed models are not straightforward, and that several approximations exist (e.g.&nbsp;Satterthwaite’s method).</li>
+<li>Identify limitations and assumptions of mixed models in a described analysis.</li>
+<li>Recognise a correct and complete statement of results from a mixed model.</li>
+</ol>
+<p>These learning objectives, together with the content of this chapter, define what you need to know for the exam.</p>
+<p>The learning objectives for all chapters, and for the course as a whole, are also given on the <a href="https://opetchey.github.io/BIO144_Course_Information/3.1-learning-objectives.html">Learning Objectives page of the course information website</a>.</p>
+</div>
+</div>
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
 <p>So far in BIO144 we mostly used models where <strong>each observation is assumed independent</strong>:</p>
@@ -419,7 +450,7 @@ Note
 <p>This means that our data have a <strong>grouping structure</strong>: observations are grouped by individual. If we want to calculate the mean growth, we should account for this grouping.</p>
 <p>Let’s read in the illustrative data:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>dat_example <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"datasets/mixed_model_example.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>example_repeated <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"datasets/mixed_model_example.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 50 Columns: 3
 ── Column specification ────────────────────────────────────────────────────────
@@ -433,7 +464,7 @@ dbl (2): temperature, growth
 </div>
 <p>Here are the first few rows:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dat_example)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(example_repeated)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 3
   individual temperature growth
@@ -536,7 +567,7 @@ Caution
 <h3 class="anchored" data-anchor-id="an-example-dataset">An example dataset</h3>
 <p>Read in the data:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"datasets/plant_growth_repeated.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>plant_growth <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"datasets/plant_growth_repeated.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 240 Columns: 4
 ── Column specification ────────────────────────────────────────────────────────
@@ -549,7 +580,7 @@ dbl (3): temp, week, height
 </div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dat)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(plant_growth)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 4
   plant_id  temp  week height
@@ -570,7 +601,7 @@ dbl (3): temp, week, height
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="11.1-mixed-models_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="11.1-mixed-models_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -582,7 +613,7 @@ dbl (3): temp, week, height
 <section id="wrong-model-treat-all-rows-as-independent" class="level3">
 <h3 class="anchored" data-anchor-id="wrong-model-treat-all-rows-as-independent">Wrong model: treat all rows as independent</h3>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>m_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(height <span class="sc">~</span> week <span class="sc">*</span> temp, <span class="at">data =</span> dat)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>m_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(height <span class="sc">~</span> week <span class="sc">*</span> temp, <span class="at">data =</span> plant_growth)</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(m_lm)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Variance Table
@@ -604,7 +635,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <h3 class="anchored" data-anchor-id="mixed-model-random-intercept-for-plant">Mixed model: random intercept for plant</h3>
 <p>Now let’s fit a mixed model with plant identity as a random effect:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>m_lmm1 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(height <span class="sc">~</span> week <span class="sc">*</span> temp <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> plant_id), <span class="at">data =</span> dat)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>m_lmm1 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(height <span class="sc">~</span> week <span class="sc">*</span> temp <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> plant_id), <span class="at">data =</span> plant_growth)</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(m_lmm1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Variance Table
@@ -639,7 +670,7 @@ week:temp    1   42.8    42.8   30.939</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="11.1-mixed-models_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="11.1-mixed-models_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -652,7 +683,7 @@ week:temp    1   42.8    42.8   30.939</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="11.1-mixed-models_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="11.1-mixed-models_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -666,7 +697,7 @@ week:temp    1   42.8    42.8   30.939</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="11.1-mixed-models_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="11.1-mixed-models_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -675,12 +706,12 @@ week:temp    1   42.8    42.8   30.939</code></pre>
 <li>Residuals vs explanatory variable (helpful for nonlinearity with a continuous explanatory variable)</li>
 </ol>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(dat<span class="sc">$</span>temp, <span class="fu">resid</span>(m_lmm1), <span class="at">xlab =</span> <span class="st">"x"</span>, <span class="at">ylab =</span> <span class="st">"Residuals"</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(plant_growth<span class="sc">$</span>temp, <span class="fu">resid</span>(m_lmm1), <span class="at">xlab =</span> <span class="st">"x"</span>, <span class="at">ylab =</span> <span class="st">"Residuals"</span>)</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="11.1-mixed-models_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="11.1-mixed-models_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -704,7 +735,7 @@ In mixed models, inference depends on how you handle degrees of freedom and unce
 <h3 class="anchored" data-anchor-id="extension-random-slopes-for-week">Extension: random slopes for week</h3>
 <p>If you believe plants differ in growth rate (not only baseline), add a random slope:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>m_lmm2 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(height <span class="sc">~</span> week <span class="sc">*</span> temp <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">+</span> week <span class="sc">|</span> plant_id), <span class="at">data =</span> dat)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>m_lmm2 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(height <span class="sc">~</span> week <span class="sc">*</span> temp <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">+</span> week <span class="sc">|</span> plant_id), <span class="at">data =</span> plant_growth)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>boundary (singular) fit: see help('isSingular')</code></pre>
 </div>
@@ -712,7 +743,7 @@ In mixed models, inference depends on how you handle degrees of freedom and unce
 <div class="cell-output cell-output-stdout">
 <pre><code>Linear mixed model fit by REML ['lmerMod']
 Formula: height ~ week * temp + (1 + week | plant_id)
-   Data: dat
+   Data: plant_growth
 
 REML criterion at convergence: 831.3
 
@@ -721,10 +752,10 @@ Scaled residuals:
 -2.39049 -0.63013  0.04646  0.65238  2.39351 
 
 Random effects:
- Groups   Name        Variance  Std.Dev. Corr
- plant_id (Intercept) 0.8469435 0.92030      
-          week        0.0007977 0.02824  1.00
- Residual             1.3802111 1.17482      
+ Groups   Name        Variance  Std.Dev. Corr 
+ plant_id (Intercept) 0.8469435 0.92030       
+          week        0.0007977 0.02824  1.00 
+ Residual             1.3802111 1.17482       
 Number of obs: 240, groups:  plant_id, 30
 
 Fixed effects:
@@ -750,13 +781,13 @@ boundary (singular) fit: see help('isSingular')</code></pre>
 <pre><code>refitting model(s) with ML (instead of REML)</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Data: dat
+<pre><code>Data: plant_growth
 Models:
 m_lmm1: height ~ week * temp + (1 | plant_id)
 m_lmm2: height ~ week * temp + (1 + week | plant_id)
-       npar    AIC    BIC  logLik deviance Chisq Df Pr(&gt;Chisq)
-m_lmm1    6 825.51 846.39 -406.75   813.51                    
-m_lmm2    8 828.92 856.76 -406.46   812.92 0.591  2     0.7441</code></pre>
+       npar    AIC    BIC  logLik -2*log(L) Chisq Df Pr(&gt;Chisq)
+m_lmm1    6 825.51 846.39 -406.75    813.51                    
+m_lmm2    8 828.92 856.76 -406.46    812.92 0.591  2     0.7441</code></pre>
 </div>
 </div>
 <p>There is little evidence that adding random slopes improves the model here (p = 0.77). But in other datasets it might.</p>
@@ -781,7 +812,7 @@ Note
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="11.1-mixed-models_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="768"></p>
+<p><img src="11.1-mixed-models_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="768"></p>
 </figure>
 </div>
 </div>
@@ -808,7 +839,7 @@ Attaching package: 'lmerTest'</code></pre>
 
     step</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>m_lmm1 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(height <span class="sc">~</span> week <span class="sc">*</span> temp <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> plant_id), <span class="at">data =</span> dat)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>m_lmm1 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(height <span class="sc">~</span> week <span class="sc">*</span> temp <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> plant_id), <span class="at">data =</span> plant_growth)</span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(m_lmm1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Type III Analysis of Variance Table with Satterthwaite's method

@@ -14,6 +14,21 @@ source(file.path(lo_dir, "lo.R"))
 lo_callout("11.1", lo_dir)
 ```
 
+::: {.callout-note icon=false}
+## Code walkthrough for this chapter
+<!-- 2027 addition: code walkthrough script and video -->
+
+**Script:** [walkthrough_ch11_mixed_models.R](walkthroughs/walkthrough_ch11_mixed_models.R){download="walkthrough_ch11_mixed_models.R"}
+
+This R script contains the code of this chapter, with comments that explain each step. Download it, save it in your BIO144 RStudio project folder, open it in RStudio, and run it line by line while you read the chapter or watch the video. The script reads the datasets directly from the internet. Its last section ("Practical toolbox") shows code that the Unit 11 practical uses but this chapter does not.
+
+To download the script straight into your project folder (for example on RStudio Server), run this line in the Console:
+
+`download.file("https://opetchey.github.io/BIO144_Course_Book/walkthroughs/walkthrough_ch11_mixed_models.R", destfile = "walkthrough_ch11_mixed_models.R")`
+
+**Video walkthrough:** coming soon. <!-- VIDEO PLACEHOLDER: replace "coming soon." with the link, e.g. [Watch the video walkthrough](https://youtu.be/XXXX), or embed it with the Quarto video shortcode -->
+:::
+
 ## Introduction
 
 So far in BIO144 we mostly used models where **each observation is assumed independent**:
@@ -99,8 +114,8 @@ example_repeated <- expand_grid(
   individual = individual_ids,
   obs_number = 1:n_obs_per_ind) |> 
   mutate(x = runif(n_individuals * n_obs_per_ind, 0, 10)
-) %>%
-  arrange(individual) %>%
+) |>
+  arrange(individual) |>
   mutate(
     # random intercept per individual
     b0 = rnorm(n_individuals, 0, 2)[as.integer(individual)],
@@ -109,9 +124,10 @@ example_repeated <- expand_grid(
     beta1 = 1.5,
     # response variable
     y = beta0 + beta1 * x + b0 + rnorm(n(), 0, 1)
-  ) %>%
+  ) |>
   select(individual, temperature = x, growth = y)
-write_csv(example_repeated, here("datasets", "mixed_model_example.csv"))
+# 2027 fix: relative path instead of here()
+write_csv(example_repeated, "datasets/mixed_model_example.csv")
 ```
 
 Let's read in the illustrative data:
@@ -267,14 +283,20 @@ plant_growth <- expand_grid(plant_tbl, week = weeks) |>
   select(plant_id, temp, week, height)
 
 # Write out so students can re-load it
-write_csv(plant_growth, here("datasets", "plant_growth_repeated.csv"))
+# 2027 fix: relative path instead of here()
+write_csv(plant_growth, "datasets/plant_growth_repeated.csv")
 ```
 
 Read in the data:
 
 ```{r}
-plant_growth <- read_csv("datasets/plant_growth_repeated.csv")
+# 2027 fix: read_csv() reads temp as a number, so make it a factor (three temperatures)
+plant_growth <- read_csv("datasets/plant_growth_repeated.csv") |>
+  mutate(temp = factor(temp, levels = c("10", "15", "20")))
 ```
+
+<!-- 2027 fix: explain why temp is converted to a factor -->
+`read_csv()` reads `temp` as a number (10, 15, 20). Because we treat temperature as a treatment with three levels, we convert it to a factor with `factor()`.
 
 
 ```{r}
@@ -311,7 +333,8 @@ anova(m_lm)
 This model pretends there are $30 \times 8 = 240$ independent data points.
 But most of that information is repeated measures on the same plants.
 
-We can see that this is pseudoreplication because there are many more residual degrees of freedom (236) than plants (30). This is a classic sign of pseudoreplication. We really cannot trust the p-values or confidence intervals from this model.
+<!-- 2027 fix: residual df is 234 when temp is a factor (240 - 6 parameters); was 236 for numeric temp -->
+We can see that this is pseudoreplication because there are many more residual degrees of freedom (`r df.residual(m_lm)`) than plants (30). This is a classic sign of pseudoreplication. We really cannot trust the p-values or confidence intervals from this model.
 
 
 
@@ -368,10 +391,11 @@ plot(fitted(m_lmm1), sqrt(abs(resid(m_lmm1))),
 ```
 
 
-4) Residuals vs explanatory variable (helpful for nonlinearity with a continuous explanatory variable)
+4) Residuals vs explanatory variable (helpful for nonlinearity with a continuous explanatory variable, here week)
 
 ```{r}
-plot(plant_growth$temp, resid(m_lmm1), xlab = "x", ylab = "Residuals")
+# 2027 fix: residuals against the continuous explanatory variable (week), with a proper axis label
+plot(plant_growth$week, resid(m_lmm1), xlab = "Week", ylab = "Residuals")
 abline(h = 0, lty = 2)
 ```
 
@@ -401,13 +425,18 @@ m_lmm2 <- lmer(height ~ week * temp + (1 + week | plant_id), data = plant_growth
 summary(m_lmm2)
 ```
 
+<!-- 2027 fix: explain the singular fit of m_lmm2 -->
+Note the message "boundary (singular) fit". In the "Random effects" part of the summary, the standard deviation among plants in their week slope is almost zero (`r round(as.data.frame(VarCorr(m_lmm2))$sdcor[2], 2)`), and the correlation between random intercepts and slopes is `r round(as.data.frame(VarCorr(m_lmm2))$sdcor[3], 2)`. This means the data contain almost no evidence that plants differ in growth rate: the random-slope model is more complex than the data can support (see the caution box about random slopes above). A singular fit is a sign that we should simplify the model, here by going back to the random-intercept model.
+
 Compare the two mixed models:
 
 ```{r}
-anova(m_lmm1, m_lmm2)
+m_lmm_comparison <- anova(m_lmm1, m_lmm2)
+m_lmm_comparison
 ```
 
-There is little evidence that adding random slopes improves the model here (p = 0.77). But in other datasets it might.
+<!-- 2027 fix: p-value from inline R (was hard-coded 0.77) -->
+There is little evidence that adding random slopes improves the model here (p = `r round(m_lmm_comparison[["Pr(>Chisq)"]][2], 2)`). But in other datasets it might.
 
 ::: {.callout-note}
 This likelihood ratio test compares nested models. It is widely used, but has subtleties for random effects. In BIO144 you can treat it as a reasonable practical tool, while noting that "testing random effects" is an advanced topic.
@@ -444,7 +473,8 @@ There is not much difference between the two models here, but in other datasets 
 
 Calculating p-values for fixed effects in mixed models is complicated, and there are multiple methods (Satterthwaite, Kenward-Roger, likelihood ratio tests, bootstrapping, Bayesian credible intervals). It is difficult because the degrees of freedom depend on the random effects structure and the data. There is no clear and objective method to get the degrees of freedom.
 
-Neverthless, we can get p-values for terms using the `lmerTest` package (optional). This changes the `lmer()` function to provide p-values using Satterthwaite's method for degrees of freedom.
+<!-- 2027 fix: typos -->
+Nevertheless, we can get p-values for terms using the `lmerTest` package (optional). This changes the `lmer()` function to provide p-values using Satterthwaite's method for degrees of freedom.
 
 ```{r}
 library(lmerTest)
@@ -452,11 +482,14 @@ m_lmm1 <- lmer(height ~ week * temp + (1 | plant_id), data = plant_growth)
 anova(m_lmm1)
 ```
 
+<!-- 2027 fix: explain why the Sum Sq differ from the lme4 anova() table above -->
+You may notice that the Sum Sq (and F value) for `temp` differ from the `anova()` table we got earlier with `lme4`. This is not because the model changed (it is the same model), but because the two `anova()` functions calculate different types of sums of squares. The `lme4` version gives *sequential* (Type I) sums of squares, like `anova()` for `lm()`: each term is tested after the terms above it. The `lmerTest` version gives Type III sums of squares by default: each term is tested after *all* other terms, including the interaction. The last term (`week:temp`) is the same in both. If you want the sequential version with p-values, use `anova(m_lmm1, type = 1)`. As with `lm()`, when there is an interaction, focus first on the interaction term.
+
 ### Reporting (template)
 
 * We modelled plant height as a function of week, temperature, and their interaction using a linear mixed model with plant identity as a random effect.  
 * Height increased with week (fixed effect of week), and plants at higher temperature were taller on average (fixed effect of temperature).
-* All fixed effects had a p-value < 0.05, calculate using Satterthwaite's method for degrees of freedom (lmerTest package).
+* All fixed effects had a p-value < 0.05, calculated using Satterthwaite's method for degrees of freedom (lmerTest package).
 * Including plant as a random effect accounted for non-independence due to repeated measures.
 
 ## Review

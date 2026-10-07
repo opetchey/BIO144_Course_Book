@@ -22,6 +22,21 @@ source(file.path(lo_dir, "lo.R"))
 lo_callout("1.1", lo_dir)
 ```
 
+::: {.callout-note icon=false}
+## Code walkthrough for this chapter
+<!-- 2027 addition: code walkthrough script and video -->
+
+**Script:** [walkthrough_ch01_intro.R](walkthroughs/walkthrough_ch01_intro.R){download="walkthrough_ch01_intro.R"}
+
+This R script contains the code of this chapter, with comments that explain each step. This is the code from the analysis of the class reaction time data in the first lecture. Download it, save it in your BIO144 RStudio project folder, open it in RStudio, and run it line by line while you read the chapter or watch the video. The script reads the datasets directly from the internet. Its last section ("Practical toolbox") shows code that the Unit 1 practical uses but this chapter does not.
+
+To download the script straight into your project folder (for example on RStudio Server), run this line in the Console:
+
+`download.file("https://opetchey.github.io/BIO144_Course_Book/walkthroughs/walkthrough_ch01_intro.R", destfile = "walkthrough_ch01_intro.R")`
+
+**Video walkthrough:** coming soon. <!-- VIDEO PLACEHOLDER: replace "coming soon." with the link, e.g. [Watch the video walkthrough](https://youtu.be/XXXX), or embed it with the Quarto video shortcode -->
+:::
+
 ## About this chapter
 
 The first week of BIO144 is different from all the others. It is the only lecture that uses slides, and much of it is about how the course works rather than about statistical methods. This chapter is the written version of that lecture. It covers:
@@ -115,7 +130,7 @@ Please keep up with the course material, and reach out to us if you feel you are
 * **OLAT**, the hub, which links to everything else and hosts the discussion forum. Please ask questions and make requests in the forum.
 * The **course information website**, with general information, the learning objectives, and a page for each week.
 * The **course book** (this book).
-* The site with the **homework, practicals and weekly quizzes**.
+* The site with the **homework, practicals and weekly quizzes** (on the UZH RStudio Connect server: off campus, connect to the UZH VPN first). <!-- 2027 fix: VPN note -->
 
 Much of the course material is new or recently revised. If you find something that is unclear, too brief, or wrong, please let us know.
 
@@ -574,11 +589,11 @@ In statistics, clarity of reasoning matters more than code that merely *runs*.
 
 ## RStudio Server
 
-In this course you use RStudio in a web browser, through the UZH RStudio Server (<https://rstudio.mnf.uzh.ch/>).
+You can use R and RStudio either on your own laptop or in a web browser, through the UZH RStudio Server (<https://rstudio.mnf.uzh.ch/>). <!-- 2027 fix: same message as the course information and the Unit 1 practical -->
 
-* The downside: you have to be connected to the internet.
-* The upside: much of the setup is already done for you, and the available memory and processing power can be increased when needed.
-* **You will have to use RStudio Server in the exam**, so it is worth getting used to it from the start.
+* **You will have to use RStudio Server in the exam**, so whichever you use during the course, make sure you can log in to RStudio Server and work there (the Unit 1 practical starts with this).
+* RStudio Server: much of the setup is already done for you, but you have to be connected to the internet (and to the UZH network or VPN for some resources).
+* Your own laptop: works offline, but you need to install R, RStudio and the add-on packages yourself (see the "Getting R & RStudio" section of the Previous Knowledge self-tests).
 
 Only registered users can log in. Everyone in the OLAT course is registered, so you must be in the OLAT course to get access.
 

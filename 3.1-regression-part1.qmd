@@ -14,6 +14,21 @@ source(file.path(lo_dir, "lo.R"))
 lo_callout("3.1", lo_dir)
 ```
 
+::: {.callout-note icon=false}
+## Code walkthrough for this chapter
+<!-- 2027 addition: code walkthrough script and video -->
+
+**Script:** [walkthrough_ch03_regression_part1.R](walkthroughs/walkthrough_ch03_regression_part1.R){download="walkthrough_ch03_regression_part1.R"}
+
+This R script contains the code of this chapter, with comments that explain each step. Download it, save it in your BIO144 RStudio project folder, open it in RStudio, and run it line by line while you read the chapter or watch the video. The script reads the datasets directly from the internet. Its last section ("Practical toolbox") shows code that the Unit 3 practical uses but this chapter does not.
+
+To download the script straight into your project folder (for example on RStudio Server), run this line in the Console:
+
+`download.file("https://opetchey.github.io/BIO144_Course_Book/walkthroughs/walkthrough_ch03_regression_part1.R", destfile = "walkthrough_ch03_regression_part1.R")`
+
+**Video walkthrough:** coming soon. <!-- VIDEO PLACEHOLDER: replace "coming soon." with the link, e.g. [Watch the video walkthrough](https://youtu.be/XXXX), or embed it with the Quarto video shortcode -->
+:::
+
 ## Introduction
 
 Linear regression is a common statistical method that models the relationship between a dependent (response) variable and one or more independent (explanatory) variables. The relationship is modeled with the equation for a straight line ($y = a + bx$).
@@ -58,7 +73,8 @@ Lets look at some simulated example data:
 
 ```{r}
 # Load the data
-bp_age_data <- read.csv("datasets/Simulated_Blood_Pressure_and_Age_Data.csv")
+# 2027 fix: read_csv() instead of read.csv()
+bp_age_data <- read_csv("datasets/Simulated_Blood_Pressure_and_Age_Data.csv")
 
 # How many data points with both age and blood pressure?
 bp_age_data <- na.omit(bp_age_data)
@@ -262,7 +278,8 @@ First we read in the dataset:
 
 ```{r}
 #| echo: true
-bp_age_data <- read.csv("datasets/Simulated_Blood_Pressure_and_Age_Data.csv")
+# 2027 fix: read_csv() instead of read.csv()
+bp_age_data <- read_csv("datasets/Simulated_Blood_Pressure_and_Age_Data.csv")
 ```
 
 The we make a graph of the data:
@@ -289,7 +306,7 @@ summary(bp_age_model)
 
 How do our guesses of the intercept and slope compare to the guesses we made earlier?
 
-Recal that the units of the *Age* coefficient are in mmHg per year. This means that for each additional year of age, the systolic blood pressure increases by ´r round(coef(bp_age_model)[2],2)´ mmHg.
+Recal that the units of the *Age* coefficient are in mmHg per year. This means that for each additional year of age, the systolic blood pressure increases by `r round(coef(bp_age_model)[2],2)` mmHg. <!-- 2027 fix: inline R used acute accents instead of backticks, so the number was not shown -->
 
 <!---
 **Think–Pair–Share** (#a_interpreting_slope) In words, what does the slope represent in this model? What does it *not* tell you?
@@ -377,14 +394,14 @@ coef(bp_age_model)
 We can then use the mutate function from the dplyr package to add the expected values to the dataset:
 
 ```{r}
-bp_age_data <- bp_age_data %>%
+bp_age_data <- bp_age_data |>
   mutate(Expected_BP = coef(bp_age_model)[1] + coef(bp_age_model)[2] * Age)
 ```
 
 And we can get the residuals by subtracting the expected values from the observed values:
 
 ```{r}
-bp_age_data <- bp_age_data %>%
+bp_age_data <- bp_age_data |>
   mutate(Residuals = Systolic_BP - Expected_BP)
 ```
 
@@ -392,7 +409,7 @@ bp_age_data <- bp_age_data %>%
 We can also get the expected values and residuals directly from the `lm` object using the `fitted()` (or `predicted()`) and `residuals()` functions:
 
 ```{r}
-bp_age_data <- bp_age_data %>%
+bp_age_data <- bp_age_data |>
   mutate(Expected_BP = fitted(bp_age_model),
          Residuals = residuals(bp_age_model))
 ```
@@ -639,7 +656,7 @@ To look to see if the variance of the residuals is constant, we need to see if t
 Lets first calculated the $\sqrt{|R_i|}$ values for our blood pressure model:
 
 ```{r}
-bp_age_data <- bp_age_data %>%
+bp_age_data <- bp_age_data |>
   mutate(fitted = predict(bp_age_model),
          residuals = residuals(bp_age_model),
          sigma_hat = sqrt(sum(residuals^2)/(n()-2)),
@@ -660,11 +677,12 @@ This graph is known as the scale-location plot. It is particularly suited to che
 
 ::: {.callout-tip}
 
-We can also use the built-in plot function for linear models to create this plot. It is the third plot in the set of model checking plots.
+We can also use the `autoplot()` function from the `ggfortify` package to create this plot. It is the third plot in the set of model checking plots, so we use `which = 3`. The argument `smooth.colour = NA` removes the smoothed line. <!-- 2027 fix: autoplot() instead of base plot(); invalid chunk option "evaluate" removed -->
 
 ```{r}
-#| evaluate: false
-plot(bp_age_model, which=3, add.smooth = FALSE)
+# 2027 fix: autoplot() (ggfortify) instead of plot(bp_age_model, which = 3)
+library(ggfortify)
+autoplot(bp_age_model, which = 3, smooth.colour = NA)
 ```
 :::
 
@@ -689,7 +707,8 @@ And here the scale-location plot for a linear model of that data:
 
 ```{r}
 m_sim <- lm(y~x)
-plot(m_sim,which=3)
+# 2027 fix: autoplot() instead of plot(m_sim, which = 3)
+autoplot(m_sim, which = 3)
 ```
 
 
@@ -724,7 +743,8 @@ The blood pressure data seems to be linear:
   
 ```{r}
 #| echo: false
-suppressMessages(ggplot(bp_age_model, aes(x = Age, y=Systolic_BP)) +
+# 2027 fix: plot the data (bp_age_data), not the model object
+suppressMessages(ggplot(bp_age_data, aes(x = Age, y=Systolic_BP)) +
   geom_point() +
   geom_smooth(formula = y ~ x, method="lm", se=FALSE)
 )
@@ -732,7 +752,8 @@ suppressMessages(ggplot(bp_age_model, aes(x = Age, y=Systolic_BP)) +
 
 ```{r}
 #| eval: false
-ggplot(bp_age_model, aes(x = Age, y=Systolic_BP)) +
+# 2027 fix: plot the data (bp_age_data), not the model object
+ggplot(bp_age_data, aes(x = Age, y=Systolic_BP)) +
   geom_point() +
   geom_smooth(formula = y ~ x, method="lm", se=FALSE)
 ```
@@ -773,16 +794,18 @@ ggplot(mapping = aes(x = fitted(m_sim), y = resid(m_sim))) +
 
 We can very clearly see pattern in the residuals in this Tukey-Anscombe plot. The residuals are positive, then negative, then positive, as the fitted $y$ value gets larger.
 
-We can also make this Tukey-Anscombe plot using the built-in plot function for linear models in R:
+We can also make this Tukey-Anscombe plot using the `autoplot()` function (it is plot number 1 of the model checking plots): <!-- 2027 fix: autoplot() instead of base plot() -->
 
 ```{r}
-plot(m_sim, which=1)
+# 2027 fix: autoplot() instead of plot(m_sim, which = 1)
+autoplot(m_sim, which = 1)
 ```
 
-The red line in the Tukey-Anscombe plot is a loess smooth. It is automatically added to the plot. It is a way of estimating the pattern in the residuals. If the red line is not flat, then there is a pattern in the residuals. However, the loess smooth is not always reliable. It is a good idea to look at the residuals directly, without this smooth.
+The blue line in the Tukey-Anscombe plot is a loess smooth. <!-- 2027 fix: autoplot draws the smooth in blue --> It is automatically added to the plot. It is a way of estimating the pattern in the residuals. If the red line is not flat, then there is a pattern in the residuals. However, the loess smooth is not always reliable. It is a good idea to look at the residuals directly, without this smooth.
 
 ```{r}
-plot(m_sim, which=1, add.smooth = FALSE)
+# 2027 fix: autoplot() instead of plot(m_sim, which = 1, add.smooth = FALSE)
+autoplot(m_sim, which = 1, smooth.colour = NA)
 ```
 
 
@@ -791,7 +814,8 @@ The data here is simulated to show a very clear pattern in the residuals. In rea
 Here is the Tukey-Anscombe plot for the blood pressure data:
 
 ```{r}
-plot(bp_age_model, which=1, add.smooth = FALSE)
+# 2027 fix: autoplot() instead of plot(bp_age_model, which = 1, add.smooth = FALSE)
+autoplot(bp_age_model, which = 1, smooth.colour = NA)
 ```
 
 There is very little evidence of any pattern in the residuals. This data is simulated with a truly linear relationship, so we would not expect to see any pattern in the residuals.
@@ -824,7 +848,8 @@ An outlier is a data point that is very different from the other data points. Ou
 Lets again look at the blood pressure versus age data:
 
 ```{r}
-ggplot(bp_age_model, aes(x = Age, y=Systolic_BP)) +
+# 2027 fix: plot the data (bp_age_data), not the model object
+ggplot(bp_age_data, aes(x = Age, y=Systolic_BP)) +
   geom_point() +
   geom_smooth(formula = y ~ x, method="lm", se=FALSE) +
   xlim(10, 85) +
@@ -864,13 +889,19 @@ The size of the residuals are like the weight of the child. Data points with lar
 
 So the overall effect of a data point on the slope of the line of best fit is a combination of the leverage and the residual. This quantity is called the $influence$ of a data point.
 
-Let's add a rather extreme data point to the blood pressure versus age data:
+Let's add a rather extreme data point (age 80, blood pressure 120) to the blood pressure versus age data, and fit the model to the data with this extra point: <!-- 2027 fix: the code that adds the point and fits the model is now visible, and the model has its own name -->
+
+```{r}
+# 2027 fix: visible code; data and model have separate, meaningful names
+bp_age_data_outlier <- bp_age_data |>
+  select(Age, Systolic_BP) |>
+  bind_rows(tibble(Age = 80, Systolic_BP = 120))
+m_bp_age_outlier <- lm(Systolic_BP ~ Age, data = bp_age_data_outlier)
+```
 
 ```{r}
 #| echo: false
-bp_age_data <- read.csv("datasets/Simulated_Blood_Pressure_and_Age_Data.csv")
-bp_age_data_outlier_added <- rbind(bp_age_data, data.frame(Age=80, Systolic_BP=120))
-ggplot(bp_age_data_outlier_added, aes(x = Age, y=Systolic_BP)) +
+ggplot(bp_age_data_outlier, aes(x = Age, y=Systolic_BP)) +
   geom_point() +
   geom_smooth(formula = y ~ x, method="lm", se=FALSE) +
   geom_smooth(formula = y ~ x, data = bp_age_data, method="lm", se=FALSE, color="red") +
@@ -884,8 +915,8 @@ We can make a histogram of the residuals and see that the outlier has a large re
 
 ```{r}
 #| echo: false
-bp_age_data_outlier_added <- lm(Systolic_BP ~ Age, data=bp_age_data_outlier_added)
-ggplot(bp_age_data_outlier_added, aes(x = .resid)) +
+# 2027 fix: use the model object m_bp_age_outlier (no longer overwrites the data object)
+ggplot(m_bp_age_outlier, aes(x = .resid)) +
   geom_histogram(bins=10) +
   geom_vline(xintercept = 0, color="red")
 ```
@@ -904,15 +935,17 @@ $MSE$ is the mean squared error of the model.
 
 
 ```{r}
-plot(bp_age_data_outlier_added, which=5)
+# 2027 fix: autoplot() instead of plot(..., which = 5); model object has its own name
+autoplot(m_bp_age_outlier, which = 5)
 ```
+
+Observation 101 (the added point) is far to the right (large leverage) and far from zero (large standardised residual). Its Cook's distance is `r round(cooks.distance(m_bp_age_outlier)[101], 2)`, much larger than that of any of the original data points (the largest of which is `r round(max(cooks.distance(bp_age_model)), 2)`). <!-- 2027 fix: added the Cook's distance of the outlier -->
 
 But does it have a large influence on the value of the slope? In the next graph we show the line of best fit with the outlier (blue line) and without the outlier (red line).
 
 ```{r}
 #| echo: false
-bp_age_data_outlier <- rbind(bp_age_data, data.frame(Age=80, Systolic_BP=120))
-bp_age_data_outlier_added <- lm(Systolic_BP ~ Age, data=bp_age_data_outlier)
+# 2027 fix: data and model now made in the visible chunk above
 ggplot(bp_age_data_outlier, aes(x = Age, y=Systolic_BP)) +
   geom_point() +
   geom_smooth(formula = y ~ x, method="lm", se=FALSE) +
@@ -921,7 +954,15 @@ ggplot(bp_age_data_outlier, aes(x = Age, y=Systolic_BP)) +
   ylim(100, 180)
 ```
 
-No, the outlier doesn't have much influence on the slope. The outlier has a large leverage. It is far from the pivot. But it does not have such a large effect (influence) on the slope. This is in large part because there are a lot data points (100) that are quite tightly arranged around the regression line.
+We can compare the estimated coefficients with and without the outlier:
+
+```{r}
+# 2027 fix: show the coefficients with and without the outlier
+coef(bp_age_model)
+coef(m_bp_age_outlier)
+```
+
+The outlier has a moderate influence on the slope: it changes from `r round(coef(bp_age_model)[2], 3)` to `r round(coef(m_bp_age_outlier)[2], 3)` mmHg per year. The outlier has a large leverage. It is far from the pivot. But it does not have a very large effect (influence) on the slope. This is in large part because there are a lot data points (100) that are quite tightly arranged around the regression line. <!-- 2027 fix: influence is moderate (slope 0.824 to 0.783, Cook's distance 0.85), not small -->
 
 
 #### Graphical illustration of the leverage effect
@@ -957,7 +998,8 @@ The outlier (red circle) in the middle plot "pulls" the regression line in its d
 In the leverage plot, (standardized) residuals $\tilde{R_i}$ are plotted against the leverage $H_{ii}$ :
 
 ```{r}
-plot(bp_age_model, which=5, add.smooth = FALSE)
+# 2027 fix: autoplot() instead of plot(bp_age_model, which = 5, add.smooth = FALSE)
+autoplot(bp_age_model, which = 5, smooth.colour = NA)
 ```
 
 Critical ranges are the top and bottom right corners!!
@@ -974,10 +1016,9 @@ Some texts will give a rule of thumb that points with Cook’s distances greater
 
 ### The `autoplot()` function from the `ggfortify` package
 
-So far we have used the built-in `plot()` function for linear models to create the model checking plots. Another option is to use the `autoplot()` function from the `ggfortify` package. This function creates the same four model checking plots, but doesn't require the `par(mfrow=c(2,2))` command to arrange the plots in a 2x2 grid, so is slightly more convenient to use. Of course, you do need to ensure that the `ggfortify` package is installed and loaded.
+So far we have used the `autoplot()` function from the `ggfortify` package to make one model checking plot at a time, choosing the plot with the `which` argument. If we leave out `which`, `autoplot()` makes the four standard model checking plots (residuals vs fitted, QQ-plot, scale-location, and residuals vs leverage) arranged in a 2x2 grid. This is what you will usually do. Of course, you do need to ensure that the `ggfortify` package is installed and loaded. (You may also see the built-in `plot()` function used for this in other texts, for example `plot(bp_age_model, which = 1)`; it makes the same plots with base R graphics.) <!-- 2027 fix: text updated because the chapter now uses autoplot() throughout -->
 
 ```{r}
-#| eval: false
 library(ggfortify)
 autoplot(bp_age_model, smooth.colour = NA)
 ```
@@ -1008,7 +1049,9 @@ Here's another example of $y$ and $x$ that are not linearly related:
 
 ```{r fig.height=4, fig.width=7}
 #| echo: true
-nonlinear_data <- tibble(x = runif(50)) %>%
+# 2027 fix: set.seed() so the simulated data, and the numbers quoted below, are the same each time
+set.seed(3)
+nonlinear_data <- tibble(x = runif(50)) |>
   mutate(log_y = log(0.1) + 0.5* log(x) + rnorm(50,0,0.1),
          y = exp(log_y),
          log_y = log(y),
@@ -1085,9 +1128,9 @@ p7 + p8
 
 Let's look at the four model checking plots for the log-log-transformed data:
 
-```{r out.width="14cm", fig.align='center', echo=FALSE, message=FALSE, warning=FALSE}
-par(mfrow=c(2,2))
-plot(m_log_log)
+```{r out.width="14cm", fig.align='center', message=FALSE, warning=FALSE}
+# 2027 fix: visible autoplot() instead of hidden par(mfrow) + plot()
+autoplot(m_log_log)
 ```
 
 All looks pretty good except for the scale-location plot, which shows a bit of a pattern. But overall, this looks much better than our original model.
@@ -1468,9 +1511,9 @@ healthcare_data <- suppressMessages(readr::read_csv("https://raw.githubuserconte
 #filter(healthcare_data, !is.na(child_mort) & !is.na(health_exp_total))
 
 ## Wrange the data
-healthcare_2013 <- healthcare_data %>%
-  filter(year==2013) %>% ## only data fro 2013 please
-  select(year:continent, health_exp_total, child_mort, life_expectancy) %>% ## only these columns please
+healthcare_2013 <- healthcare_data |>
+  filter(year==2013) |> ## only data fro 2013 please
+  select(year:continent, health_exp_total, child_mort, life_expectancy) |> ## only these columns please
   drop_na() ## drop rows with any NAs
 
 ## From last weeks work we know we need to log transform the data
@@ -1548,9 +1591,9 @@ healthcare_data <- suppressMessages(readr::read_csv("https://raw.githubuserconte
 #filter(healthcare_data, !is.na(child_mort) & !is.na(health_exp_total))
 
 ## Wrange the data
-healthcare_2013 <- healthcare_data %>%
-  filter(year==2013) %>% ## only data fro 2013 please
-  select(year:continent, health_exp_total, child_mort, life_expectancy) %>% ## only these columns please
+healthcare_2013 <- healthcare_data |>
+  filter(year==2013) |> ## only data fro 2013 please
+  select(year:continent, health_exp_total, child_mort, life_expectancy) |> ## only these columns please
   drop_na() ## drop rows with any NAs
 
 ## From last weeks work we know we need to log transform the data

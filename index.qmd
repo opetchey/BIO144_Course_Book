@@ -11,7 +11,7 @@ Beware that Owen sometimes makes updates to the book during the semester, so if 
 
 If you'd like a copy of this book for yourself, there are a few ways. But beware: if you take a local copy then it will not be updated when Owen makes changes to the online version!
 
-* You can download a PDF version of the entire book: <a href="BIO144-Course-Book--version-2026-.pdf" target="_blank">
+* You can download a PDF version of the entire book: <a href="BIO144_Course_Book.pdf" target="_blank">
   📄 Download PDF
 </a>
 

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Mixed models (L11-1) – BIO144 Course Book (version 2026)</title>
+<title>Mixed models (L11-1) – BIO144 Course Book (version 2027, draft)</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -165,7 +165,7 @@ window.Quarto = {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">BIO144 Course Book (version 2026)</a> 
+      <a href="./">BIO144 Course Book (version 2027, draft)</a> 
         <div class="sidebar-tools-main">
     <a href="https://github.com/opetchey/BIO144_Course_Book/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
@@ -341,7 +341,6 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><em>Version 2027.0-draft (reviewed): these learning objectives may still change.</em></p>
 <p>After this unit, students will be able to:</p>
 <ol type="1">
 <li>Recognise grouped, nested or hierarchical data in biological study designs (e.g.&nbsp;repeated measures, individuals within populations, sites within regions).</li>
@@ -360,6 +359,24 @@ window.Quarto = {
 </ol>
 <p>These learning objectives, together with the content of this chapter, define what you need to know for the exam.</p>
 <p>The learning objectives for all chapters, and for the course as a whole, are also given on the <a href="https://opetchey.github.io/BIO144_Course_Information/3.1-learning-objectives.html">Learning Objectives page of the course information website</a>.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Code walkthrough for this chapter
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<!-- 2027 addition: code walkthrough script and video -->
+<p><strong>Script:</strong> <a href="walkthroughs/walkthrough_ch11_mixed_models.R" download="walkthrough_ch11_mixed_models.R">walkthrough_ch11_mixed_models.R</a></p>
+<p>This R script contains the code of this chapter, with comments that explain each step. Download it, save it in your BIO144 RStudio project folder, open it in RStudio, and run it line by line while you read the chapter or watch the video. The script reads the datasets directly from the internet. Its last section (“Practical toolbox”) shows code that the Unit 11 practical uses but this chapter does not.</p>
+<p>To download the script straight into your project folder (for example on RStudio Server), run this line in the Console:</p>
+<p><code>download.file("https://opetchey.github.io/BIO144_Course_Book/walkthroughs/walkthrough_ch11_mixed_models.R", destfile = "walkthrough_ch11_mixed_models.R")</code></p>
+<p><strong>Video walkthrough:</strong> coming soon. <!-- VIDEO PLACEHOLDER: replace "coming soon." with the link, e.g. [Watch the video walkthrough](https://youtu.be/XXXX), or embed it with the Quarto video shortcode --></p>
 </div>
 </div>
 <section id="introduction" class="level2">
@@ -567,7 +584,9 @@ Caution
 <h3 class="anchored" data-anchor-id="an-example-dataset">An example dataset</h3>
 <p>Read in the data:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>plant_growth <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"datasets/plant_growth_repeated.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 2027 fix: read_csv() reads temp as a number, so make it a factor (three temperatures)</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>plant_growth <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"datasets/plant_growth_repeated.csv"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">temp =</span> <span class="fu">factor</span>(temp, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"10"</span>, <span class="st">"15"</span>, <span class="st">"20"</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 240 Columns: 4
 ── Column specification ────────────────────────────────────────────────────────
@@ -579,18 +598,20 @@ dbl (3): temp, week, height
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>
 </div>
+<!-- 2027 fix: explain why temp is converted to a factor -->
+<p><code>read_csv()</code> reads <code>temp</code> as a number (10, 15, 20). Because we treat temperature as a treatment with three levels, we convert it to a factor with <code>factor()</code>.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(plant_growth)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 4
-  plant_id  temp  week height
-  &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
-1 P01         10     0   6.79
-2 P01         10     1   8.59
-3 P01         10     2  12.1 
-4 P01         10     3  11.0 
-5 P01         10     4  13.5 
-6 P01         10     5  16.7 </code></pre>
+  plant_id temp   week height
+  &lt;chr&gt;    &lt;fct&gt; &lt;dbl&gt;  &lt;dbl&gt;
+1 P01      10        0   6.79
+2 P01      10        1   8.59
+3 P01      10        2  12.1 
+4 P01      10        3  11.0 
+5 P01      10        4  13.5 
+6 P01      10        5  16.7 </code></pre>
 </div>
 </div>
 </section>
@@ -619,17 +640,18 @@ dbl (3): temp, week, height
 <pre><code>Analysis of Variance Table
 
 Response: height
-           Df Sum Sq Mean Sq F value    Pr(&gt;F)    
-week        1 4478.8  4478.8 1889.96 &lt; 2.2e-16 ***
-temp        1  586.6   586.6  247.52 &lt; 2.2e-16 ***
-week:temp   1   42.8    42.8   18.08 3.053e-05 ***
-Residuals 236  559.3     2.4                      
+           Df Sum Sq Mean Sq   F value    Pr(&gt;F)    
+week        1 4478.8  4478.8 1888.8551 &lt; 2.2e-16 ***
+temp        2  586.9   293.5  123.7678 &lt; 2.2e-16 ***
+week:temp   2   46.9    23.4    9.8838 7.572e-05 ***
+Residuals 234  554.8     2.4                        
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
 <p>This model pretends there are <span class="math inline">\(30 \times 8 = 240\)</span> independent data points. But most of that information is repeated measures on the same plants.</p>
-<p>We can see that this is pseudoreplication because there are many more residual degrees of freedom (236) than plants (30). This is a classic sign of pseudoreplication. We really cannot trust the p-values or confidence intervals from this model.</p>
+<!-- 2027 fix: residual df is 234 when temp is a factor (240 - 6 parameters); was 236 for numeric temp -->
+<p>We can see that this is pseudoreplication because there are many more residual degrees of freedom (234) than plants (30). This is a classic sign of pseudoreplication. We really cannot trust the p-values or confidence intervals from this model.</p>
 </section>
 <section id="mixed-model-random-intercept-for-plant" class="level3">
 <h3 class="anchored" data-anchor-id="mixed-model-random-intercept-for-plant">Mixed model: random intercept for plant</h3>
@@ -640,9 +662,9 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Variance Table
           npar Sum Sq Mean Sq  F value
-week         1 4478.8  4478.8 3234.109
-temp         1   83.9    83.9   60.556
-week:temp    1   42.8    42.8   30.939</code></pre>
+week         1 4478.8  4478.8 3264.193
+temp         2   80.3    40.1   29.258
+week:temp    2   46.9    23.4   17.081</code></pre>
 </div>
 </div>
 <p>In the anova table, note that there are no degrees of freedom and no p-values for fixed effects. This is because calculating these in mixed models is complicated and there are multiple methods. We will look at this more later in this chapter.</p>
@@ -703,11 +725,12 @@ week:temp    1   42.8    42.8   30.939</code></pre>
 </div>
 </div>
 <ol start="4" type="1">
-<li>Residuals vs explanatory variable (helpful for nonlinearity with a continuous explanatory variable)</li>
+<li>Residuals vs explanatory variable (helpful for nonlinearity with a continuous explanatory variable, here week)</li>
 </ol>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(plant_growth<span class="sc">$</span>temp, <span class="fu">resid</span>(m_lmm1), <span class="at">xlab =</span> <span class="st">"x"</span>, <span class="at">ylab =</span> <span class="st">"Residuals"</span>)</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 2027 fix: residuals against the continuous explanatory variable (week), with a proper axis label</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(plant_growth<span class="sc">$</span>week, <span class="fu">resid</span>(m_lmm1), <span class="at">xlab =</span> <span class="st">"Week"</span>, <span class="at">ylab =</span> <span class="st">"Residuals"</span>)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -745,52 +768,60 @@ In mixed models, inference depends on how you handle degrees of freedom and unce
 Formula: height ~ week * temp + (1 + week | plant_id)
    Data: plant_growth
 
-REML criterion at convergence: 831.3
+REML criterion at convergence: 822.6
 
 Scaled residuals: 
      Min       1Q   Median       3Q      Max 
--2.39049 -0.63013  0.04646  0.65238  2.39351 
+-2.43220 -0.64862  0.04439  0.63469  2.31852 
 
 Random effects:
  Groups   Name        Variance  Std.Dev. Corr 
- plant_id (Intercept) 0.8469435 0.92030       
-          week        0.0007977 0.02824  1.00 
- Residual             1.3802111 1.17482       
+ plant_id (Intercept) 0.9012457 0.94934       
+          week        0.0006804 0.02608  1.00 
+ Residual             1.3682646 1.16973       
 Number of obs: 240, groups:  plant_id, 30
 
 Fixed effects:
             Estimate Std. Error t value
-(Intercept) 5.986151   0.829045   7.221
-week        1.207819   0.127550   9.469
-temp        0.224843   0.053330   4.216
-week:temp   0.045169   0.008205   5.505
+(Intercept)  8.12308    0.38358  21.177
+week         1.69948    0.05767  29.469
+temp15       1.45872    0.54247   2.689
+temp20       2.24843    0.54247   4.145
+week:temp15  0.10592    0.08156   1.299
+week:temp20  0.45169    0.08156   5.538
 
 Correlation of Fixed Effects:
-          (Intr) week   temp  
-week      -0.407              
-temp      -0.965  0.393       
-week:temp  0.393 -0.965 -0.407
+            (Intr) week   temp15 temp20 wk:t15
+week        -0.404                            
+temp15      -0.707  0.285                     
+temp20      -0.707  0.285  0.500              
+week:temp15  0.285 -0.707 -0.404 -0.202       
+week:temp20  0.285 -0.707 -0.202 -0.404  0.500
 optimizer (nloptwrap) convergence code: 0 (OK)
 boundary (singular) fit: see help('isSingular')</code></pre>
 </div>
 </div>
+<!-- 2027 fix: explain the singular fit of m_lmm2 -->
+<p>Note the message “boundary (singular) fit”. In the “Random effects” part of the summary, the standard deviation among plants in their week slope is almost zero (0.03), and the correlation between random intercepts and slopes is 1. This means the data contain almost no evidence that plants differ in growth rate: the random-slope model is more complex than the data can support (see the caution box about random slopes above). A singular fit is a sign that we should simplify the model, here by going back to the random-intercept model.</p>
 <p>Compare the two mixed models:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(m_lmm1, m_lmm2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>m_lmm_comparison <span class="ot">&lt;-</span> <span class="fu">anova</span>(m_lmm1, m_lmm2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>refitting model(s) with ML (instead of REML)</code></pre>
 </div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>m_lmm_comparison</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Data: plant_growth
 Models:
 m_lmm1: height ~ week * temp + (1 | plant_id)
 m_lmm2: height ~ week * temp + (1 + week | plant_id)
-       npar    AIC    BIC  logLik -2*log(L) Chisq Df Pr(&gt;Chisq)
-m_lmm1    6 825.51 846.39 -406.75    813.51                    
-m_lmm2    8 828.92 856.76 -406.46    812.92 0.591  2     0.7441</code></pre>
+       npar    AIC    BIC  logLik -2*log(L)  Chisq Df Pr(&gt;Chisq)
+m_lmm1    8 826.51 854.35 -405.25    810.51                     
+m_lmm2   10 830.01 864.82 -405.00    810.01 0.4974  2     0.7798</code></pre>
 </div>
 </div>
-<p>There is little evidence that adding random slopes improves the model here (p = 0.77). But in other datasets it might.</p>
+<!-- 2027 fix: p-value from inline R (was hard-coded 0.77) -->
+<p>There is little evidence that adding random slopes improves the model here (p = 0.78). But in other datasets it might.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -822,9 +853,10 @@ Note
 <section id="significance-testing-for-fixed-effects" class="level3">
 <h3 class="anchored" data-anchor-id="significance-testing-for-fixed-effects">Significance testing for fixed effects</h3>
 <p>Calculating p-values for fixed effects in mixed models is complicated, and there are multiple methods (Satterthwaite, Kenward-Roger, likelihood ratio tests, bootstrapping, Bayesian credible intervals). It is difficult because the degrees of freedom depend on the random effects structure and the data. There is no clear and objective method to get the degrees of freedom.</p>
-<p>Neverthless, we can get p-values for terms using the <code>lmerTest</code> package (optional). This changes the <code>lmer()</code> function to provide p-values using Satterthwaite’s method for degrees of freedom.</p>
+<!-- 2027 fix: typos -->
+<p>Nevertheless, we can get p-values for terms using the <code>lmerTest</code> package (optional). This changes the <code>lmer()</code> function to provide p-values using Satterthwaite’s method for degrees of freedom.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lmerTest)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lmerTest)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>
 Attaching package: 'lmerTest'</code></pre>
@@ -839,18 +871,20 @@ Attaching package: 'lmerTest'</code></pre>
 
     step</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>m_lmm1 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(height <span class="sc">~</span> week <span class="sc">*</span> temp <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> plant_id), <span class="at">data =</span> plant_growth)</span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(m_lmm1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>m_lmm1 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(height <span class="sc">~</span> week <span class="sc">*</span> temp <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> plant_id), <span class="at">data =</span> plant_growth)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(m_lmm1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Type III Analysis of Variance Table with Satterthwaite's method
-           Sum Sq Mean Sq NumDF   DenDF F value    Pr(&gt;F)    
-week      126.767 126.767     1 208.000  91.538 &lt; 2.2e-16 ***
-temp       21.679  21.679     1  49.063  15.655 0.0002447 ***
-week:temp  42.845  42.845     1 208.000  30.939 8.131e-08 ***
+          Sum Sq Mean Sq NumDF  DenDF   F value    Pr(&gt;F)    
+week      4478.8  4478.8     1 207.00 3264.1929 &lt; 2.2e-16 ***
+temp        21.6    10.8     2  46.37    7.8666  0.001144 ** 
+week:temp   46.9    23.4     2 207.00   17.0806 1.362e-07 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
+<!-- 2027 fix: explain why the Sum Sq differ from the lme4 anova() table above -->
+<p>You may notice that the Sum Sq (and F value) for <code>temp</code> differ from the <code>anova()</code> table we got earlier with <code>lme4</code>. This is not because the model changed (it is the same model), but because the two <code>anova()</code> functions calculate different types of sums of squares. The <code>lme4</code> version gives <em>sequential</em> (Type I) sums of squares, like <code>anova()</code> for <code>lm()</code>: each term is tested after the terms above it. The <code>lmerTest</code> version gives Type III sums of squares by default: each term is tested after <em>all</em> other terms, including the interaction. The last term (<code>week:temp</code>) is the same in both. If you want the sequential version with p-values, use <code>anova(m_lmm1, type = 1)</code>. As with <code>lm()</code>, when there is an interaction, focus first on the interaction term.</p>
 </section>
 <section id="reporting-template" class="level3">
 <h3 class="anchored" data-anchor-id="reporting-template">Reporting (template)</h3>
@@ -858,7 +892,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <li>We modelled plant height as a function of week, temperature, and their interaction using a linear mixed model with plant identity as a random effect.<br>
 </li>
 <li>Height increased with week (fixed effect of week), and plants at higher temperature were taller on average (fixed effect of temperature).</li>
-<li>All fixed effects had a p-value &lt; 0.05, calculate using Satterthwaite’s method for degrees of freedom (lmerTest package).</li>
+<li>All fixed effects had a p-value &lt; 0.05, calculated using Satterthwaite’s method for degrees of freedom (lmerTest package).</li>
 <li>Including plant as a random effect accounted for non-independence due to repeated measures.</li>
 </ul>
 </section>

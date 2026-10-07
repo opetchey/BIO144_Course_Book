@@ -14,6 +14,21 @@ source(file.path(lo_dir, "lo.R"))
 lo_callout("8.1", lo_dir)
 ```
 
+::: {.callout-note icon=false}
+## Code walkthrough for this chapter
+<!-- 2027 addition: code walkthrough script and video -->
+
+**Script:** [walkthrough_ch08_glm_count_data.R](walkthroughs/walkthrough_ch08_glm_count_data.R){download="walkthrough_ch08_glm_count_data.R"}
+
+This R script contains the code of this chapter, with comments that explain each step. Download it, save it in your BIO144 RStudio project folder, open it in RStudio, and run it line by line while you read the chapter or watch the video. The script reads the datasets directly from the internet. Its last section ("Practical toolbox") shows code that the Unit 8 practical uses but this chapter does not.
+
+To download the script straight into your project folder (for example on RStudio Server), run this line in the Console:
+
+`download.file("https://opetchey.github.io/BIO144_Course_Book/walkthroughs/walkthrough_ch08_glm_count_data.R", destfile = "walkthrough_ch08_glm_count_data.R")`
+
+**Video walkthrough:** coming soon. <!-- VIDEO PLACEHOLDER: replace "coming soon." with the link, e.g. [Watch the video walkthrough](https://youtu.be/XXXX), or embed it with the Quarto video shortcode -->
+:::
+
 In all the previous chapters, we have focused on **linear models**. These are suitable for continuous response variables that can, mathematically, take negative values. However, response variables can be otherwise. For example, we might have a response variable that is the number of offspring produced by a mother. This is a *count* type of response variable. In this chapter, you'll see why the models we used so far are usually inappropriate for count data. Then you'll learn about a more appropriate type of model: **Generalized Linear Models (GLMs)**.
 
 ## Introduction
@@ -59,7 +74,8 @@ write_csv(soay, here("datasets", "soay_sheep.csv"))
 
 Read in an example dataset:
 ```{r}
-soay <- read.csv("datasets/soay_sheep.csv")
+# 2027 fix: read_csv() instead of read.csv() (course convention)
+soay <- read_csv("datasets/soay_sheep.csv")
 ```
 
 Here are the first few rows of the dataset:
@@ -355,6 +371,14 @@ As always, we should check model assumptions:
 autoplot(soay_glm, which = 1:4, add.smooth = TRUE)
 ```
 
+<!-- 2027 fix: which = 1:4 shows Cook's distance, not residuals vs leverage; add the residuals vs leverage plot that the checklist asks for -->
+The bottom-right plot above shows Cook's distance for each observation. The checklist below also asks for the residuals vs leverage plot, which we get with `which = 5`:
+
+```{r}
+#| warning: false
+autoplot(soay_glm, which = 5)
+```
+
 The QQ-plot is rather concerning. However, QQ-plots in GLMs are not testing normality of residuals in the same way as for linear models, so their interpretation differs. The *deviance residuals* should approximately follow a normal distribution if the model fits well. Here, there are some deviations from normality, which could be somewhat concerning, but for now we will focus on the other plots. (If you're interested in what are deviance residuals, please see the *Extras* section at the end of this chapter.)
 
 
@@ -420,7 +444,8 @@ A one-unit increase in an explanatory variable multiplies the expected count by 
 --->
 
 
-This means that for each additional kilogram of body size, the expected count of fitness increases by a factor of approximately 1.06 (i.e., a 6% increase). We use the number multiplicatively because of the log link function.
+<!-- 2027 fix: 1.06 (6%) made consistent with 1.055 (5.5%) above -->
+This means that for each additional kilogram of body size, the expected count of fitness increases by a factor of approximately 1.055 (i.e., a 5.5% increase). We use the number multiplicatively because of the log link function.
 
 
 
@@ -477,16 +502,15 @@ Note that we back-transform the predictions and confidence intervals using the e
 If we only wanted the fitted value (and not confidence intervals) we could have used `type = "response"` in the `predict()` function to get predictions on the original count scale (back-transformed from the log scale). When we don't specified this, we would get predictions on the log scale--this is the default behavior.
 :::
 
-Now we can plot the data and the fitted relationship with confidence intervals:
+Now we can plot the data and the fitted relationship with confidence intervals. Each layer gets its own `data` and `aes()`, because the layers use different data frames (`soay` for the points, `new_data` for the line and band):
 
+<!-- 2027 fix: code made visible; aes() moved into each layer so geom_ribbon does not inherit y = fitness (which is not in new_data and gave an error) -->
 ```{r fig.width=4, fig.height=4}
-#| echo: false
-ggplot(soay, aes(x = body.size, y = fitness)) +
-  geom_point(alpha = 0.4) +
-  geom_line(data = new_data, aes(x = body.size, y = fit), color
- = "blue") +
-  geom_ribbon(data = new_data, aes(x = body.size, ymin = lower,
- ymax = upper), alpha = 0.2, fill = "blue") +
+ggplot() +
+  geom_point(data = soay, aes(x = body.size, y = fitness), alpha = 0.4) +
+  geom_line(data = new_data, aes(x = body.size, y = fit), color = "blue") +
+  geom_ribbon(data = new_data, aes(x = body.size, ymin = lower, ymax = upper),
+              alpha = 0.2, fill = "blue") +
   labs(x = "Body mass (kg)", y = "Lifetime fitness")
 ```
 
@@ -592,13 +616,15 @@ For example, we could include parasite load as an additional predictor of fitnes
 set.seed(1234)
 soay$parasite.load <- rpois(nrow(soay), lambda = 5)
 soay$fitness <- rpois(nrow(soay), lambda = exp(0.05 * soay$body.size - 0.1 * soay$parasite.load - 1))
-write_csv(soay, here("datasets", "soay_sheep_with_parasites.csv"))
+# 2027 fix: relative path instead of here()
+write_csv(soay, "datasets/soay_sheep_with_parasites.csv")
 ```
 
 Read in the updated dataset:
 
 ```{r}
-soay <- read.csv("datasets/soay_sheep_with_parasites.csv")
+# 2027 fix: read_csv() instead of read.csv() (course convention)
+soay <- read_csv("datasets/soay_sheep_with_parasites.csv")
 ```
 
 Here is the first few rows of the updated dataset:

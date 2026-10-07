@@ -14,6 +14,21 @@ source(file.path(lo_dir, "lo.R"))
 lo_callout("12.1", lo_dir)
 ```
 
+::: {.callout-note icon=false}
+## Code walkthrough for this chapter
+<!-- 2027 addition: code walkthrough script and video -->
+
+**Script:** [walkthrough_ch12_review.R](walkthroughs/walkthrough_ch12_review.R){download="walkthrough_ch12_review.R"}
+
+This R script contains the code of this chapter, with comments that explain each step. Download it, save it in your BIO144 RStudio project folder, open it in RStudio, and run it line by line while you read the chapter or watch the video. The script reads the datasets directly from the internet. Its last section ("Practical toolbox") shows code that the Unit 12 practical uses but this chapter does not.
+
+To download the script straight into your project folder (for example on RStudio Server), run this line in the Console:
+
+`download.file("https://opetchey.github.io/BIO144_Course_Book/walkthroughs/walkthrough_ch12_review.R", destfile = "walkthrough_ch12_review.R")`
+
+**Video walkthrough:** coming soon. <!-- VIDEO PLACEHOLDER: replace "coming soon." with the link, e.g. [Watch the video walkthrough](https://youtu.be/XXXX), or embed it with the Quarto video shortcode -->
+:::
+
 ## Introduction
 
 In earlier chapters we learned many different statistical tools:
@@ -129,7 +144,7 @@ Biological question:
 Example model:
 
 ```r
-m1 <- lm(biomass ~ fertilizer, data = plants)
+m_biomass_fertilizer <- lm(biomass ~ fertilizer, data = plants)
 ```
 
 Suppose we plan 20 plants per treatment and 3 treatments. That gives $n = 60$ observations.
@@ -162,7 +177,7 @@ Biological question:
 Example model:
 
 ```r
-m1 <- lm(growth_rate ~ temperature, data = growth)
+m_growth_temperature <- lm(growth_rate ~ temperature, data = growth)
 ```
 
 Suppose we plan $n = 50$ observations across the temperature gradient.
@@ -197,13 +212,13 @@ Biological question:
 Example model:
 
 ```r
-m1 <- lmer(heart_rate ~ treatment + time + (1 | animal_id), data = heart)
+m_heart_rate <- lmer(heart_rate ~ treatment + time + (1 | animal_id), data = heart)
 ```
 
 If the biological question is whether the treatment changes the trajectory through time, then plan an interaction:
 
 ```r
-m2 <- lmer(heart_rate ~ treatment * time + (1 | animal_id), data = heart)
+m_heart_rate_interaction <- lmer(heart_rate ~ treatment * time + (1 | animal_id), data = heart)
 ```
 
 Here we need to plan both the number of animals and the number of measurements per animal. For example, 20 animals measured 5 times each gives 100 observations, but those 100 observations are not equivalent to 100 independent animals.
@@ -233,7 +248,7 @@ Biological question:
 Example model:
 
 ```r
-m1 <- glm(infected ~ habitat, family = binomial, data = infection)
+m_infection_habitat <- glm(infected ~ habitat, family = binomial, data = infection)
 ```
 
 Suppose we plan 50 individuals in each of two habitats, giving $n = 100$ observations. With two habitat groups, the expected residual df is roughly:
@@ -665,15 +680,10 @@ For a binomial GLM, ask:
 - Did I use the correct response type and family?
 - Are observations independent?
 - Are there obvious influential observations?
-- Is there overdispersion, especially for grouped/binomial count data?
+- Is there overdispersion? (This question applies to counts and to grouped binomial data, i.e. successes out of a number of trials.)
 
-A simple overdispersion check:
-
-```{r}
-deviance(m_infection) / df.residual(m_infection)
-```
-
-A ratio much larger than 1 can suggest overdispersion. This is a warning sign that the model may be underestimating uncertainty.
+<!-- 2027 fix: the deviance/df overdispersion check does not work for individual-level 0/1 data, so it is no longer offered here -->
+The simple overdispersion check (residual deviance divided by residual degrees of freedom, roughly 1 if there is no overdispersion) is **not** useful here. Our response is individual-level 0/1 data (each row is one individual, infected or not). For such data the ratio says nothing about overdispersion, so we do not calculate it. (See the GLM checklist in Chapters 8 and 9.) We will use this check for the count data in the next example.
 
 ### Interpret the output
 
@@ -811,6 +821,9 @@ deviance(m_offspring) / df.residual(m_offspring)
 ```
 
 For count models, overdispersion is a common issue. If the residual deviance is much larger than the residual df, the Poisson model may be too simple.
+
+<!-- 2027 fix: state the value of the dispersion ratio and what it means -->
+Here the ratio is `r round(deviance(m_offspring) / df.residual(m_offspring), 2)`. This is somewhat above 1, but below the rule-of-thumb values of about 1.5–2, so there is no strong sign of overdispersion and the Poisson model is acceptable. (If it were much larger, we would consider a quasi-Poisson or negative binomial model.)
 
 ### Interpret the output
 

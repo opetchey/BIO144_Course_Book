@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Count data (L8) – BIO144 Course Book (version 2026)</title>
+<title>Count data (L8) – BIO144 Course Book (version 2027, draft)</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -165,7 +165,7 @@ window.Quarto = {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">BIO144 Course Book (version 2026)</a> 
+      <a href="./">BIO144 Course Book (version 2027, draft)</a> 
         <div class="sidebar-tools-main">
     <a href="https://github.com/opetchey/BIO144_Course_Book/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
@@ -344,7 +344,6 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><em>Version 2027.0-draft (reviewed): these learning objectives may still change.</em></p>
 <p>After this unit, students will be able to:</p>
 <ol type="1">
 <li>Identify biological questions and study designs in which the response variable is a count.</li>
@@ -363,6 +362,24 @@ window.Quarto = {
 </ol>
 <p>These learning objectives, together with the content of this chapter, define what you need to know for the exam.</p>
 <p>The learning objectives for all chapters, and for the course as a whole, are also given on the <a href="https://opetchey.github.io/BIO144_Course_Information/3.1-learning-objectives.html">Learning Objectives page of the course information website</a>.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Code walkthrough for this chapter
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<!-- 2027 addition: code walkthrough script and video -->
+<p><strong>Script:</strong> <a href="walkthroughs/walkthrough_ch08_glm_count_data.R" download="walkthrough_ch08_glm_count_data.R">walkthrough_ch08_glm_count_data.R</a></p>
+<p>This R script contains the code of this chapter, with comments that explain each step. Download it, save it in your BIO144 RStudio project folder, open it in RStudio, and run it line by line while you read the chapter or watch the video. The script reads the datasets directly from the internet. Its last section (“Practical toolbox”) shows code that the Unit 8 practical uses but this chapter does not.</p>
+<p>To download the script straight into your project folder (for example on RStudio Server), run this line in the Console:</p>
+<p><code>download.file("https://opetchey.github.io/BIO144_Course_Book/walkthroughs/walkthrough_ch08_glm_count_data.R", destfile = "walkthrough_ch08_glm_count_data.R")</code></p>
+<p><strong>Video walkthrough:</strong> coming soon. <!-- VIDEO PLACEHOLDER: replace "coming soon." with the link, e.g. [Watch the video walkthrough](https://youtu.be/XXXX), or embed it with the Quarto video shortcode --></p>
 </div>
 </div>
 <p>In all the previous chapters, we have focused on <strong>linear models</strong>. These are suitable for continuous response variables that can, mathematically, take negative values. However, response variables can be otherwise. For example, we might have a response variable that is the number of offspring produced by a mother. This is a <em>count</em> type of response variable. In this chapter, you’ll see why the models we used so far are usually inappropriate for count data. Then you’ll learn about a more appropriate type of model: <strong>Generalized Linear Models (GLMs)</strong>.</p>
@@ -392,19 +409,31 @@ window.Quarto = {
 <p><strong>Question:</strong> Are heavier females fitter than lighter females?</p>
 <p>Read in an example dataset:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>soay <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"datasets/soay_sheep.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 2027 fix: read_csv() instead of read.csv() (course convention)</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>soay <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"datasets/soay_sheep.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 100 Columns: 2
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+dbl (2): body.size, fitness
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
 </div>
 <p>Here are the first few rows of the dataset:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(soay)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(soay)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  body.size fitness
-1  53.99529      12
-2  32.69467       0
-3  33.55580       2
-4  43.20078       2
-5  43.34102       4
-6  59.52711       7</code></pre>
+<pre><code># A tibble: 6 × 2
+  body.size fitness
+      &lt;dbl&gt;   &lt;dbl&gt;
+1      54.0      12
+2      32.7       0
+3      33.6       2
+4      43.2       2
+5      43.3       4
+6      59.5       7</code></pre>
 </div>
 </div>
 <p>As always, we start by exploring the data visually:</p>
@@ -424,12 +453,12 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="the-wrong-analysis">The wrong analysis</h3>
 <p>Let’s analyse the data with linear regression, treating counts as if they were continuous.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>mod_soay_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(fitness <span class="sc">~</span> body.size, <span class="at">data =</span> soay)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>mod_soay_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(fitness <span class="sc">~</span> body.size, <span class="at">data =</span> soay)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The model checking plots show clear violations of linear regression assumptions:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#par(mfrow = c(2, 2))</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(mod_soay_lm, <span class="at">which =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="at">add.smooth =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#par(mfrow = c(2, 2))</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(mod_soay_lm, <span class="at">which =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="at">add.smooth =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -529,11 +558,11 @@ Important
 <p><strong>Link function</strong>: <span class="math inline">\(\mu_i = \eta_i\)</span></p>
 <p>In R, we use the function <code>glm()</code> to fit generalised linear models. For a normal linear model of the Soay sheep data, we would write:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>mod_soay_glm <span class="ot">&lt;-</span> <span class="fu">glm</span>(fitness <span class="sc">~</span> body.size, <span class="at">data =</span> soay, <span class="at">family =</span> <span class="fu">gaussian</span>(<span class="at">link =</span> <span class="st">"identity"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>mod_soay_glm <span class="ot">&lt;-</span> <span class="fu">glm</span>(fitness <span class="sc">~</span> body.size, <span class="at">data =</span> soay, <span class="at">family =</span> <span class="fu">gaussian</span>(<span class="at">link =</span> <span class="st">"identity"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Here we have specified the family as Gaussian (i.e., Normal) with an identity link. This model produces the same results as the linear model we fitted earlier with <code>lm()</code>. And we can get the following model summary:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_soay_glm)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_soay_glm)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -558,7 +587,7 @@ Number of Fisher Scoring iterations: 2</code></pre>
 </div>
 <p>Compare that to the linear model summary:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_soay_lm)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_soay_lm)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -604,21 +633,21 @@ F-statistic: 198.7 on 1 and 98 DF,  p-value: &lt; 2.2e-16</code></pre>
 </ul>
 <p>In R, we can get the probability of observing a count of 3, when the expected count is 5, using the <code>dpois()</code> function:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dpois</span>(<span class="dv">3</span>, <span class="at">lambda =</span> <span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dpois</span>(<span class="dv">3</span>, <span class="at">lambda =</span> <span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.1403739</code></pre>
 </div>
 </div>
 <p>And we expect the probability of observing a count of 5 when the expected count is 5 to be higher:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dpois</span>(<span class="dv">5</span>, <span class="at">lambda =</span> <span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dpois</span>(<span class="dv">5</span>, <span class="at">lambda =</span> <span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.1754674</code></pre>
 </div>
 </div>
 <p>What happens when we ask for the probability of observing a count of 3.5 when the expected count is 5? Or a count of -1?</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dpois</span>(<span class="fl">3.5</span>, <span class="at">lambda =</span> <span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dpois</span>(<span class="fl">3.5</span>, <span class="at">lambda =</span> <span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in dpois(3.5, lambda = 5): non-integer x = 3.500000</code></pre>
 </div>
@@ -628,7 +657,7 @@ F-statistic: 198.7 on 1 and 98 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 <p>The warning message tells us that the Poisson distribution is only defined for non-negative integers. This is a key property of the Poisson distribution: it is only defined for integers (0, 1, 2, …).</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dpois</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="at">lambda =</span> <span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dpois</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="at">lambda =</span> <span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0</code></pre>
 </div>
@@ -695,19 +724,31 @@ In a Poisson distribution, the mean and variance are equal. This captures an imp
 <h2 class="anchored" data-anchor-id="r---poisson-glm">R - Poisson GLM</h2>
 <p>When fitting a Poisson GLM in R, we use the <code>glm()</code> function, specifying the family as <code>poisson</code>:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>soay_glm <span class="ot">&lt;-</span> <span class="fu">glm</span>(fitness <span class="sc">~</span> body.size, <span class="at">data =</span> soay, <span class="at">family =</span> <span class="fu">poisson</span>(<span class="at">link =</span> <span class="st">"log"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>soay_glm <span class="ot">&lt;-</span> <span class="fu">glm</span>(fitness <span class="sc">~</span> body.size, <span class="at">data =</span> soay, <span class="at">family =</span> <span class="fu">poisson</span>(<span class="at">link =</span> <span class="st">"log"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Specifying <code>family = poisson</code> tells R to use the Poisson distribution with a log link function by default. We also specify the link explicitly as <code>link = "log"</code>. You will, however, often only see <code>family = poisson</code> and not the log link, because the log link is the default for the Poisson family.</p>
 <section id="checking-model-assumptions" class="level3">
 <h3 class="anchored" data-anchor-id="checking-model-assumptions">Checking model assumptions</h3>
 <p>As always, we should check model assumptions:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co">#par(mfrow = c(2, 2))</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(soay_glm, <span class="at">which =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="at">add.smooth =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co">#par(mfrow = c(2, 2))</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(soay_glm, <span class="at">which =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="at">add.smooth =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
 <p><img src="8.1-GLM1-count-data_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="432"></p>
+</figure>
+</div>
+</div>
+</div>
+<!-- 2027 fix: which = 1:4 shows Cook's distance, not residuals vs leverage; add the residuals vs leverage plot that the checklist asks for -->
+<p>The bottom-right plot above shows Cook’s distance for each observation. The checklist below also asks for the residuals vs leverage plot, which we get with <code>which = 5</code>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(soay_glm, <span class="at">which =</span> <span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="8.1-GLM1-count-data_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -753,7 +794,7 @@ Important
 <section id="interpreting-coefficients" class="level3">
 <h3 class="anchored" data-anchor-id="interpreting-coefficients">Interpreting coefficients</h3>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(soay_glm)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(soay_glm)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -821,13 +862,14 @@ Important
 <!---
 **Think–Pair–Share** (#tps-what-change-beta) If $\beta=0.05$ what change in the expected count would be caused by an increase in body mass of 1 kg? As well as a numeric value, specify whether it is used additively or multiplicatively.
 --->
-<p>This means that for each additional kilogram of body size, the expected count of fitness increases by a factor of approximately 1.06 (i.e., a 6% increase). We use the number multiplicatively because of the log link function.</p>
+<!-- 2027 fix: 1.06 (6%) made consistent with 1.055 (5.5%) above -->
+<p>This means that for each additional kilogram of body size, the expected count of fitness increases by a factor of approximately 1.055 (i.e., a 5.5% increase). We use the number multiplicatively because of the log link function.</p>
 <p>Pleaes note that of course all these calculations can be done in R. For example, for a body size of 40 kg:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>body_size_example <span class="ot">&lt;-</span> <span class="dv">40</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>linear_predictor <span class="ot">&lt;-</span> <span class="fu">coef</span>(soay_glm)[<span class="dv">1</span>] <span class="sc">+</span> <span class="fu">coef</span>(soay_glm)[<span class="dv">2</span>] <span class="sc">*</span> body_size_example</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>expected_count <span class="ot">&lt;-</span> <span class="fu">exp</span>(linear_predictor)</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>expected_count</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>body_size_example <span class="ot">&lt;-</span> <span class="dv">40</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>linear_predictor <span class="ot">&lt;-</span> <span class="fu">coef</span>(soay_glm)[<span class="dv">1</span>] <span class="sc">+</span> <span class="fu">coef</span>(soay_glm)[<span class="dv">2</span>] <span class="sc">*</span> body_size_example</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>expected_count <span class="ot">&lt;-</span> <span class="fu">exp</span>(linear_predictor)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>expected_count</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>(Intercept) 
    2.455011 </code></pre>
@@ -851,7 +893,7 @@ Note
 <h3 class="anchored" data-anchor-id="analysis-of-deviance">Analysis of deviance</h3>
 <p>There is something technically different that we have glossed over until now: how model fit is assessed. In linear regression we estimate parameters by minimizing the sum of squared residuals. In GLMs, we use <strong>maximum likelihood estimation (MLE)</strong>. In this course we will not go into the mathematical details of MLE, but the key idea is that we find the parameter values that make the observed data most probable under the assumed model (just like in least squares). Instead of minimising sums of squares, we maximise the <strong>likelihood</strong> of the data given the model. Maximising the likelihood is equivalent to minimising the <strong>deviance</strong>, which is a measure of model fit based on likelihoods. Hence, when we fit a GLM in R, we get output including the <strong>deviance</strong> (and not sums of squares):</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(soay_glm, <span class="at">test =</span> <span class="st">"Chisq"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(soay_glm, <span class="at">test =</span> <span class="st">"Chisq"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Deviance Table
 
@@ -878,11 +920,11 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <p>When we wish to make a graph of the fitted relationship, we can either make it with the y-axis on the log scale (linear predictor scale) or back-transform to the original count scale. I usually prefer the original scale, as it is easier to interpret.</p>
 <p>The first step is to create a new data frame with a sequence of body sizes for prediction, and errors for the 95% confidence intervals:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>new_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">body.size =</span> <span class="fu">seq</span>(<span class="fu">min</span>(soay<span class="sc">$</span>body.size), <span class="fu">max</span>(soay<span class="sc">$</span>body.size), <span class="at">length.out =</span> <span class="dv">100</span>))</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>soay_predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(soay_glm, <span class="at">newdata =</span> new_data, <span class="at">se.fit =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>new_data<span class="sc">$</span>fit <span class="ot">&lt;-</span> <span class="fu">exp</span>(soay_predictions<span class="sc">$</span>fit)</span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>new_data<span class="sc">$</span>lower <span class="ot">&lt;-</span> <span class="fu">exp</span>(soay_predictions<span class="sc">$</span>fit <span class="sc">-</span> <span class="fl">1.96</span> <span class="sc">*</span> soay_predictions<span class="sc">$</span>se.fit)</span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>new_data<span class="sc">$</span>upper <span class="ot">&lt;-</span> <span class="fu">exp</span>(soay_predictions<span class="sc">$</span>fit <span class="sc">+</span> <span class="fl">1.96</span> <span class="sc">*</span> soay_predictions<span class="sc">$</span>se.fit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>new_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">body.size =</span> <span class="fu">seq</span>(<span class="fu">min</span>(soay<span class="sc">$</span>body.size), <span class="fu">max</span>(soay<span class="sc">$</span>body.size), <span class="at">length.out =</span> <span class="dv">100</span>))</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>soay_predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(soay_glm, <span class="at">newdata =</span> new_data, <span class="at">se.fit =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>new_data<span class="sc">$</span>fit <span class="ot">&lt;-</span> <span class="fu">exp</span>(soay_predictions<span class="sc">$</span>fit)</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>new_data<span class="sc">$</span>lower <span class="ot">&lt;-</span> <span class="fu">exp</span>(soay_predictions<span class="sc">$</span>fit <span class="sc">-</span> <span class="fl">1.96</span> <span class="sc">*</span> soay_predictions<span class="sc">$</span>se.fit)</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>new_data<span class="sc">$</span>upper <span class="ot">&lt;-</span> <span class="fu">exp</span>(soay_predictions<span class="sc">$</span>fit <span class="sc">+</span> <span class="fl">1.96</span> <span class="sc">*</span> soay_predictions<span class="sc">$</span>se.fit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Note that we back-transform the predictions and confidence intervals using the exponential function, since the link function is the log. And note that we must calculate the confidence intervals on the log scale first, and then back-transform them.</p>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -898,12 +940,19 @@ Note
 <p>If we only wanted the fitted value (and not confidence intervals) we could have used <code>type = "response"</code> in the <code>predict()</code> function to get predictions on the original count scale (back-transformed from the log scale). When we don’t specified this, we would get predictions on the log scale–this is the default behavior.</p>
 </div>
 </div>
-<p>Now we can plot the data and the fitted relationship with confidence intervals:</p>
+<p>Now we can plot the data and the fitted relationship with confidence intervals. Each layer gets its own <code>data</code> and <code>aes()</code>, because the layers use different data frames (<code>soay</code> for the points, <code>new_data</code> for the line and band):</p>
+<!-- 2027 fix: code made visible; aes() moved into each layer so geom_ribbon does not inherit y = fitness (which is not in new_data and gave an error) -->
 <div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> soay, <span class="fu">aes</span>(<span class="at">x =</span> body.size, <span class="at">y =</span> fitness), <span class="at">alpha =</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> new_data, <span class="fu">aes</span>(<span class="at">x =</span> body.size, <span class="at">y =</span> fit), <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="at">data =</span> new_data, <span class="fu">aes</span>(<span class="at">x =</span> body.size, <span class="at">ymin =</span> lower, <span class="at">ymax =</span> upper),</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">alpha =</span> <span class="fl">0.2</span>, <span class="at">fill =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Body mass (kg)"</span>, <span class="at">y =</span> <span class="st">"Lifetime fitness"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="8.1-GLM1-count-data_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" width="384"></p>
+<p><img src="8.1-GLM1-count-data_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid figure-img" width="384"></p>
 </figure>
 </div>
 </div>
@@ -951,8 +1000,8 @@ Tip
 <p>If this ratio is substantially greater than 1 (e.g., &gt; 1.5 or 2), it indicates overdispersion.</p>
 <p>Check this for our Soay sheep model:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>dispersion_soay <span class="ot">&lt;-</span> <span class="fu">deviance</span>(soay_glm) <span class="sc">/</span> <span class="fu">df.residual</span>(soay_glm)</span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>dispersion_soay</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>dispersion_soay <span class="ot">&lt;-</span> <span class="fu">deviance</span>(soay_glm) <span class="sc">/</span> <span class="fu">df.residual</span>(soay_glm)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>dispersion_soay</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.9977877</code></pre>
 </div>
@@ -979,8 +1028,8 @@ Caution
 <p>One solution is the <strong>quasi-Poisson</strong> model, which estimates an additional dispersion parameter:</p>
 <p>For this, we can use <code>family = quasipoisson</code> in <code>glm()</code>:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>soay_quasi <span class="ot">&lt;-</span> <span class="fu">glm</span>(fitness <span class="sc">~</span> body.size, <span class="at">data =</span> soay, <span class="at">family =</span> quasipoisson)</span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(soay_quasi)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>soay_quasi <span class="ot">&lt;-</span> <span class="fu">glm</span>(fitness <span class="sc">~</span> body.size, <span class="at">data =</span> soay, <span class="at">family =</span> quasipoisson)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(soay_quasi)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -1039,19 +1088,31 @@ Note
 <p>For example, we could include parasite load as an additional predictor of fitness in the Soay sheep data:</p>
 <p>Read in the updated dataset:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>soay <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"datasets/soay_sheep_with_parasites.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 2027 fix: read_csv() instead of read.csv() (course convention)</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>soay <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"datasets/soay_sheep_with_parasites.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 100 Columns: 3
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+dbl (3): body.size, fitness, parasite.load
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
 </div>
 <p>Here is the first few rows of the updated dataset:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(soay)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(soay)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  body.size fitness parasite.load
-1  53.99529       1             2
-2  32.69467       1             6
-3  33.55580       0             5
-4  43.20078       1             6
-5  43.34102       0             7
-6  59.52711       3             6</code></pre>
+<pre><code># A tibble: 6 × 3
+  body.size fitness parasite.load
+      &lt;dbl&gt;   &lt;dbl&gt;         &lt;dbl&gt;
+1      54.0       1             2
+2      32.7       1             6
+3      33.6       0             5
+4      43.2       1             6
+5      43.3       0             7
+6      59.5       3             6</code></pre>
 </div>
 </div>
 <p>We can visualise the relationship between parasite load and fitness:</p>
@@ -1059,7 +1120,7 @@ Note
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="8.1-GLM1-count-data_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="384"></p>
+<p><img src="8.1-GLM1-count-data_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="384"></p>
 </figure>
 </div>
 </div>
@@ -1067,23 +1128,23 @@ Note
 <p>It looks like higher parasite loads are associated with lower fitness.</p>
 <p>We can fit a Poisson GLM with both body size and parasite load as explanatory variables:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>soay_glm_parasites <span class="ot">&lt;-</span> <span class="fu">glm</span>(fitness <span class="sc">~</span> body.size <span class="sc">+</span> parasite.load, <span class="at">data =</span> soay, <span class="at">family =</span> poisson)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>soay_glm_parasites <span class="ot">&lt;-</span> <span class="fu">glm</span>(fitness <span class="sc">~</span> body.size <span class="sc">+</span> parasite.load, <span class="at">data =</span> soay, <span class="at">family =</span> poisson)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>As always we check model assumptions:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co">#par(mfrow = c(2, 2))</span></span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(soay_glm_parasites, <span class="at">which =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="at">add.smooth =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co">#par(mfrow = c(2, 2))</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(soay_glm_parasites, <span class="at">which =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="at">add.smooth =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="8.1-GLM1-count-data_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="8.1-GLM1-count-data_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>The model checking plots look good. We can summarise the model:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(soay_glm_parasites, <span class="at">test =</span> <span class="st">"Chisq"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(soay_glm_parasites, <span class="at">test =</span> <span class="st">"Chisq"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Deviance Table
 

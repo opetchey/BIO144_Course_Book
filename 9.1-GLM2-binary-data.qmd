@@ -15,6 +15,21 @@ source(file.path(lo_dir, "lo.R"))
 lo_callout("9.1", lo_dir)
 ```
 
+::: {.callout-note icon=false}
+## Code walkthrough for this chapter
+<!-- 2027 addition: code walkthrough script and video -->
+
+**Script:** [walkthrough_ch09_glm_binary_data.R](walkthroughs/walkthrough_ch09_glm_binary_data.R){download="walkthrough_ch09_glm_binary_data.R"}
+
+This R script contains the code of this chapter, with comments that explain each step. Download it, save it in your BIO144 RStudio project folder, open it in RStudio, and run it line by line while you read the chapter or watch the video. The script reads the datasets directly from the internet. Its last section ("Practical toolbox") shows code that the Unit 9 practical uses but this chapter does not.
+
+To download the script straight into your project folder (for example on RStudio Server), run this line in the Console:
+
+`download.file("https://opetchey.github.io/BIO144_Course_Book/walkthroughs/walkthrough_ch09_glm_binary_data.R", destfile = "walkthrough_ch09_glm_binary_data.R")`
+
+**Video walkthrough:** coming soon. <!-- VIDEO PLACEHOLDER: replace "coming soon." with the link, e.g. [Watch the video walkthrough](https://youtu.be/XXXX), or embed it with the Quarto video shortcode -->
+:::
+
 ## Introduction
 
 In the previous chapter we moved from linear models and normal errors to generalized linear models (GLMs) to handle count responses with a Poisson GLM. In this chapter we move to another common case: **binary** and **binomial responses**. Because binary data is a special case of binomial data, we will often refer to both as "binomial data".
@@ -64,7 +79,8 @@ y_binary <- rbinom(number_persons, size = 1, prob = 0.8)
 
 This code says please draw 10 random numbers from a binomial distribution where each number is the result of 1 trial (size = 1) with a probability of success of 0.8 (prob = 0.8). Because size = 1, each number will be either 0 or 1.
 
-Hence, the object `y` contains 10 simulated persons, where each person has an 80% chance of being 1:
+<!-- 2027 fix: object name y -> y_binary -->
+Hence, the object `y_binary` contains 10 simulated persons, where each person has an 80% chance of being 1:
 
 ```{r}
 y_binary
@@ -101,6 +117,9 @@ y_binomial
 ```
 
 So in neither case did we get exactly 8 successes! What is the chance of that!
+
+<!-- 2027 fix: explain why the binary and binomial simulations give different numbers of successes -->
+Note also that the two simulations give different numbers of successes (`r sum(y_binary)` and `r y_binomial`), even though both used `set.seed(123)`, the same number of persons and the same probability. This is because they are different random draws: `rbinom(10, size = 1, ...)` and `rbinom(1, size = 10, ...)` use the random numbers in a different way, so they do not produce the same result. Both are valid simulations of the same process.
 
 Well, we can calculate the probability of getting exactly $k$ successes in $n$ trials with success probability $\pi$ using the binomial probability formula:
 
@@ -583,7 +602,12 @@ If we had found overdispersion, a simple fix is to use the `quasibinomial` famil
 ```{r}
 beetle_glm_q <- glm(cbind(Number_killed, Number_survived) ~ Dose,
                     data = beetle, family = quasibinomial)
+# 2027 fix: show the output of the quasibinomial model
+summary(beetle_glm_q)
 ```
+
+<!-- 2027 fix: interpret the quasibinomial output -->
+The estimates are the same as for `beetle_glm`, but the standard errors are larger (for Dose, `r round(summary(beetle_glm_q)$coefficients["Dose", "Std. Error"], 4)` instead of `r round(summary(beetle_glm)$coefficients["Dose", "Std. Error"], 4)`). This is because they are scaled by the estimated dispersion parameter (`r round(summary(beetle_glm_q)$dispersion, 2)`; see the line "Dispersion parameter for quasibinomial family taken to be ..."). This value is calculated from the Pearson residuals, so it differs a little from the deviance / df ratio of about 1.4 above, but it tells us the same thing. The tests are now $t$-tests rather than $z$-tests. Here the effect of Dose remains very clear.
 
 ::: {.callout-note}
 `quasibinomial` estimates an extra dispersion parameter from the data. It is often a good "first fix" when aggregated binomial data look overdispersed.
@@ -605,7 +629,8 @@ Individuals with low ESR (ESR is erythrocyte sedimentation rate and is a measure
 data("plasma", package = "HSAUR3")
 plasma <- plasma |>
   mutate(y = as.integer(ESR) - 1)  # ESR is a factor; convert to 0/1
-write_csv(plasma, here("datasets", "plasma_esr_original_HSAUR3.csv"))
+# 2027 fix: relative path instead of here()
+write_csv(plasma, "datasets/plasma_esr_original_HSAUR3.csv")
 ```
 
 Read in the plasma dataset:
@@ -660,6 +685,16 @@ In the case of non-aggregated individual-level 0/1 data, we simply use `y` as th
 ```{r}
 plasma_glm <- glm(y ~ fibrinogen + globulin, data = plasma, family = binomial)
 ```
+
+<!-- 2027 fix: show and interpret the output of plasma_glm -->
+We look at the results (we check the model below, but in practice you would check the model before interpreting the results):
+
+```{r}
+summary(plasma_glm)
+exp(coef(plasma_glm))
+```
+
+The coefficients are on the log odds scale. Higher fibrinogen is associated with higher odds of high ESR: each extra unit of fibrinogen multiplies the odds of high ESR by about `r round(exp(coef(plasma_glm))["fibrinogen"], 1)`, when globulin is held constant ($z$-test in the summary, $p =$ `r round(summary(plasma_glm)$coefficients["fibrinogen", 4], 3)`). The estimated effect of globulin is also positive (odds multiplied by `r round(exp(coef(plasma_glm))["globulin"], 2)` per unit), but there is little evidence for it once fibrinogen is in the model ($p =$ `r round(summary(plasma_glm)$coefficients["globulin", 4], 2)`). This agrees with the conditional density plots above. Note that with only `r nrow(plasma)` people, the estimates are quite uncertain (large standard errors).
 
 
 ### Complication 2: model checking and dispersion

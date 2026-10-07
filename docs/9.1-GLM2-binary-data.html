@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Binomial data (L9) – BIO144 Course Book (version 2026)</title>
+<title>Binomial data (L9) – BIO144 Course Book (version 2027, draft)</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -165,7 +165,7 @@ window.Quarto = {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">BIO144 Course Book (version 2026)</a> 
+      <a href="./">BIO144 Course Book (version 2027, draft)</a> 
         <div class="sidebar-tools-main">
     <a href="https://github.com/opetchey/BIO144_Course_Book/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
@@ -350,7 +350,6 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><em>Version 2027.0-draft (reviewed): these learning objectives may still change.</em></p>
 <p>After this unit, students will be able to:</p>
 <ol type="1">
 <li>Identify binary response variables (e.g.&nbsp;presence–absence, success–failure) in described biological studies.</li>
@@ -370,6 +369,24 @@ window.Quarto = {
 </ol>
 <p>These learning objectives, together with the content of this chapter, define what you need to know for the exam.</p>
 <p>The learning objectives for all chapters, and for the course as a whole, are also given on the <a href="https://opetchey.github.io/BIO144_Course_Information/3.1-learning-objectives.html">Learning Objectives page of the course information website</a>.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Code walkthrough for this chapter
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<!-- 2027 addition: code walkthrough script and video -->
+<p><strong>Script:</strong> <a href="walkthroughs/walkthrough_ch09_glm_binary_data.R" download="walkthrough_ch09_glm_binary_data.R">walkthrough_ch09_glm_binary_data.R</a></p>
+<p>This R script contains the code of this chapter, with comments that explain each step. Download it, save it in your BIO144 RStudio project folder, open it in RStudio, and run it line by line while you read the chapter or watch the video. The script reads the datasets directly from the internet. Its last section (“Practical toolbox”) shows code that the Unit 9 practical uses but this chapter does not.</p>
+<p>To download the script straight into your project folder (for example on RStudio Server), run this line in the Console:</p>
+<p><code>download.file("https://opetchey.github.io/BIO144_Course_Book/walkthroughs/walkthrough_ch09_glm_binary_data.R", destfile = "walkthrough_ch09_glm_binary_data.R")</code></p>
+<p><strong>Video walkthrough:</strong> coming soon. <!-- VIDEO PLACEHOLDER: replace "coming soon." with the link, e.g. [Watch the video walkthrough](https://youtu.be/XXXX), or embed it with the Quarto video shortcode --></p>
 </div>
 </div>
 <section id="introduction" class="level2">
@@ -412,7 +429,8 @@ window.Quarto = {
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>y_binary <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(number_persons, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">prob =</span> <span class="fl">0.8</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>This code says please draw 10 random numbers from a binomial distribution where each number is the result of 1 trial (size = 1) with a probability of success of 0.8 (prob = 0.8). Because size = 1, each number will be either 0 or 1.</p>
-<p>Hence, the object <code>y</code> contains 10 simulated persons, where each person has an 80% chance of being 1:</p>
+<!-- 2027 fix: object name y -> y_binary -->
+<p>Hence, the object <code>y_binary</code> contains 10 simulated persons, where each person has an 80% chance of being 1:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>y_binary</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -449,6 +467,8 @@ window.Quarto = {
 </div>
 </div>
 <p>So in neither case did we get exactly 8 successes! What is the chance of that!</p>
+<!-- 2027 fix: explain why the binary and binomial simulations give different numbers of successes -->
+<p>Note also that the two simulations give different numbers of successes (7 and 9), even though both used <code>set.seed(123)</code>, the same number of persons and the same probability. This is because they are different random draws: <code>rbinom(10, size = 1, ...)</code> and <code>rbinom(1, size = 10, ...)</code> use the random numbers in a different way, so they do not produce the same result. Both are valid simulations of the same process.</p>
 <p>Well, we can calculate the probability of getting exactly <span class="math inline">\(k\)</span> successes in <span class="math inline">\(n\)</span> trials with success probability <span class="math inline">\(\pi\)</span> using the binomial probability formula:</p>
 <p><span class="math inline">\(P(Y=k) = \binom{n}{k} \pi^k (1-\pi)^{n-k}\)</span></p>
 <p>where <span class="math inline">\(\binom{n}{k} = \frac{n!}{k!(n-k)!}\)</span> is the binomial coefficient, which counts the number of ways to choose <span class="math inline">\(k\)</span> successes from <span class="math inline">\(n\)</span> trials.</p>
@@ -1047,8 +1067,33 @@ If there is overdispersion and we ignore it, standard errors are usually too sma
 <p>If we had found overdispersion, a simple fix is to use the <code>quasibinomial</code> family. This estimates an extra dispersion parameter from the data. For example:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>beetle_glm_q <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(Number_killed, Number_survived) <span class="sc">~</span> Dose,</span>
-<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">data =</span> beetle, <span class="at">family =</span> quasibinomial)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">data =</span> beetle, <span class="at">family =</span> quasibinomial)</span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 2027 fix: show the output of the quasibinomial model</span></span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(beetle_glm_q)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = cbind(Number_killed, Number_survived) ~ Dose, family = quasibinomial, 
+    data = beetle)
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) -14.57806    1.46611  -9.943 5.98e-05 ***
+Dose          0.24554    0.02427  10.118 5.42e-05 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for quasibinomial family taken to be 1.274895)
+
+    Null deviance: 267.6624  on 7  degrees of freedom
+Residual deviance:   8.4379  on 6  degrees of freedom
+AIC: NA
+
+Number of Fisher Scoring iterations: 4</code></pre>
 </div>
+</div>
+<!-- 2027 fix: interpret the quasibinomial output -->
+<p>The estimates are the same as for <code>beetle_glm</code>, but the standard errors are larger (for Dose, 0.0243 instead of 0.0215). This is because they are scaled by the estimated dispersion parameter (1.27; see the line “Dispersion parameter for quasibinomial family taken to be …”). This value is calculated from the Pearson residuals, so it differs a little from the deviance / df ratio of about 1.4 above, but it tells us the same thing. The tests are now <span class="math inline">\(t\)</span>-tests rather than <span class="math inline">\(z\)</span>-tests. Here the effect of Dose remains very clear.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1076,7 +1121,7 @@ Note
 <p>Individuals with low ESR (ESR is erythrocyte sedimentation rate and is a measure of general inflammation and infection) are generally considered healthy; ESR &gt; 20 mm/hr indicates possible disease. We will model the probability of high ESR using fibrinogen and globulin concentration.</p>
 <p>Read in the plasma dataset:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>plasma <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"datasets/plasma_esr_original_HSAUR3.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>plasma <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"datasets/plasma_esr_original_HSAUR3.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 32 Columns: 4
 ── Column specification ────────────────────────────────────────────────────────
@@ -1090,7 +1135,7 @@ dbl (3): fibrinogen, globulin, y
 </div>
 <p>Here are the first few rows of the data:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>plasma</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>plasma</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 32 × 4
    fibrinogen globulin ESR          y
@@ -1124,9 +1169,9 @@ dbl (3): fibrinogen, globulin, y
 </div>
 <p>A more informative plot is a conditional density plot. This shows the proportion of 0s and 1s at each value of the explanatory variable.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
-<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cdplot</span>(<span class="fu">factor</span>(y) <span class="sc">~</span> fibrinogen, <span class="at">data =</span> plasma, <span class="at">xlab =</span> <span class="st">"Fibrinogen"</span>)</span>
-<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cdplot</span>(<span class="fu">factor</span>(y) <span class="sc">~</span> globulin, <span class="at">data =</span> plasma, <span class="at">xlab =</span> <span class="st">"Globulin"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cdplot</span>(<span class="fu">factor</span>(y) <span class="sc">~</span> fibrinogen, <span class="at">data =</span> plasma, <span class="at">xlab =</span> <span class="st">"Fibrinogen"</span>)</span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cdplot</span>(<span class="fu">factor</span>(y) <span class="sc">~</span> globulin, <span class="at">data =</span> plasma, <span class="at">xlab =</span> <span class="st">"Globulin"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1134,7 +1179,7 @@ dbl (3): fibrinogen, globulin, y
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>It looks like higher fibrinogen and higher globulin are associated with higher probability of high ESR. The pattern appears stronger for fibrinogen.</p>
 </section>
@@ -1142,8 +1187,40 @@ dbl (3): fibrinogen, globulin, y
 <h3 class="anchored" data-anchor-id="fit-the-binomial-regression-model">Fit the binomial regression model</h3>
 <p>In the case of non-aggregated individual-level 0/1 data, we simply use <code>y</code> as the response variable. We have to remember to specify <code>family = binomial</code> in <code>glm()</code>.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>plasma_glm <span class="ot">&lt;-</span> <span class="fu">glm</span>(y <span class="sc">~</span> fibrinogen <span class="sc">+</span> globulin, <span class="at">data =</span> plasma, <span class="at">family =</span> binomial)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>plasma_glm <span class="ot">&lt;-</span> <span class="fu">glm</span>(y <span class="sc">~</span> fibrinogen <span class="sc">+</span> globulin, <span class="at">data =</span> plasma, <span class="at">family =</span> binomial)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
+<!-- 2027 fix: show and interpret the output of plasma_glm -->
+<p>We look at the results (we check the model below, but in practice you would check the model before interpreting the results):</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(plasma_glm)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = y ~ fibrinogen + globulin, family = binomial, data = plasma)
+
+Coefficients:
+            Estimate Std. Error z value Pr(&gt;|z|)  
+(Intercept) -12.7921     5.7963  -2.207   0.0273 *
+fibrinogen    1.9104     0.9710   1.967   0.0491 *
+globulin      0.1558     0.1195   1.303   0.1925  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 30.885  on 31  degrees of freedom
+Residual deviance: 22.971  on 29  degrees of freedom
+AIC: 28.971
+
+Number of Fisher Scoring iterations: 5</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="fu">coef</span>(plasma_glm))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> (Intercept)   fibrinogen     globulin 
+2.782735e-06 6.755579e+00 1.168567e+00 </code></pre>
+</div>
+</div>
+<p>The coefficients are on the log odds scale. Higher fibrinogen is associated with higher odds of high ESR: each extra unit of fibrinogen multiplies the odds of high ESR by about 6.8, when globulin is held constant (<span class="math inline">\(z\)</span>-test in the summary, <span class="math inline">\(p =\)</span> 0.049). The estimated effect of globulin is also positive (odds multiplied by 1.17 per unit), but there is little evidence for it once fibrinogen is in the model (<span class="math inline">\(p =\)</span> 0.19). This agrees with the conditional density plots above. Note that with only 32 people, the estimates are quite uncertain (large standard errors).</p>
 </section>
 <section id="complication-2-model-checking-and-dispersion" class="level3">
 <h3 class="anchored" data-anchor-id="complication-2-model-checking-and-dispersion">Complication 2: model checking and dispersion</h3>
@@ -1173,13 +1250,13 @@ dbl (3): fibrinogen, globulin, y
 <p>For individual-level 0/1 data, points 3 and 4 need particular care:</p>
 <p>Residual plots exist, but can be hard to interpret for 0/1 data:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="co">#par(mfrow = c(2, 2))</span></span>
-<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a><span class="co">#plot(plasma_glm)</span></span>
-<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(plasma_glm)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="co">#par(mfrow = c(2, 2))</span></span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a><span class="co">#plot(plasma_glm)</span></span>
+<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(plasma_glm)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="9.1-GLM2-binary-data_files/figure-html/unnamed-chunk-44-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="9.1-GLM2-binary-data_files/figure-html/unnamed-chunk-45-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>

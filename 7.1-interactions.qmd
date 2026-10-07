@@ -14,6 +14,21 @@ source(file.path(lo_dir, "lo.R"))
 lo_callout("7.1", lo_dir)
 ```
 
+::: {.callout-note icon=false}
+## Code walkthrough for this chapter
+<!-- 2027 addition: code walkthrough script and video -->
+
+**Script:** [walkthrough_ch07_interactions.R](walkthroughs/walkthrough_ch07_interactions.R){download="walkthrough_ch07_interactions.R"}
+
+This R script contains the code of this chapter, with comments that explain each step. Download it, save it in your BIO144 RStudio project folder, open it in RStudio, and run it line by line while you read the chapter or watch the video. The script reads the datasets directly from the internet. Its last section ("Practical toolbox") shows code that the Unit 7 practical uses but this chapter does not.
+
+To download the script straight into your project folder (for example on RStudio Server), run this line in the Console:
+
+`download.file("https://opetchey.github.io/BIO144_Course_Book/walkthroughs/walkthrough_ch07_interactions.R", destfile = "walkthrough_ch07_interactions.R")`
+
+**Video walkthrough:** coming soon. <!-- VIDEO PLACEHOLDER: replace "coming soon." with the link, e.g. [Watch the video walkthrough](https://youtu.be/XXXX), or embed it with the Quarto video shortcode -->
+:::
+
 ## Thought for the week
 
 "*You should arrive at answers on your own, and not rely upon what you get from someone else. Answers from others are nothing more than stopgap measures, they're of no value.*"
@@ -47,13 +62,14 @@ bp_meatheavy <- data.frame(bp, mins_per_week, diet) |>
 
 ```{r}
 #| echo: false
-write_csv(bp_meatheavy, here("datasets", "bp_meatheavy.csv"))
+write_csv(bp_meatheavy, "datasets/bp_meatheavy.csv")
 ```
 
 Read in the dataset:
 
 ```{r}
-bp_meatheavy <- read.csv("datasets/bp_meatheavy.csv")
+# 2027 fix: read_csv() instead of read.csv()
+bp_meatheavy <- read_csv("datasets/bp_meatheavy.csv")
 ```
 
 Here are the first few rows of the data:
@@ -90,13 +106,14 @@ head(bp_vegetarian)
 
 ```{r}
 #| echo: false
-write_csv(bp_vegetarian, here("datasets", "bp_vegetarian.csv"))
+write_csv(bp_vegetarian, "datasets/bp_vegetarian.csv")
 ```
 
 Read in the dataset:
 
 ```{r}
-bp_vegetarian <- read.csv("datasets/bp_vegetarian.csv")
+# 2027 fix: read_csv() instead of read.csv()
+bp_vegetarian <- read_csv("datasets/bp_vegetarian.csv")
 ```
 
 Here is a graph of the relationship between blood pressure and minutes of exercise for people with a vegetarian diet:
@@ -117,13 +134,16 @@ We see that exercise seems to lower blood pressure for vegetarians too, but the 
 
 To summarise this finding, we can say that the effect of exercise on blood pressure is stronger for people with a meat heavy diet than for people with a vegetarian diet. This means that the effect of exercise on blood pressure depends on diet.
 
-This is very clear when we look at the both diets in the same graph:
+This is very clear when we look at the both diets in the same graph. First we combine the two datasets into one, with `bind_rows()`: <!-- 2027 fix: this code was hidden, but bp_1cont1cat is used in visible code later -->
+
+```{r}
+bp_1cont1cat <- bind_rows(bp_meatheavy, bp_vegetarian)
+```
 
 ```{r}
 #| echo: false
 #| fig-width: 6
 #| fig-height: 4
-bp_1cont1cat <- rbind(bp_meatheavy, bp_vegetarian)
 ggplot(bp_1cont1cat, aes(x=mins_per_week, y=bp, col=diet)) + 
   geom_point() +
   geom_smooth(formula = y ~ x, method="lm") +
@@ -136,7 +156,7 @@ ggplot(bp_1cont1cat, aes(x=mins_per_week, y=bp, col=diet)) +
 
 ```{r}
 #| echo: false
-write_csv(bp_1cont1cat, here("datasets", "bp_1cont1cat.csv"))
+write_csv(bp_1cont1cat, "datasets/bp_1cont1cat.csv")
 ```
 
 (The dataset with both combined is in the file `bp_1cont1cat.csv`.)
@@ -185,10 +205,13 @@ set.seed(1)
 reps <- 1:10
 bp_2cat <- crossing(diet = c("meat heavy", "vegetarian"),
          exercise = c("low", "high"),
-         reps = reps) %>%
-  mutate(bp = 100 - 10*(exercise=="high") - 5*(diet=="vegetarian") - 20*(exercise=="high" & diet=="vegetarian"), 
-         error = rnorm(nrow(.), 0, 10),
-         bp = bp + error) |> 
+         reps = reps) |>
+  mutate(bp = 100 - 10*(exercise=="high") - 5*(diet=="vegetarian") - 20*(exercise=="high" & diet=="vegetarian"))
+bp_2cat <- bp_2cat |>
+  mutate(
+    error = rnorm(n(), 0, 10),
+    bp = bp + error
+  ) |> 
   arrange(reps, diet, exercise) |>
   mutate(exercise = relevel(factor(exercise), "low")) |> 
   select(-error)
@@ -196,13 +219,20 @@ bp_2cat <- crossing(diet = c("meat heavy", "vegetarian"),
 
 ```{r}
 #| echo: false
-write_csv(bp_2cat, here("datasets", "bp_2cat.csv"))
+write_csv(bp_2cat, "datasets/bp_2cat.csv")
 ```
 
 Read in the dataset:
 
 ```{r}
-bp_2cat <- read.csv("datasets/bp_2cat.csv")
+bp_2cat <- read_csv("datasets/bp_2cat.csv")
+```
+
+R orders the levels of a categorical variable alphabetically, so "high" would come before "low", and "high" would be the reference level. We make `exercise` a factor with the order we want: <!-- 2027 fix: the level order was lost when reading the CSV file -->
+
+```{r}
+bp_2cat <- bp_2cat |>
+  mutate(exercise = factor(exercise, levels = c("low", "high")))
 ```
 
 
@@ -218,7 +248,7 @@ And here is the data in a graph, where we show the individual data points as wel
 #| echo: false
 #| fig-width: 6
 #| fig-height: 4
-grouped_data <- group_by(bp_2cat, diet, exercise) %>%
+grouped_data <- group_by(bp_2cat, diet, exercise) |>
   summarise(mean_bp = mean(bp), sd_bp = sd(bp), .groups = "drop")
 ggplot(bp_2cat, aes(x=exercise, y=bp, col=diet)) + 
   geom_point(position=position_dodge(width=0.1), alpha = 0.5) + 
@@ -250,18 +280,20 @@ set.seed(1)
 n <- 100
 age <- runif(n, 20, 80)
 mins_per_week <- runif(n, 0, 200)
-bp <- 100 - 0.5*mins_per_week + 0.1*age + 0.005 * mins_per_week * age + rnorm(n, 0, 0.1)
+# 2027 fix: residual SD 10 (was 0.1, which gave unrealistically huge F values)
+bp <- 100 - 0.5*mins_per_week + 0.1*age + 0.005 * mins_per_week * age + rnorm(n, 0, 10)
 bp_2cont <- data.frame(bp, age, mins_per_week)
 ```
 
 ```{r}
 #| echo: false
-write_csv(bp_2cont, here("datasets", "bp_2cont.csv"))
+write_csv(bp_2cont, "datasets/bp_2cont.csv")
 ```
 
 Read in the dataset:
 ```{r}
-bp_2cont <- read.csv("datasets/bp_2cont.csv")
+# 2027 fix: read_csv() instead of read.csv()
+bp_2cont <- read_csv("datasets/bp_2cont.csv")
 ```
 
 
@@ -309,7 +341,7 @@ What do we see? If we look at a set of points of the similar colour (i.e., simil
 Yet another way to visualise this interaction is to create categorical versions of age and minutes of exercise, and then plot the data with these categorical variables:
 
 ```{r}
-#| echo: false
+# 2027 fix: this chunk was hidden; cut() makes a categorical version (classes) of a continuous variable
 bp_2cont <- bp_2cont |>
   mutate(age_class = cut(age,
                    breaks = seq(10, 100, 10),
@@ -421,7 +453,7 @@ $$y_i = \beta_0 + \beta_1 x_{i}^{(1)} + \beta_2 x_{i}^{(2)} + \epsilon_i$$
 where:
 
 * $y_i$ is the blood pressure of the $i$th participant
-* $x_i^{(1)} is the number of minutes of exercise of the $i$th participant
+* $x_i^{(1)}$ is the number of minutes of exercise of the $i$th participant
 * $x_i^{(2)}$ is the diet of the $i$th participant, coded as 0 for "meat heavy" and 1 for "vegetarian"
 * $\beta_0$ is the intercept
 * $\beta_1$ is the effect of exercise on blood pressure
@@ -492,8 +524,8 @@ The second is a shorthand for the first. The `*` operator includes the main effe
 Of course, we check the model assumptions before we interpret the results:
 
 ```{r}
-par(mfrow=c(2,2))
-plot(m_bp_exercise_diet, add.smooth=FALSE)
+# 2027 fix: autoplot() (ggfortify) instead of par(mfrow) and base plot()
+autoplot(m_bp_exercise_diet, smooth.colour = NA)
 ```
 
 All of the plots look good.
@@ -505,7 +537,8 @@ anova(m_bp_exercise_diet)
 
 In the ANOVA table we see four rows. The first row is for the main effect of minutes of exercise, the second row is for the main effect of diet, the third row is for the interaction effect between diet and minutes of exercise, and the fourth row is for the residuals. As always, an interaction term in the R output is shown with a colon `:` between the two variables (here it looks like `mins_per_week:diet`). 
 
-In this example, the F-statistic for the interaction term is quite large (`r round(anova(m_bp_exercise_diet)[3,4],2)`), and the p-value is small (`r signif(anova(m_bp_exercise_diet)[3,5],2)`). This means that we reject the null hypothesis that there is no interaction between diet and minutes of exercise on blood pressure. We conclude that the effect of minutes of exercise on blood pressure is different for people with different diets.
+<!-- 2027 fix: the evidence for the interaction (p just below 0.05) was described too strongly -->
+In this example, the F-statistic for the interaction term is `r round(anova(m_bp_exercise_diet)[3,4],2)` and the p-value is `r signif(anova(m_bp_exercise_diet)[3,5],2)`. The p-value is just below 0.05, so if we use 0.05 as the threshold we reject the null hypothesis that there is no interaction between diet and minutes of exercise on blood pressure. But the evidence is not strong: there is some evidence that the effect of minutes of exercise on blood pressure is different for people with different diets. (With a p-value this close to 0.05, a new study of the same size could quite easily give a p-value above 0.05.)
 
 
 If we like (and we don't have to), we can look at the coefficients of the model:
@@ -585,7 +618,7 @@ if (knitr::is_latex_output()) {
 ```
 
 
-We also might use a sentence like this to report the results: "The effect of minutes of exercise is generally negative, but the effect is stronger for people on a meat heavy diet than for people on a vegetarian diet ($F$-statistics of interaction term = `r round(anova(m_bp_exercise_diet)[3,4],2)`, degrees of freedom = `r anova(m_bp_exercise_diet)[3,1]`, degrees of freedom residuals = `r anova(m_bp_exercise_diet)[4,1]`, $p$-value = `r signif(anova(m_bp_exercise_diet)[3,5],2)`)."
+We also might use a sentence like this to report the results: "The effect of minutes of exercise is generally negative, and there is some evidence that the effect is stronger for people on a meat heavy diet than for people on a vegetarian diet ($F$-statistics of interaction term = `r round(anova(m_bp_exercise_diet)[3,4],2)`, degrees of freedom = `r anova(m_bp_exercise_diet)[3,1]`, degrees of freedom residuals = `r anova(m_bp_exercise_diet)[4,1]`, $p$-value = `r signif(anova(m_bp_exercise_diet)[3,5],2)`)."
 
 <!-- 2027 addition: effect size -->
 ::: {.callout-tip}
@@ -651,14 +684,14 @@ mod_2cat <- lm(bp ~ diet * exercise, data=bp_2cat)
 Recall that this fits a model with main effects of diet and exercise, as well as their interaction effect. Recall that we could specify the model equivalently as:
 
 ```{r}
-#| eval = FALSE
+#| eval: false
 mod_2cat <- lm(bp ~ diet + exercise + diet:exercise, data=bp_2cat)
 ```
 
 We can check the model assumptions:
 ```{r}
-par(mfrow=c(2,2))
-plot(mod_2cat, add.smooth=FALSE)
+# 2027 fix: autoplot() (ggfortify) instead of par(mfrow) and base plot()
+autoplot(mod_2cat, smooth.colour = NA)
 ```
 These look ok.
 
@@ -690,26 +723,36 @@ Here is an example dataset.
 #| echo: false
 set.seed(1)
 reps <- 1:10
-bp_2cat_3levels <- crossing(diet = c("meat heavy", "vegetarian",
-         "vegan"),
-         exercise = c("low", "high"),
-         reps = reps) %>%
-  mutate(bp = 100 - 10*(exercise=="high") - 5*(diet=="vegetarian") - 15*(diet=="vegan") - 15*(exercise=="high" & diet=="vegetarian") - 25*(exercise=="high" & diet=="vegan"), 
-         error = rnorm(nrow(.), 0, 10),
-         bp = bp + error) |> 
+bp_2cat_3levels <- crossing(
+  diet = c("meat heavy", "vegetarian", "vegan"),
+  exercise = c("low", "high"),
+  reps = reps
+) |>
+  mutate(
+    bp = 100 -
+      10 * (exercise == "high") -
+      5 * (diet == "vegetarian") -
+      15 * (diet == "vegan") -
+      15 * (exercise == "high" & diet == "vegetarian") -
+      25 * (exercise == "high" & diet == "vegan"),
+    error = rnorm(n(), 0, 10),
+    bp = bp + error
+  ) |>
   arrange(reps, diet, exercise) |>
-  mutate(exercise = relevel(factor(exercise), "low")) |> 
+  mutate(exercise = relevel(factor(exercise), "low")) |>
   select(-error)
 ```
 
 ```{r}
 #| echo: false
-write_csv(bp_2cat_3levels, here("datasets", "bp_3cat.csv"))
+write_csv(bp_2cat_3levels, "datasets/bp_3cat.csv")
 ```
 
 Read in the dataset:
 ```{r}
-bp_2cat_3levels <- read.csv("datasets/bp_3cat.csv")
+# 2027 fix: read_csv() instead of read.csv(), and set the order of the exercise levels
+bp_2cat_3levels <- read_csv("datasets/bp_3cat.csv") |>
+  mutate(exercise = factor(exercise, levels = c("low", "high")))
 ```
 
 Here are the first few rows of the data:
@@ -725,7 +768,7 @@ Here is the graph of the data:
 #| fig-width: 5.5
 #| fig-height: 4
 grouped_data_3levels <- group_by(bp_2cat_3levels, diet,
-         exercise) %>%
+         exercise) |>
   summarise(mean_bp = mean(bp), sd_bp = sd(bp), .groups = "drop")
 ggplot(bp_2cat_3levels, aes(x=exercise, y=bp, col=diet)) + 
   geom_point(position=position_dodge(width=0.1), alpha = 0.5) + 
@@ -765,8 +808,8 @@ mod_2cat_3levels <- lm(bp ~ diet * exercise, data=bp_2cat_3levels)
 
 We check the model assumptions:
 ```{r}
-par(mfrow=c(2,2))
-plot(mod_2cat_3levels, add.smooth=FALSE)
+# 2027 fix: autoplot() (ggfortify) instead of par(mfrow) and base plot()
+autoplot(mod_2cat_3levels, smooth.colour = NA)
 ```
 
 These look ok.
@@ -828,8 +871,8 @@ mod_2cont <- lm(bp ~ mins_per_week * age, data=bp_2cont)
 
 We check the model assumptions:
 ```{r}
-par(mfrow=c(2,2))
-plot(mod_2cont, add.smooth=FALSE)
+# 2027 fix: autoplot() (ggfortify) instead of par(mfrow) and base plot()
+autoplot(mod_2cont, smooth.colour = NA)
 ```
 
 These look ok.
@@ -842,7 +885,8 @@ anova(mod_2cont)
 
 **It looks the same as in the two-way ANOVA case!** This is because we still have two variables and their interaction, so the ANOVA table has one row for each main effect (mins_per_week and age), one row for the interaction effect (mins_per_week:age), and one row for the residuals.
 
-The F-statistic for the interaction term is very large (`r round(anova(mod_2cont)[3, "F value"],2)`) and the corresponding p-value is very small (`r signif(anova(mod_2cont)[3, "Pr(>F)"],2)`). Hence, we conclude that there is very strong evidence of an interaction between minutes of exercise and age on blood pressure. The effect of minutes of exercise on blood pressure depends on age, with a stronger effect for younger people compared to older people.
+<!-- 2027 fix: wording matched to the new, more realistic noise level in bp_2cont -->
+The F-statistic for the interaction term is large (`r round(anova(mod_2cont)[3, "F value"],2)`) and the corresponding p-value is very small (`r signif(anova(mod_2cont)[3, "Pr(>F)"],2)`). Hence, we conclude that there is strong evidence of an interaction between minutes of exercise and age on blood pressure. The effect of minutes of exercise on blood pressure depends on age, with a stronger effect for younger people compared to older people.
 
 ## General points
 
@@ -890,13 +934,15 @@ ggplot(bp_2cat, aes(x=exercise, y=bp, col=diet)) +
 There is a main effect of diet on blood pressure, as well as a main effect of exercise on blood pressure. However, there is also an interaction effect between diet and exercise on blood pressure, as the effect of diet on blood pressure depends on the level of exercise.
 
 
-It could look otherwise. For example, if we found a (albeit rather unlikely pattern) of higher blood pressure for vegetarians how exercise little, and lower blood pressure for vegetarians who exercise a lot, we would have a pattern as follows:
+It could look otherwise. For example, if we found a (albeit rather unlikely pattern) of higher blood pressure for vegetarians who exercise little, and lower blood pressure for vegetarians who exercise a lot, we would have a pattern as follows:
 
 ```{r}
 #| echo: false
 #| fig-width: 5
 #| fig-height: 4
 
+# 2027 fix: set.seed() so that the figure is the same each time
+set.seed(2)
 bp_2cat_weird <- data.frame(
   reps = paste0("R", 1:40),
   diet = rep(c("meat heavy", "vegetarian"), each = 20),
@@ -905,7 +951,7 @@ bp_2cat_weird <- data.frame(
   arrange(reps, diet, exercise) |>
   mutate(exercise = relevel(factor(exercise), "low"))
 grouped_data_weird <- group_by(bp_2cat_weird, diet,
-         exercise) %>%
+         exercise) |>
   summarise(mean_bp = mean(bp), sd_bp = sd(bp), .groups = "drop")
 ggplot(bp_2cat_weird, aes(x=exercise, y=bp, col=diet)) + 
   geom_point(position=position_dodge(width=0.1), alpha = 0.5) + 
@@ -979,7 +1025,7 @@ Here is a 3D scatter plot of the data with two continuous explanatory variables 
 
 ```{r}
 #| echo: true
-plotly::plot_ly(bp_2cont, x = ~mins_per_week, y = ~age, z = ~bp, type = "scatter3d", mode = "markers", color = age, width=500, height=500) %>%
+plotly::plot_ly(bp_2cont, x = ~mins_per_week, y = ~age, z = ~bp, type = "scatter3d", mode = "markers", color = age, width=500, height=500) |>
   plotly::layout(title = "3D Scatter plot of Blood Pressure vs Exercise and Age",
          scene = list(xaxis = list(title = "Minutes per week of exercise"),
                       yaxis = list(title = "Age"),
@@ -1035,7 +1081,7 @@ I, and others, prefer to not use bar plots with error bars to visualise data wit
 In case you must use bar plots with error bars, here is how to make one in R:
 
 ```{r}
-grouped_data <- group_by(bp_2cat, diet, exercise) %>%
+grouped_data <- group_by(bp_2cat, diet, exercise) |>
   summarise(mean_bp = mean(bp), sd_bp = sd(bp), n = n(), se_bp = sd_bp / sqrt(n), .groups = "drop")
 ggplot(grouped_data, aes(x=diet, y=mean_bp, fill=exercise)) + 
   geom_bar(stat="identity", position=position_dodge(width=0.8), alpha = 0.5) +

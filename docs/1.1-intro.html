@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Introduction (L1) – BIO144 Course Book (version 2026)</title>
+<title>Introduction (L1) – BIO144 Course Book (version 2027, draft)</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -165,7 +165,7 @@ window.Quarto = {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">BIO144 Course Book (version 2026)</a> 
+      <a href="./">BIO144 Course Book (version 2027, draft)</a> 
         <div class="sidebar-tools-main">
     <a href="https://github.com/opetchey/BIO144_Course_Book/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
@@ -349,7 +349,6 @@ The "Notation" and "Using AI assistants" detail sections are carried over from t
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><em>Version 2027.0-draft (reviewed): these learning objectives may still change.</em></p>
 <p>After this unit, students will be able to:</p>
 <ol type="1">
 <li>Describe how the lectures, course book, practicals, homework, weekly quizzes and final exam of BIO144 fit together. <em>(not examined)</em></li>
@@ -362,6 +361,24 @@ The "Notation" and "Using AI assistants" detail sections are carried over from t
 </ol>
 <p>These learning objectives, together with the content of this chapter, define what you need to know for the exam.</p>
 <p>The learning objectives for all chapters, and for the course as a whole, are also given on the <a href="https://opetchey.github.io/BIO144_Course_Information/3.1-learning-objectives.html">Learning Objectives page of the course information website</a>.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Code walkthrough for this chapter
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<!-- 2027 addition: code walkthrough script and video -->
+<p><strong>Script:</strong> <a href="walkthroughs/walkthrough_ch01_intro.R" download="walkthrough_ch01_intro.R">walkthrough_ch01_intro.R</a></p>
+<p>This R script contains the code of this chapter, with comments that explain each step. This is the code from the analysis of the class reaction time data in the first lecture. Download it, save it in your BIO144 RStudio project folder, open it in RStudio, and run it line by line while you read the chapter or watch the video. The script reads the datasets directly from the internet. Its last section (“Practical toolbox”) shows code that the Unit 1 practical uses but this chapter does not.</p>
+<p>To download the script straight into your project folder (for example on RStudio Server), run this line in the Console:</p>
+<p><code>download.file("https://opetchey.github.io/BIO144_Course_Book/walkthroughs/walkthrough_ch01_intro.R", destfile = "walkthrough_ch01_intro.R")</code></p>
+<p><strong>Video walkthrough:</strong> coming soon. <!-- VIDEO PLACEHOLDER: replace "coming soon." with the link, e.g. [Watch the video walkthrough](https://youtu.be/XXXX), or embed it with the Quarto video shortcode --></p>
 </div>
 </div>
 <section id="about-this-chapter" class="level2">
@@ -470,7 +487,7 @@ Note
 <li><strong>OLAT</strong>, the hub, which links to everything else and hosts the discussion forum. Please ask questions and make requests in the forum.</li>
 <li>The <strong>course information website</strong>, with general information, the learning objectives, and a page for each week.</li>
 <li>The <strong>course book</strong> (this book).</li>
-<li>The site with the <strong>homework, practicals and weekly quizzes</strong>.</li>
+<li>The site with the <strong>homework, practicals and weekly quizzes</strong> (on the UZH RStudio Connect server: off campus, connect to the UZH VPN first). <!-- 2027 fix: VPN note --></li>
 </ul>
 <p>Much of the course material is new or recently revised. If you find something that is unclear, too brief, or wrong, please let us know.</p>
 <!-- The 2026 slides included last year's student feedback and our responses. That is year-specific, so it is left out of the book. -->
@@ -909,11 +926,11 @@ Always check:</p>
 </section>
 <section id="rstudio-server" class="level2">
 <h2 class="anchored" data-anchor-id="rstudio-server">RStudio Server</h2>
-<p>In this course you use RStudio in a web browser, through the UZH RStudio Server (<a href="https://rstudio.mnf.uzh.ch/" class="uri">https://rstudio.mnf.uzh.ch/</a>).</p>
+<p>You can use R and RStudio either on your own laptop or in a web browser, through the UZH RStudio Server (<a href="https://rstudio.mnf.uzh.ch/" class="uri">https://rstudio.mnf.uzh.ch/</a>). <!-- 2027 fix: same message as the course information and the Unit 1 practical --></p>
 <ul>
-<li>The downside: you have to be connected to the internet.</li>
-<li>The upside: much of the setup is already done for you, and the available memory and processing power can be increased when needed.</li>
-<li><strong>You will have to use RStudio Server in the exam</strong>, so it is worth getting used to it from the start.</li>
+<li><strong>You will have to use RStudio Server in the exam</strong>, so whichever you use during the course, make sure you can log in to RStudio Server and work there (the Unit 1 practical starts with this).</li>
+<li>RStudio Server: much of the setup is already done for you, but you have to be connected to the internet (and to the UZH network or VPN for some resources).</li>
+<li>Your own laptop: works offline, but you need to install R, RStudio and the add-on packages yourself (see the “Getting R &amp; RStudio” section of the Previous Knowledge self-tests).</li>
 </ul>
 <p>Only registered users can log in. Everyone in the OLAT course is registered, so you must be in the OLAT course to get access.</p>
 </section>

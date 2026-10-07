@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Analysis of variance (L5) – BIO144 Course Book (version 2026)</title>
+<title>Analysis of variance (L5) – BIO144 Course Book (version 2027, draft)</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -165,7 +165,7 @@ window.Quarto = {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">BIO144 Course Book (version 2026)</a> 
+      <a href="./">BIO144 Course Book (version 2027, draft)</a> 
         <div class="sidebar-tools-main">
     <a href="https://github.com/opetchey/BIO144_Course_Book/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
@@ -350,7 +350,6 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><em>Version 2027.0-draft (reviewed): these learning objectives may still change.</em></p>
 <p>After this unit, students will be able to:</p>
 <ol type="1">
 <li>Explain one-way ANOVA as a linear model with a single categorical explanatory variable.</li>
@@ -369,6 +368,24 @@ window.Quarto = {
 </ol>
 <p>These learning objectives, together with the content of this chapter, define what you need to know for the exam.</p>
 <p>The learning objectives for all chapters, and for the course as a whole, are also given on the <a href="https://opetchey.github.io/BIO144_Course_Information/3.1-learning-objectives.html">Learning Objectives page of the course information website</a>.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Code walkthrough for this chapter
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<!-- 2027 addition: code walkthrough script and video -->
+<p><strong>Script:</strong> <a href="walkthroughs/walkthrough_ch05_anova.R" download="walkthrough_ch05_anova.R">walkthrough_ch05_anova.R</a></p>
+<p>This R script contains the code of this chapter, with comments that explain each step. Download it, save it in your BIO144 RStudio project folder, open it in RStudio, and run it line by line while you read the chapter or watch the video. The script reads the datasets directly from the internet. Its last section (“Practical toolbox”) shows code that the Unit 5 practical uses but this chapter does not.</p>
+<p>To download the script straight into your project folder (for example on RStudio Server), run this line in the Console:</p>
+<p><code>download.file("https://opetchey.github.io/BIO144_Course_Book/walkthroughs/walkthrough_ch05_anova.R", destfile = "walkthrough_ch05_anova.R")</code></p>
+<p><strong>Video walkthrough:</strong> coming soon. <!-- VIDEO PLACEHOLDER: replace "coming soon." with the link, e.g. [Watch the video walkthrough](https://youtu.be/XXXX), or embed it with the Quarto video shortcode --></p>
 </div>
 </div>
 <p>The previous two chapters were about linear regression. <em>Linear regression</em> is a type of <em>linear model</em> – recall that in <em>R</em> we used the function <code>lm()</code> to make the regression model. In this chapter we will look at a different type of linear model: analysis of variance (ANOVA).</p>
@@ -844,7 +861,8 @@ Note
 <p>The Q-Q plot (top right) looks pretty good, indicating that the residuals are approximately normally distributed.</p>
 <p>The residuals vs fitted plot (top left) does not show any clear pattern, which is good (though since there is no continuous explanatory variable, we would not expect to see a pattern in this plot).</p>
 <p>The scale-location plot (bottom left) does not show any clear pattern, which is good. This suggests that the residual variance is not different in different groups, i.e., that there is little if any heteroscedasticity.</p>
-<p>The residuals vs leverage plot (bottom right) does not show any clear pattern, which is good. Note that there is no measurement of the leverage of the data points in the plot above. This is because there are no continuous explanatory variables in the model. The leverage of a data point is a measure of how much that data point influences the fitted values of the model. In a linear regression model with continuous explanatory variables, the leverage of a data point can be calculated based on its distance from the mean of the explanatory variables. However, in an ANOVA model with only categorical explanatory variables, the leverage of each data point is determined solely by its group membership and is not influenced by any continuous variables. Therefore, there is no need to calculate or display leverage in this case.</p>
+<!-- 2027 fix: with which = 1:4 the bottom-right panel is Cook's distance, not residuals vs leverage -->
+<p>The bottom right plot shows Cook’s distance for each observation, that is, how much the fitted values would change if that observation were left out. No observation has a Cook’s distance near 1 (the largest is about 0.15), so no single observation has a large influence on the model. We did not ask for the residuals vs leverage plot (<code>which = 5</code>). In an ANOVA model with only a categorical explanatory variable, the leverage of a data point depends only on how many observations are in its group (<span class="math inline">\(1/n_i\)</span>), so all data points in the same group have the same leverage, and this plot is not very informative.</p>
 <p>There are a few residuals that might be a bit extreme. These might be worth investigating, but we will ignore them for now.</p>
 <!---
 **Think-pair-share**: Which of the four plots above would you use to check each of the three assumptions listed above?
@@ -867,7 +885,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
 <p>The ANOVA table shows the sum of squares, degrees of freedom, mean square, F value, and p-value for the model and residuals. As we know, the <span class="math inline">\(F\)</span> value (<span class="math inline">\(F\)</span> statistics) is calculated as the mean square of the model divided by the mean square of the residuals. The p-value is calculated based on the F-distribution with the appropriate degrees of freedom.</p>
-<p>A suitable sentence to report our findings would be: “Diet has a significant effect on blood pressure (<span class="math inline">\(F(2, 27) = 20.7, p &lt; 0.0001\)</span>)”. This means that the probability of observing such a large <span class="math inline">\(F\)</span> value under the null hypothesis is less than 0.01%.</p>
+<p>A suitable sentence to report our findings would be: “Diet has a significant effect on blood pressure (<span class="math inline">\(F(3, 46) = 20.7, p &lt; 0.0001\)</span>)”. <!-- 2027 fix: degrees of freedom were F(2, 27) --> The two numbers in brackets are the degrees of freedom of the model (<span class="math inline">\(k - 1 = 3\)</span>) and of the residuals (<span class="math inline">\(n - k = 46\)</span>). This means that the probability of observing such a large <span class="math inline">\(F\)</span> value under the null hypothesis is less than 0.01%.</p>
 <!---
 *Think-pair-share*: You know that the $R^2$ value is a measure of how much variance in the response variable is explained by the model. How would you calculate the $R^2$ value from the ANOVA table above?
 --->
@@ -976,7 +994,7 @@ P value adjustment method: none </code></pre>
 <p>In short, Bonferroni adjusts the significance threshold for each test, while Tukey HSD directly determines the minimum difference between group means needed to declare a significant pairwise difference while controlling the overall error rate.</p>
 <p>In R we can use the <code>multcomp</code> package to do Tukey HSD tests:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>bp_data_diet <span class="ot">&lt;-</span> bp_data_diet <span class="sc">%&gt;%</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>bp_data_diet <span class="ot">&lt;-</span> bp_data_diet <span class="sc">|&gt;</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">diet =</span> <span class="fu">as.factor</span>(diet))</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>m_bp_diet <span class="ot">&lt;-</span> <span class="fu">lm</span>(bp <span class="sc">~</span> diet, <span class="at">data =</span> bp_data_diet)</span>
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressMessages</span>(<span class="fu">library</span>(multcomp))</span>
@@ -1020,21 +1038,22 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 <h3 class="anchored" data-anchor-id="other-contrasts">Other contrasts</h3>
 <p>A contrast is a specific comparison between groups. So far we have only considered pairwise contrasts (i.e., comparing two groups at a time). But we can also design more complex contrasts. For example: are diets that contain meat different from diets that do not contain meat?</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>bp_data_diet <span class="ot">&lt;-</span> <span class="fu">mutate</span>(bp_data_diet,</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">meat_or_no_meat =</span> <span class="fu">ifelse</span>(diet <span class="sc">==</span> <span class="st">"meat"</span> <span class="sc">|</span></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>                                                diet <span class="sc">==</span> <span class="st">"Mediterranean"</span>,</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>                                                <span class="st">"meat"</span>, <span class="st">"no meat"</span>))</span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(bp_data_diet)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 2027 fix: the level is "meat heavy" (diet == "meat" matched nothing)</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>bp_data_diet <span class="ot">&lt;-</span> <span class="fu">mutate</span>(bp_data_diet,</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">meat_or_no_meat =</span> <span class="fu">ifelse</span>(diet <span class="sc">==</span> <span class="st">"meat heavy"</span> <span class="sc">|</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>                                                diet <span class="sc">==</span> <span class="st">"Mediterranean"</span>,</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>                                                <span class="st">"meat"</span>, <span class="st">"no meat"</span>))</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(bp_data_diet)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 4
      bp diet          person_ID meat_or_no_meat
   &lt;dbl&gt; &lt;fct&gt;         &lt;chr&gt;     &lt;chr&gt;          
-1   120 meat heavy    person_1  no meat        
+1   120 meat heavy    person_1  meat           
 2    89 vegan         person_2  no meat        
 3    86 vegetarian    person_3  no meat        
-4   116 meat heavy    person_4  no meat        
+4   116 meat heavy    person_4  meat           
 5   115 Mediterranean person_5  meat           
-6   134 meat heavy    person_6  no meat        </code></pre>
+6   134 meat heavy    person_6  meat           </code></pre>
 </div>
 </div>
 <p>Here we defined a new explanatory variable that groups the meat heavy and Mediterranean diet together into a single “meat” group and vegetarian and vegan into a single “no meat” group. We then fit a model with this explanatory variable:</p>
@@ -1051,14 +1070,15 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Model 1: bp ~ diet
 Model 2: bp ~ meat_or_no_meat
-  Res.Df    RSS Df Sum of Sq      F    Pr(&gt;F)    
-1     46 3901.5                                  
-2     48 9173.4 -2   -5271.9 31.078 2.886e-09 ***
+  Res.Df    RSS Df Sum of Sq      F   Pr(&gt;F)   
+1     46 3901.5                                
+2     48 5231.6 -2     -1330 7.8407 0.001175 **
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
-<p>We see the residual sum of squares of the model with meat or no meat is over 9’000, while that of the four diet model is less than 4’000. That is, the four diet model explains much more variance in the data than the two diet model. The <span class="math inline">\(F\)</span>-test is highly significant, so we reject the null hypothesis that the two models are equally good at explaining the data. And we conclude that its not just whether people eat meat or not, but rather what kind of diet they eat that affects their blood pressure.</p>
+<!-- 2027 fix: numbers corrected after fixing the "meat heavy" grouping -->
+<p>We see the residual sum of squares of the model with meat or no meat is 5231.6, while that of the four diet model is 3901.5. That is, the four diet model explains more variance in the data than the two diet model. The <span class="math inline">\(F\)</span>-test is significant (<span class="math inline">\(F(2, 46) = 7.84\)</span>, <span class="math inline">\(p = 0.0012\)</span>), so we reject the null hypothesis that the two models are equally good at explaining the data. And we conclude that its not just whether people eat meat or not, but rather what kind of diet they eat that affects their blood pressure.</p>
 <p>Ideally we do not make a lot of contrasts after we have collected and looked at our data. Rather, we would specify the contrasts we are interested in before we collect the data. This is called a priori contrasts. But sometimes we do exploratory data analysis and then we can make post hoc contrasts. In this case we should be careful to adjust for multiple comparisons.</p>
 </section>
 </section>
@@ -1163,17 +1183,25 @@ Note
 </div>
 <section id="choosing-the-reference-category" class="level3">
 <h3 class="anchored" data-anchor-id="choosing-the-reference-category">Choosing the reference category</h3>
-<p><strong>Question</strong>: Why was the “heavy meat” diet chosen as the reference (intercept) category?</p>
-<p><strong>Answer</strong>: Because R orders the categories alphabetically and takes the first level alphabetically as reference category.</p>
+<!-- 2027 fix: the reference level depends on how the computer sorts upper and lower case letters -->
+<p><strong>Question</strong>: Which diet is the reference (intercept) category in the model <code>m_bp_diet</code>, and why?</p>
+<p><strong>Answer</strong>: R orders the categories alphabetically and takes the first level as the reference category. But “alphabetically” depends on the settings (the “locale”) of the computer. On most computers upper and lower case letters are sorted together, so “meat heavy” comes before “Mediterranean” and is the reference. But some computers (for example some servers) sort all capital letters first, and then “Mediterranean” is the reference. So always check which level is first:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(<span class="fu">factor</span>(bp_data_diet<span class="sc">$</span>diet))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "meat heavy"    "Mediterranean" "vegan"         "vegetarian"   </code></pre>
+</div>
+</div>
+<p>If you set the order of the levels yourself (for example with <code>factor(diet, levels = c("meat heavy", "Mediterranean", "vegan", "vegetarian"))</code>), the reference is the same on every computer.</p>
 <p>Sometimes we may want to override this, for example if we have a treatment that is experimentally the control, then it will usually be useful to set this as the reference / intercept level.</p>
 <p>In R we can set the reference level using the <code>relevel</code> function:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>bp_data_diet<span class="sc">$</span>diet <span class="ot">&lt;-</span> <span class="fu">relevel</span>(<span class="fu">factor</span>(bp_data_diet<span class="sc">$</span>diet), <span class="at">ref =</span> <span class="st">"vegan"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>bp_data_diet<span class="sc">$</span>diet <span class="ot">&lt;-</span> <span class="fu">relevel</span>(<span class="fu">factor</span>(bp_data_diet<span class="sc">$</span>diet), <span class="at">ref =</span> <span class="st">"vegan"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>And now make the model and look at the estimated coefficients:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>m_bp_diet_vegan_ref <span class="ot">&lt;-</span> <span class="fu">lm</span>(bp <span class="sc">~</span> diet, <span class="at">data =</span> bp_data_diet)</span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m_bp_diet_vegan_ref)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>m_bp_diet_vegan_ref <span class="ot">&lt;-</span> <span class="fu">lm</span>(bp <span class="sc">~</span> diet, <span class="at">data =</span> bp_data_diet)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m_bp_diet_vegan_ref)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:

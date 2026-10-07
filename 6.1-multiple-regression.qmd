@@ -13,6 +13,21 @@ source(file.path(lo_dir, "lo.R"))
 lo_callout("6.1", lo_dir)
 ```
 
+::: {.callout-note icon=false}
+## Code walkthrough for this chapter
+<!-- 2027 addition: code walkthrough script and video -->
+
+**Script:** [walkthrough_ch06_multiple_regression.R](walkthroughs/walkthrough_ch06_multiple_regression.R){download="walkthrough_ch06_multiple_regression.R"}
+
+This R script contains the code of this chapter, with comments that explain each step. Download it, save it in your BIO144 RStudio project folder, open it in RStudio, and run it line by line while you read the chapter or watch the video. The script reads the datasets directly from the internet. Its last section ("Practical toolbox") shows code that the Unit 6 practical uses but this chapter does not.
+
+To download the script straight into your project folder (for example on RStudio Server), run this line in the Console:
+
+`download.file("https://opetchey.github.io/BIO144_Course_Book/walkthroughs/walkthrough_ch06_multiple_regression.R", destfile = "walkthrough_ch06_multiple_regression.R")`
+
+**Video walkthrough:** coming soon. <!-- VIDEO PLACEHOLDER: replace "coming soon." with the link, e.g. [Watch the video walkthrough](https://youtu.be/XXXX), or embed it with the Quarto video shortcode -->
+:::
+
 ## Introduction
 
 In the previous chapters we covered simple linear regression and one-way analysis of variance. In both we had one response variable and one explanatory variable. In both cases we made a linear model to relate the response variable to the explanatory variable. The two cases differed in the type of explanatory variable. In the case of simple linear regression, the explanatory variable was continuous. In the case of one-way ANOVA, the explanatory variable was categorical.
@@ -221,9 +236,10 @@ $$\epsilon_i \sim N(0, \sigma^2)$$
 
 
 
-**Seventh**, we know how to make predictions using the model, and to make a prediction band.
+<!-- 2027 fix: replaced the leftover "Seventh, ..." sentence (the first six points were missing) -->
+**What we already know** from simple linear regression also applies here: how to estimate the parameters by least squares, how to check the assumptions of the model, and how to use the model to make predictions (with confidence and prediction bands).
 
-**What we don't know** is how to answer the four questions already mentioned above:
+**What we don't know** yet is how to answer the four questions already mentioned above:
 
 * Question 1: As an ensemble (i.e., all together), are the explanatory variables "useful"? 
 * Question 2: Are each of the explanatory variables associated with the response?
@@ -272,8 +288,8 @@ We can check the assumptions of the multiple linear regression model using the s
 
 ```{r eval=T,echo=T}
 # Check the assumptions
-par(mfrow=c(2,2))
-plot(m_bp_age_exercise, which = c(1,2,3,5), add.smooth = FALSE)
+# 2027 fix: autoplot() (ggfortify) instead of par(mfrow) and base plot()
+autoplot(m_bp_age_exercise, which = c(1, 2, 3, 5), smooth.colour = NA)
 ```
 
 We see that the assumptions are met for the blood pressure example:
@@ -448,6 +464,8 @@ summary(m_bp_age_exercise)$r.squared
 Now, we can add a new explanatory variable to the blood pressure model that is not associated with the response:
 
 ```{r echo = TRUE}
+# 2027 fix: set.seed() so that the random numbers are the same each time
+set.seed(1)
 bp_data_multreg$random_variable <- rnorm(nrow(bp_data_multreg))
 m_bp_age_exercise_random <- lm(bp ~ age + mins_exercise + random_variable, data = bp_data_multreg)
 summary(m_bp_age_exercise_random)$r.squared
@@ -594,7 +612,7 @@ new_data_effects_3 <- new_data_effects_3 |>
          mins_exercise_fac = as.factor(mins_exercise)) 
 ```
 
-(Note that we changed)
+(Note that we also made a new variable, `mins_exercise_fac`, which is `mins_exercise` converted to a factor. Then ggplot gives each of the three values of minutes of exercise its own colour, and a legend with just these three values, instead of a continuous colour scale.) <!-- 2027 fix: completed the unfinished sentence -->
 
 And make a graph:
 
@@ -679,7 +697,7 @@ bp_data_perfect <- read_csv("datasets/bp_data_perfect.csv")
 ```
 
 
-Now we fit a multiple linear regression model with only age:
+Now we fit a simple linear regression model with only age: <!-- 2027 fix: "multiple" changed to "simple" -->
 
 ```{r}
 m1_age <- lm(bp ~ age, data = bp_data_perfect)
@@ -695,7 +713,7 @@ m1_both <- lm(bp ~ mins_exercise + age, data = bp_data_perfect)
 summary(m1_both)
 ```
 
-This output is a bit strange. The estimate for age is now `NA`. This is because the model cannot distinguish between the effects of age and minutes of exercise, since they are perfectly correlated. The model is unable to estimate the coefficient for age of exercise, so it returns `NA`.
+This output is a bit strange. The estimate for age is now `NA`. This is because the model cannot distinguish between the effects of age and minutes of exercise, since they are perfectly correlated. The model is unable to estimate the coefficient for age, so it returns `NA`. <!-- 2027 fix: typo "age of exercise" -->
 
 This is an example of instability of coefficients due to collinearity. The coefficient for age is completely unstable, as it changes from a number to `NA` depending on whether minutes of exercise is included in the model or not.
 
@@ -765,7 +783,7 @@ Let's have one more look at this instability that is caused by collinearity. And
 #| echo: false
 simulate_beta_hats <- function(r, n = 100, nsim = 200) {
   
-  tibble(sim = seq_len(nsim)) %>%
+  tibble(sim = seq_len(nsim)) |>
     mutate(
       data = map(sim, ~ {
         x1 <- rnorm(n)
@@ -775,19 +793,19 @@ simulate_beta_hats <- function(r, n = 100, nsim = 200) {
       }),
       beta1_hat = map_dbl(data, ~ coef(lm(y ~ x1 + x2, data = .x))["x1"]),
       correlation = r
-    ) %>%
+    ) |>
     select(beta1_hat, correlation)
 }
 
 r_values <- seq(0, 0.9, 0.1)
 
-sim_results <- tibble(correlationr = r_values) %>%
-  mutate(results = map(correlationr, simulate_beta_hats)) %>%
+sim_results <- tibble(correlationr = r_values) |>
+  mutate(results = map(correlationr, simulate_beta_hats)) |>
   unnest(results)
 
 ## get variance of beta1_hat by correlation
-var_by_corr <- sim_results %>%
-  group_by(correlation) %>%
+var_by_corr <- sim_results |>
+  group_by(correlation) |>
   summarise(var_beta1_hat = var(beta1_hat))
 
 p1 <- ggplot(sim_results, aes(x = factor(correlation), y = beta1_hat)) +
@@ -850,8 +868,10 @@ cor(data_collinear_strong)
 pairs(data_collinear_strong)
 ```
 
+Fit the two models with one explanatory variable each, and the model with both:
+
 ```{r}
-#| echo: false
+# 2027 fix: this chunk was hidden, but students need it to reproduce the results below
 m2_age <- lm(bp ~ age, data = data_collinear_strong)
 m2_mins_exercise <- lm(bp ~ mins_exercise, data = data_collinear_strong)
 m2_both <- lm(bp ~ age + mins_exercise, data = data_collinear_strong)
@@ -932,8 +952,19 @@ x2 <- rnorm(n)
 x3 <- 2 * x1 + 3 * x2 + rnorm(n, 0, 1)  # less noise, more collinearity
 y <- 5 + 1.5 * x1 - 2 * x2 + 0.5 * x3 + rnorm(n, 0, 1)
 data_collinear_severe <- data.frame(x1 = x1, x2 = x2, x3 = x3, y = y)
-m_collinear_severe <- lm(y ~ x1 + x2 + x3, data
- = data_collinear_severe)
+```
+
+```{r}
+#| echo: false
+# 2027 fix: save these data as a CSV, like the other example datasets
+write_csv(data_collinear_severe, "datasets/data_collinear_severe.csv")
+```
+
+This dataset is also available as `data_collinear_severe` in the book dataset collection: <!-- 2027 fix: dataset added -->
+
+```{r}
+data_collinear_severe <- read_csv("datasets/data_collinear_severe.csv")
+m_collinear_severe <- lm(y ~ x1 + x2 + x3, data = data_collinear_severe)
 vif(m_collinear_severe)
 ```
 

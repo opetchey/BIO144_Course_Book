@@ -14,6 +14,21 @@ source(file.path(lo_dir, "lo.R"))
 lo_callout("10.1", lo_dir)
 ```
 
+::: {.callout-note icon=false}
+## Code walkthrough for this chapter
+<!-- 2027 addition: code walkthrough script and video -->
+
+**Script:** [walkthrough_ch10_ordination.R](walkthroughs/walkthrough_ch10_ordination.R){download="walkthrough_ch10_ordination.R"}
+
+This R script contains the code of this chapter, with comments that explain each step. Download it, save it in your BIO144 RStudio project folder, open it in RStudio, and run it line by line while you read the chapter or watch the video. The script reads the datasets directly from the internet. Its last section ("Practical toolbox") shows code that the Unit 10 practical uses but this chapter does not.
+
+To download the script straight into your project folder (for example on RStudio Server), run this line in the Console:
+
+`download.file("https://opetchey.github.io/BIO144_Course_Book/walkthroughs/walkthrough_ch10_ordination.R", destfile = "walkthrough_ch10_ordination.R")`
+
+**Video walkthrough:** coming soon. <!-- VIDEO PLACEHOLDER: replace "coming soon." with the link, e.g. [Watch the video walkthrough](https://youtu.be/XXXX), or embed it with the Quarto video shortcode -->
+:::
+
 ## Introduction
 
 In earlier chapters, we have analysed variability in **one response variable at a time**. But many biological questions are intrinsically **multivariate**:
@@ -57,7 +72,8 @@ We will treat the four skull measurements as multivariate responses, and time as
 First read the dataset from the csv file:
 
 ```{r}
-skull <- read_csv(here("datasets", "skull_shape_time.csv"))
+# 2027 fix: relative path instead of here()
+skull <- read_csv("datasets/skull_shape_time.csv")
 ```
 
 
@@ -405,21 +421,21 @@ Now a 3D plot of the simulated data with different correlation structures (pleas
 #| echo: false
 p1 <- plotly::plot_ly(x = X_R0.9[,1], y = X_R0.9[,2], z = X_R0.9[,3],
               type = 'scatter3d', mode = 'markers',
-         width=500, height=500) %>%
+         width=500, height=500) |>
   layout(title = "High correlation (rho ~ 0.9)",
          scene = list(xaxis = list(title = "Var 1"),
                       yaxis = list(title = "Var 2"),
                       zaxis = list(title = "Var 3")))
 p2 <- plotly::plot_ly(x = X_R0.5[,1], y = X_R0.5[,2], z = X_R0.5[,3],
               type = 'scatter3d', mode = 'markers',
-         width=500, height=500) %>%
+         width=500, height=500) |>
   layout(title = "Moderate correlation (rho ~ 0.5)",
          scene = list(xaxis = list(title = "Var 1"),
                       yaxis = list(title = "Var 2"),
                       zaxis = list(title = "Var 3")))
 p3 <- plotly::plot_ly(x = X_R0.0[,1], y = X_R0.0[,2], z = X_R0.0[,3],
               type = 'scatter3d', mode = 'markers',
-         width=500, height=500) %>%
+         width=500, height=500) |>
   layout(title = "Low correlation (rho ~ 0.0)",
          scene = list(xaxis = list(title = "Var 1"),
                       yaxis = list(title = "Var 2"),
@@ -509,6 +525,32 @@ skull_distances <- dist(X_scaled, method = "euclidean")
 #skull_distances
 ```
 
+<!-- 2027 addition: Bray–Curtis dissimilarity, used in the Unit 10 practical -->
+#### Distances for community (abundance) data: Bray–Curtis
+
+Euclidean distance on scaled variables suits continuous measurements like these skull dimensions. For **species abundance or community composition data** (counts or relative abundances of many species or taxa at each site or sample), the most widely used dissimilarity is **Bray–Curtis**. For two samples $j$ and $k$, with abundances $y_{ij}$ and $y_{ik}$ of species $i$:
+
+$$BC_{jk} = \frac{\sum_i |y_{ij} - y_{ik}|}{\sum_i (y_{ij} + y_{ik})}$$
+
+It is 0 when two samples have identical composition and 1 when they share no species. Two features make it better suited to community data than Euclidean distance:
+
+* **It ignores shared absences.** Two sites both lacking a species are not counted as similar because of it (with many species, most are absent from most sites, and Euclidean distance would make sites with few species look similar just because they share many zeros).
+* **It works on the original abundances** (or proportions), without scaling each species. Very abundant species have more influence than rare ones, so abundances are sometimes square-root or log transformed first.
+
+A small example with three sites and four species:
+
+```{r}
+#| echo: true
+communities <- data.frame(species_A = c(10, 8, 0),
+                          species_B = c(5, 6, 0),
+                          species_C = c(0, 0, 4),
+                          species_D = c(0, 0, 3))
+vegdist(communities, method = "bray")
+dist(communities, method = "euclidean")
+```
+
+Sites 1 and 2 share the same species in similar numbers (Bray–Curtis about 0.10), whereas site 3 shares no species with either (Bray–Curtis exactly 1). In R, Bray–Curtis dissimilarities are calculated with `vegdist(..., method = "bray")` from the vegan package, and can be passed to `metaMDS()` just like the Euclidean distances here.
+
 ### Step 2: Fit NMDS with multiple random starts
 
 In NMDS, we need to choose some random starting configuration of points. And we want to make sure that we choose a good solution, not just a local optimum. Hence, we try multiple random starts and pick the best one.
@@ -567,8 +609,8 @@ The stress decreases when we move to three dimensions, indicating a better fit. 
 
 We can plot the NMDS scores, colored by time:
 
+<!-- 2027 fix: code made visible, because nmds_scores is used in the visible code below -->
 ```{r}
-#| echo: false
 nmds_scores <- as_tibble(scores(skull_nmds, display = "sites")) |>
   mutate(id = skull$id, thousand.years = skull$thousand.years)
 
@@ -669,7 +711,8 @@ If we bin years into categories, MANOVA becomes closer to multivariate ANOVA:
 ```{r}
 skull <- skull |>
   mutate(year_class = cut(thousand.years, breaks = 8) |> fct_inorder())
-skull_manova_class <- manova(cbind(max.breadth, basi.height, basi.length, nasal.height) ~ thousand.years,
+# 2027 fix: use the binned years (year_class), not thousand.years
+skull_manova_class <- manova(cbind(max.breadth, basi.height, basi.length, nasal.height) ~ year_class,
                       data = skull)
 summary(skull_manova_class, test = "Pillai")
 ```

@@ -1,9 +1,12 @@
 project:
   type: book
   output-dir: docs
+  resources:
+    - walkthroughs/*.R
 
 book:
   title: "BIO144 Course Book (version 2027, draft)"
+  output-file: "BIO144_Course_Book"   # fixed name for the PDF, so the link in index.qmd keeps working when the title changes
   author: "Owen Petchey"
   date: today
   reader-mode: true
@@ -46,7 +49,7 @@ format:
     fig-height: 4
     fig-align: center
   pdf:
-    keep-tex: true
+    keep-tex: false
     documentclass: book
     classoption:
       - 8pt

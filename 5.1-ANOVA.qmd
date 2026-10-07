@@ -14,6 +14,21 @@ source(file.path(lo_dir, "lo.R"))
 lo_callout("5.1", lo_dir)
 ```
 
+::: {.callout-note icon=false}
+## Code walkthrough for this chapter
+<!-- 2027 addition: code walkthrough script and video -->
+
+**Script:** [walkthrough_ch05_anova.R](walkthroughs/walkthrough_ch05_anova.R){download="walkthrough_ch05_anova.R"}
+
+This R script contains the code of this chapter, with comments that explain each step. Download it, save it in your BIO144 RStudio project folder, open it in RStudio, and run it line by line while you read the chapter or watch the video. The script reads the datasets directly from the internet. Its last section ("Practical toolbox") shows code that the Unit 5 practical uses but this chapter does not.
+
+To download the script straight into your project folder (for example on RStudio Server), run this line in the Console:
+
+`download.file("https://opetchey.github.io/BIO144_Course_Book/walkthroughs/walkthrough_ch05_anova.R", destfile = "walkthrough_ch05_anova.R")`
+
+**Video walkthrough:** coming soon. <!-- VIDEO PLACEHOLDER: replace "coming soon." with the link, e.g. [Watch the video walkthrough](https://youtu.be/XXXX), or embed it with the Quarto video shortcode -->
+:::
+
 The previous two chapters were about linear regression. *Linear regression* is a type of *linear model* -- recall that in *R* we used the function `lm()` to make the regression model.  In this chapter we will look at a different type of linear model: analysis of variance (ANOVA).
 
 ## Introduction
@@ -151,16 +166,17 @@ bp_data_diet <- tibble(diet = sample(c("meat heavy", "Mediterranean",
 
 ```{r}
 #| echo: false
-group_means <- bp_data_diet %>%
-  group_by(diet, .groups = "drop") %>%
-  summarise(mean_bp = mean(bp), .groups = "drop") |> 
-  arrange(diet)
-group_means <- group_means[c(2, 1, 3, 4),]
+# 2027 fix: explicit level order, so the figure is the same whatever the computer's sort order (locale)
+bp_data_diet_fig <- bp_data_diet |>
+  mutate(diet = factor(diet, levels = c("meat heavy", "Mediterranean", "vegan", "vegetarian")))
+group_means <- bp_data_diet_fig |>
+  group_by(diet) |>
+  summarise(mean_bp = mean(bp), .groups = "drop")
 ```
 
 ```{r}
 #| echo: false
-ggplot(bp_data_diet, aes(x = diet, y = bp)) +
+ggplot(bp_data_diet_fig, aes(x = diet, y = bp)) +
   geom_point() +
   geom_point(data = group_means, aes(x = diet, y = mean_bp), color = "red", size = 3) +
   labs(title = "Blood pressure by diet",
@@ -206,28 +222,26 @@ Graphically, the model now looks like this:
 
 ```{r}
 #| echo: false
-m_bp_diet <- lm(bp ~ diet, data = bp_data_diet)
-group_means <- bp_data_diet %>%
-  group_by(diet, .groups = "drop") %>%
-  summarise(mean_bp = mean(bp), .groups = "drop")
-ggplot(bp_data_diet, aes(x = diet, y = bp)) +
+# 2027 fix: meat heavy set explicitly as the reference (first level), independent of the locale
+m_bp_diet_fig <- lm(bp ~ diet, data = bp_data_diet_fig)
+ggplot(bp_data_diet_fig, aes(x = diet, y = bp)) +
   geom_point() +
-  geom_hline(yintercept = coef(m_bp_diet)[1], color = "red") +
+  geom_hline(yintercept = coef(m_bp_diet_fig)[1], color = "red") +
   geom_point(data = group_means, aes(y = mean_bp), color = "blue", size = 3) +
-  geom_segment(data = group_means[-2,], aes(x = diet, xend = diet,
-                                       y = coef(m_bp_diet)[1], yend = mean_bp),
+  geom_segment(data = group_means[-1,], aes(x = diet, xend = diet,
+                                       y = coef(m_bp_diet_fig)[1], yend = mean_bp),
                color = "blue",
                arrow = arrow(length = unit(0.5,"cm"), ends = "both")) +
   labs(title = "Blood pressure by diet",
        x = "Diet",
        y = "Blood pressure") +
-  annotate("text", x = 0, y = group_means$mean_bp[2]+1.5,
+  annotate("text", x = 0, y = group_means$mean_bp[1]+1.5,
             label = "beta_0", hjust = -0.5) +
-  annotate("text", x = 2, y = mean(group_means$mean_bp[c(2, 1)]),
+  annotate("text", x = 2, y = mean(group_means$mean_bp[c(1, 2)]),
             label = "beta_1", hjust = -0.1) +
-  annotate("text", x = 3, y = mean(group_means$mean_bp[c(2, 3)]),
+  annotate("text", x = 3, y = mean(group_means$mean_bp[c(1, 3)]),
             label = "beta_2", hjust = -0.1) +
-  annotate("text", x = 4, y = mean(group_means$mean_bp[c(2, 4)]),
+  annotate("text", x = 4, y = mean(group_means$mean_bp[c(1, 4)]),
             label = "beta_3", hjust = -0.1) 
 
 ```
@@ -599,7 +613,8 @@ The residuals vs fitted plot (top left) does not show any clear pattern, which i
 
 The scale-location plot (bottom left) does not show any clear pattern, which is good. This suggests that the residual variance is not different in different groups, i.e., that there is little if any heteroscedasticity.
 
-The residuals vs leverage plot (bottom right) does not show any clear pattern, which is good. Note that there is no measurement of the leverage of the data points in the plot above. This is because there are no continuous explanatory variables in the model. The leverage of a data point is a measure of how much that data point influences the fitted values of the model. In a linear regression model with continuous explanatory variables, the leverage of a data point can be calculated based on its distance from the mean of the explanatory variables. However, in an ANOVA model with only categorical explanatory variables, the leverage of each data point is determined solely by its group membership and is not influenced by any continuous variables. Therefore, there is no need to calculate or display leverage in this case.
+<!-- 2027 fix: with which = 1:4 the bottom-right panel is Cook's distance, not residuals vs leverage -->
+The bottom right plot shows Cook's distance for each observation, that is, how much the fitted values would change if that observation were left out. No observation has a Cook's distance near 1 (the largest is about 0.15), so no single observation has a large influence on the model. We did not ask for the residuals vs leverage plot (`which = 5`). In an ANOVA model with only a categorical explanatory variable, the leverage of a data point depends only on how many observations are in its group ($1/n_i$), so all data points in the same group have the same leverage, and this plot is not very informative.
 
 There are a few residuals that might be a bit extreme. These might be worth investigating, but we will ignore them for now.
 
@@ -620,7 +635,8 @@ anova(m_bp_diet)
 
 The ANOVA table shows the sum of squares, degrees of freedom, mean square, F value, and p-value for the model and residuals. As we know, the $F$ value ($F$ statistics) is calculated as the mean square of the model divided by the mean square of the residuals. The p-value is calculated based on the F-distribution with the appropriate degrees of freedom.
 
-A suitable sentence to report our findings would be: "Diet has a significant effect on blood pressure ($F(2, 27) = 20.7, p < 0.0001$)". This means that the probability of observing such a large $F$ value under the null hypothesis is less than 0.01%.
+A suitable sentence to report our findings would be: "Diet has a significant effect on blood pressure ($F(3, 46) = 20.7, p < 0.0001$)". <!-- 2027 fix: degrees of freedom were F(2, 27) -->
+The two numbers in brackets are the degrees of freedom of the model ($k - 1 = 3$) and of the residuals ($n - k = 46$). This means that the probability of observing such a large $F$ value under the null hypothesis is less than 0.01%.
 
 <!---
 *Think-pair-share*: You know that the $R^2$ value is a measure of how much variance in the response variable is explained by the model. How would you calculate the $R^2$ value from the ANOVA table above?
@@ -747,7 +763,7 @@ In R we can use the `multcomp` package to do Tukey HSD tests:
 
 ```{r}
 #| echo: true
-bp_data_diet <- bp_data_diet %>%
+bp_data_diet <- bp_data_diet |>
   mutate(diet = as.factor(diet))
 m_bp_diet <- lm(bp ~ diet, data = bp_data_diet)
 suppressMessages(library(multcomp))
@@ -775,8 +791,9 @@ The Bonferroni correction is more conservative than Tukey HSD, which is more con
 A contrast is a specific comparison between groups. So far we have only considered pairwise contrasts (i.e., comparing two groups at a time). But we can also design more complex contrasts. For example: are diets that contain meat different from diets that do not contain meat?
 
 ```{r}
+# 2027 fix: the level is "meat heavy" (diet == "meat" matched nothing)
 bp_data_diet <- mutate(bp_data_diet,
-                       meat_or_no_meat = ifelse(diet == "meat" |
+                       meat_or_no_meat = ifelse(diet == "meat heavy" |
                                                 diet == "Mediterranean",
                                                 "meat", "no meat"))
 head(bp_data_diet)
@@ -800,7 +817,8 @@ Let's look at the ANOVA table of the model comparison:
 anova(m_bp_diet, m_bp_meat_or_no_meat)
 ```
 
-We see the residual sum of squares of the model with meat or no meat is over 9'000, while that of the four diet model is less than 4'000. That is, the four diet model explains much more variance in the data than the two diet model. The $F$-test is highly significant, so we reject the null hypothesis that the two models are equally good at explaining the data. And we conclude that its not just whether people eat meat or not, but rather what kind of diet they eat that affects their blood pressure.
+<!-- 2027 fix: numbers corrected after fixing the "meat heavy" grouping -->
+We see the residual sum of squares of the model with meat or no meat is 5231.6, while that of the four diet model is 3901.5. That is, the four diet model explains more variance in the data than the two diet model. The $F$-test is significant ($F(2, 46) = 7.84$, $p = 0.0012$), so we reject the null hypothesis that the two models are equally good at explaining the data. And we conclude that its not just whether people eat meat or not, but rather what kind of diet they eat that affects their blood pressure.
 
 Ideally we do not make a lot of contrasts after we have collected and looked at our data. Rather, we would specify the contrasts we are interested in before we collect the data. This is called a priori contrasts. But sometimes we do exploratory data analysis and then we can make post hoc contrasts. In this case we should be careful to adjust for multiple comparisons.
 
@@ -883,9 +901,16 @@ The content of this Extras section is not examinable. It is here for those who w
 
 ### Choosing the reference category
 
-**Question**: Why was the "heavy meat" diet chosen as the reference (intercept) category?
+<!-- 2027 fix: the reference level depends on how the computer sorts upper and lower case letters -->
+**Question**: Which diet is the reference (intercept) category in the model `m_bp_diet`, and why?
 
-**Answer**: Because R orders the categories alphabetically and takes the first level alphabetically as reference category.
+**Answer**: R orders the categories alphabetically and takes the first level as the reference category. But "alphabetically" depends on the settings (the "locale") of the computer. On most computers upper and lower case letters are sorted together, so "meat heavy" comes before "Mediterranean" and is the reference. But some computers (for example some servers) sort all capital letters first, and then "Mediterranean" is the reference. So always check which level is first:
+
+```{r}
+levels(factor(bp_data_diet$diet))
+```
+
+If you set the order of the levels yourself (for example with `factor(diet, levels = c("meat heavy", "Mediterranean", "vegan", "vegetarian"))`), the reference is the same on every computer.
 
 Sometimes we may want to override this, for example if we have a treatment that is experimentally the control, then it will usually be useful to set this as the reference / intercept level.
 

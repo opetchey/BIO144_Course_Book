@@ -1,0 +1,104 @@
+# Render the course book (HTML and PDF) and publish it to GitHub Pages
+# every time something is pushed to the main branch.
+#
+# One-time setup on GitHub: Settings > Pages > Build and deployment >
+# Source: "GitHub Actions".
+#
+# The book's learning-objective boxes are read from the course information
+# repository, so that repository is checked out next to the book, as on your
+# computer. To rebuild the book after changing only the learning objectives,
+# use Actions > "Render and publish course book" > "Run workflow".
+
+name: Render and publish course book
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Check out the course book
+        uses: actions/checkout@v4
+        with:
+          path: BIO144_Course_Book
+
+      - name: Check out the course information (learning objectives)
+        uses: actions/checkout@v4
+        with:
+          repository: opetchey/BIO144_Course_Information
+          path: BIO144_Course_Information
+
+      - name: Set up Quarto and TinyTeX (for the PDF)
+        uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          tinytex: true
+
+      - name: Set up R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - name: Install R packages
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            any::rmarkdown
+            any::knitr
+            any::yaml
+            any::tidyverse
+            any::patchwork
+            any::gtsummary
+            any::here
+            any::kableExtra
+            any::ggfortify
+            any::HSAUR3
+            any::vegan
+            any::car
+            any::broom
+            any::plotly
+            any::lme4
+            any::lmerTest
+            any::Matrix
+            any::janitor
+            any::multcomp
+            any::latex2exp
+            any::MASS
+            any::GGally
+            any::webshot2
+
+      - name: Render the book (HTML and PDF)
+        working-directory: BIO144_Course_Book
+        run: quarto render
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload the rendered book
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: BIO144_Course_Book/docs
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

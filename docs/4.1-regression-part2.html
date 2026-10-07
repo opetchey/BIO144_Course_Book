@@ -1163,17 +1163,27 @@ Note
 <p>Now its less clear which is the real data. We can use this idea to test the null hypothesis.</p>
 <p>We do the same procedure of but instead of just looking at the graphs, we calculate the slope of the regression line each time. This gives us a distribution of slopes we would expect to observe if the null hypothesis is true. We can then see where the observed slope lies in this distribution of null hypothesis slopes.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># repeat 10000 time a randomisation test</span></span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fl">0.15</span><span class="sc">*</span>x <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, <span class="dv">15</span>)</span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>rand_slopes <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">10000</span>, {</span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  y_rand <span class="ot">&lt;-</span> <span class="fu">sample</span>(y)</span>
-<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>  m_rand <span class="ot">&lt;-</span> <span class="fu">lm</span>(y_rand <span class="sc">~</span> x)</span>
-<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coef</span>(m_rand)[<span class="dv">2</span>]</span>
-<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">slopes =</span> rand_slopes), <span class="fu">aes</span>(<span class="at">x =</span> slopes)) <span class="sc">+</span></span>
-<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">50</span>) <span class="sc">+</span></span>
-<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">coef</span>(m_sim)[<span class="dv">2</span>], <span class="at">color =</span> <span class="st">"red"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 2027 fix: the observed slope and the shuffled slopes now come from the same data</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="co"># The "observed" data: a weak relationship</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">456</span>)</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>y_weak <span class="ot">&lt;-</span> <span class="fl">0.15</span><span class="sc">*</span>x <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, <span class="dv">15</span>)</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>m_weak <span class="ot">&lt;-</span> <span class="fu">lm</span>(y_weak <span class="sc">~</span> x)</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>observed_slope <span class="ot">&lt;-</span> <span class="fu">coef</span>(m_weak)[<span class="dv">2</span>]</span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>observed_slope</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        x 
+0.1388931 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Repeat the randomisation 10000 times: shuffle y_weak, fit the model, keep the slope</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>rand_slopes <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">10000</span>, {</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  y_rand <span class="ot">&lt;-</span> <span class="fu">sample</span>(y_weak)</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  m_rand <span class="ot">&lt;-</span> <span class="fu">lm</span>(y_rand <span class="sc">~</span> x)</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coef</span>(m_rand)[<span class="dv">2</span>]</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">slopes =</span> rand_slopes), <span class="fu">aes</span>(<span class="at">x =</span> slopes)) <span class="sc">+</span></span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">50</span>) <span class="sc">+</span></span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> observed_slope, <span class="at">color =</span> <span class="st">"red"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1182,14 +1192,15 @@ Note
 </div>
 </div>
 </div>
-<p>We can now calculate the probability of observing the data we have, given the null hypothesis is true.</p>
+<p>The red line is the slope of the observed data; the histogram shows the slopes we get when the null hypothesis is true (no relationship). We can now calculate the probability of observing a slope at least as extreme as the one we observed (in either direction), given the null hypothesis is true. This is the p-value of the randomisation test:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>p_value <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">abs</span>(rand_slopes) <span class="sc">&gt;=</span> <span class="fu">abs</span>(<span class="fu">coef</span>(m_sim)[<span class="dv">2</span>]))</span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>p_value</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>p_value <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">abs</span>(rand_slopes) <span class="sc">&gt;=</span> <span class="fu">abs</span>(observed_slope))</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>p_value</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.0172</code></pre>
+<pre><code>[1] 0.0103</code></pre>
 </div>
 </div>
+<p>Compare this with the p-value for the slope from the <em>t</em>-test in <code>summary(m_weak)</code>, which is 0.0092. The two methods give similar answers.</p>
 </section>
 <section id="visualising-p-values-for-regression-slopes" class="level3">
 <h3 class="anchored" data-anchor-id="visualising-p-values-for-regression-slopes">Visualising p-values for regression slopes</h3>

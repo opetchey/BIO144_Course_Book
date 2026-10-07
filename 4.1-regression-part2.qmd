@@ -961,6 +961,7 @@ Now let's create 19 and put the real one in there somewhere random. Here's a cas
 
 ```{r fig.width=10, fig.height=10}
 #| echo: false
+set.seed(11) # 2027 fix: reproducible lineup
 y <- 0.5*x + rnorm(n, 0, 15)
 par(mfrow = c(5, 4))
 this_one <- round(runif(1, 1, 20),0)
@@ -982,6 +983,7 @@ We can confidently find the real data amount the shuffled data. But what if the 
 
 ```{r fig.width=10, fig.height=10}
 #| echo: false
+set.seed(12) # 2027 fix: reproducible lineup
 y <- 0.15*x + rnorm(n, 0, 15)
 par(mfrow = c(5, 4))
 this_one <- round(runif(1, 1, 20),0)
@@ -1003,27 +1005,34 @@ Now its less clear which is the real data. We can use this idea to test the null
 We do the same procedure of but instead of just looking at the graphs, we calculate the slope of the regression line each time. This gives us a distribution of slopes we would expect to observe if the null hypothesis is true. We can then see where the observed slope lies in this distribution of null hypothesis slopes.
 
 ```{r}
-# repeat 10000 time a randomisation test
-y <- 0.15*x + rnorm(n, 0, 15)
+# 2027 fix: the observed slope and the shuffled slopes now come from the same data
+# The "observed" data: a weak relationship
+set.seed(456)
+y_weak <- 0.15*x + rnorm(n, 0, 15)
+m_weak <- lm(y_weak ~ x)
+observed_slope <- coef(m_weak)[2]
+observed_slope
+
+# Repeat the randomisation 10000 times: shuffle y_weak, fit the model, keep the slope
 rand_slopes <- replicate(10000, {
-  y_rand <- sample(y)
+  y_rand <- sample(y_weak)
   m_rand <- lm(y_rand ~ x)
   coef(m_rand)[2]
 })
 
 ggplot(data.frame(slopes = rand_slopes), aes(x = slopes)) +
   geom_histogram(bins = 50) +
-  geom_vline(xintercept = coef(m_sim)[2], color = "red")
+  geom_vline(xintercept = observed_slope, color = "red")
 ```
 
-We can now calculate the probability of observing the data we have, given the null hypothesis is true.
+The red line is the slope of the observed data; the histogram shows the slopes we get when the null hypothesis is true (no relationship). We can now calculate the probability of observing a slope at least as extreme as the one we observed (in either direction), given the null hypothesis is true. This is the p-value of the randomisation test:
 
 ```{r}
-p_value <- mean(abs(rand_slopes) >= abs(coef(m_sim)[2]))
+p_value <- mean(abs(rand_slopes) >= abs(observed_slope))
 p_value
 ```
 
-
+Compare this with the p-value for the slope from the *t*-test in `summary(m_weak)`, which is `r signif(summary(m_weak)$coefficients[2, 4], 2)`. The two methods give similar answers.
 
 ### Visualising p-values for regression slopes
 

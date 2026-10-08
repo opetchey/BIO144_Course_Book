@@ -62,9 +62,9 @@ jobs:
             any::tidyverse
             any::patchwork
             any::gtsummary
-            any::broom.helpers   # needed by gtsummary::tbl_regression()
-            any::cardx           # used by some gtsummary statistics
-            any::gt              # gtsummary tables
+            any::broom.helpers
+            any::cardx
+            any::gt
             any::here
             any::kableExtra
             any::ggfortify

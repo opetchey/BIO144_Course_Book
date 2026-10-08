@@ -87,6 +87,15 @@ jobs:
         working-directory: BIO144_Course_Book
         run: quarto render
 
+      - name: Make a zip of the HTML book for offline reading
+        working-directory: BIO144_Course_Book
+        run: |
+          rm -rf "$RUNNER_TEMP/BIO144_Course_Book_html"
+          cp -r docs "$RUNNER_TEMP/BIO144_Course_Book_html"
+          rm -f "$RUNNER_TEMP/BIO144_Course_Book_html/"*.pdf
+          (cd "$RUNNER_TEMP" && zip -rq BIO144_Course_Book_html.zip BIO144_Course_Book_html)
+          mv "$RUNNER_TEMP/BIO144_Course_Book_html.zip" docs/
+
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
 

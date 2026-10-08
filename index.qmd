@@ -15,8 +15,7 @@ If you'd like a copy of this book for yourself, there are a few ways. But beware
   📄 Download PDF
 </a>
 
-* You can download a complete local copy of the HTML version of the BIO144 course book from here:  
-[https://github.com/opetchey/BIO144_Course_Book/tree/main](https://github.com/opetchey/BIO144_Course_Book/tree/main). The html files for the book are in the `_book` folder, and this is the only folder you need for your offline html copy of the book. You can open the `index.html` file in your web browser to read the book offline.
+* You can download a complete copy of the HTML version of the book, to read offline: <a href="BIO144_Course_Book_html.zip">📦 Download HTML book (zip)</a>. Unzip it, then open the file `index.html` (in the folder `BIO144_Course_Book_html`) in your web browser. <!-- 2027 fix: the zip is made automatically by the GitHub workflow each time the book is published; it does not exist when the book is rendered locally -->
 
 * You can get all of the source code for the book from the [GitHub repository](https://github.com/opetchey/BIO144_Course_Book). However, you may find it a little complicated to do anything useful with it!
 

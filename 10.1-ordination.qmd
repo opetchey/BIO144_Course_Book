@@ -415,7 +415,7 @@ X_R0.0 <- MASS::mvrnorm(n = num_samples,
                   Sigma = Sigma_R0.0)
 ```
   
-Now a 3D plot of the simulated data with different correlation structures (please note that these plots are best viewed in the HTML version of the book; in the PDF version, they will appear as static images):
+Now a 3D plot of the simulated data with different correlation structures (these interactive figures are shown only in the online, HTML, version of the book):
 
 ```{r}
 #| echo: false
@@ -444,21 +444,29 @@ p3 <- plotly::plot_ly(x = X_R0.0[,1], y = X_R0.0[,2], z = X_R0.0[,3],
 
 
 ```{r fig.width=2, fig.height=2}
+#| eval: !expr knitr::is_html_output()
 #| echo: false
 p1
 ```
 
 
 ```{r fig.width=2, fig.height=2}
+#| eval: !expr knitr::is_html_output()
 #| echo: false
 p2
 ```
 
 
 ```{r fig.width=2, fig.height=2}
+#| eval: !expr knitr::is_html_output()
 #| echo: false
 p3
 ```
+
+::: {.content-visible unless-format="html"}
+<!-- 2027 fix: plotly figures are run only for HTML, so the PDF build needs no browser screenshots -->
+*These interactive 3-D figures are shown only in the online version of the book: see [this chapter online](https://opetchey.github.io/BIO144_Course_Book/10.1-ordination.html).*
+:::
   
 The first plot shows data with high correlation among variables, where the points are clustered along a diagonal line, indicating that the variables are strongly related. The second plot shows moderate correlation, where the points are more spread out but still show some clustering. The third plot shows low correlation, where the points are scattered randomly in space, indicating that the variables are largely independent.
 

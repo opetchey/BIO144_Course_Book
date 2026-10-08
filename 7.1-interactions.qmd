@@ -1021,17 +1021,23 @@ Bottom line: more explanatory variables, more interactions, more levels in categ
 
 Here is a 3D scatter plot of the data with two continuous explanatory variables (age and minutes of exercise) and one continuous response variable (blood pressure). This plot helps to visualise the interaction between age and minutes of exercise on blood pressure.
 
-(Please note that this plot is best viewed in the HTML version of the book; in the PDF version, it will appear as a static image.)
+(This interactive figure is shown only in the online, HTML, version of the book.)
 
 ```{r}
+#| eval: !expr knitr::is_html_output()
 #| echo: true
-plotly::plot_ly(bp_2cont, x = ~mins_per_week, y = ~age, z = ~bp, type = "scatter3d", mode = "markers", color = age, width=500, height=500) |>
+plotly::plot_ly(bp_2cont, x = ~mins_per_week, y = ~age, z = ~bp, type = "scatter3d", mode = "markers", color = ~age, width=500, height=500) |>
   plotly::layout(title = "3D Scatter plot of Blood Pressure vs Exercise and Age",
          scene = list(xaxis = list(title = "Minutes per week of exercise"),
                       yaxis = list(title = "Age"),
                       zaxis = list(title = "Blood Pressure"))
          )
 ```
+
+::: {.content-visible unless-format="html"}
+<!-- 2027 fix: plotly figures are run only for HTML, so the PDF build needs no browser screenshots -->
+*This interactive 3-D figure is shown only in the online version of the book: see [this chapter online](https://opetchey.github.io/BIO144_Course_Book/7.1-interactions.html).*
+:::
 
 
 ### Types of sums of squares

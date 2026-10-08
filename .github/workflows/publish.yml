@@ -81,7 +81,6 @@ jobs:
             any::latex2exp
             any::MASS
             any::GGally
-            any::webshot2
 
       - name: Render the book (HTML and PDF)
         working-directory: BIO144_Course_Book

@@ -1,4 +1,3 @@
-<!-- 2027 addition: shared checklist for checking a GLM, included in chapters 8 and 9 -->
 ::: {.callout-note}
 ## Checklist: checking a GLM
 

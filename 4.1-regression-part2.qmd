@@ -16,7 +16,6 @@ lo_callout("4.1", lo_dir)
 
 ::: {.callout-note icon=false}
 ## Code walkthrough for this chapter
-<!-- 2027 addition: code walkthrough script and video -->
 
 **Script:** [walkthrough_ch04_regression_part2.R](walkthroughs/walkthrough_ch04_regression_part2.R){download="walkthrough_ch04_regression_part2.R"}
 
@@ -55,10 +54,9 @@ So, in this chapter, we cover:
 What would a good regression model look like? What would a bad one look like? One could say that a good regression model is one that explains a lot the variability in the response variable. But what could we mean by "variability in the response variable" and "explains a lot"?
 
 
-Take these two examples. The code makes two example datasets: in `y1` the data are close to a straight line (residual standard deviation 1), in `y2` they are more scattered (residual standard deviation 5). You do not need to understand the `rnorm()` part. <!-- 2027 fix: the code that makes the example data is visible and uses set.seed(), so SST, SSM, SSE and R squared are the same each time -->
+Take these two examples. The code makes two example datasets: in `y1` the data are close to a straight line (residual standard deviation 1), in `y2` they are more scattered (residual standard deviation 5). You do not need to understand the `rnorm()` part.
 
 ```{r}
-# 2027 fix: set.seed() and visible code, because the calculations below use y1
 set.seed(1233)
 x <- 1:10
 y1 <- 2*x + rnorm(10,0,1)
@@ -153,7 +151,7 @@ ggplot() +
 
 In this graph, the square of the length of the green lines is the model sum of squares ($SSM$). The square of the length of the red lines is the error sum of squares ($SSE$).
 
-In a better model the length of the green lines will be **longer** (the square of these gives the $SSM$, <!-- 2027 fix: typo SMM --> the variability explained by the model). And the length of the red lines will be **shorter** (the square of these gives the $SSE$, the variability not explained by the model).
+In a better model the length of the green lines will be **longer** (the square of these gives the $SSM$, the variability explained by the model). And the length of the red lines will be **shorter** (the square of these gives the $SSE$, the variability not explained by the model).
 
 
 ### $SSM$
@@ -266,7 +264,6 @@ p4 <- ggplot(data.frame(x = x, y_ex20 = y_ex20), aes(x = x, y = y_ex20)) +
 
 Using the blood pressure data, we can fit a regression model and look at the output. We use the `summary` function to get the regression output, and we can see that the $R^2$ value is given in the output. Look for "Multiple R-squared" in the output, which is the $R^2$ value of the model. 
 ```{r}
-# 2027 fix: visible code (the model is used in the rest of the chapter); read_csv() with a relative path, no here()
 bp_data <- read_csv("datasets/Simulated_Blood_Pressure_and_Age_Data.csv")
 bp_age_model <- lm(Systolic_BP ~ Age, data = bp_data)
 summary(bp_age_model)
@@ -404,7 +401,6 @@ But how can we calculate the $p$-value from the $t$-statistic? The answer is to 
 
 But what is the $t$-distribution? It is a distribution of the $t$-statistic under the null hypothesis. It is a bell-shaped distribution that is centered on zero. The shape of the distribution is determined by the degrees of freedom, which is $n-2$ for a simple linear regression model.
 
-<!-- 2027 addition: how the degrees of freedom change the t-distribution -->
 With few degrees of freedom the $t$-distribution has heavier tails than the normal distribution: extreme values of $t$ are more likely, because the residual variance (and so the standard error) is estimated less precisely. As the degrees of freedom increase, the $t$-distribution gets closer and closer to the standard normal distribution:
 
 ```{r}
@@ -472,7 +468,6 @@ This area (p-value) can be calculated using the cumulative distribution function
 
 ```{r}
 #| echo: true
-# 2027 fix: n was only defined in a hidden chunk
 n <- 100
 t_value <- 1.5
 p_value <- 2 * pt(-abs(t_value), df = n - 2)
@@ -514,7 +509,7 @@ p_value <- 2 * pt(-abs(t_value), df = n - 2)
 p_value
 ```
 
-The p-value is `r round(p_value, 3)`, which means that there is a `r round(p_value, 3)` probability <!-- 2027 fix: p is 0.014, not 0.01 --> of observing a value of the $t$-statistic at least as extreme as 2.5, given that the null hypothesis is true. Therefore, we reject the null hypothesis of no relationship between the response and explanatory variable.
+The p-value is `r round(p_value, 3)`, which means that there is a `r round(p_value, 3)` probability of observing a value of the $t$-statistic at least as extreme as 2.5, given that the null hypothesis is true. Therefore, we reject the null hypothesis of no relationship between the response and explanatory variable.
 
 
 ### Where is the $p$-value in the regression output?
@@ -548,7 +543,7 @@ The actual value of the slope has practical meaning. The slope of the regression
 
 We can ask what values of a parameter estimate are compatible with the data (confidence intervals)? To answer this question, we can determine the confidence intervals of the regression parameters.
 
-A 95% confidence interval is calculated with a procedure that, if we repeated the study many times and calculated an interval from each new sample, would give intervals that contain the true parameter value in 95% of the repetitions. Any one interval either contains the true value or it does not; the 95% refers to the procedure, not to the particular interval we calculated. A useful, informal way to think of a 95% confidence interval of the slope is as the range of values of the slope that are compatible with the data. <!-- 2027 fix: correct definition of a confidence interval (not "contains the true value with probability 95%") -->
+A 95% confidence interval is calculated with a procedure that, if we repeated the study many times and calculated an interval from each new sample, would give intervals that contain the true parameter value in 95% of the repetitions. Any one interval either contains the true value or it does not; the 95% refers to the procedure, not to the particular interval we calculated. A useful, informal way to think of a 95% confidence interval of the slope is as the range of values of the slope that are compatible with the data.
 
 We can then imagine two cases. The 95% confidence interval of the slope includes 0:
 
@@ -606,7 +601,7 @@ $$t = \frac{\hat\beta_1}{\hat\sigma^{(\beta_1)}}$$
 
 The first step is to calculate the $t$-value that corresponds to a p-value of 0.05. This is the $t$-value that corresponds to the 97.5% quantile of the $t$-distribution with $n-2$ degrees of freedom.
 
-$t_{0.975} = -t_{0.025} = 1.96$, for large $n$. <!-- 2027 fix: sign -->
+$t_{0.975} = -t_{0.025} = 1.96$, for large $n$.
 
 The 95% confidence interval of the slope is then given by:
 
@@ -643,7 +638,6 @@ Or we can do it using values from the coefficients table:
 bp_age_coefs <- summary(bp_age_model)$coef
 beta <- bp_age_coefs[2,1]
 sdbeta <- bp_age_coefs[2,2] 
-# 2027 fix: the residual degrees of freedom are 98 (n - 2), not 241
 beta + c(-1,1) * qt(0.975, df = df.residual(bp_age_model)) * sdbeta
 ```
 
@@ -657,10 +651,9 @@ If another sample from the same population was taken, the regression line would 
 
 Lets look at this in a graph of our blood pressure data. The black line is the regression line fitted to the data. The purple line is the confidence band for the expected values of $y$ (systolic blood pressure) for each value of $x$ (age). The shaded area around the purple line is the 95% confidence band for the expected values of $y$.
 
-We can calculate the confidence band with the `predict()` function, using `interval = "confidence"`, and then plot it: <!-- 2027 fix: confidence band code now visible -->
+We can calculate the confidence band with the `predict()` function, using `interval = "confidence"`, and then plot it:
 
 ```{r}
-# 2027 fix: visible code, because students need it to make confidence bands
 ## calculate the confidence band for the expected values of y
 new_data <- data.frame(Age = seq(20, 80, by = 1))
 conf_band <- cbind(new_data,
@@ -725,10 +718,9 @@ The key point is that the standard error of a future observation is larger than 
 
 Here's a graph showing the prediction band in green for the blood pressure data (with the confidence band in purple):
 
-The code is the same as for the confidence band, but with `interval = "prediction"`: <!-- 2027 fix: prediction band code now visible -->
+The code is the same as for the confidence band, but with `interval = "prediction"`:
 
 ```{r}
-# 2027 fix: visible code, because students need it to make prediction bands
 prediction_band <- cbind(new_data,
                    predict(bp_age_model, newdata = new_data, interval = "prediction", level = 0.95))
 ggplot(bp_data, aes(x = Age, y = Systolic_BP)) +
@@ -749,7 +741,6 @@ Another way to think of the 95% confidence band is that it is where we would exp
 
 
 
-<!-- 2027 addition: extrapolation -->
 ## Extrapolation: predicting beyond the data
 
 A regression model describes the relationship only over the range of values of the explanatory variable that we observed. In the blood pressure data, ages range from `r min(bp_data$Age)` to `r max(bp_data$Age)` years. Using the model to make predictions outside this range is called **extrapolation**, and it is risky:
@@ -785,7 +776,6 @@ We *DO NOT* report like this:
 *There was a statistically significant relationship between age and systolic blood pressure ($p < 0.001$).*
 
 
-<!-- 2027 addition: effect size and biological relevance -->
 ### How big is the effect, and does it matter?
 
 A $p$-value tells us whether the data are compatible with there being no relationship. It does not tell us how strong the relationship is, or whether it is important. For that we need the **effect size**: here, the estimated slope, with its confidence interval, in the units of the variables.
@@ -796,7 +786,6 @@ Whether an effect of this size is *biologically* (or medically) important is not
 
 This is the third of the four principles for high-quality data analysis introduced in Chapter 1: emphasise effect sizes and biological relevance, rather than statistical significance alone.
 
-<!-- 2027 addition: association versus causation -->
 ## Association is not causation
 
 The blood pressure data come from an *observational* study: we did not assign people their ages. The regression therefore describes an **association**: older people in this sample tend to have higher blood pressure. On its own, it does not show that ageing *causes* the increase. Many other things differ with age, such as diet, exercise and body weight, and any of these could contribute to the association.
@@ -961,7 +950,7 @@ Now let's create 19 and put the real one in there somewhere random. Here's a cas
 
 ```{r fig.width=10, fig.height=10}
 #| echo: false
-set.seed(11) # 2027 fix: reproducible lineup
+set.seed(11)
 y <- 0.5*x + rnorm(n, 0, 15)
 par(mfrow = c(5, 4))
 this_one <- round(runif(1, 1, 20),0)
@@ -983,7 +972,7 @@ We can confidently find the real data amount the shuffled data. But what if the 
 
 ```{r fig.width=10, fig.height=10}
 #| echo: false
-set.seed(12) # 2027 fix: reproducible lineup
+set.seed(12)
 y <- 0.15*x + rnorm(n, 0, 15)
 par(mfrow = c(5, 4))
 this_one <- round(runif(1, 1, 20),0)
@@ -1005,7 +994,6 @@ Now its less clear which is the real data. We can use this idea to test the null
 We do the same procedure of but instead of just looking at the graphs, we calculate the slope of the regression line each time. This gives us a distribution of slopes we would expect to observe if the null hypothesis is true. We can then see where the observed slope lies in this distribution of null hypothesis slopes.
 
 ```{r}
-# 2027 fix: the observed slope and the shuffled slopes now come from the same data
 # The "observed" data: a weak relationship
 set.seed(456)
 y_weak <- 0.15*x + rnorm(n, 0, 15)

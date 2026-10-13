@@ -16,7 +16,6 @@ lo_callout("3.1", lo_dir)
 
 ::: {.callout-note icon=false}
 ## Code walkthrough for this chapter
-<!-- 2027 addition: code walkthrough script and video -->
 
 **Script:** [walkthrough_ch03_regression_part1.R](walkthroughs/walkthrough_ch03_regression_part1.R){download="walkthrough_ch03_regression_part1.R"}
 
@@ -73,7 +72,6 @@ Lets look at some simulated example data:
 
 ```{r}
 # Load the data
-# 2027 fix: read_csv() instead of read.csv()
 bp_age_data <- read_csv("datasets/Simulated_Blood_Pressure_and_Age_Data.csv")
 
 # How many data points with both age and blood pressure?
@@ -278,7 +276,6 @@ First we read in the dataset:
 
 ```{r}
 #| echo: true
-# 2027 fix: read_csv() instead of read.csv()
 bp_age_data <- read_csv("datasets/Simulated_Blood_Pressure_and_Age_Data.csv")
 ```
 
@@ -306,7 +303,7 @@ summary(bp_age_model)
 
 How do our guesses of the intercept and slope compare to the guesses we made earlier?
 
-Recal that the units of the *Age* coefficient are in mmHg per year. This means that for each additional year of age, the systolic blood pressure increases by `r round(coef(bp_age_model)[2],2)` mmHg. <!-- 2027 fix: inline R used acute accents instead of backticks, so the number was not shown -->
+Recal that the units of the *Age* coefficient are in mmHg per year. This means that for each additional year of age, the systolic blood pressure increases by `r round(coef(bp_age_model)[2],2)` mmHg.
 
 <!---
 **Think–Pair–Share** (#a_interpreting_slope) In words, what does the slope represent in this model? What does it *not* tell you?
@@ -677,10 +674,9 @@ This graph is known as the scale-location plot. It is particularly suited to che
 
 ::: {.callout-tip}
 
-We can also use the `autoplot()` function from the `ggfortify` package to create this plot. It is the third plot in the set of model checking plots, so we use `which = 3`. The argument `smooth.colour = NA` removes the smoothed line. <!-- 2027 fix: autoplot() instead of base plot(); invalid chunk option "evaluate" removed -->
+We can also use the `autoplot()` function from the `ggfortify` package to create this plot. It is the third plot in the set of model checking plots, so we use `which = 3`. The argument `smooth.colour = NA` removes the smoothed line.
 
 ```{r}
-# 2027 fix: autoplot() (ggfortify) instead of plot(bp_age_model, which = 3)
 library(ggfortify)
 autoplot(bp_age_model, which = 3, smooth.colour = NA)
 ```
@@ -707,7 +703,6 @@ And here the scale-location plot for a linear model of that data:
 
 ```{r}
 m_sim <- lm(y~x)
-# 2027 fix: autoplot() instead of plot(m_sim, which = 3)
 autoplot(m_sim, which = 3)
 ```
 
@@ -743,7 +738,6 @@ The blood pressure data seems to be linear:
   
 ```{r}
 #| echo: false
-# 2027 fix: plot the data (bp_age_data), not the model object
 suppressMessages(ggplot(bp_age_data, aes(x = Age, y=Systolic_BP)) +
   geom_point() +
   geom_smooth(formula = y ~ x, method="lm", se=FALSE)
@@ -752,7 +746,6 @@ suppressMessages(ggplot(bp_age_data, aes(x = Age, y=Systolic_BP)) +
 
 ```{r}
 #| eval: false
-# 2027 fix: plot the data (bp_age_data), not the model object
 ggplot(bp_age_data, aes(x = Age, y=Systolic_BP)) +
   geom_point() +
   geom_smooth(formula = y ~ x, method="lm", se=FALSE)
@@ -794,17 +787,15 @@ ggplot(mapping = aes(x = fitted(m_sim), y = resid(m_sim))) +
 
 We can very clearly see pattern in the residuals in this Tukey-Anscombe plot. The residuals are positive, then negative, then positive, as the fitted $y$ value gets larger.
 
-We can also make this Tukey-Anscombe plot using the `autoplot()` function (it is plot number 1 of the model checking plots): <!-- 2027 fix: autoplot() instead of base plot() -->
+We can also make this Tukey-Anscombe plot using the `autoplot()` function (it is plot number 1 of the model checking plots):
 
 ```{r}
-# 2027 fix: autoplot() instead of plot(m_sim, which = 1)
 autoplot(m_sim, which = 1)
 ```
 
-The blue line in the Tukey-Anscombe plot is a loess smooth. <!-- 2027 fix: autoplot draws the smooth in blue --> It is automatically added to the plot. It is a way of estimating the pattern in the residuals. If the red line is not flat, then there is a pattern in the residuals. However, the loess smooth is not always reliable. It is a good idea to look at the residuals directly, without this smooth.
+The blue line in the Tukey-Anscombe plot is a loess smooth. It is automatically added to the plot. It is a way of estimating the pattern in the residuals. If the blue line is not flat, then there is a pattern in the residuals. However, the loess smooth is not always reliable. It is a good idea to look at the residuals directly, without this smooth.
 
 ```{r}
-# 2027 fix: autoplot() instead of plot(m_sim, which = 1, add.smooth = FALSE)
 autoplot(m_sim, which = 1, smooth.colour = NA)
 ```
 
@@ -814,7 +805,6 @@ The data here is simulated to show a very clear pattern in the residuals. In rea
 Here is the Tukey-Anscombe plot for the blood pressure data:
 
 ```{r}
-# 2027 fix: autoplot() instead of plot(bp_age_model, which = 1, add.smooth = FALSE)
 autoplot(bp_age_model, which = 1, smooth.colour = NA)
 ```
 
@@ -848,7 +838,6 @@ An outlier is a data point that is very different from the other data points. Ou
 Lets again look at the blood pressure versus age data:
 
 ```{r}
-# 2027 fix: plot the data (bp_age_data), not the model object
 ggplot(bp_age_data, aes(x = Age, y=Systolic_BP)) +
   geom_point() +
   geom_smooth(formula = y ~ x, method="lm", se=FALSE) +
@@ -889,10 +878,9 @@ The size of the residuals are like the weight of the child. Data points with lar
 
 So the overall effect of a data point on the slope of the line of best fit is a combination of the leverage and the residual. This quantity is called the $influence$ of a data point.
 
-Let's add a rather extreme data point (age 80, blood pressure 120) to the blood pressure versus age data, and fit the model to the data with this extra point: <!-- 2027 fix: the code that adds the point and fits the model is now visible, and the model has its own name -->
+Let's add a rather extreme data point (age 80, blood pressure 120) to the blood pressure versus age data, and fit the model to the data with this extra point:
 
 ```{r}
-# 2027 fix: visible code; data and model have separate, meaningful names
 bp_age_data_outlier <- bp_age_data |>
   select(Age, Systolic_BP) |>
   bind_rows(tibble(Age = 80, Systolic_BP = 120))
@@ -915,7 +903,6 @@ We can make a histogram of the residuals and see that the outlier has a large re
 
 ```{r}
 #| echo: false
-# 2027 fix: use the model object m_bp_age_outlier (no longer overwrites the data object)
 ggplot(m_bp_age_outlier, aes(x = .resid)) +
   geom_histogram(bins=10) +
   geom_vline(xintercept = 0, color="red")
@@ -935,17 +922,15 @@ $MSE$ is the mean squared error of the model.
 
 
 ```{r}
-# 2027 fix: autoplot() instead of plot(..., which = 5); model object has its own name
 autoplot(m_bp_age_outlier, which = 5)
 ```
 
-Observation 101 (the added point) is far to the right (large leverage) and far from zero (large standardised residual). Its Cook's distance is `r round(cooks.distance(m_bp_age_outlier)[101], 2)`, much larger than that of any of the original data points (the largest of which is `r round(max(cooks.distance(bp_age_model)), 2)`). <!-- 2027 fix: added the Cook's distance of the outlier -->
+Observation 101 (the added point) is far to the right (large leverage) and far from zero (large standardised residual). Its Cook's distance is `r round(cooks.distance(m_bp_age_outlier)[101], 2)`, much larger than that of any of the original data points (the largest of which is `r round(max(cooks.distance(bp_age_model)), 2)`).
 
 But does it have a large influence on the value of the slope? In the next graph we show the line of best fit with the outlier (blue line) and without the outlier (red line).
 
 ```{r}
 #| echo: false
-# 2027 fix: data and model now made in the visible chunk above
 ggplot(bp_age_data_outlier, aes(x = Age, y=Systolic_BP)) +
   geom_point() +
   geom_smooth(formula = y ~ x, method="lm", se=FALSE) +
@@ -957,12 +942,11 @@ ggplot(bp_age_data_outlier, aes(x = Age, y=Systolic_BP)) +
 We can compare the estimated coefficients with and without the outlier:
 
 ```{r}
-# 2027 fix: show the coefficients with and without the outlier
 coef(bp_age_model)
 coef(m_bp_age_outlier)
 ```
 
-The outlier has a moderate influence on the slope: it changes from `r round(coef(bp_age_model)[2], 3)` to `r round(coef(m_bp_age_outlier)[2], 3)` mmHg per year. The outlier has a large leverage. It is far from the pivot. But it does not have a very large effect (influence) on the slope. This is in large part because there are a lot data points (100) that are quite tightly arranged around the regression line. <!-- 2027 fix: influence is moderate (slope 0.824 to 0.783, Cook's distance 0.85), not small -->
+The outlier has a moderate influence on the slope: it changes from `r round(coef(bp_age_model)[2], 3)` to `r round(coef(m_bp_age_outlier)[2], 3)` mmHg per year. The outlier has a large leverage. It is far from the pivot. But it does not have a very large effect (influence) on the slope. This is in large part because there are a lot data points (100) that are quite tightly arranged around the regression line.
 
 
 #### Graphical illustration of the leverage effect
@@ -998,7 +982,6 @@ The outlier (red circle) in the middle plot "pulls" the regression line in its d
 In the leverage plot, (standardized) residuals $\tilde{R_i}$ are plotted against the leverage $H_{ii}$ :
 
 ```{r}
-# 2027 fix: autoplot() instead of plot(bp_age_model, which = 5, add.smooth = FALSE)
 autoplot(bp_age_model, which = 5, smooth.colour = NA)
 ```
 
@@ -1016,7 +999,7 @@ Some texts will give a rule of thumb that points with Cook’s distances greater
 
 ### The `autoplot()` function from the `ggfortify` package
 
-So far we have used the `autoplot()` function from the `ggfortify` package to make one model checking plot at a time, choosing the plot with the `which` argument. If we leave out `which`, `autoplot()` makes the four standard model checking plots (residuals vs fitted, QQ-plot, scale-location, and residuals vs leverage) arranged in a 2x2 grid. This is what you will usually do. Of course, you do need to ensure that the `ggfortify` package is installed and loaded. (You may also see the built-in `plot()` function used for this in other texts, for example `plot(bp_age_model, which = 1)`; it makes the same plots with base R graphics.) <!-- 2027 fix: text updated because the chapter now uses autoplot() throughout -->
+So far we have used the `autoplot()` function from the `ggfortify` package to make one model checking plot at a time, choosing the plot with the `which` argument. If we leave out `which`, `autoplot()` makes the four standard model checking plots (residuals vs fitted, QQ-plot, scale-location, and residuals vs leverage) arranged in a 2x2 grid. This is what you will usually do. Of course, you do need to ensure that the `ggfortify` package is installed and loaded. (You may also see the built-in `plot()` function used for this in other texts, for example `plot(bp_age_model, which = 1)`; it makes the same plots with base R graphics.)
 
 ```{r}
 library(ggfortify)
@@ -1049,7 +1032,6 @@ Here's another example of $y$ and $x$ that are not linearly related:
 
 ```{r fig.height=4, fig.width=7}
 #| echo: true
-# 2027 fix: set.seed() so the simulated data, and the numbers quoted below, are the same each time
 set.seed(3)
 nonlinear_data <- tibble(x = runif(50)) |>
   mutate(log_y = log(0.1) + 0.5* log(x) + rnorm(50,0,0.1),
@@ -1129,7 +1111,6 @@ p7 + p8
 Let's look at the four model checking plots for the log-log-transformed data:
 
 ```{r out.width="14cm", fig.align='center', message=FALSE, warning=FALSE}
-# 2027 fix: visible autoplot() instead of hidden par(mfrow) + plot()
 autoplot(m_log_log)
 ```
 
@@ -1158,7 +1139,6 @@ Transformations can also be applied on explanatory variables, as we saw in the e
 
 
 
-<!-- 2027 addition: interpreting models with log-transformed variables -->
 ### Interpreting a model with log-transformed variables
 
 When we transform a variable, the coefficients of the model are on the transformed scale. With a square-root transformation they are hard to interpret. With a log transformation, however, they have useful interpretations in terms of *multiplicative* (proportional) changes. This matters a lot in practice: the slope of a model with a log-transformed response is not "the change in $y$ per unit $x$".

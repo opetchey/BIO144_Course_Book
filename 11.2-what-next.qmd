@@ -10,7 +10,6 @@ lo_callout("11.2", lo_dir)
 
 ::: {.callout-note icon=false}
 ## Code walkthrough
-<!-- 2027 addition -->
 This chapter has no R code. The Unit 11 code walkthrough script and video are at the top of the [Mixed models](11.1-mixed-models.qmd) chapter.
 :::
 

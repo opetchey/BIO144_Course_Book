@@ -16,7 +16,6 @@ lo_callout("8.1", lo_dir)
 
 ::: {.callout-note icon=false}
 ## Code walkthrough for this chapter
-<!-- 2027 addition: code walkthrough script and video -->
 
 **Script:** [walkthrough_ch08_glm_count_data.R](walkthroughs/walkthrough_ch08_glm_count_data.R){download="walkthrough_ch08_glm_count_data.R"}
 
@@ -74,7 +73,6 @@ write_csv(soay, here("datasets", "soay_sheep.csv"))
 
 Read in an example dataset:
 ```{r}
-# 2027 fix: read_csv() instead of read.csv() (course convention)
 soay <- read_csv("datasets/soay_sheep.csv")
 ```
 
@@ -371,7 +369,6 @@ As always, we should check model assumptions:
 autoplot(soay_glm, which = 1:4, add.smooth = TRUE)
 ```
 
-<!-- 2027 fix: which = 1:4 shows Cook's distance, not residuals vs leverage; add the residuals vs leverage plot that the checklist asks for -->
 The bottom-right plot above shows Cook's distance for each observation. The checklist below also asks for the residuals vs leverage plot, which we get with `which = 5`:
 
 ```{r}
@@ -444,7 +441,6 @@ A one-unit increase in an explanatory variable multiplies the expected count by 
 --->
 
 
-<!-- 2027 fix: 1.06 (6%) made consistent with 1.055 (5.5%) above -->
 This means that for each additional kilogram of body size, the expected count of fitness increases by a factor of approximately 1.055 (i.e., a 5.5% increase). We use the number multiplicatively because of the log link function.
 
 
@@ -504,7 +500,6 @@ If we only wanted the fitted value (and not confidence intervals) we could have 
 
 Now we can plot the data and the fitted relationship with confidence intervals. Each layer gets its own `data` and `aes()`, because the layers use different data frames (`soay` for the points, `new_data` for the line and band):
 
-<!-- 2027 fix: code made visible; aes() moved into each layer so geom_ribbon does not inherit y = fitness (which is not in new_data and gave an error) -->
 ```{r fig.width=4, fig.height=4}
 ggplot() +
   geom_point(data = soay, aes(x = body.size, y = fitness), alpha = 0.4) +
@@ -519,7 +514,6 @@ Excellent! We can now write a nice sentence for our results:
 Reproductive fitness (in terms of lifetime number of offspring) increased significantly with body mass, with a unit increase in body mass associated with a multiplicative increase in expected fitness of `r round(exp(coef(soay_glm)[2]), 2)` (95% CI: `r round(exp(confint(soay_glm)[2, ]), 2)`; $\chi^2 =$ `r round(anova(soay_glm, test = "Chisq")$Deviance[2], 2)`, $df = 1$, $p <$ `r signif(anova(soay_glm, test = "Chisq")[2,5], 2)`).
 
 
-<!-- 2027 addition: effect size and biological relevance -->
 ::: {.callout-tip}
 **How big is the effect?** A multiplicative effect per kg of body mass can be hard to judge. It helps to also express it over the range of the data. In this example, the model predicts an expected lifetime fitness of `r round(new_data$fit[1], 1)` offspring for the lightest sheep (`r round(min(soay$body.size))` kg) and `r round(new_data$fit[nrow(new_data)], 1)` offspring for the heaviest (`r round(max(soay$body.size))` kg). Whether a difference of this size is biologically important (for example, for the evolution of body size) is a biological question, but reporting the effect in this way gives readers what they need to judge it.
 :::
@@ -616,14 +610,12 @@ For example, we could include parasite load as an additional predictor of fitnes
 set.seed(1234)
 soay$parasite.load <- rpois(nrow(soay), lambda = 5)
 soay$fitness <- rpois(nrow(soay), lambda = exp(0.05 * soay$body.size - 0.1 * soay$parasite.load - 1))
-# 2027 fix: relative path instead of here()
 write_csv(soay, "datasets/soay_sheep_with_parasites.csv")
 ```
 
 Read in the updated dataset:
 
 ```{r}
-# 2027 fix: read_csv() instead of read.csv() (course convention)
 soay <- read_csv("datasets/soay_sheep_with_parasites.csv")
 ```
 

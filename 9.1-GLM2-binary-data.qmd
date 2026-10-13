@@ -17,7 +17,6 @@ lo_callout("9.1", lo_dir)
 
 ::: {.callout-note icon=false}
 ## Code walkthrough for this chapter
-<!-- 2027 addition: code walkthrough script and video -->
 
 **Script:** [walkthrough_ch09_glm_binary_data.R](walkthroughs/walkthrough_ch09_glm_binary_data.R){download="walkthrough_ch09_glm_binary_data.R"}
 
@@ -79,7 +78,6 @@ y_binary <- rbinom(number_persons, size = 1, prob = 0.8)
 
 This code says please draw 10 random numbers from a binomial distribution where each number is the result of 1 trial (size = 1) with a probability of success of 0.8 (prob = 0.8). Because size = 1, each number will be either 0 or 1.
 
-<!-- 2027 fix: object name y -> y_binary -->
 Hence, the object `y_binary` contains 10 simulated persons, where each person has an 80% chance of being 1:
 
 ```{r}
@@ -118,7 +116,6 @@ y_binomial
 
 So in neither case did we get exactly 8 successes! What is the chance of that!
 
-<!-- 2027 fix: explain why the binary and binomial simulations give different numbers of successes -->
 Note also that the two simulations give different numbers of successes (`r sum(y_binary)` and `r y_binomial`), even though both used `set.seed(123)`, the same number of persons and the same probability. This is because they are different random draws: `rbinom(10, size = 1, ...)` and `rbinom(1, size = 10, ...)` use the random numbers in a different way, so they do not produce the same result. Both are valid simulations of the same process.
 
 Well, we can calculate the probability of getting exactly $k$ successes in $n$ trials with success probability $\pi$ using the binomial probability formula:
@@ -379,7 +376,6 @@ Let's work though an example of binomial regression, with data in what we call *
 
 Eight groups of beetles were exposed to an insecticide dose for 5 hours. For each dose level, we know how many beetles were tested and how many died. This is **binomial (aggregated)** data.
 
-<!-- 2027 fix: the beetle data used to come from the AICcmodavg package (no longer loaded); it is read from datasets/beetle_mortality.csv below -->
 
 Read in the beetle dataset:
 ```{r}
@@ -549,7 +545,6 @@ We also see that the standard errors are larger at intermediate doses, where the
 
 ### Reporting
 
-<!-- 2027 fix: confidence interval for a predicted probability -->
 To report a predicted probability with its confidence interval, we calculate the prediction and its standard error on the link (log-odds) scale, form the interval there, and then back-transform both to the probability scale with `plogis()` (the inverse of the logit). This is the same approach we used for the Poisson GLM, where we back-transformed with `exp()`. Calculating the interval on the link scale first ensures that it stays between 0 and 1.
 
 ```{r}
@@ -563,11 +558,10 @@ prob_50_ci
 
 When reporting results from a logistic regression, you might say something like:
 
-"A logistic regression was used to model the probability of beetle mortality as a function of insecticide dose. The odds of mortality increased by a factor of `r round(exp(coef(beetle_glm)[["Dose"]]), 2)` (95% CI: `r round(exp(confint(beetle_glm)["Dose", 1]), 2)` to `r round(exp(confint(beetle_glm)["Dose", 2]), 2)`) per unit increase in dose. This indicates that higher doses are associated with higher odds of mortality. The model predicts that at a dose of 50, the probability of mortality is approximately `r round(prob_50, 2)` (95% CI: `r round(prob_50_ci[1], 2)` to `r round(prob_50_ci[2], 2)`). Mortality was strongly associated with dose (likelihood ratio test: change in deviance = `r round(anova(beetle_glm, test = "Chisq")$Deviance[2], 1)`, $df = 1$, $p$ `r beetle_p <- anova(beetle_glm, test = "Chisq")[2, 5]; if (beetle_p < 0.001) "< 0.001" else paste("=", signif(beetle_p, 2))`)." <!-- 2027 fix: report the change in deviance (null minus residual) on 1 df, not the residual deviance -->
+"A logistic regression was used to model the probability of beetle mortality as a function of insecticide dose. The odds of mortality increased by a factor of `r round(exp(coef(beetle_glm)[["Dose"]]), 2)` (95% CI: `r round(exp(confint(beetle_glm)["Dose", 1]), 2)` to `r round(exp(confint(beetle_glm)["Dose", 2]), 2)`) per unit increase in dose. This indicates that higher doses are associated with higher odds of mortality. The model predicts that at a dose of 50, the probability of mortality is approximately `r round(prob_50, 2)` (95% CI: `r round(prob_50_ci[1], 2)` to `r round(prob_50_ci[2], 2)`). Mortality was strongly associated with dose (likelihood ratio test: change in deviance = `r round(anova(beetle_glm, test = "Chisq")$Deviance[2], 1)`, $df = 1$, $p$ `r beetle_p <- anova(beetle_glm, test = "Chisq")[2, 5]; if (beetle_p < 0.001) "< 0.001" else paste("=", signif(beetle_p, 2))`)."
 
 
 
-<!-- 2027 addition: effect size -->
 ::: {.callout-tip}
 **How big is the effect?** Odds ratios are hard for most readers to interpret. As well as the odds ratio, report predicted probabilities at a few meaningful values of the explanatory variable (for example, the lowest and highest doses used, or a dose of practical interest), with their confidence intervals. Readers can then judge whether the effect is biologically (or practically) important. See also "Probability vs odds ratio in reporting" below.
 :::
@@ -602,11 +596,9 @@ If we had found overdispersion, a simple fix is to use the `quasibinomial` famil
 ```{r}
 beetle_glm_q <- glm(cbind(Number_killed, Number_survived) ~ Dose,
                     data = beetle, family = quasibinomial)
-# 2027 fix: show the output of the quasibinomial model
 summary(beetle_glm_q)
 ```
 
-<!-- 2027 fix: interpret the quasibinomial output -->
 The estimates are the same as for `beetle_glm`, but the standard errors are larger (for Dose, `r round(summary(beetle_glm_q)$coefficients["Dose", "Std. Error"], 4)` instead of `r round(summary(beetle_glm)$coefficients["Dose", "Std. Error"], 4)`). This is because they are scaled by the estimated dispersion parameter (`r round(summary(beetle_glm_q)$dispersion, 2)`; see the line "Dispersion parameter for quasibinomial family taken to be ..."). This value is calculated from the Pearson residuals, so it differs a little from the deviance / df ratio of about 1.4 above, but it tells us the same thing. The tests are now $t$-tests rather than $z$-tests. Here the effect of Dose remains very clear.
 
 ::: {.callout-note}
@@ -629,7 +621,6 @@ Individuals with low ESR (ESR is erythrocyte sedimentation rate and is a measure
 data("plasma", package = "HSAUR3")
 plasma <- plasma |>
   mutate(y = as.integer(ESR) - 1)  # ESR is a factor; convert to 0/1
-# 2027 fix: relative path instead of here()
 write_csv(plasma, "datasets/plasma_esr_original_HSAUR3.csv")
 ```
 
@@ -686,7 +677,6 @@ In the case of non-aggregated individual-level 0/1 data, we simply use `y` as th
 plasma_glm <- glm(y ~ fibrinogen + globulin, data = plasma, family = binomial)
 ```
 
-<!-- 2027 fix: show and interpret the output of plasma_glm -->
 We look at the results (we check the model below, but in practice you would check the model before interpreting the results):
 
 ```{r}

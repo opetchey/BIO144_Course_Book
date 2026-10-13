@@ -24,7 +24,7 @@ lo_callout("1.1", lo_dir)
 
 ::: {.callout-note icon=false}
 ## Code walkthrough for this chapter
-<!-- 2027 addition: code walkthrough script and video -->
+
 
 **Script:** [walkthrough_ch01_intro.R](walkthroughs/walkthrough_ch01_intro.R){download="walkthrough_ch01_intro.R"}
 
@@ -101,26 +101,24 @@ You will meet each principle many times. Principle 1 is the first step of the wo
 ## How the course is organised
 
 ::: {.callout-note}
-Times, names and other details in this section can change from year to year. The [course information website](https://opetchey.github.io/BIO144_Course_Information/) has the current details.
-<!-- check each year -->
+The [course information website](https://opetchey.github.io/BIO144_Course_Information/) has the current times, dates, and other details that can change from year to year. 
 :::
 
 **The team.** You are at the centre of the course, supported by the lectures, the practicals, the discussion forum on OLAT and, when needed, email. The course is taught by Prof. Owen Petchey, with a head teaching assistant, an examinations coordinator, and numerous teaching assistants.
-<!-- check each year: names were Til Hämmig (head TA) and Dr Frank Pennekamp (examinations) in 2026 -->
 
-**The conceptual side: lectures** (Mondays, 8:00–9:45).
+**The conceptual side: lectures**
 
 * Apart from this first week, the lectures do not use slides.
 * The **course book contains what you need to know.** Each week has a chapter.
-* In lectures, the lecturer talks, draws, codes, and asks you questions.
-* One lecture is given by a guest.
+* In lectures, the lecturer talks, draws, and asks you questions.
+
 
 Many of the questions in lectures use **think, pair, share**: you first think about the question on your own, then discuss it with a neighbour, then share with the class. Peer discussion improves understanding, even when none of the students in a discussion group originally knew the correct answer (Smith et al. 2009).
 
 **The practical side.**
 
-* **Practicals** (Thursday or Friday, 13:00–15:00), where you work on data analysis with help from the teaching assistants.
-* **Homework**, best done between Monday and the practical.
+* **Practicals**, where you work on data analysis with help from the teaching assistants.
+* **Homework**, best done between the lecture and the practical.
 * **Weekly practice quizzes**, which you can do at any time.
 
 Please keep up with the course material, and reach out to us if you feel you are falling behind. The weeks do not all need the same amount of time, so look ahead and plan early.
@@ -130,7 +128,7 @@ Please keep up with the course material, and reach out to us if you feel you are
 * **OLAT**, the hub, which links to everything else and hosts the discussion forum. Please ask questions and make requests in the forum.
 * The **course information website**, with general information, the learning objectives, and a page for each week.
 * The **course book** (this book).
-* The site with the **homework, practicals and weekly quizzes** (on the UZH RStudio Connect server: off campus, connect to the UZH VPN first). <!-- 2027 fix: VPN note -->
+* The site with the **homework, practicals and weekly quizzes** (on the UZH RStudio Connect server: off campus, connect to the UZH VPN first). 
 
 Much of the course material is new or recently revised. If you find something that is unclear, too brief, or wrong, please let us know.
 
@@ -140,17 +138,9 @@ Much of the course material is new or recently revised. If you find something th
 
 ::: {.callout-note}
 Check the course information website for the current examination details.
-<!-- check each year -->
 :::
 
-* The exam consists of three or four **case studies**. In each, you analyse a dataset and answer questions about it. Many conceptual questions are embedded in the case studies.
-* Many questions are answered by **entering numbers**, rounded to the required number of decimal places.
-* The exam is in person, on site, on your own computer (a "bring your own device" exam), using the Safe Exam Browser and **RStudio Server**.
-* You may bring notes on both sides of three sheets of A4 paper, and a German–English dictionary (which we may inspect). No other sources may be consulted.
-* There is a mandatory practice exam, and you will have access to a representative exam from a previous year.
-* Grades are not "curved": you are not competing against each other. (We may adjust the pass mark if a particular exam turns out to be much harder than previous ones.)
-
-Because the exam asks you to analyse data in R and give numerical answers, the best preparation is to practise doing analyses yourself, every week.
+One comment here: The exam consists of **case studies**. In each, you analyse a dataset and answer questions about it. Many conceptual questions are embedded in the case studies. Because the exam asks you to analyse data in R and give numerical answers, the best preparation is to practise doing analyses yourself, every week.
 
 ## How we will work together
 
@@ -589,7 +579,7 @@ In statistics, clarity of reasoning matters more than code that merely *runs*.
 
 ## RStudio Server
 
-You can use R and RStudio either on your own laptop or in a web browser, through the UZH RStudio Server (<https://rstudio.mnf.uzh.ch/>). <!-- 2027 fix: same message as the course information and the Unit 1 practical -->
+You can use R and RStudio either on your own laptop or in a web browser, through the UZH RStudio Server (<https://rstudio.mnf.uzh.ch/>). 
 
 * **You will have to use RStudio Server in the exam**, so whichever you use during the course, make sure you can log in to RStudio Server and work there (the Unit 1 practical starts with this).
 * RStudio Server: much of the setup is already done for you, but you have to be connected to the internet (and to the UZH network or VPN for some resources).
@@ -632,10 +622,9 @@ There has already been quite a lot of research on reaction times. In general, ma
 
 Before collecting any data, we decide what graph we will make and what statistical test we will use.
 
-* **Graph:** box plots of reaction time (in seconds, on the horizontal axis) for females and males. This shows the centre and spread of the two groups side by side.
+* **Graph:** box plots of reaction time (on the horizontal axis) for females and males. This shows the centre and spread of the two groups side by side.
 * **Statistical test:** we are comparing the mean of a continuous response variable (reaction time) between two groups (the explanatory variable, sex), so a two-sample t-test is a natural choice. Its assumptions include independent observations, and roughly normally distributed values with similar variances in the two groups.
 
-<!-- TO DO (Owen): confirm the test used in the demonstration, and whether you also show it as a linear model with lm(). -->
 
 ### Selection of subjects
 
@@ -645,7 +634,6 @@ Ideally, the subjects would be a random sample from the population we want to dr
 
 You measure your own reaction time using an online test, and record it, along with some other information about yourself, in a form linked from the course information website. Because these are data about people, we need to think about ethical issues, such as consent, anonymity, and how the data will be used and shared.
 
-<!-- TO DO (Owen): add a sentence on what the form records (variables) and how anonymity and consent are handled. -->
 
 ### Data wrangling, visualisation and statistical test
 

@@ -15,7 +15,6 @@ lo_callout("6.1", lo_dir)
 
 ::: {.callout-note icon=false}
 ## Code walkthrough for this chapter
-<!-- 2027 addition: code walkthrough script and video -->
 
 **Script:** [walkthrough_ch06_multiple_regression.R](walkthroughs/walkthrough_ch06_multiple_regression.R){download="walkthrough_ch06_multiple_regression.R"}
 
@@ -213,7 +212,6 @@ fig
 ```
 
 ::: {.content-visible unless-format="html"}
-<!-- 2027 fix: plotly figures are run only for HTML, so the PDF build needs no browser screenshots -->
 *This interactive 3-D figure is shown only in the online version of the book: see [this chapter online](https://opetchey.github.io/BIO144_Course_Book/6.1-multiple-regression.html).*
 :::
 
@@ -242,7 +240,6 @@ $$\epsilon_i \sim N(0, \sigma^2)$$
 
 
 
-<!-- 2027 fix: replaced the leftover "Seventh, ..." sentence (the first six points were missing) -->
 **What we already know** from simple linear regression also applies here: how to estimate the parameters by least squares, how to check the assumptions of the model, and how to use the model to make predictions (with confidence and prediction bands).
 
 **What we don't know** yet is how to answer the four questions already mentioned above:
@@ -294,7 +291,6 @@ We can check the assumptions of the multiple linear regression model using the s
 
 ```{r eval=T,echo=T}
 # Check the assumptions
-# 2027 fix: autoplot() (ggfortify) instead of par(mfrow) and base plot()
 autoplot(m_bp_age_exercise, which = c(1, 2, 3, 5), smooth.colour = NA)
 ```
 
@@ -470,7 +466,6 @@ summary(m_bp_age_exercise)$r.squared
 Now, we can add a new explanatory variable to the blood pressure model that is not associated with the response:
 
 ```{r echo = TRUE}
-# 2027 fix: set.seed() so that the random numbers are the same each time
 set.seed(1)
 bp_data_multreg$random_variable <- rnorm(nrow(bp_data_multreg))
 m_bp_age_exercise_random <- lm(bp ~ age + mins_exercise + random_variable, data = bp_data_multreg)
@@ -618,7 +613,7 @@ new_data_effects_3 <- new_data_effects_3 |>
          mins_exercise_fac = as.factor(mins_exercise)) 
 ```
 
-(Note that we also made a new variable, `mins_exercise_fac`, which is `mins_exercise` converted to a factor. Then ggplot gives each of the three values of minutes of exercise its own colour, and a legend with just these three values, instead of a continuous colour scale.) <!-- 2027 fix: completed the unfinished sentence -->
+(Note that we also made a new variable, `mins_exercise_fac`, which is `mins_exercise` converted to a factor. Then ggplot gives each of the three values of minutes of exercise its own colour, and a legend with just these three values, instead of a continuous colour scale.)
 
 And make a graph:
 
@@ -635,7 +630,6 @@ ggplot(data = new_data_effects_3, aes(x = age, y = prediction,
 
 
 
-<!-- 2027 addition: reporting with effect sizes -->
 ## Reporting
 
 As for simple regression, a good report of a multiple regression gives the effect size of each explanatory variable, with its uncertainty, in meaningful units, as well as the test results. For example:
@@ -703,7 +697,7 @@ bp_data_perfect <- read_csv("datasets/bp_data_perfect.csv")
 ```
 
 
-Now we fit a simple linear regression model with only age: <!-- 2027 fix: "multiple" changed to "simple" -->
+Now we fit a simple linear regression model with only age:
 
 ```{r}
 m1_age <- lm(bp ~ age, data = bp_data_perfect)
@@ -719,7 +713,7 @@ m1_both <- lm(bp ~ mins_exercise + age, data = bp_data_perfect)
 summary(m1_both)
 ```
 
-This output is a bit strange. The estimate for age is now `NA`. This is because the model cannot distinguish between the effects of age and minutes of exercise, since they are perfectly correlated. The model is unable to estimate the coefficient for age, so it returns `NA`. <!-- 2027 fix: typo "age of exercise" -->
+This output is a bit strange. The estimate for age is now `NA`. This is because the model cannot distinguish between the effects of age and minutes of exercise, since they are perfectly correlated. The model is unable to estimate the coefficient for age, so it returns `NA`.
 
 This is an example of instability of coefficients due to collinearity. The coefficient for age is completely unstable, as it changes from a number to `NA` depending on whether minutes of exercise is included in the model or not.
 
@@ -877,7 +871,6 @@ pairs(data_collinear_strong)
 Fit the two models with one explanatory variable each, and the model with both:
 
 ```{r}
-# 2027 fix: this chunk was hidden, but students need it to reproduce the results below
 m2_age <- lm(bp ~ age, data = data_collinear_strong)
 m2_mins_exercise <- lm(bp ~ mins_exercise, data = data_collinear_strong)
 m2_both <- lm(bp ~ age + mins_exercise, data = data_collinear_strong)
@@ -962,11 +955,10 @@ data_collinear_severe <- data.frame(x1 = x1, x2 = x2, x3 = x3, y = y)
 
 ```{r}
 #| echo: false
-# 2027 fix: save these data as a CSV, like the other example datasets
 write_csv(data_collinear_severe, "datasets/data_collinear_severe.csv")
 ```
 
-This dataset is also available as `data_collinear_severe` in the book dataset collection: <!-- 2027 fix: dataset added -->
+This dataset is also available as `data_collinear_severe` in the book dataset collection:
 
 ```{r}
 data_collinear_severe <- read_csv("datasets/data_collinear_severe.csv")
@@ -1084,7 +1076,6 @@ This means that about `r round(semi_partial_r2 * 100, 2)`% of the total variance
 **Think–Pair–Share** (#a_interpreting_coefficients_conditionally) How does the interpretation of a coefficient change when you add another explanatory variable to the model?
 --->
 
-<!-- 2027 addition: confounding and causation -->
 ## Confounding: why we include other explanatory variables
 
 In Chapter 4 we saw that an association between two variables in an observational study does not show that one causes the other, because of possible **confounding variables**: variables associated with both the explanatory variable and the response. Multiple regression gives us one way to deal with confounding variables that we have measured: include them as explanatory variables.
@@ -1187,7 +1178,6 @@ plotly::plot_ly(bp_data_multreg, x = ~age, y = ~mins_exercise, z = ~bp,
 ```
 
 ::: {.content-visible unless-format="html"}
-<!-- 2027 fix: plotly figures are run only for HTML, so the PDF build needs no browser screenshots -->
 *This interactive 3-D figure is shown only in the online version of the book: see [this chapter online](https://opetchey.github.io/BIO144_Course_Book/6.1-multiple-regression.html).*
 :::
 

@@ -16,7 +16,6 @@ lo_callout("10.1", lo_dir)
 
 ::: {.callout-note icon=false}
 ## Code walkthrough for this chapter
-<!-- 2027 addition: code walkthrough script and video -->
 
 **Script:** [walkthrough_ch10_ordination.R](walkthroughs/walkthrough_ch10_ordination.R){download="walkthrough_ch10_ordination.R"}
 
@@ -72,7 +71,6 @@ We will treat the four skull measurements as multivariate responses, and time as
 First read the dataset from the csv file:
 
 ```{r}
-# 2027 fix: relative path instead of here()
 skull <- read_csv("datasets/skull_shape_time.csv")
 ```
 
@@ -464,7 +462,6 @@ p3
 ```
 
 ::: {.content-visible unless-format="html"}
-<!-- 2027 fix: plotly figures are run only for HTML, so the PDF build needs no browser screenshots -->
 *These interactive 3-D figures are shown only in the online version of the book: see [this chapter online](https://opetchey.github.io/BIO144_Course_Book/10.1-ordination.html).*
 :::
   
@@ -533,7 +530,6 @@ skull_distances <- dist(X_scaled, method = "euclidean")
 #skull_distances
 ```
 
-<!-- 2027 addition: Bray–Curtis dissimilarity, used in the Unit 10 practical -->
 #### Distances for community (abundance) data: Bray–Curtis
 
 Euclidean distance on scaled variables suits continuous measurements like these skull dimensions. For **species abundance or community composition data** (counts or relative abundances of many species or taxa at each site or sample), the most widely used dissimilarity is **Bray–Curtis**. For two samples $j$ and $k$, with abundances $y_{ij}$ and $y_{ik}$ of species $i$:
@@ -617,7 +613,6 @@ The stress decreases when we move to three dimensions, indicating a better fit. 
 
 We can plot the NMDS scores, colored by time:
 
-<!-- 2027 fix: code made visible, because nmds_scores is used in the visible code below -->
 ```{r}
 nmds_scores <- as_tibble(scores(skull_nmds, display = "sites")) |>
   mutate(id = skull$id, thousand.years = skull$thousand.years)
@@ -682,7 +677,6 @@ If you test time against each skull measurement separately, you face a **multipl
 
 A better match to the question (“do skulls change through time in multivariate space?”) is a **multivariate test**.
 
-<!-- 2027 addition: scope of the multivariate tests -->
 ::: {.callout-important}
 **What you need to know about these methods.** You do not need to be able to run these tests yourself. You should know that they exist, understand what question each one answers, and be able to choose which one you would use in a given situation:
 
@@ -719,7 +713,6 @@ If we bin years into categories, MANOVA becomes closer to multivariate ANOVA:
 ```{r}
 skull <- skull |>
   mutate(year_class = cut(thousand.years, breaks = 8) |> fct_inorder())
-# 2027 fix: use the binned years (year_class), not thousand.years
 skull_manova_class <- manova(cbind(max.breadth, basi.height, basi.length, nasal.height) ~ year_class,
                       data = skull)
 summary(skull_manova_class, test = "Pillai")

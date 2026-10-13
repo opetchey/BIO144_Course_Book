@@ -16,7 +16,6 @@ lo_callout("5.1", lo_dir)
 
 ::: {.callout-note icon=false}
 ## Code walkthrough for this chapter
-<!-- 2027 addition: code walkthrough script and video -->
 
 **Script:** [walkthrough_ch05_anova.R](walkthroughs/walkthrough_ch05_anova.R){download="walkthrough_ch05_anova.R"}
 
@@ -166,7 +165,6 @@ bp_data_diet <- tibble(diet = sample(c("meat heavy", "Mediterranean",
 
 ```{r}
 #| echo: false
-# 2027 fix: explicit level order, so the figure is the same whatever the computer's sort order (locale)
 bp_data_diet_fig <- bp_data_diet |>
   mutate(diet = factor(diet, levels = c("meat heavy", "Mediterranean", "vegan", "vegetarian")))
 group_means <- bp_data_diet_fig |>
@@ -222,7 +220,6 @@ Graphically, the model now looks like this:
 
 ```{r}
 #| echo: false
-# 2027 fix: meat heavy set explicitly as the reference (first level), independent of the locale
 m_bp_diet_fig <- lm(bp ~ diet, data = bp_data_diet_fig)
 ggplot(bp_data_diet_fig, aes(x = diet, y = bp)) +
   geom_point() +
@@ -613,7 +610,6 @@ The residuals vs fitted plot (top left) does not show any clear pattern, which i
 
 The scale-location plot (bottom left) does not show any clear pattern, which is good. This suggests that the residual variance is not different in different groups, i.e., that there is little if any heteroscedasticity.
 
-<!-- 2027 fix: with which = 1:4 the bottom-right panel is Cook's distance, not residuals vs leverage -->
 The bottom right plot shows Cook's distance for each observation, that is, how much the fitted values would change if that observation were left out. No observation has a Cook's distance near 1 (the largest is about 0.15), so no single observation has a large influence on the model. We did not ask for the residuals vs leverage plot (`which = 5`). In an ANOVA model with only a categorical explanatory variable, the leverage of a data point depends only on how many observations are in its group ($1/n_i$), so all data points in the same group have the same leverage, and this plot is not very informative.
 
 There are a few residuals that might be a bit extreme. These might be worth investigating, but we will ignore them for now.
@@ -635,7 +631,7 @@ anova(m_bp_diet)
 
 The ANOVA table shows the sum of squares, degrees of freedom, mean square, F value, and p-value for the model and residuals. As we know, the $F$ value ($F$ statistics) is calculated as the mean square of the model divided by the mean square of the residuals. The p-value is calculated based on the F-distribution with the appropriate degrees of freedom.
 
-A suitable sentence to report our findings would be: "Diet has a significant effect on blood pressure ($F(3, 46) = 20.7, p < 0.0001$)". <!-- 2027 fix: degrees of freedom were F(2, 27) -->
+A suitable sentence to report our findings would be: "Diet has a significant effect on blood pressure ($F(3, 46) = 20.7, p < 0.0001$)".
 The two numbers in brackets are the degrees of freedom of the model ($k - 1 = 3$) and of the residuals ($n - k = 46$). This means that the probability of observing such a large $F$ value under the null hypothesis is less than 0.01%.
 
 <!---
@@ -791,7 +787,6 @@ The Bonferroni correction is more conservative than Tukey HSD, which is more con
 A contrast is a specific comparison between groups. So far we have only considered pairwise contrasts (i.e., comparing two groups at a time). But we can also design more complex contrasts. For example: are diets that contain meat different from diets that do not contain meat?
 
 ```{r}
-# 2027 fix: the level is "meat heavy" (diet == "meat" matched nothing)
 bp_data_diet <- mutate(bp_data_diet,
                        meat_or_no_meat = ifelse(diet == "meat heavy" |
                                                 diet == "Mediterranean",
@@ -817,7 +812,6 @@ Let's look at the ANOVA table of the model comparison:
 anova(m_bp_diet, m_bp_meat_or_no_meat)
 ```
 
-<!-- 2027 fix: numbers corrected after fixing the "meat heavy" grouping -->
 We see the residual sum of squares of the model with meat or no meat is 5231.6, while that of the four diet model is 3901.5. That is, the four diet model explains more variance in the data than the two diet model. The $F$-test is significant ($F(2, 46) = 7.84$, $p = 0.0012$), so we reject the null hypothesis that the two models are equally good at explaining the data. And we conclude that its not just whether people eat meat or not, but rather what kind of diet they eat that affects their blood pressure.
 
 Ideally we do not make a lot of contrasts after we have collected and looked at our data. Rather, we would specify the contrasts we are interested in before we collect the data. This is called a priori contrasts. But sometimes we do exploratory data analysis and then we can make post hoc contrasts. In this case we should be careful to adjust for multiple comparisons.
@@ -829,7 +823,6 @@ When communicating the results of an ANOVA, we usually report the $F$-statistic,
 
 > Blood pressure differed significantly between groups, with the mean of a meat heavy diet being 123 mmHg, while the mean blood pressure of the vegan group was 27 mmHg lower (One-way ANOVA, $F(3, 46) = 20.7$, $p < 0.0001$.
 
-<!-- 2027 addition: effect size -->
 ::: {.callout-tip}
 **Report the effect sizes, not only the test.** The $F$-test only tells us whether there is evidence that *some* group means differ. Notice that the sentence above also gives the size of the difference (27 mmHg lower in the vegan group). Even better is to give the uncertainty of the difference too, for example its 95% confidence interval (from `confint()` applied to the linear model). Readers can then judge whether the difference is large enough to be biologically or medically important.
 :::
@@ -901,7 +894,6 @@ The content of this Extras section is not examinable. It is here for those who w
 
 ### Choosing the reference category
 
-<!-- 2027 fix: the reference level depends on how the computer sorts upper and lower case letters -->
 **Question**: Which diet is the reference (intercept) category in the model `m_bp_diet`, and why?
 
 **Answer**: R orders the categories alphabetically and takes the first level as the reference category. But "alphabetically" depends on the settings (the "locale") of the computer. On most computers upper and lower case letters are sorted together, so "meat heavy" comes before "Mediterranean" and is the reference. But some computers (for example some servers) sort all capital letters first, and then "Mediterranean" is the reference. So always check which level is first:

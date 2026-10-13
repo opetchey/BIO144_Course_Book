@@ -16,7 +16,6 @@ lo_callout("2.1", lo_dir)
 
 ::: {.callout-note icon=false}
 ## Code walkthrough for this chapter
-<!-- 2027 addition: code walkthrough script and video -->
 
 **Script:** [walkthrough_ch02_r_and_rstudio.R](walkthroughs/walkthrough_ch02_r_and_rstudio.R){download="walkthrough_ch02_r_and_rstudio.R"}
 
@@ -192,10 +191,9 @@ And of course there is always your course instructors and fellow students to hel
 **Think–Pair–Share** (#a_errors_are_information) When we do something that R does not understand, it often gives us an error message. In red! What will you do when you get an error message?
 --->
 
-<!-- 2027 addition: finding and fixing errors -->
 ## Finding and fixing errors
 
-Everyone who writes R code gets errors, all the time. Error messages are not a sign that you are doing badly; they are information. Learning to read them and fix the problem quickly is one of the most useful skills you can develop, and it matters in the exam, where you have to get your code working on your own.
+Everyone who writes R code gets errors. Error messages are not a sign that you are doing badly; they are information. Learning to read them and fix the problem quickly is one of the most useful skills you can develop, and it matters in the exam, where you have to get your code working on your own.
 
 ### Errors and warnings
 
@@ -301,7 +299,7 @@ If you click on the project name, a dropdown menu will appear. From there, you c
 **Create a new R Project:** File > New Project > New Directory or Existing Directory > New Project > Choose a name and location for your project > Create Project.
 
 ::: {.callout-important}
-**Get organised!** Put all files for a project in one folder. For example, I made a folder called `BIO144_2026` and put all files related to this course in that folder. Within that folder, I have subfolders for `datasets`, `scripts`, and `results`. <!-- 2027 fix: folder name datasets, matching the code --> I then create an R Project in the `BIO144_2026` folder. This way, all files related to the course are in one place, and I can easily find them later.
+**Get organised!** Put all files for a project in one folder. For example, I made a folder called `BIO144_2027` and put all files related to this course in that folder. Within that folder, I have subfolders for `datasets`, `scripts`, and `results`. I then create an R Project in the `BIO144_2027` folder. This way, all files related to the course are in one place, and I can easily find them later.
 :::
 
 Now, always open and ensure you're working within the R Project for your project. As mentioned, you can see the project name at the top right of the RStudio window. And if its not the correct project, click on the name to get the drop-down list of available projects from which you can switch to the correct one.
@@ -311,7 +309,7 @@ Now, always open and ensure you're working within the R Project for your project
 
 First, get some datasets for us to work with. The datasets used in this book are available for download as a zip file here: [course_book_datasets.zip](course_book_datasets.zip). You can download this file and unzip it to get all of the datasets used in the book. The datasets are in CSV format, which can be opened in R or other statistical software.
 
-Put the datasets in a `datasets` folder in your project folder. All code in this book reads data from `datasets/...`. <!-- 2027 fix: folder name datasets, matching the code -->
+Put the datasets in a `datasets` folder in your project folder. All code in this book reads data from `datasets/...`.
 
 We will use the `readr` package to import data into R. The `readr` package provides functions to read data from various file formats, including CSV (comma-separated values) files, tab-separated values files, and others.
 
@@ -325,7 +323,7 @@ my_data <- read_csv("datasets/my_data_file.csv")
 
 
 
-This code will read the `my_data_file.csv` file from the `datasets` folder within the current working directory (which should be the R Project directory) and store it in a data frame called `my_data`. <!-- 2027 fix: file, folder and object names now match the code -->
+This code will read the `my_data_file.csv` file from the `datasets` folder within the current working directory (which should be the R Project directory) and store it in a data frame called `my_data`.
 
 ::: {.callout-tip}
 **Easily getting the file path** In RStudio, you can easily get the file path by putting the cursor in the parentheses of the `read_csv()` function, the press the tab key. A drop-down menu will appear with options to navigate to the file. This way, you don't have to type the file path manually.
@@ -901,14 +899,14 @@ Note two things about the `ggsave()` function. First, the first argument is the 
 Also note that the file is saved to the current working directory. When you're working in an R project, this is usually the base directory of the project. If you want to save your plots in a folder named `plots` you would first need to create the folder (if it doesn't already exist) and then specify the path in the file name:
 
 ```{r}
-# 2027 fix: showWarnings = FALSE, so no warning when the folder already exists
+# Use argument showWarnings = FALSE, so no warning when the folder already exists
 dir.create("plots", showWarnings = FALSE)  # Create the folder if it doesn't exist
 ggsave("plots/scatterplot_age_vs_score.pdf", plot = plot1, width = 8, height = 6)
 ```
 
 ## Review
 
-In this chapter we learned about using R and RStudio for data analysis. We covered the basics of R programming, including data types, variables, functions, and packages. <!-- 2027 fix: control structures are not covered in this chapter --> We also learned about importing data into R, cleaning and wrangling data using the `dplyr` package, and visualising data using the `ggplot2` package. A great starting point for your journey into data analysis with R!
+In this chapter we learned about using R and RStudio for data analysis. We covered the basics of R programming, including data types, variables, functions, and packages. We also learned about importing data into R, cleaning and wrangling data using the `dplyr` package, and visualising data using the `ggplot2` package. A great starting point for your journey into data analysis with R!
 
 ## Further reading
 

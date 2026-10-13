@@ -16,7 +16,6 @@ lo_callout("7.1", lo_dir)
 
 ::: {.callout-note icon=false}
 ## Code walkthrough for this chapter
-<!-- 2027 addition: code walkthrough script and video -->
 
 **Script:** [walkthrough_ch07_interactions.R](walkthroughs/walkthrough_ch07_interactions.R){download="walkthrough_ch07_interactions.R"}
 
@@ -68,7 +67,6 @@ write_csv(bp_meatheavy, "datasets/bp_meatheavy.csv")
 Read in the dataset:
 
 ```{r}
-# 2027 fix: read_csv() instead of read.csv()
 bp_meatheavy <- read_csv("datasets/bp_meatheavy.csv")
 ```
 
@@ -112,7 +110,6 @@ write_csv(bp_vegetarian, "datasets/bp_vegetarian.csv")
 Read in the dataset:
 
 ```{r}
-# 2027 fix: read_csv() instead of read.csv()
 bp_vegetarian <- read_csv("datasets/bp_vegetarian.csv")
 ```
 
@@ -134,7 +131,7 @@ We see that exercise seems to lower blood pressure for vegetarians too, but the 
 
 To summarise this finding, we can say that the effect of exercise on blood pressure is stronger for people with a meat heavy diet than for people with a vegetarian diet. This means that the effect of exercise on blood pressure depends on diet.
 
-This is very clear when we look at the both diets in the same graph. First we combine the two datasets into one, with `bind_rows()`: <!-- 2027 fix: this code was hidden, but bp_1cont1cat is used in visible code later -->
+This is very clear when we look at the both diets in the same graph. First we combine the two datasets into one, with `bind_rows()`:
 
 ```{r}
 bp_1cont1cat <- bind_rows(bp_meatheavy, bp_vegetarian)
@@ -228,7 +225,7 @@ Read in the dataset:
 bp_2cat <- read_csv("datasets/bp_2cat.csv")
 ```
 
-R orders the levels of a categorical variable alphabetically, so "high" would come before "low", and "high" would be the reference level. We make `exercise` a factor with the order we want: <!-- 2027 fix: the level order was lost when reading the CSV file -->
+R orders the levels of a categorical variable alphabetically, so "high" would come before "low", and "high" would be the reference level. We make `exercise` a factor with the order we want:
 
 ```{r}
 bp_2cat <- bp_2cat |>
@@ -280,7 +277,6 @@ set.seed(1)
 n <- 100
 age <- runif(n, 20, 80)
 mins_per_week <- runif(n, 0, 200)
-# 2027 fix: residual SD 10 (was 0.1, which gave unrealistically huge F values)
 bp <- 100 - 0.5*mins_per_week + 0.1*age + 0.005 * mins_per_week * age + rnorm(n, 0, 10)
 bp_2cont <- data.frame(bp, age, mins_per_week)
 ```
@@ -292,7 +288,6 @@ write_csv(bp_2cont, "datasets/bp_2cont.csv")
 
 Read in the dataset:
 ```{r}
-# 2027 fix: read_csv() instead of read.csv()
 bp_2cont <- read_csv("datasets/bp_2cont.csv")
 ```
 
@@ -341,7 +336,7 @@ What do we see? If we look at a set of points of the similar colour (i.e., simil
 Yet another way to visualise this interaction is to create categorical versions of age and minutes of exercise, and then plot the data with these categorical variables:
 
 ```{r}
-# 2027 fix: this chunk was hidden; cut() makes a categorical version (classes) of a continuous variable
+# cut() makes a categorical version (classes) of a continuous variable
 bp_2cont <- bp_2cont |>
   mutate(age_class = cut(age,
                    breaks = seq(10, 100, 10),
@@ -524,7 +519,6 @@ The second is a shorthand for the first. The `*` operator includes the main effe
 Of course, we check the model assumptions before we interpret the results:
 
 ```{r}
-# 2027 fix: autoplot() (ggfortify) instead of par(mfrow) and base plot()
 autoplot(m_bp_exercise_diet, smooth.colour = NA)
 ```
 
@@ -537,7 +531,6 @@ anova(m_bp_exercise_diet)
 
 In the ANOVA table we see four rows. The first row is for the main effect of minutes of exercise, the second row is for the main effect of diet, the third row is for the interaction effect between diet and minutes of exercise, and the fourth row is for the residuals. As always, an interaction term in the R output is shown with a colon `:` between the two variables (here it looks like `mins_per_week:diet`). 
 
-<!-- 2027 fix: the evidence for the interaction (p just below 0.05) was described too strongly -->
 In this example, the F-statistic for the interaction term is `r round(anova(m_bp_exercise_diet)[3,4],2)` and the p-value is `r signif(anova(m_bp_exercise_diet)[3,5],2)`. The p-value is just below 0.05, so if we use 0.05 as the threshold we reject the null hypothesis that there is no interaction between diet and minutes of exercise on blood pressure. But the evidence is not strong: there is some evidence that the effect of minutes of exercise on blood pressure is different for people with different diets. (With a p-value this close to 0.05, a new study of the same size could quite easily give a p-value above 0.05.)
 
 
@@ -620,7 +613,6 @@ if (knitr::is_latex_output()) {
 
 We also might use a sentence like this to report the results: "The effect of minutes of exercise is generally negative, and there is some evidence that the effect is stronger for people on a meat heavy diet than for people on a vegetarian diet ($F$-statistics of interaction term = `r round(anova(m_bp_exercise_diet)[3,4],2)`, degrees of freedom = `r anova(m_bp_exercise_diet)[3,1]`, degrees of freedom residuals = `r anova(m_bp_exercise_diet)[4,1]`, $p$-value = `r signif(anova(m_bp_exercise_diet)[3,5],2)`)."
 
-<!-- 2027 addition: effect size -->
 ::: {.callout-tip}
 **Report the effect sizes, too.** The sentence above tells the reader that the effect of exercise differs between diets, and gives the test of the interaction. It would be more informative to also give the size of the effect of exercise in each diet: the estimated slope of blood pressure against minutes of exercise for each diet, with its 95% confidence interval, preferably expressed over a meaningful amount of exercise (for example, per hour per week). Readers can then judge whether the effects, and the difference between them, are biologically important.
 :::
@@ -690,7 +682,6 @@ mod_2cat <- lm(bp ~ diet + exercise + diet:exercise, data=bp_2cat)
 
 We can check the model assumptions:
 ```{r}
-# 2027 fix: autoplot() (ggfortify) instead of par(mfrow) and base plot()
 autoplot(mod_2cat, smooth.colour = NA)
 ```
 These look ok.
@@ -750,7 +741,6 @@ write_csv(bp_2cat_3levels, "datasets/bp_3cat.csv")
 
 Read in the dataset:
 ```{r}
-# 2027 fix: read_csv() instead of read.csv(), and set the order of the exercise levels
 bp_2cat_3levels <- read_csv("datasets/bp_3cat.csv") |>
   mutate(exercise = factor(exercise, levels = c("low", "high")))
 ```
@@ -808,7 +798,6 @@ mod_2cat_3levels <- lm(bp ~ diet * exercise, data=bp_2cat_3levels)
 
 We check the model assumptions:
 ```{r}
-# 2027 fix: autoplot() (ggfortify) instead of par(mfrow) and base plot()
 autoplot(mod_2cat_3levels, smooth.colour = NA)
 ```
 
@@ -871,7 +860,6 @@ mod_2cont <- lm(bp ~ mins_per_week * age, data=bp_2cont)
 
 We check the model assumptions:
 ```{r}
-# 2027 fix: autoplot() (ggfortify) instead of par(mfrow) and base plot()
 autoplot(mod_2cont, smooth.colour = NA)
 ```
 
@@ -885,7 +873,6 @@ anova(mod_2cont)
 
 **It looks the same as in the two-way ANOVA case!** This is because we still have two variables and their interaction, so the ANOVA table has one row for each main effect (mins_per_week and age), one row for the interaction effect (mins_per_week:age), and one row for the residuals.
 
-<!-- 2027 fix: wording matched to the new, more realistic noise level in bp_2cont -->
 The F-statistic for the interaction term is large (`r round(anova(mod_2cont)[3, "F value"],2)`) and the corresponding p-value is very small (`r signif(anova(mod_2cont)[3, "Pr(>F)"],2)`). Hence, we conclude that there is strong evidence of an interaction between minutes of exercise and age on blood pressure. The effect of minutes of exercise on blood pressure depends on age, with a stronger effect for younger people compared to older people.
 
 ## General points
@@ -941,7 +928,6 @@ It could look otherwise. For example, if we found a (albeit rather unlikely patt
 #| fig-width: 5
 #| fig-height: 4
 
-# 2027 fix: set.seed() so that the figure is the same each time
 set.seed(2)
 bp_2cat_weird <- data.frame(
   reps = paste0("R", 1:40),
@@ -1035,7 +1021,6 @@ plotly::plot_ly(bp_2cont, x = ~mins_per_week, y = ~age, z = ~bp, type = "scatter
 ```
 
 ::: {.content-visible unless-format="html"}
-<!-- 2027 fix: plotly figures are run only for HTML, so the PDF build needs no browser screenshots -->
 *This interactive 3-D figure is shown only in the online version of the book: see [this chapter online](https://opetchey.github.io/BIO144_Course_Book/7.1-interactions.html).*
 :::
 

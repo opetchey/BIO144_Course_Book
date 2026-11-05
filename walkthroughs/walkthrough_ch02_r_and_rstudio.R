@@ -235,7 +235,7 @@ my_data3
 levels(my_data3$education_level)
 ggplot(my_data3, aes(x = education_level, y = age)) +
   geom_point()
-# Look at: the levels are in alphabetical order, which makes no sense here.
+# Look: the levels are in alphabetical order, which makes no sense here.
 
 # Set the order of the levels ourselves:
 my_data3 <- my_data3 |>

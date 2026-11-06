@@ -2,7 +2,8 @@
 # BIO144 Data Analysis in Biology
 # Code walkthrough for Chapter 4: Regression Part 2
 # Course book chapter: https://opetchey.github.io/BIO144_Course_Book/4.1-regression-part2.html
-# The video walkthrough of this script is linked at the top of that chapter.
+# The video walkthrough of this script is linked from the Unit 4 page of the
+# course information website: https://opetchey.github.io/BIO144_Course_Information/Unit4.html
 #
 # How to use this script
 # - Save it in your BIO144 RStudio project folder and open it in RStudio.

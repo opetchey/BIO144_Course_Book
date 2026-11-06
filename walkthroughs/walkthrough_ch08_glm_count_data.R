@@ -2,7 +2,8 @@
 # BIO144 Data Analysis in Biology
 # Code walkthrough for Chapter 8: Count data (GLM part 1)
 # Course book chapter: https://opetchey.github.io/BIO144_Course_Book/8.1-GLM1-count-data.html
-# The video walkthrough of this script is linked at the top of that chapter.
+# The video walkthrough of this script is linked from the Unit 8 page of the
+# course information website: https://opetchey.github.io/BIO144_Course_Information/Unit8.html
 #
 # How to use this script
 # - Save it in your BIO144 RStudio project folder and open it in RStudio.

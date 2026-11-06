@@ -14,19 +14,6 @@ source(file.path(lo_dir, "lo.R"))
 lo_callout("12.1", lo_dir)
 ```
 
-::: {.callout-note icon=false}
-## Code walkthrough for this chapter
-
-**Script:** [walkthrough_ch12_review.R](walkthroughs/walkthrough_ch12_review.R){download="walkthrough_ch12_review.R"}
-
-This R script contains the code of this chapter, with comments that explain each step. Download it, save it in your BIO144 RStudio project folder, open it in RStudio, and run it line by line while you read the chapter or watch the video. The script reads the datasets directly from the internet. Its last section ("Practical toolbox") shows code that the Unit 12 practical uses but this chapter does not.
-
-To download the script straight into your project folder (for example on RStudio Server), run this line in the Console:
-
-`download.file("https://opetchey.github.io/BIO144_Course_Book/walkthroughs/walkthrough_ch12_review.R", destfile = "walkthrough_ch12_review.R")`
-
-**Video walkthrough:** coming soon. <!-- VIDEO PLACEHOLDER: replace "coming soon." with the link, e.g. [Watch the video walkthrough](https://youtu.be/XXXX), or embed it with the Quarto video shortcode -->
-:::
 
 ## Introduction
 

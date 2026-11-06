@@ -2,7 +2,8 @@
 # BIO144 Data Analysis in Biology
 # Code walkthrough for Chapter 11: Mixed models
 # Course book chapter: https://opetchey.github.io/BIO144_Course_Book/11.1-mixed-models.html
-# The video walkthrough of this script is linked at the top of that chapter.
+# The video walkthrough of this script is linked from the Unit 11 page of the
+# course information website: https://opetchey.github.io/BIO144_Course_Information/Unit11.html
 #
 # How to use this script
 # - Save it in your BIO144 RStudio project folder and open it in RStudio.

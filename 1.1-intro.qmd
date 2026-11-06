@@ -1,12 +1,3 @@
-<!--
-2027 version of chapter 1, written from the Week 1 lecture slides
-(BIO144_Course_Information/assets/Week1_lecture_slides.pdf). Replaced the 2026 chapter on 2026-10-06
-(the 2026 version is in the git history).
-Sections marked "TO DO (Owen)" need input that is not in the slides.
-Year-specific details (times, names, exam rules) are marked "check each year".
-The "Notation" and "Using AI assistants" detail sections are carried over from the 2026 chapter.
--->
-
 ```{r}
 #| echo: false
 source("_common.R")
@@ -22,20 +13,6 @@ source(file.path(lo_dir, "lo.R"))
 lo_callout("1.1", lo_dir)
 ```
 
-::: {.callout-note icon=false}
-## Code walkthrough for this chapter
-
-
-**Script:** [walkthrough_ch01_intro.R](walkthroughs/walkthrough_ch01_intro.R){download="walkthrough_ch01_intro.R"}
-
-This R script contains the code of this chapter, with comments that explain each step. This is the code from the analysis of the class reaction time data in the first lecture. Download it, save it in your BIO144 RStudio project folder, open it in RStudio, and run it line by line while you read the chapter or watch the video. The script reads the datasets directly from the internet. Its last section ("Practical toolbox") shows code that the Unit 1 practical uses but this chapter does not.
-
-To download the script straight into your project folder (for example on RStudio Server), run this line in the Console:
-
-`download.file("https://opetchey.github.io/BIO144_Course_Book/walkthroughs/walkthrough_ch01_intro.R", destfile = "walkthrough_ch01_intro.R")`
-
-**Video walkthrough:** coming soon. <!-- VIDEO PLACEHOLDER: replace "coming soon." with the link, e.g. [Watch the video walkthrough](https://youtu.be/XXXX), or embed it with the Quarto video shortcode -->
-:::
 
 ## About this chapter
 
@@ -111,6 +88,7 @@ The [course information website](https://opetchey.github.io/BIO144_Course_Inform
 * Apart from this first week, the lectures do not use slides.
 * The **course book contains what you need to know.** Each week has a chapter.
 * In lectures, the lecturer talks, draws, and asks you questions.
+* You do not need to prepare for lectures: they work for everyone, including if you have not looked at anything beforehand. If you would like some ideas for how you *could* prepare (for example, skimming the chapter), see [Preparing for lectures](https://opetchey.github.io/BIO144_Course_Information/1.1-general-information.html#preparing-for-lectures) on the course information website.
 
 
 Many of the questions in lectures use **think, pair, share**: you first think about the question on your own, then discuss it with a neighbour, then share with the class. Peer discussion improves understanding, even when none of the students in a discussion group originally knew the correct answer (Smith et al. 2009).
@@ -132,15 +110,13 @@ Please keep up with the course material, and reach out to us if you feel you are
 
 Much of the course material is new or recently revised. If you find something that is unclear, too brief, or wrong, please let us know.
 
-<!-- The 2026 slides included last year's student feedback and our responses. That is year-specific, so it is left out of the book. -->
-
 ## The final examination
 
 ::: {.callout-note}
 Check the course information website for the current examination details.
 :::
 
-One comment here: The exam consists of **case studies**. In each, you analyse a dataset and answer questions about it. Many conceptual questions are embedded in the case studies. Because the exam asks you to analyse data in R and give numerical answers, the best preparation is to practise doing analyses yourself, every week.
+One comment here, very relevant to how you use AI during the course. You cannot use AI in the exam. The exam consists of **case studies**. In each, you analyse a dataset and answer questions about it. Many conceptual questions are embedded in the case studies. Because the exam asks you to analyse data in R and give numerical answers, the best preparation is to practise doing analyses yourself, every week. 
 
 ## How we will work together
 
@@ -622,7 +598,7 @@ There has already been quite a lot of research on reaction times. In general, ma
 
 Before collecting any data, we decide what graph we will make and what statistical test we will use.
 
-* **Graph:** box plots of reaction time (on the horizontal axis) for females and males. This shows the centre and spread of the two groups side by side.
+* **Graph:** box plots of reaction time (in milliseconds, on the horizontal axis) for females and males. This shows the centre and spread of the two groups side by side.
 * **Statistical test:** we are comparing the mean of a continuous response variable (reaction time) between two groups (the explanatory variable, sex), so a two-sample t-test is a natural choice. Its assumptions include independent observations, and roughly normally distributed values with similar variances in the two groups.
 
 
@@ -637,9 +613,7 @@ You measure your own reaction time using an online test, and record it, along wi
 
 ### Data wrangling, visualisation and statistical test
 
-These steps are done live in RStudio, with a script.
-
-<!-- TO DO (Owen): add the R code from the demonstration (import, wrangling, box plot, t-test), using meaningful object names, e.g. reaction_times for the dataset. -->
+These steps are done live in RStudio.
 
 Doing the analysis with a script in R, rather than by pointing and clicking, makes it:
 

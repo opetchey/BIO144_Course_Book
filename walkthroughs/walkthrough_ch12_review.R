@@ -2,7 +2,8 @@
 # BIO144 Data Analysis in Biology
 # Code walkthrough for Chapter 12: Review: planning and implementing statistical analyses
 # Course book chapter: https://opetchey.github.io/BIO144_Course_Book/12.1-review.html
-# The video walkthrough of this script is linked at the top of that chapter.
+# The video walkthrough of this script is linked from the Unit 12 page of the
+# course information website: https://opetchey.github.io/BIO144_Course_Information/Unit12.html
 #
 # How to use this script
 # - Save it in your BIO144 RStudio project folder and open it in RStudio.
@@ -32,6 +33,7 @@ library(tidyverse)  # read_csv(), dplyr, tidyr, ggplot2
 library(ggfortify)  # autoplot() for model diagnostic plots
 library(lme4)       # lmer(), only used in the Practical toolbox at the end
 library(lmerTest)   # p-values for lmer(), only used in the Practical toolbox
+library(emmeans)    # predicted means with confidence intervals, only used in the Practical toolbox
 
 
 # 2. Example 1: Linear model with an interaction ----
@@ -302,3 +304,16 @@ confint(m_height_mixed, parm = "beta_", method = "Wald")
 new_plant <- expand_grid(week = c(0, 7), temp = c(10, 20))
 new_plant |>
   mutate(predicted_height = predict(m_height_mixed, newdata = new_plant, re.form = NA))
+
+## T9. Predicted means with 95% confidence intervals: emmeans() ----
+# predict() gives no confidence intervals for a mixed model. emmeans() from
+# the emmeans package gives the predicted mean for an average plant, with its
+# standard error and 95% confidence interval. at = ... chooses the values of
+# the explanatory variables.
+height_means <- emmeans(m_height_mixed, ~ week * temp,
+                        at = list(week = c(0, 7), temp = c(10, 20)))
+height_means
+# as_tibble() turns the result into a data frame for ggplot (columns emmean,
+# lower.CL and upper.CL).
+as_tibble(height_means)
+# Look at: the column emmean is the same as predicted_height from T8.

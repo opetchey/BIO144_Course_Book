@@ -6,3 +6,6 @@
 /.quarto/
 
 **/*.quarto_ipynb
+
+# Rendered website: built and published by GitHub Actions, so not tracked in git
+/docs/

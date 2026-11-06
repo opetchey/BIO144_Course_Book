@@ -2,7 +2,8 @@
 # BIO144 Data Analysis in Biology
 # Code walkthrough for Chapter 5: Analysis of variance (ANOVA)
 # Course book chapter: https://opetchey.github.io/BIO144_Course_Book/5.1-ANOVA.html
-# The video walkthrough of this script is linked at the top of that chapter.
+# The video walkthrough of this script is linked from the Unit 5 page of the
+# course information website: https://opetchey.github.io/BIO144_Course_Information/Unit5.html
 #
 # How to use this script
 # - Save it in your BIO144 RStudio project folder and open it in RStudio.

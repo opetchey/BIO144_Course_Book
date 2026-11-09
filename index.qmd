@@ -31,6 +31,10 @@ The datasets used in this book are available for download as a zip file here: [c
 
 This book uses a number of R add-on packages for data analysis and visualization. You will need to install these packages in order to run the code in the book. The required packages are listed in the `_common.r` file in the GitHub repository for the book. Here is a link to that file: [_common.R](https://raw.githubusercontent.com/opetchey/BIO144_Course_Book/refs/heads/main/_common.R). You can copy and paste the list of packages from that file into your R console to install them.
 
+## Why the graphs in this book look a little different from yours
+
+The graphs in this book use a course style: a white background, pale green grid lines and the course colours. This style is applied behind the scenes, so it does not appear in the code shown in the book. When you run the same code yourself, your graphs will have the usual ggplot2 look (a grey background), but they show exactly the same thing.
+
 ## If you think you found a mistake in this book {.unnumbered}
 
 If you think you have found a mistake in the book, please say. A really nice way is to submit an issue on the GitHub repository for the book: [Issues page of the GitHub repository](https://github.com/opetchey/BIO144_Course_Book/issues). You will need a GitHub account to do this, but they are free and easy to set up. Otherwise tell Owen in person sometime, or in the OLAT Forum, or by email.

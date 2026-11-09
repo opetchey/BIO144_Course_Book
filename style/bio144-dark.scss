@@ -1,0 +1,31 @@
+/*-- scss:defaults --*/
+// BIO144 house style "Spring Term": dark colours. Used with cosmo + bio144-rules.scss.
+$web-font-path: "https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=JetBrains+Mono:wght@400;600&display=swap";
+$font-family-sans-serif: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+$headings-font-family: "Bricolage Grotesque", "Avenir Next", "Segoe UI", sans-serif;
+$font-family-monospace: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+$headings-font-weight: 700;
+$body-bg: #121C15;
+$body-color: #E4EEE6;
+$primary: #A8D89A;
+$link-color: #A8D89A;
+$code-color: #F2B9C9;
+$border-radius: .6rem;
+
+/*-- scss:rules --*/
+:root {
+  --b144-bg: #121C15;
+  --b144-paper: #16241B;
+  --b144-ink: #E4EEE6;
+  --b144-muted: #A9BDB0;
+  --b144-line: #2C4033;
+  --b144-green: #A8D89A;
+  --b144-green-soft: #1E3326;
+  --b144-pink: #E58FA6;
+  --b144-pink-ink: #F2B9C9;
+  --b144-pink-soft: #33222A;
+  --b144-stem: #C9B597;
+  --b144-stem-soft: #2A251D;
+  --b144-code-bg: #1A2A1F;
+  --b144-on-unit: #13221A;
+}

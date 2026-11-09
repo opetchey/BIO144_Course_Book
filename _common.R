@@ -24,3 +24,9 @@ invisible(
     )
   )
 )
+
+## BIO144 house style for figures (Spring Term). Source: BIO144_Style/R/theme_bio144.R
+## (copied to style/ by BIO144_Style/quarto/sync.R). Used in the book only: students'
+## own plots keep the ggplot2 defaults.
+source("style/theme_bio144.R")
+use_bio144_style()

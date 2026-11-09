@@ -1,0 +1,42 @@
+<script>
+/* BIO144 house style: season colour per unit, unit badge and unit map.
+   Works on the course book (chapter files "4.1-....html") and the course
+   information site ("Unit4.html"). Edit UNITS / SEASON here only. */
+(function () {
+  var UNITS = ["Intro", "R", "Reg I", "Reg II", "ANOVA", "Mult. reg", "Interact.",
+               "GLM count", "GLM binary", "Ordination", "Mixed & more", "Review"];
+  /* 2027 lecture dates on the frost-to-buttercup ramp */
+  var SEASON = ["#B9C7D3", "#BCCDCA", "#C0D3C2", "#C3D9B9", "#C1DBAF", "#ADD395",
+                "#A3CF87", "#90C573", "#86C16E", "#7DBC69", "#6FB260", "#92B65C"];
+  var BOOK = ["1.1-intro", "2.1-R-and-RStudio", "3.1-regression-part1", "4.1-regression-part2",
+              "5.1-ANOVA", "6.1-multiple-regression", "7.1-interactions", "8.1-GLM1-count-data",
+              "9.1-GLM2-binary-data", "10.1-ordination", "11.1-mixed-models", "12.1-review"];
+  var file = (location.pathname.split("/").pop() || "").replace(/\.html$/, "");
+  var m, unit = null, site = null;
+  /* Book: only the chapter files listed above (plus 11.2-what-next, part of Unit 11).
+     Course information: only the Unit pages. Other pages (e.g. 1.1-general-information
+     on the course information site) get no unit map. Links stay within the same site. */
+  var bookIdx = BOOK.indexOf(file);
+  if (bookIdx >= 0) { unit = bookIdx + 1; site = "book"; }
+  else if (file === "11.2-what-next") { unit = 11; site = "book"; }
+  else if ((m = file.match(/^Unit(\d+)$/))) { unit = +m[1]; site = "info"; }
+  if (!unit || unit < 1 || unit > 12) return;
+  document.documentElement.style.setProperty("--unit", SEASON[unit - 1]);
+  var title = document.querySelector("#title-block-header") || document.querySelector("main h1");
+  if (!title) return;
+  var bar = document.createElement("div");
+  bar.className = "b144-unitbar";
+  var two = function (n) { return (n < 10 ? "0" : "") + n; };
+  var html = '<div class="b144-badge"><b>' + two(unit) + '</b><span>Unit ' + unit + ' · ' + UNITS[unit - 1] + '</span></div>';
+  html += '<ol class="b144-map" aria-label="The 12 units of BIO144">';
+  for (var i = 1; i <= 12; i++) {
+    var href = site === "book" ? BOOK[i - 1] + ".html" : "Unit" + i + ".html";
+    var cur = i === unit ? ' aria-current="page"' : "";
+    var style = ' style="background:' + SEASON[i - 1] + (i > unit ? ';opacity:.7' : '') + '"';
+    html += '<li><a href="' + href + '"' + cur + style + ' title="Unit ' + i + ': ' + UNITS[i - 1] + '"><b>' + two(i) + '</b><span class="lab">' + UNITS[i - 1] + '</span></a></li>';
+  }
+  html += "</ol>";
+  bar.innerHTML = html;
+  title.parentNode.insertBefore(bar, title);
+})();
+</script>

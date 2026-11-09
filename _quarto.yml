@@ -17,7 +17,7 @@ book:
     right: |
       This book was built with <a href="https://quarto.org/">Quarto</a>.
   cover-image: cover.png
-  favicon: cover.png
+  favicon: assets/favicon.png
   site-url: https://opetchey.github.io/BIO144_Course_Book/
   repo-url: https://github.com/opetchey/BIO144_Course_Book/
   repo-branch: main
@@ -44,7 +44,10 @@ book:
 
 format:
   html:
-    theme: cosmo
+    theme:
+      light: [cosmo, style/bio144-light.scss, style/bio144-rules.scss]
+      dark: [cosmo, style/bio144-dark.scss, style/bio144-rules.scss]
+    include-after-body: style/bio144-units.html
     fig-width: 4.5
     fig-height: 4
     fig-align: center

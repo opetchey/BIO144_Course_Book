@@ -288,7 +288,9 @@ $$H_1: \beta_1 \neq 0$$
 
 So, how do we test the null hypothesis? We are going to calculate the probability of observing the data we have, given that the null hypothesis is true. If this probability is very low, then we can reject the null hypothesis.
 
-::: {.callout-note}
+::: {.callout-important .key-idea}
+## Key idea
+
 We never prove the null hypothesis is true. Instead, we calculate the probability of observing our data given that the null hypothesis is true. If this probability is very low, we reject the null hypothesis.
 :::
 
@@ -419,7 +421,7 @@ ggplot(data.frame(t_val = seq(-4, 4, 0.01)), aes(x = t_val)) +
 
 The height of the line is the "density" and not a probability. The probability of observing a value of the $t$-statistic in a given range is the area under the curve of the $t$-distribution in that range. The area under the curve of the $t$-distribution is equal to 1, which means that the total probability of observing a value of the $t$-statistic is 1.
 
-::: {.callout-tip}
+::: {.callout-note .aside-note}
 By the way, it is named the $t$-distribution by it's developer, William Sealy Gosset, who worked for the Guinness brewery in Dublin, Ireland. In his 1908 paper, Gosset introduced the $t$-distribution but he didn't explicitly explain his choice of the letter $t$. The choice of the letter $t$ could be to indicate "Test", as the $t$-distribution was developed specifically for hypothesis testing.
 :::
 
@@ -510,7 +512,7 @@ summary(bp_age_model)
 
 In the coefficients table, look for the row corresponding to the slope (the second row, which is the "Age" row). In this row we see the estimate of the slope, the standard error of the slope, the $t$-value for the slope,and in the last column "Pr(>|t|)". This means "the probability of observing a value of the $t$-statistic at least as extreme as the one observed, given that the null hypothesis is true".
 
-::: {.callout-note}
+::: {.callout-note .aside-note}
 The vertical bars around *t* indicate that we are looking at the absolute value of the $t$-statistic, which is what we use for a two-tailed test, which is the most common test for the slope of a regression line 
 :::
 
@@ -853,9 +855,11 @@ Again, there are many good books and online resources about regression models. T
 
 
 
-## Extras
+## Extras {.extras}
 
-::: {.callout-note}
+::: {.callout-note .extras}
+## Extras · not examined
+
 The content of this Extras section is not examinable. It is here for those who want to learn more.
 :::
 

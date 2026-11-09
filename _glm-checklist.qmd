@@ -1,5 +1,7 @@
-::: {.callout-note}
-## Checklist: checking a GLM
+::: {.callout-important .key-idea}
+## Key idea
+
+**Checklist: checking a GLM**
 
 1. **Is the family right for the response variable?** Counts: Poisson (or quasi-Poisson / negative binomial if overdispersed). Binary data, or successes out of a number of trials: binomial. No diagnostic plot can rescue a model with the wrong family.
 2. **Are the observations independent?** This comes from the study design, not from the plots. If observations are grouped or repeated, a mixed model is needed (Chapter 11).

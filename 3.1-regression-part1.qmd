@@ -201,7 +201,9 @@ polygon(from_x,from_y,to_x,to_y,col=2,lwd=2)
 ```
 
 
-::: {.callout-note}
+::: {.callout-important .key-idea}
+## Key idea
+
 Residuals are model-based quantities, not properties of the raw data.
 :::
 
@@ -389,7 +391,9 @@ bp_age_data <- bp_age_data |>
   mutate(Residuals = Systolic_BP - Expected_BP)
 ```
 
-::: {.callout-tip}
+::: {.callout-tip .r-toolbox}
+## R toolbox
+
 We can also get the expected values and residuals directly from the `lm` object using the `fitted()` (or `predicted()`) and `residuals()` functions:
 
 ```{r}
@@ -469,7 +473,9 @@ This assumption implies that:
 (c) The $\epsilon_i$ are independent of each other.
 
 
-::: {.callout-note}
+::: {.callout-important .key-idea}
+## Key idea
+
 These assumptions are about the residuals, not the observed data!!!
 :::
 
@@ -659,7 +665,9 @@ ggplot(bp_age_data, aes(x = fitted, y = sqrt_abs_R_i)) +
 
 This graph is known as the scale-location plot. It is particularly suited to check the assumption of equal variances (__homoscedasticity / Homoskedastizität__). There should be __no trend__ or pattern.
 
-::: {.callout-tip}
+::: {.callout-tip .r-toolbox}
+## R toolbox
+
 
 We can also use the `autoplot()` function from the `ggfortify` package to create this plot. It is the third plot in the set of model checking plots, so we use `which = 3`. The argument `smooth.colour = NA` removes the smoothed line.
 
@@ -1240,9 +1248,11 @@ There are many good books and online resources about regression models, fitting 
 * For a complementary perspective on regression, see Chapter 7 of The New Statistics with R, by Andy Hector.
 
 
-## Extras
+## Extras {.extras}
 
-::: {.callout-note}
+::: {.callout-note .extras}
+## Extras · not examined
+
 The content of this Extras section is not examinable. It is here for those who want to learn more.
 :::
 

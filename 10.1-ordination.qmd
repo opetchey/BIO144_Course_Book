@@ -32,8 +32,11 @@ When we have **many response variables**, two practical problems appear:
 
 It can also help in cases where we have many explanatory variables (e.g. environmental gradients). This can be especially useful when predictors are collinear.
 
-::: {.callout-important}
-**Core idea**  
+::: {.callout-important .key-idea}
+## Key idea
+
+**Core idea**
+
 Ordination finds a low-dimensional representation (often 2D) of *multivariate* data,
 so that points that are "similar" in the original multivariate space end up close together in the ordination plot.
 :::
@@ -129,8 +132,11 @@ Fitting separate regressions for each measurement has two problems:
 
 PCA is the most common entry point.
 
-::: {.callout-important}
-**What PCA does**  
+::: {.callout-important .key-idea}
+## Key idea
+
+**What PCA does**
+
 PCA finds new axes (PC1, PC2, …) that are:
 - linear combinations of the original variables
 - orthogonal (uncorrelated)
@@ -153,7 +159,7 @@ You can think of PCA as turning the data cloud until you find the view where the
 
 The key idea is that PCA does not invent new information: it simply re-expresses the same data using new axes that make dominant patterns easier to see.
 
-::: {.callout-note}
+::: {.callout-note .aside-note}
 Under the hood, PCA is based on the covariance (or correlation) matrix of the variables. The principal components are eigenvectors of this matrix, and the amount of variance they capture is given by the corresponding eigenvalues. You do not need to compute these by hand, but this explains why PCA is fundamentally about variance and correlation.
 :::
 
@@ -168,7 +174,7 @@ Before PCA, we usually **center** and **scale** the data, or at least think care
 
 Scaling matters if variables are on different scales or if you care about *relative* variation.
 
-::: {.callout-note}
+::: {.callout-note .aside-note}
 Note that above it is written that PCA does not change the relative positions of the points. However, if we scale the data before performing PCA, this can affect the relative positions of the points in the PCA space. Scaling ensures that all variables contribute equally to the analysis, which can be important when variables are measured on different scales. If we do not scale the data, variables with larger variances can dominate the PCA results, potentially distorting the relative positions of the points in the PCA space.
 :::
 
@@ -221,8 +227,9 @@ ggplot(pca_scores, aes(x = PC1, y = PC2, color = thousand.years)) +
   labs(color = "Thousand\nyears ago")
 ```
 
-::: {.callout-note}
-**Interpretation tip**  
+::: {.callout-note .aside-note}
+**Interpretation tip**
+
 If points separate along PC1 as time increases, that suggests the dominant multivariate trend is associated with time.
 :::
 
@@ -494,8 +501,11 @@ NMDS is often used when:
 * the relationships are not well represented by a linear method
 * you want flexibility in the choice of distance (e.g. Bray–Curtis, Gower, …)
 
-::: {.callout-important}
-**What NMDS does (conceptually)**  
+::: {.callout-important .key-idea}
+## Key idea
+
+**What NMDS does (conceptually)**
+
 1) compute pairwise distances among objects  
 2) place points in a low-dimensional space (usually 2D)  
 3) try to preserve the **rank order** of distances (non-metric)  
@@ -609,8 +619,11 @@ ggplot(nmds_scores, aes(x = NMDS1, y = NMDS2, color = thousand.years)) +
   labs(color = "Thousand\nyears ago")
 ```
 
-::: {.callout-note}
-**Axis directions are arbitrary**  
+::: {.callout-warning .common-mistake}
+## Common mistake
+
+**Axis directions are arbitrary**
+
 Flipping or rotating an NMDS solution (or a PCA) does not change its meaning.
 Only relative distances among points matter.
 :::
@@ -649,7 +662,7 @@ ggplot(nmds_scores, aes(x = NMDS1, y = NMDS2)) +
   labs(color = "Thousand\nyears ago")
 ```
 
-::: {.callout-note}
+::: {.callout-note .aside-note}
 This NMDS graph looks a lot like the PCA biplot. This is because our data are fairly linear and Euclidean distances are appropriate. In more complex datasets, NMDS can reveal patterns that PCA might miss.
 :::
 
@@ -664,7 +677,9 @@ If you test time against each skull measurement separately, you face a **multipl
 
 A better match to the question (“do skulls change through time in multivariate space?”) is a **multivariate test**.
 
-::: {.callout-important}
+::: {.callout-important .key-idea}
+## Key idea
+
 **What you need to know about these methods.** You do not need to be able to run these tests yourself. You should know that they exist, understand what question each one answers, and be able to choose which one you would use in a given situation:
 
 | Question | Approach |
@@ -705,8 +720,11 @@ skull_manova_class <- manova(cbind(max.breadth, basi.height, basi.length, nasal.
 summary(skull_manova_class, test = "Pillai")
 ```
 
-::: {.callout-caution}
-**MANOVA assumptions matter**  
+::: {.callout-warning .common-mistake}
+## Common mistake
+
+**MANOVA assumptions matter**
+
 MANOVA relies on multivariate normality and homogeneity of covariance matrices.
 In many biological datasets, these are imperfect—so distance-based alternatives are common.
 :::

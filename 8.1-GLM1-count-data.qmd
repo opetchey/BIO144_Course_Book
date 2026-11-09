@@ -117,8 +117,11 @@ Think-pair-share Other than non-linearity, heteroscedasticity, what other proble
 --->
 
 
-::: {.callout-caution}
-**Why this matters**  
+::: {.callout-important .key-idea}
+## Key idea
+
+**Why this matters**
+
 Violating model assumptions can lead to biased estimates, incorrect standard errors, and misleading p-values.
 :::
 
@@ -145,8 +148,9 @@ However, many biological response variables are:
 
 In these cases, forcing the data into a linear model often leads to invalid predictions and misleading inference. **Generalized Linear Models (GLMs)** solve this problem.
 
-::: {.callout-important}
-**Key idea**
+::: {.callout-important .key-idea}
+## Key idea
+
 GLMs are not a replacement for linear models — they are a *generalisation* of them. Linear regression is a special case of a GLM.
 :::
 
@@ -282,8 +286,11 @@ The Poisson distribution has two important properties:
 2. The **mean and variance are equal**.
 
 
-::: {.callout-important}
-**Mean–variance relationship**  
+::: {.callout-important .key-idea}
+## Key idea
+
+**Mean–variance relationship**
+
 In a Poisson distribution, the mean and variance are equal. This captures an important feature of count data, but it will later lead to the concept of *overdispersion*.
 :::
 
@@ -371,7 +378,9 @@ The other plots look much better than for the linear model. The residuals vs fit
 
 {{< include _glm-checklist.qmd >}}
 
-::: {.callout-important}
+::: {.callout-warning .common-mistake}
+## Common mistake
+
 You must specify the **family** in `glm()`. If you omit the link function, R uses the default link for that family.
 :::
 
@@ -396,7 +405,7 @@ But this doesn't mean we predict a fitness of 0.907 offspring. Instead, we need 
 
 $E(y_{40}) = \exp(\eta) = \exp(0.907) = 2.48$
 
-::: {.callout-caution}
+::: {.callout-note .aside-note}
 Some of the calculations in this text are done with rounded values for clarity. In practice, you should use the full precision values from R to avoid rounding errors. You will see below that the predicted value calculated here (2.48) differs from that calculated in R (2.46) due to rounding. Always do calculations with full precision values from R, and only round the final result if needed.
 :::
 
@@ -419,7 +428,9 @@ This means that each increase in body size of 1 kg multiplies the expected count
 This shows that the exponentiated coefficient $\exp(\beta_1)$ gives the multiplicative change in expected count for a one-unit change in the explanatory variable.
 
 
-::: {.callout-important}
+::: {.callout-important .key-idea}
+## Key idea
+
 A one-unit increase in an explanatory variable multiplies the expected count by $\exp(\beta)$.
 :::
 
@@ -444,7 +455,7 @@ expected_count
 
 
 
-::: {.callout-note}
+::: {.callout-note .aside-note}
 Although counts can only be integers, the expected value from a Poisson model can be any positive real number. This is because the expected value is a mean over many possible counts.
 :::
 
@@ -481,7 +492,9 @@ new_data$upper <- exp(soay_predictions$fit + 1.96 * soay_predictions$se.fit)
 
 Note that we back-transform the predictions and confidence intervals using the exponential function, since the link function is the log. And note that we must calculate the confidence intervals on the log scale first, and then back-transform them.
 
-::: {.callout-note}
+::: {.callout-tip .r-toolbox}
+## R toolbox
+
 If we only wanted the fitted value (and not confidence intervals) we could have used `type = "response"` in the `predict()` function to get predictions on the original count scale (back-transformed from the log scale). When we don't specified this, we would get predictions on the log scale--this is the default behavior.
 :::
 
@@ -501,7 +514,9 @@ Excellent! We can now write a nice sentence for our results:
 Reproductive fitness (in terms of lifetime number of offspring) increased significantly with body mass, with a unit increase in body mass associated with a multiplicative increase in expected fitness of `r round(exp(coef(soay_glm)[2]), 2)` (95% CI: `r round(exp(confint(soay_glm)[2, ]), 2)`; $\chi^2 =$ `r round(anova(soay_glm, test = "Chisq")$Deviance[2], 2)`, $df = 1$, $p <$ `r signif(anova(soay_glm, test = "Chisq")[2,5], 2)`).
 
 
-::: {.callout-tip}
+::: {.callout-important .key-idea}
+## Key idea
+
 **How big is the effect?** A multiplicative effect per kg of body mass can be hard to judge. It helps to also express it over the range of the data. In this example, the model predicts an expected lifetime fitness of `r round(new_data$fit[1], 1)` offspring for the lightest sheep (`r round(min(soay$body.size))` kg) and `r round(new_data$fit[nrow(new_data)], 1)` offspring for the heaviest (`r round(max(soay$body.size))` kg). Whether a difference of this size is biologically important (for example, for the evolution of body size) is a biological question, but reporting the effect in this way gives readers what they need to judge it.
 :::
 
@@ -542,7 +557,9 @@ dispersion_soay
 Here, the dispersion is quite close to 1 (it is `r round(dispersion_soay, 2)`), indicating little  overdispersion. However, in many real datasets, overdispersion is common.
 
 
-::: {.callout-caution}
+::: {.callout-warning .common-mistake}
+## Common mistake
+
 Ignoring overdispersion leads to **anti-conservative p-values** (too small). This would be a typical example of **Type I error inflation**. Type I errors occur when we incorrectly reject a true null hypothesis, leading to false positives. In the context of statistical modeling, ignoring overdispersion can result in underestimating standard errors, which in turn leads to smaller p-values. Consequently, we may conclude that an effect is statistically significant when it is not, thereby increasing the likelihood of Type I errors.
 :::
 
@@ -575,7 +592,7 @@ Examples include:
 - Number of cigarettes smoked (many people do not smoke, more than can be modelled by a Poisson distribution)
 - Parasite counts (many host individual have no parasites, more than can be modelled by a Poission distribution)
 
-::: {.callout-note}
+::: {.callout-note .aside-note}
 Zero inflation often reflects **two processes**: whether an observation can be non-zero at all, and how large it is if it is. E.g., whether an individual smokes at all, and then how many cigarettes they smoke if they do.
 :::
 
@@ -670,9 +687,11 @@ With this foundation, you are now equipped to analyse count data using GLMs in R
 * Generalized Linear Models With Examples in R (2018) by Peter K. Dunn and Gordon K. Smyth.
 
 
-## Extras
+## Extras {.extras}
 
-::: {.callout-note}
+::: {.callout-note .extras}
+## Extras · not examined
+
 The content of this Extras section is not examinable. It is here for those who want to learn more.
 :::
 

@@ -30,7 +30,9 @@ There are two ways to use **RStudio**:
 
 What do we recommend? Try the cloud first. If you like it then continue to use it.
 
-::: {.callout-important}
+::: {.callout-warning .common-mistake}
+## Common mistake
+
 Whether you use the RStudio application on your computer, or use RStudio on the Cloud, you are responsible for the safety and persistence of your files (data, code, etc.). Just because you're using RStudio on the Cloud does not mean your files are automatically saved forever. Make sure to download and back up your important files regularly! 
 :::
 
@@ -81,7 +83,7 @@ b <- 10
 c <- a + b
 ```
 
-::: {.callout-note}
+::: {.callout-note .aside-note}
 In fact, just about everything in R is an object! These objects live in your R session (i.e., in the memory of your computer), and you can see them in the Environment pane. You can create objects to store data, functions, and other information. Your data files are something different. They are just like other files on your computer, such as documents, images, and music files. They live on your hard drive (or in the cloud), and you can import them into R when you need to work with them.
 :::
 
@@ -235,7 +237,9 @@ You can also use the RStudio interface to install packages. Go to the "Packages"
 
 You can see which packages are currently installed by looking in the "Packages" tab.
 
-::: {.callout-tip}
+::: {.callout-tip .r-toolbox}
+## R toolbox
+
 You only need to install a package once. After it is installed, you can load it into your R session using the `library()` function. Do not install packages every time you want to use them; just load them with `library()`.
 :::
 
@@ -268,7 +272,7 @@ A common problem you might see is an error message when trying to install or loa
 
 These messages indicate that the package you are trying to install or load requires a newer version of R than the one you currently have. To fix this, you will need to update your R installation to the required version or higher. Then its also a good idea to update your packages as well.
 
-::: {.callout-note}
+::: {.callout-note .aside-note}
 RStudio is also regularly updated, with new version released every several months or so. Your version of RStudio is independent of your version of R, so you can update RStudio without changing your R version. Note that usually your version of RStudio is not as important as your version of R and the packages you are using. So updating RStudio is usually not a high priority and doesn't often help solve problems related to add on package versions.
 :::
 
@@ -285,7 +289,9 @@ If you click on the project name, a dropdown menu will appear. From there, you c
 
 **Create a new R Project:** File > New Project > New Directory or Existing Directory > New Project > Choose a name and location for your project > Create Project.
 
-::: {.callout-important}
+::: {.callout-important .key-idea}
+## Key idea
+
 **Get organised!** Put all files for a project in one folder. For example, I made a folder called `BIO144_2027` and put all files related to this course in that folder. Within that folder, I have subfolders for `datasets`, `scripts`, and `results`. I then create an R Project in the `BIO144_2027` folder. This way, all files related to the course are in one place, and I can easily find them later.
 :::
 
@@ -312,7 +318,9 @@ my_data <- read_csv("datasets/my_data_file.csv")
 
 This code will read the `my_data_file.csv` file from the `datasets` folder within the current working directory (which should be the R Project directory) and store it in a data frame called `my_data`.
 
-::: {.callout-tip}
+::: {.callout-tip .r-toolbox}
+## R toolbox
+
 **Easily getting the file path** In RStudio, you can easily get the file path by putting the cursor in the parentheses of the `read_csv()` function, the press the tab key. A drop-down menu will appear with options to navigate to the file. This way, you don't have to type the file path manually.
 :::
 
@@ -371,7 +379,9 @@ Looks complicated eh! Well, that's because it is, for sure. But let's break it d
 
 
 
-::: {.callout-important}
+::: {.callout-warning .common-mistake}
+## Common mistake
+
 **Let's assume your data was imported incorrectly.** This means you have to inspect it carefully. Check that the variable names are correct, that the data types are correct (e.g., numeric, character, factor), that there are the correct number of rows and columns. If you find any issues, you need to find out what caused them, fix them, and re-import the data (see below).
 :::
 
@@ -400,7 +410,7 @@ my_data <- my_data |>
 
 The `clean_names()` function from the `janitor` package will convert variable names to a consistent format (lowercase, spaces replaced by underscores, no special characters).
 
-::: {.callout-note}
+::: {.callout-note .aside-note}
 When we ran the code `library(janitor)` we got the message: **Attaching package: 'janitor'
 The following objects are masked from 'package:stats': chisq.test, fisher.test**
 This sometimes happens when two packages have functions with the same name. In this case, the `janitor` package has functions called `chisq.test()` and `fisher.test()`, which are also in the base `stats` package. When we load the `janitor` package, it masks (hides) the functions from the `stats` package. This is usually not a problem, but if you want to use the functions from the `stats` package, you can specify the package name when calling the function, like this: `stats::chisq.test()`.
@@ -424,7 +434,9 @@ The `dplyr` package also provides functions to group data frames and to summariz
 
 The pipe operator `|>` is used to chain together multiple operations on a data frame. 
 
-::: {.callout-tip}
+::: {.callout-tip .r-toolbox}
+## R toolbox
+
 Note that you will often see another pipe operator `%>%` used in examples. The pipe operator `|>` is a newer version of `%>%` that is more efficient and easier to use. The pipe operator `|>` is available in R version 4.1.0 and later.
 :::
 
@@ -546,7 +558,9 @@ my_data2 |>
 It's unusual to need the rows of a dataset to be arranged in a specific order, but it can be useful when looking at the data directly.
 
 
-::: {.callout-tip}
+::: {.callout-tip .r-toolbox}
+## R toolbox
+
 Note that when you view the data in RStudio, it will always be arranged by the row number. In the viewer you can sort by clicking on the column headers.
 :::
 
@@ -758,7 +772,9 @@ ggplot(my_data3, aes(x = education_level, y = age)) +
 
 We have a problem here: the education levels are not in a sensible order. The first level is "Bachelor's", followed by "High School", "Master's", and "PhD".
 
-::: {.callout-note}
+::: {.callout-tip .r-toolbox}
+## R toolbox
+
 Why do you think the levels are in this order? We didn't tell R to order them like this! The answer is that R orders factor levels alphabetically by default. So when we convert a character variable to a factor without specifying the order of the levels, R will order them alphabetically.
 :::
 
@@ -914,9 +930,11 @@ A great place to consolidate your learning so far, and to learn more about the *
 
 There are a series of excellent cheat sheets for R and RStudio, and for packages in the *tidyverse*. They're pretty dense and packed with information, but they can be very useful as a quick reference. You can find them here: [RStudio Cheat Sheets](https://posit.co/resources/cheatsheets/).
 
-## Extras
+## Extras {.extras}
 
-::: {.callout-note}
+::: {.callout-note .extras}
+## Extras · not examined
+
 The content of this Extras section is not examinable. It is here for those who want to learn more.
 :::
 

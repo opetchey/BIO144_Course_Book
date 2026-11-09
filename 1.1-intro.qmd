@@ -77,7 +77,7 @@ You will meet each principle many times. Principle 1 is the first step of the wo
 
 ## How the course is organised
 
-::: {.callout-note}
+::: {.callout-note .aside-note}
 The [course information website](https://opetchey.github.io/BIO144_Course_Information/) has the current times, dates, and other details that can change from year to year. 
 :::
 
@@ -112,7 +112,7 @@ Much of the course material is new or recently revised. If you find something th
 
 ## The final examination
 
-::: {.callout-note}
+::: {.callout-note .aside-note}
 Check the course information website for the current examination details.
 :::
 
@@ -148,7 +148,9 @@ The knowledge and expertise *you* bring is what makes a good relationship with a
 
 ### Guidance and good practice
 
-::: {.callout-important}
+::: {.callout-important .key-idea}
+## Key idea
+
 For the final examination, you will use your own computer. Access to and use of prohibited materials and tools will be strictly controlled. These include generative AI tools, browser-based assistants, external software, online services, and any AI code copilots inside RStudio or other IDEs. You will be told by late May exactly how this will work. This means **no form of generative AI will be available during the exam**. Because of this, please avoid becoming overly reliant on GenAI—such as ChatGPT, Claude, Gemini, Copilot, or similar tools for answering quiz questions, explaining results, fixing errors, guiding your analysis, or writing code. You must be able to perform all tasks independently. We also strongly recommend that you do not use RStudio with Copilot integration during the course, as it will not function in the exam environment and may leave you under prepared. Throughout the semester, be sure to practice writing your own R code, interpreting outputs yourself, and applying statistical reasoning without AI assistance, as your exam performance will depend entirely on your own knowledge and skills.
 :::
 

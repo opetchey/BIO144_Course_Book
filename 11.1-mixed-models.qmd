@@ -32,7 +32,9 @@ But many biological datasets violate independence because observations come in *
 
 In these cases, treating all rows as independent often leads to **false confidence** (too-small standard errors, too-small p-values). Mixed models are one standard way to handle this.
 
-::: {.callout-important}
+::: {.callout-important .key-idea}
+## Key idea
+
 **Core idea** A *mixed model* extends over all our previous models by adding **random effects** that represent grouping structure (clusters) in the data.
 
 * **fixed effects**: effects you want to estimate explicitly (treatments, temperature, time, …)
@@ -58,7 +60,7 @@ Reasons *not* to average include:
 5. **“Sharing information” across groups**: mixed models partially pool group estimates toward the overall mean.
 6. **Keeping information**: you can use all observations without collapsing the design.
 
-::: {.callout-note}
+::: {.callout-note .aside-note}
 A mixed model gives you a principled compromise between:
 
 * analysing each observation as a independent one, and
@@ -184,7 +186,9 @@ y ~ x + (1 + x | group)
 
 Here each group has its own intercept **and** its own slope, and these can be correlated.
 
-::: {.callout-caution}
+::: {.callout-warning .common-mistake}
+## Common mistake
+
 Random slopes are powerful but can be hard to estimate with small datasets.
 If the model struggles to fit (singular fit warnings), consider simplifying.
 :::
@@ -378,8 +382,11 @@ abline(h = 0, lty = 2)
 
 
 
-::: {.callout-caution}
-**Don’t over-interpret p-values**  
+::: {.callout-warning .common-mistake}
+## Common mistake
+
+**Don’t over-interpret p-values**
+
 In mixed models, inference depends on how you handle degrees of freedom and uncertainty.
 In BIO144, focus on:
 - correct model structure (what must be random?)
@@ -408,7 +415,7 @@ m_lmm_comparison
 
 There is little evidence that adding random slopes improves the model here (p = `r round(m_lmm_comparison[["Pr(>Chisq)"]][2], 2)`). But in other datasets it might.
 
-::: {.callout-note}
+::: {.callout-note .aside-note}
 This likelihood ratio test compares nested models. It is widely used, but has subtleties for random effects. In BIO144 you can treat it as a reasonable practical tool, while noting that "testing random effects" is an advanced topic.
 :::
 

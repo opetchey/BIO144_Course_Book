@@ -77,7 +77,9 @@ ggplot(bp_data_diet, aes(x = diet, y = bp)) +
        y = "Blood Pressure (mm Hg)") 
 ```
 
-::: {.callout-tip}
+::: {.callout-tip .r-toolbox}
+## R toolbox
+
 We just used `geom_jitter()` instead of `geom_point()` to make a scatterplot. This is because `geom_jitter()` adds a small amount of random noise to the points, which helps to prevent overplotting when multiple points have the same value (which is common when the x-axis is categorical).
 
 When we use `geom_jitter()`, we can specify the amount of noise to add in the x and y directions using the `width` and `height` arguments, respectively. We must be very careful to not add noise to the y direction if we care about the actual y values (e.g., blood pressure). In this case, we only added noise in the x direction by setting `height = 0` to separate the points just enough, but not so much that we could get confused about which of the diets they belong to.
@@ -174,7 +176,7 @@ ggplot(bp_data_diet_fig, aes(x = diet, y = bp)) +
             color = "red")
 ```
 
-::: {.callout-note}
+::: {.callout-note .aside-note}
 There is lots of hidden code used to create the data used in the graph above, and to make the graph itself. You can see the code by going to the [Github repository for this book](https://github.com/opetchey/BIO144_Course_Book). 
 :::
 
@@ -232,7 +234,7 @@ ggplot(bp_data_diet_fig, aes(x = diet, y = bp)) +
 
 
 
-::: {.callout-hint}
+::: {.callout-note .aside-note}
 Here is something to warp you mind... we described one-way ANOVA as a linear model with one categorical explanatory variable. But as you can see above, we can also describe it as a linear model with multiple binary explanatory variables (one for each group except the reference group). And when we make a linear model in R it really does create multiple binary explanatory variables behind the scenes. So one-way ANOVA and multiple linear regression with multiple binary explanatory variables are really the same thing! And, even more mind-warping, one-way ANOVA and multiple regression (regression with multiple continuous explanatory variables) are also the same thing! So when we look at multiple regression later in the course, you can think of it as just an extension of one-way ANOVA.
 :::
 
@@ -253,7 +255,7 @@ A key point is that we are testing a null hypothesis that concerns all the group
 
 Because we are testing a null hypothesis that concerns all the groups, we need to use an $F$-test. It asks if the model with the group means is better than a model with just the overall mean.
 
-::: {.callout-note}
+::: {.callout-note .aside-note}
 The $F$-test is called the "$F$-test" because it is based on the $F$-distribution, which was named after the statistician [Sir Ronald A. Fisher](https://en.wikipedia.org/wiki/Ronald_Fisher). Fisher developed this statistical method as part of his pioneering work in analysis of variance (ANOVA) and other fields of experimental design and statistical inference.
 :::
 
@@ -438,7 +440,9 @@ $$MS_{residual} = \frac{SS_{\text{within}}}{n-k} = \frac{SSE}{n-k}$$
 
 $$F = \frac{MS_{model}}{MS_{residual}}$$
 
-::: {.callout-note}
+::: {.callout-important .key-idea}
+## Key idea
+
 **Why divide by the degrees of freedom?** The more observations we have, the greater will be the total sum of squares. The more observations we have, the greater will be the residual sum of squares. So it is not very informative to compare totals. Rather, we need to compare the mean of the sums of squares. Except we don't calculate the mean by dividing by the number of observations. Rather we divide by the degrees of freedom. The total mean square is an estimate of the variance of the response variable. And the residual mean square is an estimate of the variance of the residuals.
 :::
 
@@ -810,7 +814,9 @@ When communicating the results of an ANOVA, we usually report the $F$-statistic,
 
 > Blood pressure differed significantly between groups, with the mean of a meat heavy diet being 123 mmHg, while the mean blood pressure of the vegan group was 27 mmHg lower (One-way ANOVA, $F(3, 46) = 20.7$, $p < 0.0001$.
 
-::: {.callout-tip}
+::: {.callout-important .key-idea}
+## Key idea
+
 **Report the effect sizes, not only the test.** The $F$-test only tells us whether there is evidence that *some* group means differ. Notice that the sentence above also gives the size of the difference (27 mmHg lower in the vegan group). Even better is to give the uncertainty of the difference too, for example its 95% confidence interval (from `confint()` applied to the linear model). Readers can then judge whether the difference is large enough to be biologically or medically important.
 :::
 
@@ -873,9 +879,11 @@ If you'd like some further reading on ANOVA and ANOVA in R, here are some good r
 * Chapter 14 of *Linear Models with R* by Faraway. This chapter is eight pages.
 * Chapter 9 of **Statistics. An Introduction using R** by Crawley, up to the section *Factorial experiments*. This section is about 16 pages.
 
-## Extras
+## Extras {.extras}
 
-::: {.callout-note}
+::: {.callout-note .extras}
+## Extras · not examined
+
 The content of this Extras section is not examinable. It is here for those who want to learn more.
 :::
 

@@ -30,8 +30,11 @@ In earlier chapters we learned many different statistical tools:
 
 This final chapter pulls those ideas together. The aim is not to memorize a list of tests. The aim is to move carefully from a **biological question** to a **planned model**, and then from a fitted model to a checked, interpreted, plotted, and reported result.
 
-::: {.callout-important}
-**Core idea**  
+::: {.callout-important .key-idea}
+## Key idea
+
+**Core idea**
+
 Do not start with "Which test do I use?" Start with the biological question, sketch the expected figure, identify the response variable and data structure, then choose the model.
 :::
 
@@ -108,7 +111,9 @@ A useful planning sentence is:
 
 This sentence is not just a reporting sentence. It is a design sentence. If you cannot complete it, the study plan (including question) is probably not clear enough yet.
 
-::: {.callout-note}
+::: {.callout-important .key-idea}
+## Key idea
+
 Residual degrees of freedom are not magic numbers that appear later in R. They are already implied by the design and the model.
 :::
 
@@ -213,7 +218,9 @@ Planning sentence:
 
 > We will test whether drug treatment affects heart rate over time using a mixed model, because heart rate is continuous, treatment and time are explanatory variables, and repeated measurements are grouped within animals. We plan to measure 20 animals 5 times each, giving 100 total observations, while accounting for animal identity as a random effect.
 
-::: {.callout-caution}
+::: {.callout-important .key-idea}
+## Key idea
+
 The random-effects question comes early. Before asking "ANOVA or regression?", ask whether the observations are independent.
 :::
 
@@ -322,7 +329,9 @@ Plot data + model predictions
 Report statistical and biological conclusion
 ```
 
-::: {.callout-important}
+::: {.callout-important .key-idea}
+## Key idea
+
 The order matters. We do not fit a model, look for a small p-value, and only then check whether the model was reasonable. We check first, then interpret.
 :::
 

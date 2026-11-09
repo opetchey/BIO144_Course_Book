@@ -131,8 +131,9 @@ ggplot(mapping = aes(x = 0:10, y = p_k_successes)) +
 So the probability of getting exactly 8 successes is actually quite low, at about 0.3. But it is still the most likely outcome.
 
 
-::: {.callout-important}
-**So what???**
+::: {.callout-important .key-idea}
+## Key idea
+
 You should now understand two important things:
 
 * The relationship between binary data (0/1) and binomial data (counts of successes out of trials).
@@ -180,8 +181,8 @@ ggplot(mapping = aes(x = prob_seq, y = log_odds_seq)) +
   labs(x = "Probability", y = "Log-odds (logit)")
 ```
 
-::: {.callout-important}
-**So what???**
+::: {.callout-important .key-idea}
+## Key idea
 
 The reason why the logit is useful is that it maps probabilities (0 to 1) to the whole real line (-infinity to infinity). This is important because in a GLM, the linear predictor can take any value from -infinity to infinity, so we need a link function that can map between the two scales. The logit does this perfectly.
 :::
@@ -218,8 +219,8 @@ $OR = \frac{0.667}{0.250} = 2.67$
 
 This means that the odds of success in group 1 are about 2.67 times the odds of success in group 2.
 
-::: {.callout-important}
-**So what???**
+::: {.callout-important .key-idea}
+## Key idea
 
 You will see below that the coefficients in a binomial GLM with logit link correspond to log-odds ratios. Exponentiating those coefficients gives odds ratios. This is a key part of interpreting the results of a binomial GLM.
 
@@ -437,8 +438,11 @@ num_tested_example
 
 At the highest dose (76.54), the model predicts about 76 deaths, but only 60 beetles were tested! Clearly this is an impossible prediction. We can't go on with the Poisson model either.
 
-::: {.callout-caution}
-**Poisson vs binomial, when to use each**  
+::: {.callout-important .key-idea}
+## Key idea
+
+**Poisson vs binomial, when to use each**
+
 Use a Poisson model when counts have *no known upper limit*.  
 Use a binomial model when counts are "$k$ successes out of $n$ trials".
 Use a binomial/binary model when each observation is a 0/1 response.
@@ -477,8 +481,11 @@ autoplot(beetle_glm)
 
 Not great, but again we have only 8 dose levels. Let us continue in any case and look at the ANOVA table and the coefficients.
 
-::: {.callout-important}
-**The response in aggregated binomial data**  
+::: {.callout-important .key-idea}
+## Key idea
+
+**The response in aggregated binomial data**
+
 Use `cbind(successes, failures)` in `glm(..., family = binomial)`.
 
 - successes: number of 1s  
@@ -549,7 +556,9 @@ When reporting results from a logistic regression, you might say something like:
 
 
 
-::: {.callout-tip}
+::: {.callout-important .key-idea}
+## Key idea
+
 **How big is the effect?** Odds ratios are hard for most readers to interpret. As well as the odds ratio, report predicted probabilities at a few meaningful values of the explanatory variable (for example, the lowest and highest doses used, or a dose of practical interest), with their confidence intervals. Readers can then judge whether the effect is biologically (or practically) important. See also "Probability vs odds ratio in reporting" below.
 :::
 
@@ -571,8 +580,11 @@ deviance(beetle_glm) / df.residual(beetle_glm)
 
 The ratio is about 1.4, which is suggests some overdispersion, but is on the limit of what is usually considered acceptable.
 
-::: {.callout-caution}
-**Type I error inflation (binomial overdispersion)**  
+::: {.callout-warning .common-mistake}
+## Common mistake
+
+**Type I error inflation (binomial overdispersion)**
+
 If there is overdispersion and we ignore it, standard errors are usually too small and $p$-values can be too small (anti-conservative). That increases false positives (Type I errors).
 :::
 
@@ -588,7 +600,7 @@ summary(beetle_glm_q)
 
 The estimates are the same as for `beetle_glm`, but the standard errors are larger (for Dose, `r round(summary(beetle_glm_q)$coefficients["Dose", "Std. Error"], 4)` instead of `r round(summary(beetle_glm)$coefficients["Dose", "Std. Error"], 4)`). This is because they are scaled by the estimated dispersion parameter (`r round(summary(beetle_glm_q)$dispersion, 2)`; see the line "Dispersion parameter for quasibinomial family taken to be ..."). This value is calculated from the Pearson residuals, so it differs a little from the deviance / df ratio of about 1.4 above, but it tells us the same thing. The tests are now $t$-tests rather than $z$-tests. Here the effect of Dose remains very clear.
 
-::: {.callout-note}
+::: {.callout-note .aside-note}
 `quasibinomial` estimates an extra dispersion parameter from the data. It is often a good "first fix" when aggregated binomial data look overdispersed.
 :::
 
@@ -691,8 +703,11 @@ Residual plots exist, but can be hard to interpret for 0/1 data:
 autoplot(plasma_glm)
 ```
 
-::: {.callout-important}
-**Dispersion checks need caution for individual 0/1 data**  
+::: {.callout-warning .common-mistake}
+## Common mistake
+
+**Dispersion checks need caution for individual 0/1 data**
+
 The simple "residual deviance $\approx$ residual df" rule-of-thumb is most
 useful for *aggregated* binomial data. With individual-level 0/1 data,
 detecting overdispersion is more subtle and often requires additional
@@ -705,8 +720,11 @@ structure (e.g. grouping, random effects).
 
 Sometimes a explanatory variable (or combination of explanatory variables) perfectly predicts the response variable (all 0s on one side, all 1s on the other). This is called **(complete) separation** and can cause extremely large coefficient estimates and warnings.
 
-::: {.callout-caution}
-**Separation warning**  
+::: {.callout-warning .common-mistake}
+## Common mistake
+
+**Separation warning**
+
 If your logistic regression produces enormous standard errors or warnings
 about fitted probabilities being 0 or 1, check for separation. Remedies
 include more data, simpler models, or penalized methods (advanced topic).

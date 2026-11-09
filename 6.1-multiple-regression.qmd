@@ -103,7 +103,9 @@ ggplot2::ggplot(bp_data_multreg, aes(x = age, y = mins_exercise)) +
 
 And here we see no relationship between age and minutes of exercise. The two explanatory variables appear to be independent.
 
-::: {.callout-important}
+::: {.callout-important .key-idea}
+## Key idea
+
 The lack of correlation between the two explanatory variables is very important. If the two explanatory variables were correlated, we would have a situation known as multicollinearity. Multicollinearity can greatly complicate the interpretation of the results of a multiple regression analysis. We will discuss multicollinearity later.
 :::
 
@@ -347,7 +349,7 @@ So the `summary()` function gives us everything we need to answer question 1. It
 
 **How to report the result**. We could write somthing like this: "The combination of age and minutes of exercise is significantly associated with blood pressure (F(2, 97) = `r round(summary(m_bp_age_exercise)$fstatistic[1], 2)`, p = `r signif(pf(summary(m_bp_age_exercise)$fstatistic[1], summary(m_bp_age_exercise)$fstatistic[2], summary(m_bp_age_exercise)$fstatistic[3], lower.tail = FALSE), 3)`)." Note that this is rather an undesirable statement, because it focuses too much on the statistics and not enough on the science. Indeed, perhaps we care more about the association of each explanatory variable with blood pressure, which we will look at next.
 
-::: {.callout-note}
+::: {.callout-note .aside-note}
 If you want to review how to calculate a p-value from an F-statistic, see the corresponding section of the one-way ANOVA chapter.
 :::
 
@@ -377,7 +379,7 @@ degrees of freedom (the residual degrees of freedom).
 
 
 
-::: {.callout-important}
+::: {.callout-note .aside-note}
 **However** Please insert a note into your brain that we are dealing here with an ideal case of **uncorrelated explanatory variables**. You'll learn later in the course about what happens when explanatory variables are correlated. Hint: interpretation is difficult and unstable!
 :::
 
@@ -566,7 +568,9 @@ Then we can use the `predict()` function to make predictions for these new value
 new_predictions <- predict(m_bp_age_exercise, newdata = new_data)
 ```
 
-::: {.callout-important}
+::: {.callout-warning .common-mistake}
+## Common mistake
+
 The new data frame must have the all the explanatory variables used in the model, and the variable names must match exactly those used in the model.
 :::
 
@@ -758,7 +762,7 @@ summary(m_collinear_12)$coefficients
 
 Yes, they do change quite a bit. The coefficients for $x_1$ and $x_2$ are quite different when $x_3$ is included in the model compared to when it is not included. This is because $x_3$ is predictable from $x_1$ and $x_2$, so including $x_3$ in the model changes the interpretation of the coefficients for $x_1$ and $x_2$.
 
-::: {.callout-note}
+::: {.callout-note .aside-note}
 In a not so extreme case such as this one, the coefficients will not be completely unstable (i.e., they will not change from a number to NA) but they can still change quite a bit depending on which other collinear variables are included in the model.
 :::
 
@@ -1142,9 +1146,11 @@ If you'd like to solidify your understanding of multiple linear regression, you 
 
 
 
-## Extras
+## Extras {.extras}
 
-::: {.callout-note}
+::: {.callout-note .extras}
+## Extras · not examined
+
 The content of this Extras section is not examinable. It is here for those who want to learn more.
 :::
 

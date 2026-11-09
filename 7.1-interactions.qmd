@@ -374,7 +374,9 @@ ggplot(bp_2cont, aes(x=age, y=bp, col = mins_per_week_class)) +
        y="Blood pressure")
 ```
 
-::: {.callout-important}
+::: {.callout-important .key-idea}
+## Key idea
+
 **There is only one interaction** We made two graphs of the same data, one with age as a categorical variable and one with minutes of exercise as a categorical variable. In both graphs we see an interaction. This is not us seeing two separate interactions, however. There is only one interaction here, namely that the effect of age on blood pressure depends on minutes of exercise, and equivalently, that the effect of minutes of exercise on blood pressure depends on age. The two graphs just look at the same interaction from different perspectives.
 :::
 
@@ -600,7 +602,9 @@ if (knitr::is_latex_output()) {
 
 We also might use a sentence like this to report the results: "The effect of minutes of exercise is generally negative, and there is some evidence that the effect is stronger for people on a meat heavy diet than for people on a vegetarian diet ($F$-statistics of interaction term = `r round(anova(m_bp_exercise_diet)[3,4],2)`, degrees of freedom = `r anova(m_bp_exercise_diet)[3,1]`, degrees of freedom residuals = `r anova(m_bp_exercise_diet)[4,1]`, $p$-value = `r signif(anova(m_bp_exercise_diet)[3,5],2)`)."
 
-::: {.callout-tip}
+::: {.callout-important .key-idea}
+## Key idea
+
 **Report the effect sizes, too.** The sentence above tells the reader that the effect of exercise differs between diets, and gives the test of the interaction. It would be more informative to also give the size of the effect of exercise in each diet: the estimated slope of blood pressure against minutes of exercise for each diet, with its 95% confidence interval, preferably expressed over a meaningful amount of exercise (for example, per hour per week). Readers can then judge whether the effects, and the difference between them, are biologically important.
 :::
 
@@ -687,7 +691,9 @@ In this example, the F-statistic for the interaction term is quite large (`r rou
 **Think-Pair-Share** (#tps-two-way-report) Write a sentence reporting the results of the two-way ANOVA. Focus on the biological interpretation of the results, rather than the statistical details. Include statistics in parentheses, in support of your statements.
 --->
 
-::: {.callout-important}
+::: {.callout-important .key-idea}
+## Key idea
+
 **Reporting two-way ANOVA results** When reporting the results of a two-way ANOVA, it is important to focus on the biological interpretation of the results, rather than the statistical details. Include statistics in parentheses, in support of your statements. For example, you might say something like: "The effect of exercise was different for people on different diets, with a stronger effect for those on a vegetarian diet compared to those on a meat heavy diet (F(1, 36) = 13.77, p < 0.001)."
 :::
 
@@ -804,7 +810,9 @@ Reporting the patterns and statistics is similar to before, but now we have more
 
 
 
-::: {.callout-caution}
+::: {.callout-important .key-idea}
+## Key idea
+
 **Degrees of freedom** Look at the ANOVA table and the degrees of freedom column. For diet, the degrees of freedom is 2, because there are three levels of diet (meat heavy, vegetarian, vegan), and the degrees of freedom is number of levels minus 1. For exercise, the degrees of freedom is 1, because there are two levels of exercise (low, high). For the interaction term diet:exercise, the degrees of freedom is 2, which is the product of the degrees of freedom for diet (2) and exercise (1).
 
 Another way to think about this is how many parameters are estimated? The answer is as follows: six parameters are estimated in total, one for each of the combinations of diet and exercise (3 diets x 2 exercises = 6 combinations). Hence the residual degrees of freedom is total number of observations (60) minus 6.
@@ -876,7 +884,9 @@ and compare the estimate of $\beta_{1,veg}$ to the estimate of $\beta_{1,meat}$?
 
 Well, you could do that, and could probably find a way to test for whether the difference in the slopes is different from 0. This would be a test of the null hypothesis that the effect of minutes of exercise on blood pressure is the same for people with different diets. But, this would be a more complicated way to do it, and would not be as general as the model with the interaction term. The model with the interaction term is more general, more flexible, and more elegant.
 
-::: {.callout-note}
+::: {.callout-warning .common-mistake}
+## Common mistake
+
 It is usually better model the whole dataset to test a single hypothesis, rather dividing up the dataset into smaller parts, fitting a model to each part, and then comparing the results of the models. The latter approach is less efficient and less elegant. **One hypothesis = one model.**
 :::
 
@@ -964,9 +974,11 @@ Interpretation of three-way interactions can be quite complex, as it involves un
 * This is a nice paper for clinicians on understanding interactions: [How to interact with interactions: what clinicians should know about statistical interactions](https://publications.aap.org/hospitalpediatrics/article/13/10/e319/194006/How-to-Interact-With-Interactions-What-Clinicians?autologincheck=redirected)
 * If you want a challenge, and to see how nuanced interactions and interpretation can be, have a look at this paper [Interactions in statistical models: Three things to know](https://besjournals.onlinelibrary.wiley.com/doi/10.1111/2041-210X.13714)
 
-## Extras
+## Extras {.extras}
 
-::: {.callout-note}
+::: {.callout-note .extras}
+## Extras · not examined
+
 The content of this Extras section is not examinable. It is here for those who want to learn more.
 :::
 
@@ -1014,7 +1026,8 @@ plotly::plot_ly(bp_2cont, x = ~mins_per_week, y = ~age, z = ~bp, type = "scatter
 
 ### Types of sums of squares
 
-::: {.callout-important}
+::: {.callout-warning .common-mistake}
+## Common mistake
 
 **A note on anova() and "Type I" (sequential) sums of squares**
 

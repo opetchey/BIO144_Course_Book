@@ -546,9 +546,6 @@ ggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +
   geom_line(lty = "dotted") +
   geom_errorbar(aes(y = 0, xmin = -0.1, xmax = 0.5),
                 width = 0.05, orientation = "y") +
-  theme(axis.title.y = element_blank(),
-        axis.text.y = element_blank(),
-        axis.ticks.y = element_blank()) +
   #geom_vline(xintercept = c(-1, 1), linetype = "dashed") +
   ylim(-0.1, 0.1) +
   xlim(-1, 1) +
@@ -570,9 +567,6 @@ ggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +
   geom_line(lty = "dotted") +
   geom_errorbar(aes(y = 0, xmin = 0.1, xmax = 0.7),
                 width = 0.05, orientation = "y") +
-  theme(axis.title.y = element_blank(),
-        axis.text.y = element_blank(),
-        axis.ticks.y = element_blank()) +
   #geom_vline(xintercept = c(-1, 1), linetype = "dashed") +
   ylim(-0.1, 0.1) +
   xlim(-1, 1) +

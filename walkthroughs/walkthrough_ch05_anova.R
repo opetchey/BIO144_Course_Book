@@ -30,6 +30,10 @@
 library(multcomp)   # for Tukey HSD post-hoc tests with glht()
 library(tidyverse)
 library(ggfortify)  # for autoplot() of model checking plots
+## ggfortify (which provides autoplot()) still uses some old ggplot2 features. This gives
+## harmless deprecation warnings (e.g. about fortify(<lm>) and the size aesthetic).
+## This line hides them:
+options(lifecycle_verbosity = "quiet")
 # Note: stat_summary(fun.data = mean_cl_normal) in section 8 needs the Hmisc
 # package to be installed (install.packages("Hmisc")); you do not need to load it.
 

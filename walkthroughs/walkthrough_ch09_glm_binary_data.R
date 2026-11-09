@@ -26,6 +26,10 @@
 
 library(tidyverse)  # read_csv(), ggplot2, dplyr, and more
 library(ggfortify)  # autoplot() for model diagnostic plots
+## ggfortify (which provides autoplot()) still uses some old ggplot2 features. This gives
+## harmless deprecation warnings (e.g. about fortify(<lm>) and the size aesthetic).
+## This line hides them:
+options(lifecycle_verbosity = "quiet")
 
 
 # 2. Binary and binomial data ----

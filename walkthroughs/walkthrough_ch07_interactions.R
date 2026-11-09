@@ -25,6 +25,10 @@
 # 1. Load the packages ----
 library(tidyverse)  # read_csv(), dplyr functions, ggplot2
 library(ggfortify)  # autoplot() for model diagnostic plots
+## ggfortify (which provides autoplot()) still uses some old ggplot2 features. This gives
+## harmless deprecation warnings (e.g. about fortify(<lm>) and the size aesthetic).
+## This line hides them:
+options(lifecycle_verbosity = "quiet")
 
 
 # 2. Example 1 (1 categorical, 1 continuous) ----

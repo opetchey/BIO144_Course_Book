@@ -31,6 +31,10 @@
 # 1. Load the packages ----
 library(tidyverse)  # read_csv(), dplyr, tidyr, ggplot2
 library(ggfortify)  # autoplot() for model diagnostic plots
+## ggfortify (which provides autoplot()) still uses some old ggplot2 features. This gives
+## harmless deprecation warnings (e.g. about fortify(<lm>) and the size aesthetic).
+## This line hides them:
+options(lifecycle_verbosity = "quiet")
 library(lme4)       # lmer(), only used in the Practical toolbox at the end
 library(lmerTest)   # p-values for lmer(), only used in the Practical toolbox
 library(emmeans)    # predicted means with confidence intervals, only used in the Practical toolbox
@@ -48,8 +52,7 @@ metabolism |>
 # Planned figure: one colour per species
 ggplot(metabolism, aes(body_size, metabolic_rate, colour = species)) +
   geom_point() +
-  labs(x = "Body size", y = "Metabolic rate", colour = "Species") +
-  theme_classic()
+  labs(x = "Body size", y = "Metabolic rate", colour = "Species")
 # Look at: do the three species seem to have different slopes?
 
 ## 2b. Fit the planned model ----
@@ -113,8 +116,7 @@ ggplot(metabolism, aes(body_size, metabolic_rate, colour = species)) +
   ) +
   geom_line(data = plot_metabolism, aes(y = fit), linewidth = 1) +
   labs(x = "Body size", y = "Metabolic rate",
-       colour = "Species", fill = "Species") +
-  theme_classic()
+       colour = "Species", fill = "Species")
 # The lines and ribbons come from m_metabolism: the figure shows the model
 # we fitted and checked. See the chapter for an example report.
 
@@ -138,8 +140,7 @@ infection_summary <- infection |>
   )
 ggplot(infection_summary, aes(habitat, infected)) +
   geom_col(fill = "grey70", colour = "grey25") +
-  labs(x = "Habitat", y = "Observed proportion infected") +
-  theme_classic()
+  labs(x = "Habitat", y = "Observed proportion infected")
 
 ## 3b. Fit the planned model ----
 m_infection <- glm(
@@ -184,8 +185,7 @@ ggplot(infection, aes(habitat, infected)) +
     size = 4,
     colour = "firebrick"
   ) +
-  labs(x = "Habitat", y = "Infection status / predicted probability") +
-  theme_classic()
+  labs(x = "Habitat", y = "Infection status / predicted probability")
 
 
 # 4. Example 3: Count GLM ----
@@ -199,8 +199,7 @@ offspring |>
 # Planned figure
 ggplot(offspring, aes(food, n_offspring)) +
   geom_point(alpha = 0.7) +
-  labs(x = "Food availability", y = "Number of offspring") +
-  theme_classic()
+  labs(x = "Food availability", y = "Number of offspring")
 
 ## 4b. Fit the planned model ----
 m_offspring <- glm(
@@ -240,8 +239,7 @@ ggplot(offspring, aes(food, n_offspring)) +
     colour = "firebrick",
     linewidth = 1
   ) +
-  labs(x = "Food availability", y = "Number of offspring") +
-  theme_classic()
+  labs(x = "Food availability", y = "Number of offspring")
 # Look at: the prediction line curves upwards, because the Poisson GLM uses a
 # log link. See the chapter for the report and the final checklists.
 

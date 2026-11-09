@@ -30,3 +30,7 @@ invisible(
 ## own plots keep the ggplot2 defaults.
 source("style/theme_bio144.R")
 use_bio144_style()
+
+## ggfortify (autoplot()) gives harmless ggplot2 deprecation warnings
+## (fortify(<lm>), size aesthetic for lines); hide them in the book
+options(lifecycle_verbosity = "quiet")

@@ -27,6 +27,10 @@ library(tidyverse)  # read_csv(), dplyr, ggplot2
 library(patchwork)  # put two ggplots side by side with +
 library(lme4)       # lmer(): linear mixed models
 library(lmerTest)   # adds degrees of freedom and p-values to lmer() output
+## ggfortify (which provides autoplot()) still uses some old ggplot2 features. This gives
+## harmless deprecation warnings (e.g. about fortify(<lm>) and the size aesthetic).
+## This line hides them:
+options(lifecycle_verbosity = "quiet")
 # Note: once lmerTest is loaded, lmer() is the lmerTest version. In sections
 # 6 and 8 we write lme4::lmer() to use the original lme4 version, so you see
 # what the chapter shows first. Section 10 then uses the lmerTest version.

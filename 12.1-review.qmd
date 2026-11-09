@@ -423,8 +423,7 @@ ggplot(metabolism, aes(body_size, metabolic_rate, colour = species)) +
     x = "Body size",
     y = "Metabolic rate",
     colour = "Species"
-  ) +
-  theme_classic()
+  )
 ```
 
 ### Fit the planned model
@@ -563,8 +562,7 @@ ggplot(metabolism, aes(body_size, metabolic_rate, colour = species)) +
     y = "Metabolic rate",
     colour = "Species",
     fill = "Species"
-  ) +
-  theme_classic()
+  )
 ```
 
 The model and the figure now match. The lines and ribbons come from `m_metabolism`, the model we fitted and checked.
@@ -651,8 +649,7 @@ ggplot(infection_summary, aes(habitat, infected)) +
   labs(
     x = "Habitat",
     y = "Observed proportion infected"
-  ) +
-  theme_classic()
+  )
 ```
 
 ### Fit the planned model
@@ -715,8 +712,7 @@ ggplot(infection, aes(habitat, infected)) +
   labs(
     x = "Habitat",
     y = "Infection status / predicted probability"
-  ) +
-  theme_classic()
+  )
 ```
 
 For GLMs, `type = "response"` gives predictions on the biological scale. For a binomial GLM, that means predicted probabilities.
@@ -791,8 +787,7 @@ ggplot(offspring, aes(food, n_offspring)) +
   labs(
     x = "Food availability",
     y = "Number of offspring"
-  ) +
-  theme_classic()
+  )
 ```
 
 ### Fit the planned model
@@ -850,8 +845,7 @@ ggplot(offspring, aes(food, n_offspring)) +
   labs(
     x = "Food availability",
     y = "Number of offspring"
-  ) +
-  theme_classic()
+  )
 ```
 
 ### Report

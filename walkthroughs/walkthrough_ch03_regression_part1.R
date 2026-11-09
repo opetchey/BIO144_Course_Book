@@ -26,6 +26,10 @@
 # Load all packages at the top of a script, so it is clear what is needed.
 library(tidyverse)  # readr, dplyr, ggplot2 and more
 library(ggfortify)  # autoplot() for model checking plots
+## ggfortify (which provides autoplot()) still uses some old ggplot2 features. This gives
+## harmless deprecation warnings (e.g. about fortify(<lm>) and the size aesthetic).
+## This line hides them:
+options(lifecycle_verbosity = "quiet")
 library(patchwork)  # put several ggplots side by side with + and /
 
 

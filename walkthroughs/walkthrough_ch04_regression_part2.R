@@ -25,6 +25,10 @@
 # 1. Load the packages ----
 library(tidyverse)  # readr, dplyr, ggplot2 and more
 library(ggfortify)  # autoplot() for model checking plots
+## ggfortify (which provides autoplot()) still uses some old ggplot2 features. This gives
+## harmless deprecation warnings (e.g. about fortify(<lm>) and the size aesthetic).
+## This line hides them:
+options(lifecycle_verbosity = "quiet")
 
 
 # 2. Read the data and fit the model (from Chapter 3) ----
@@ -304,8 +308,7 @@ ggplot(animal_data, aes(x = body_mass, y = metabolic_rate)) +
   scale_x_log10() +
   scale_y_log10() +
   labs(x = "Body mass (g, log scale)", y = "Metabolic rate (log scale)",
-       colour = "Group") +
-  theme_bw(base_size = 14)
+       colour = "Group")
 # Note: with scale_x_log10() the line is fitted to log10 values, as in m_animal.
 
 # (6) Find the largest value of a variable (to know the range of the data):

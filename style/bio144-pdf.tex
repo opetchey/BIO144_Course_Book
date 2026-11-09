@@ -1,0 +1,48 @@
+% BIO144 house style "Spring Term" for the PDF version of the course book.
+% Source: BIO144_Style/latex/bio144-pdf.tex (copied to the book's style/ folder by sync.R).
+% Used with lualatex (pdf-engine: lualatex) and the fonts in style/fonts/.
+
+% --- Colours -------------------------------------------------------------
+\usepackage{xcolor}
+\definecolor{bioGreen}{HTML}{2F6B45}
+\definecolor{bioInk}{HTML}{1E3226}
+\definecolor{bioMuted}{HTML}{566E5F}
+\definecolor{bioPink}{HTML}{D96C8A}
+\definecolor{bioStem}{HTML}{6B5A44}
+\definecolor{bioLine}{HTML}{C9D6C2}
+
+% --- Fallback for characters missing from the web fonts (e.g. Greek, some maths symbols)
+\directlua{luaotfload.add_fallback("bioFallback", {"latinmodern-math:mode=node;", "lmroman10-regular:mode=node;"})}
+
+% --- Text and code fonts (set here, after the fallback is defined) --------
+\setmainfont[Path=style/fonts/, UprightFont=AtkinsonHyperlegible-Regular.ttf, BoldFont=AtkinsonHyperlegible-Bold.ttf,
+  ItalicFont=AtkinsonHyperlegible-Italic.ttf, BoldItalicFont=AtkinsonHyperlegible-Bold.ttf, RawFeature={fallback=bioFallback}]{AtkinsonHyperlegible-Regular}
+\setsansfont[Path=style/fonts/, UprightFont=AtkinsonHyperlegible-Regular.ttf, BoldFont=AtkinsonHyperlegible-Bold.ttf,
+  ItalicFont=AtkinsonHyperlegible-Italic.ttf, BoldItalicFont=AtkinsonHyperlegible-Bold.ttf, RawFeature={fallback=bioFallback}]{AtkinsonHyperlegible-Regular}
+\setmonofont[Path=style/fonts/, UprightFont=JetBrainsMono-Medium.ttf, BoldFont=JetBrainsMono-Medium.ttf,
+  ItalicFont=JetBrainsMono-Medium.ttf, BoldItalicFont=JetBrainsMono-Medium.ttf, Scale=0.88, RawFeature={fallback=bioFallback;-liga;-calt}]{JetBrainsMono-Medium}
+
+% --- Heading font and colours (sectsty works with the book class) ---------
+\newfontfamily\bioHeadingFont[Path=style/fonts/, UprightFont=BricolageGrotesque-ExtraBold.ttf, BoldFont=BricolageGrotesque-ExtraBold.ttf, RawFeature={fallback=bioFallback}]{BricolageGrotesque-ExtraBold}
+\usepackage{sectsty}
+\chapterfont{\bioHeadingFont\color{bioGreen}}
+\sectionfont{\bioHeadingFont\color{bioGreen}}
+\subsectionfont{\bioHeadingFont\color{bioInk}}
+\subsubsectionfont{\bioHeadingFont\color{bioInk}}
+
+% --- Callouts: recolour Quarto's built-in types to the house roles ---------
+%   important = Key idea (green), warning = Common mistake (pink),
+%   tip = R toolbox (stem brown), note = Note, Extras and Learning objectives (muted green)
+\AtBeginDocument{%
+  \definecolor{quarto-callout-important-color}{HTML}{2F6B45}%
+  \definecolor{quarto-callout-important-color-frame}{HTML}{2F6B45}%
+  \definecolor{quarto-callout-warning-color}{HTML}{D96C8A}%
+  \definecolor{quarto-callout-warning-color-frame}{HTML}{D96C8A}%
+  \definecolor{quarto-callout-tip-color}{HTML}{6B5A44}%
+  \definecolor{quarto-callout-tip-color-frame}{HTML}{6B5A44}%
+  \definecolor{quarto-callout-note-color}{HTML}{7FA864}%
+  \definecolor{quarto-callout-note-color-frame}{HTML}{7FA864}%
+  \definecolor{quarto-callout-caution-color}{HTML}{D96C8A}%
+  \definecolor{quarto-callout-caution-color-frame}{HTML}{D96C8A}%
+  \hypersetup{colorlinks=true, linkcolor=bioGreen, urlcolor=bioGreen, citecolor=bioGreen}%
+}

@@ -53,6 +53,8 @@ format:
     fig-align: center
   pdf:
     keep-tex: false
+    pdf-engine: lualatex
+    include-in-header: style/bio144-pdf.tex
     documentclass: book
     classoption:
       - 8pt

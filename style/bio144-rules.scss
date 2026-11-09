@@ -88,3 +88,6 @@ section.extras > h2 .header-section-number { display: none; }
 // Plain output blocks and inline code: readable in both themes
 pre:not(.sourceCode), pre:not(.sourceCode) code { color: var(--b144-ink) !important; background: transparent; }
 p code:not(.sourceCode), li code:not(.sourceCode), td code:not(.sourceCode) { background: transparent !important; color: $code-color; padding: 0; }
+
+// JetBrains Mono ligatures off: show |> and <- as typed, not as arrows/triangles
+code, pre, kbd, .sourceCode, div.sourceCode, pre.sourceCode code { font-variant-ligatures: none; font-feature-settings: "liga" 0, "calt" 0; }
